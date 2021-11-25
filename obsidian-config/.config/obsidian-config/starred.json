@@ -1,0 +1,24 @@
+{
+  "items": [
+    {
+      "type": "file",
+      "title": "Map of Contents",
+      "path": "000s INDEX.md"
+    },
+    {
+      "type": "file",
+      "title": "Project Requirements",
+      "path": "Victoria University/NEE4101(Research Proposal)/Project Requirements.md"
+    },
+    {
+      "type": "file",
+      "title": "Project Sponsor",
+      "path": "Victoria University/NEE4101(Research Proposal)/Project Sponsor.md"
+    },
+    {
+      "type": "file",
+      "title": "~ Courses",
+      "path": "010s Courses.md"
+    }
+  ]
+}

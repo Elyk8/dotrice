@@ -1,0 +1,21 @@
+Xft.dpi: 120
+/* Xft.autohint: false */
+/* Xft.Hinting: 1 */
+/* Xft.RGBA: rgb */
+/* Xft.HintStyle: hintslight */
+/* Xft.Antialias: 1 */
+/* Xft.lcdfilter: lcdfilter */
+Xcursor.theme: Bibata-Modern-Ice
+
+! Font Settings
+*font: JetBrainsMono Nerd Font:medium:size=12:antialias=true:autohint=true
+*font2: JoyPixels:pixelsize=21:antialias=true:autohint=true
+
+! general
+st.alpha: 0.95
+
+/* #include "./Xresources.d/nvcode.xresources" */
+#include "./Xresources.d/tokyonight.xresources"
+/* #include "./Xresources.d/doom.xresources" */
+/* #include "./Xresources.d/git.xresources" */
+/* #include "./Xresources.d/gitdark.xresources" */

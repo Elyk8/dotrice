@@ -1,0 +1,7 @@
+[Desktop Entry]
+Exec=/usr/bin/neomutt %u
+MimeType=x-scheme-handler/mailto;
+Name=neomutt
+NoDisplay=true
+Terminal=true
+Type=Application

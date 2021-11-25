@@ -1,0 +1,12 @@
+#!/bin/sh
+alias \
+	jkz="\$EDITOR \$HOME/.config/zsh/.zshrc" \
+	jkzp="\$EDITOR \$HOME/.config/zsh/.zprofile" \
+	jkf="\$EDITOR \$HOME/.config/shell/files" \
+	jka="\$EDITOR \$HOME/.config/shell/aliasrc" \
+	jke="\$EDITOR \$HOME/.config/lvim/config.lua" \
+	jkl="\$EDITOR \$HOME/.config/lf/lfrc" \
+	jkxp="\$EDITOR \$HOME/.config/x11/xprofile" \
+	jkx="\$EDITOR \$HOME/.config/x11/xinitrc" \
+	jkX="\$EDITOR \$HOME/.config/x11/Xresources" \
+	jkt="\$EDITOR \$HOME/.config/alacritty/alacritty.yml" \

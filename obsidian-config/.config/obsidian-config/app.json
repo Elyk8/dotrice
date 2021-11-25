@@ -1,0 +1,24 @@
+{
+  "spellcheck": true,
+  "vimMode": true,
+  "showLineNumber": true,
+  "showUnsupportedFiles": true,
+  "promptDelete": false,
+  "attachmentFolderPath": "Attachments 📎",
+  "alwaysUpdateLinks": true,
+  "newFileLocation": "current",
+  "lineWrap": true,
+  "strictLineBreaks": true,
+  "readableLineLength": false,
+  "showFrontmatter": false,
+  "fileSortOrder": "alphabetical",
+  "pdfExportSettings": {
+    "pageSize": "A4",
+    "landscape": false,
+    "margin": "0",
+    "downscalePercent": 100
+  },
+  "defaultViewMode": "preview",
+  "useMarkdownLinks": false,
+  "trashOption": "local"
+}

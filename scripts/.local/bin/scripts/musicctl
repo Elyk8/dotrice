@@ -1,0 +1,20 @@
+#!/bin/sh
+
+args="-p spotify,%any"
+case "$(playerctl status $args 2>&1)" in
+	"No players found"|"Stopped") ;;
+	*)
+		case "$1" in
+			"seek"|"volume")
+				args="position ${2#+}+ $args"
+				;;
+			"toggle") args="play-pause $args" ;;
+			"prev") args="previous $args" ;;
+			*) args=$@ ;;
+		esac
+		playerctl $args
+		exit
+		;;
+esac
+
+mpc $@ > /dev/null 2>&1

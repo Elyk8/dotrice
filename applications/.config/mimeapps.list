@@ -1,0 +1,29 @@
+[Added Associations]
+inode/directory=file.desktop;org.kde.dolphin.desktop;
+x-scheme-handler/http=brave-browser.desktop;
+x-scheme-handler/https=brave-browser.desktop;
+x-scheme-handler/mailto=neomutt-2.desktop;mail.desktop;
+
+[Default Applications]
+application/gzip=Write.desktop;
+application/json=text.desktop
+application/pdf=pdf.desktop;
+application/postscript=text.desktop
+application/rss+xml=rss.desktop
+application/x-bittorrent=torrent.desktop;
+image/gif=img.desktop;
+image/jpeg=img.desktop;
+image/png=img.desktop;
+inode/directory=file.desktop;
+text/html=brave.desktop;
+text/plain=text.desktop;
+text/x-shellscript=text.desktop;
+text/xml=brave.desktop;
+video/mp4=video.desktop;
+video/x-matroska=video.desktop
+x-scheme-handler/ftp=brave.desktop;
+x-scheme-handler/http=brave-browser.desktop;
+x-scheme-handler/https=brave-browser.desktop;
+x-scheme-handler/lbry=lbry.desktop
+x-scheme-handler/magnet=torrent.desktop;
+x-scheme-handler/mailto=neomutt-2.desktop;

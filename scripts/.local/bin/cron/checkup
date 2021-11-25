@@ -1,0 +1,23 @@
+#!/bin/sh
+# export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u "$USER")/bus
+# export DISPLAY=:0
+. $HOME/.dbus/session-bus/*-0
+
+# Syncs repositories and downloads updates, meant to be run as a cronjob.
+ping -q -c 1 archlinux.org > /dev/null || exit
+
+/usr/bin/notify-send "📦 Repository Sync" "Checking for package updates..."
+
+sudo pacman -Syuw --noconfirm || /usr/bin/notify-send "Error downloading updates.
+
+Check your internet connection, if pacman is already running, or run update manually to see errors."
+
+if pacman -Qu | grep -v "\[ignored\]"
+then
+	/usr/bin/notify-send "📦 Repository Sync" "Updates available. Click statusbar icon (📦) for update."
+else
+	/usr/bin/notify-send "📦 Repository Sync"  "Sync complete. No new packages for update."
+fi
+
+sleep 1
+duskc --ignore-reply run_command setstatus 0 "$(sb-pacpackages)"

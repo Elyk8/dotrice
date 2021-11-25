@@ -1,0 +1,12 @@
+{
+  "baseFontSize": 22,
+  "translucency": false,
+  "theme": "obsidian",
+  "cssTheme": "Obsidian Nord",
+  "baseFontSizeAction": true,
+  "enabledCssSnippets": [
+    "custom",
+    "font",
+    "cursor"
+  ]
+}

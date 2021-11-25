@@ -1,0 +1,29 @@
+#!/bin/sh
+# SETSTATUS="duskc --ignore-reply run_command setstatus"
+
+MODE_FILE=/tmp/shotkey-mode
+
+NORMAL_MODE=
+
+get_mode() {
+	mode=$(cat $MODE_FILE)
+	echo "${mode:-$NORMAL_MODE}"
+}
+
+save_mode() {
+	mode_label=$SHOTKEY_MODE_LABEL
+	echo "${mode_label:-$NORMAL_MODE}" > $MODE_FILE
+  notify-send -t 1000 "${mode_label:-$NORMAL_MODE}" -h string:x-canonical-private-synchronous:anything
+  # $SETSTATUS 10 "$(sb-keymode)"
+  # polybar-msg hook keymode 1
+}
+
+# Use this function to print out current mode
+case $1 in
+on-mode-change) save_mode ;;
+mode) get_mode ;;
+*)
+	echo "no"
+	exit 1
+	;;
+esac

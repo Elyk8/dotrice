@@ -1,0 +1,15 @@
+/* Wrap long nav text*/
+.nav-file-title,
+.nav-folder-title,
+.nav-file-title-content,
+.nav-folder-title-content {
+    white-space: normal;
+    width: auto;
+}
+
+/* Indent wrapped text */
+.nav-file-title-content,
+.nav-folder-title-content {
+    margin-left: 20px;
+    text-indent: 20px;
+}

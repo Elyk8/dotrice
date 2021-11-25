@@ -1,0 +1,18 @@
+# zsh 
+/zsh/.config/zsh/plugins/
+
+# inkscape
+/inkscape/.config/inkscape/*
+!/inkscape/.config/inkscape/extensions
+!/inkscape/.config/inkscape/templates
+
+# safeeyes
+/safeeyes/.config/safeeyes/plugins
+
+# VSCodium
+/vscodium/.config/VSCodium/*
+!/vscodium/.config/VSCodium/product.json
+!/vscodium/.config/VSCodium/User/
+/vscodium/.config/VSCodium/User/*
+!/vscodium/.config/VSCodium/User/keybindings.json
+!/vscodium/.config/VSCodium/User/settings.json

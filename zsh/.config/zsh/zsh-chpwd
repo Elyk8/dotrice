@@ -1,0 +1,13 @@
+# Hook onto `chpwd` in the right way
+# with the official util add-zsh-hook
+
+# wrap command `ls` into a function
+_ls_on_cwd_change() {
+  exa --group-directories-first --git;
+}
+
+# load add-zsh-hook if it's not available yet
+(( $+functions[add-zsh-hook] )) || autoload -Uz add-zsh-hook
+
+# hook _ls_on_cwd_change onto `chpwd`
+add-zsh-hook chpwd _ls_on_cwd_change

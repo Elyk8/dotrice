@@ -1,0 +1,38 @@
+#!/bin/sh
+/usr/bin/prime-offload
+xdg-user-dirs-update
+
+if which dbus-launch >/dev/null && test -z "$DBUS_SESSION_BUS_ADDRESS"; then
+  eval "$(dbus-launch --sh-syntax --exit-with-x11)"
+	echo "D-Bus per-session daemon address is: $DBUS_SESSION_BUS_ADDRESS"
+fi
+eval "$(gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)"
+export SSH_AUTH_SOCK
+/usr/libexec/polkit-gnome-authentication-agent-1 &
+
+xrdb -load ~/.config/x11/Xresources
+remaps &
+lxsession &
+nm-applet &
+volctl &
+clipster -d &
+picom -b &
+dunst &
+redshift &
+
+/usr/bin/pipewire &
+/usr/bin/pipewire-pulse &
+/usr/bin/pipewire-media-session &
+
+/usr/bin/mpd &
+
+xrandr -s 1920x1080
+
+feh --no-fehbg --bg-scale --randomize -r "${XDG_PICTURES_DIR:="$HOME/pix"}/wallpapers" &
+
+safeeyes -e &
+shotkey &
+
+/bin/sh -c "sleep 1 && ntfd" &
+
+exec dusk

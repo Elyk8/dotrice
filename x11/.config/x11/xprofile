@@ -1,0 +1,16 @@
+#!/bin/sh
+xrdb -merge ~/.config/x11/Xresources
+
+autostart="mpd mpDris2 shotkey dunst"
+
+feh --recursive --no-fehbg --bg-scale --randomize "${XDG_PICTURES_DIR:="$HOME/pix"}/wallpapers" &
+
+remaps &
+lxsession &
+nm-applet &
+picom -b &
+safeeyes -e &
+
+for program in $autostart; do
+	pidof -s "$program" || setsid -f "$program"
+done >/dev/null 2>&1

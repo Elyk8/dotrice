@@ -1,0 +1,5 @@
+#!/bin/sh
+. $HOME/.config/rofi/configuration.sh
+
+script=$(find -L ~/.local/bin/* -type f | rofi -dmenu -theme "$dir"/"$theme" -l 20 -p "Scripts:")
+setsid -f "$TERMINAL" -e "$EDITOR" "$script"

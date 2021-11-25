@@ -1,0 +1,3 @@
+[submodule "safeeyes/.config/safeeyes/plugins"]
+	path = safeeyes/.config/safeeyes/plugins
+	url = https://github.com/safeeyes/safeeyes-plugins.git

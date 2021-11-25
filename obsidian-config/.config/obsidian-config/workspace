@@ -1,0 +1,177 @@
+{
+  "main": {
+    "id": "a4eaad72d05befaf",
+    "type": "split",
+    "children": [
+      {
+        "id": "c8dbecdc4c6bf558",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "Victoria University/NEE4101(Research Proposal)/Meetings with Supervisor/5 - 21-11-03.md",
+            "mode": "source"
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "590163f2f64bcf5d",
+    "type": "split",
+    "children": [
+      {
+        "id": "85c2dda46ad0a120",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7d0336fd8f705396",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "tag:#td",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "8163d10a53c49f02",
+            "type": "leaf",
+            "state": {
+              "type": "starred",
+              "state": {}
+            }
+          },
+          {
+            "id": "c74f1640ca5ecbe6",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "4150beba72b2ea55",
+            "type": "leaf",
+            "state": {
+              "type": "recent-files",
+              "state": {}
+            }
+          },
+          {
+            "id": "bc3c914ad17307e6",
+            "type": "leaf",
+            "state": {
+              "type": "file-tree-view",
+              "state": {}
+            }
+          }
+        ],
+        "currentTab": 2
+      }
+    ],
+    "direction": "horizontal",
+    "width": 268.00468826293945
+  },
+  "right": {
+    "id": "1c064167f54edd19",
+    "type": "split",
+    "children": [
+      {
+        "id": "fcbbfbb216bef31f",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "70df24a01c3a0b3b",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Victoria University/NEE4101(Research Proposal)/Meetings with Supervisor/5 - 21-11-03.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": false
+              }
+            }
+          },
+          {
+            "id": "8f099804673ddda2",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Victoria University/NEE4101(Research Proposal)/Meetings with Supervisor/5 - 21-11-03.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "75cc98503e275880",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Victoria University/NEE4101(Research Proposal)/Meetings with Supervisor/5 - 21-11-03.md"
+              }
+            }
+          },
+          {
+            "id": "9b038e10add5191e",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": false
+              }
+            }
+          },
+          {
+            "id": "d013b3e24aaea849",
+            "type": "leaf",
+            "state": {
+              "type": "calendar",
+              "state": {}
+            }
+          },
+          {
+            "id": "7cd4d91dcb582147",
+            "type": "leaf",
+            "state": {
+              "type": "reminder-list",
+              "state": {}
+            }
+          }
+        ],
+        "currentTab": 3
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "c8dbecdc4c6bf558",
+  "lastOpenFiles": [
+    "Victoria University/NEE4101(Research Proposal)/Meetings with Supervisor/5 - 21-11-03.md",
+    "Victoria University/NEE4101(Research Proposal)/Meetings with Supervisor/1 - 21-09-15.md",
+    "Victoria University/NEE4101(Research Proposal)/Literature Review/Literature Review.md",
+    "Victoria University/NEE4101(Research Proposal)/Literature Review/Fleeting Notes/Advanced Medical Robotic Nursing Assistant.md",
+    "Victoria University/NEE4101(Research Proposal)/Literature Review/Fleeting Notes/Fleeting Notes.md",
+    "Victoria University/NEE4101(Research Proposal)/Meetings with Supervisor/3 - 21-09-06.md",
+    "Victoria University/NEE4101(Research Proposal)/Meetings with Supervisor/4 - 21-10-20.md",
+    "Victoria University/NEE4101(Research Proposal)/NEE4101(Research Proposal).md",
+    "Victoria University/NEE4101(Research Proposal)/Meetings with Supervisor/Meetings with Supervisor.md",
+    "Victoria University/NEE4101(Research Proposal)/_Index_of_NEE4101(Research Proposal).md"
+  ]
+}

@@ -1,0 +1,225 @@
+#!/bin/sh
+# Adds `~/.local/bin` to $PATH
+export PATH="$PATH:${$(find -L $HOME/.local/bin -type d -printf %p:)%%:}"
+
+# ~/ Clean-up:
+export XDG_DATA_HOME=${XDG_DATA_HOME:="$HOME/.local/share"}
+export XDG_CACHE_HOME=${XDG_CACHE_HOME:="$HOME/.cache"}
+export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:="$HOME/.config"}
+export XINITRC="${XDG_CONFIG_HOME:-$HOME/.config}/x11/xinitrc"
+# export XAUTHORITY="$XDG_RUNTIME_DIR/Xauthority" # This line will break some DMs.
+export NOTMUCH_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/notmuch-config"
+export GTK2_RC_FILES="${XDG_CONFIG_HOME:-$HOME/.config}/gtk-2.0/gtkrc-2.0"
+export LESSHISTFILE="-"
+export WGETRC="${XDG_CONFIG_HOME:-$HOME/.config}/wget/wgetrc"
+export INPUTRC="${XDG_CONFIG_HOME:-$HOME/.config}/shell/inputrc"
+export ZDOTDIR="${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
+#export ALSA_CONFIG_PATH="$XDG_CONFIG_HOME/alsa/asoundrc"
+#export GNUPGHOME="${XDG_DATA_HOME:-$HOME/.local/share}/gnupg"
+export WINEPREFIX="${XDG_DATA_HOME:-$HOME/.local/share}/wineprefixes/default"
+export KODI_DATA="${XDG_DATA_HOME:-$HOME/.local/share}/kodi"
+export PASSWORD_STORE_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/password-store"
+export TMUX_TMPDIR="$XDG_RUNTIME_DIR"
+export ANDROID_SDK_HOME="${XDG_CONFIG_HOME:-$HOME/.config}/android"
+export CARGO_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/cargo"
+export GOPATH="${XDG_DATA_HOME:-$HOME/.local/share}/go"
+export ANSIBLE_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/ansible/ansible.cfg"
+export UNISON="${XDG_DATA_HOME:-$HOME/.local/share}/unison"
+export HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/history"
+export WEECHAT_HOME="${XDG_CONFIG_HOME:-$HOME/.config}/weechat"
+export MBSYNCRC="${XDG_CONFIG_HOME:-$HOME/.config}/mbsync/config"
+export ELECTRUMDIR="${XDG_DATA_HOME:-$HOME/.local/share}/electrum"
+export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="${XDG_CONFIG_HOME:-$HOME/.config}/java"
+export SCREENRC="${XDG_CONFIG_HOME:-$HOME/.config}/screen/screenrc"
+export MATLAB_LOG_DIR="/tmp"
+export MATLAB_SHELL="/bin/bash"
+export KDEHOME="${XDG_CONFIG_HOME:-$HOME/.config}/kde"
+export PLASMA_USE_QT_SCALING=1
+
+# XDG Directories
+export XDG_DOWNLOAD_DIR=${XDG_DOWNLOAD_DIR:="$HOME/dl"}
+export XDG_DOCUMENTS_DIR=${XDG_DOCUMENTS_DIR:="$HOME/dox"}
+export XDG_MUSIC_DIR=${XDG_MUSIC_DIR:="$HOME/music"}
+export XDG_PICTURES_DIR=${XDG_PICTURES_DIR:="$HOME/pix"}
+export XDG_VIDEOS_DIR=${XDG_VIDEOS_DIR:="$HOME/vids"}
+
+export STATUS_DISPLAY="$HOME/.local/bin/status-dusk/display"
+export STATUS_CLICK="$HOME/.local/bin/status-dusk/click"
+
+# Other program settings:
+export DICS="/usr/share/stardict/dic/"
+export SUDO_ASKPASS="$HOME/.local/bin/dmenu/dm-pass"
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse'
+export LESS=-R
+# Start blinking
+export LESS_TERMCAP_mb=$(tput bold; tput setaf 2) # green
+# Start bold
+export LESS_TERMCAP_md=$(tput bold; tput setaf 2) # green
+# Start stand out
+export LESS_TERMCAP_so=$(tput bold; tput setaf 3) # yellow
+# End standout
+export LESS_TERMCAP_se=$(tput rmso; tput sgr0)
+# Start underline
+export LESS_TERMCAP_us=$(tput smul; tput bold; tput setaf 1) # red
+# End Underline
+export LESS_TERMCAP_ue=$(tput sgr0)
+# End bold, blinking, standout, underline
+export LESS_TERMCAP_me=$(tput sgr0)
+export LESSOPEN="| /usr/bin/highlight -O ansi %s 2>/dev/null"
+export _ZL_DATA="${XDG_DATA_HOME:-$HOME/.local/share}/z.lua"
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+export UNCRUSTIFY_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/uncrustify/uncrustify.cfg"
+
+# Default programs:
+export VISUAL="lvim"
+export EDITOR="lvim"
+export READER="zathura"
+export TERMINAL="alacritty"
+export BROWSER="brave"
+export VIDEO="mpv"
+export IMAGE="sxiv"
+export OPENER="xdg-open"
+export PAGER="less -S"
+export MANPAGER="lvim -c 'set ft=man nonumber nolist ts=8 laststatus=1 showtabline=1' '+Man!' -"
+# Others
+export MOZ_USE_XINPUT2="1"		              # Mozilla smooth scrolling/touchpads.
+export AWT_TOOLKIT="MToolkit wmname LG3D"	  # May have to install wmname
+export _JAVA_AWT_WM_NONREPARENTING=1	      # Fix for Java applications in dwm
+
+# This is the list for lf icons:
+export LF_ICONS="di=📁:\
+st=📁:\
+dt=📁:\
+fi=📃:\
+ln=🔗:\
+tw=🤝:\
+ow=📂:\
+or=❌:\
+ex=🎯:\
+*.txt=📝:\
+*.mom=📝:\
+*.me=📝:\
+*.ms=📝:\
+*.png=📸:\
+*.webp=🎨:\
+*.ico=🎨:\
+*.jpg=📸:\
+*.jpe=📸:\
+*.jpeg=📸:\
+*.gif=🎨:\
+*.svg=🎨:\
+*.tif=🎨:\
+*.tiff=🎨:\
+*.xcf=🖌:\
+*.html=🌎:\
+*.xml=📰:\
+*.gpg=🔐:\
+*.css=🎨:\
+*.pdf=📚:\
+*.djvu=📚:\
+*.epub=📚:\
+*.csv=📓:\
+*.xlsx=📓:\
+*.tex=📜:\
+*.md=📘:\
+*.r=📊:\
+*.R=📊:\
+*.rmd=📊:\
+*.Rmd=📊:\
+*.m=📊:\
+*.mp3=🎵:\
+*.opus=🎵:\
+*.ogg=🎵:\
+*.m4a=🎵:\
+*.flac=🎼:\
+*.wav=🎼:\
+*.mkv=🎥:\
+*.mp4=🎥:\
+*.webm=🎥:\
+*.mpeg=🎥:\
+*.avi=🎥:\
+*.mov=🎥:\
+*.mpg=🎥:\
+*.wmv=🎥:\
+*.m4b=🎥:\
+*.flv=🎥:\
+*.tar=📦:\
+*.tgz=📦:\
+*.arc=📦:\
+*.arj=📦:\
+*.taz=📦:\
+*.lha=📦:\
+*.lz4=📦:\
+*.lzh=📦:\
+*.lzma=📦:\
+*.tlz=📦:\
+*.txz=📦:\
+*.tzo=📦:\
+*.t7z=📦:\
+*.zip=📦:\
+*.z=📦:\
+*.dz=📦:\
+*.gz=📦:\
+*.lrz=📦:\
+*.lz=📦:\
+*.lzo=📦:\
+*.xz=📦:\
+*.zst=📦:\
+*.tzst=📦:\
+*.bz2=📦:\
+*.bz=📦:\
+*.tbz=📦:\
+*.tbz2=📦:\
+*.tz=📦:\
+*.deb=📦:\
+*.rpm=📦:\
+*.war=📦:\
+*.ear=📦:\
+*.sar=📦:\
+*.rar=📦:\
+*.alz=📦:\
+*.ace=📦:\
+*.zoo=📦:\
+*.cpio=📦:\
+*.7z=📦:\
+*.rz=📦:\
+*.cab=📦:\
+*.wim=📦:\
+*.swm=📦:\
+*.dwm=📦:\
+*.esd=📦:\
+*.z64=🎮:\
+*.v64=🎮:\
+*.n64=🎮:\
+*.gba=🎮:\
+*.nes=🎮:\
+*.gdi=🎮:\
+*.1=ℹ:\
+*.nfo=ℹ:\
+*.info=ℹ:\
+*.log=📙:\
+*.iso=📀:\
+*.img=📀:\
+*.bib=🎓:\
+*.ged=👪:\
+*.part=💔:\
+*.torrent=🔽:\
+*.jar=♨:\
+*.java=♨:\
+"
+export LF_COLORS="\
+~/dox=01;31:\
+~/dl=01;31:\
+~/.local/share=01;31:\
+~/.config/lf/lfrc=31:\
+.git/=01;32:\
+.git=32:\
+.gitignore=32:\
+Makefile=32:\
+README.*=33:\
+*.txt=34:\
+*.md=34:\
+ln=01;36:\
+di=01;34:\
+ex=01;32:\
+"

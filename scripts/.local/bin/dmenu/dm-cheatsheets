@@ -1,0 +1,11 @@
+#!/bin/sh
+alias alacritty='alacritty --class cheatsheet -e '
+while true; do 
+	cheat=$(printf "dwm\\nst\\nshkey" | rofi -dmenu -l 3 ) ; [ "$cheat" != "" ] || exit 
+	case $cheat in
+		dwm) alacritty $HOME/.local/lib/cheatsheets/dwmbindings || exit ; break ;; 
+		st) alacritty $HOME/.local/lib/cheatsheets/stbindings || exit ; break ;; 
+		shkey) alacritty $HOME/.local/lib/cheatsheets/shotkey-list || exit ; break ;; 
+		*) break ;;
+	esac
+done

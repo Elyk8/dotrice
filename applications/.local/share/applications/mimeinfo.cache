@@ -1,0 +1,17 @@
+[MIME Cache]
+application/x-shellscript=text.desktop;
+text/english=text.desktop;
+text/plain=text.desktop;
+text/x-c=text.desktop;
+text/x-c++=text.desktop;
+text/x-c++hdr=text.desktop;
+text/x-c++src=text.desktop;
+text/x-chdr=text.desktop;
+text/x-csrc=text.desktop;
+text/x-java=text.desktop;
+text/x-makefile=text.desktop;
+text/x-matlab=matlab.desktop;
+text/x-moc=text.desktop;
+text/x-pascal=text.desktop;
+text/x-tcl=text.desktop;
+text/x-tex=text.desktop;
