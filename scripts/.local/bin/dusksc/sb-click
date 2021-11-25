@@ -1,0 +1,16 @@
+#!/bin/sh
+case $BLOCK_STATUS in
+  0) sb-pacpackages-click ;;
+  1) sb-music-click ;;
+  2) sb-radio-click ;;
+  3) sb-forecast-click ;;
+  4) sb-mailbox ;;
+  5) sb-volume-click ;;
+  6) sb-microphone-click ;;
+  7) sb-redshiftstatus-click ;;
+  8) sb-brightness-click ;;
+  9) sb-battery-click ;;
+  10) sb-keymode-click ;;
+  15) sb-clock-click ;;
+	*)  notify-send -t 2000 "Unknown status $BLOCK_STATUS clicked $BLOCK_BUTTON" & ;;
+esac

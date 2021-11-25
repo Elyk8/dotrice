@@ -50,9 +50,9 @@ alias merge="xrdb -merge ~/.Xresources"
 # Aliases for software managment
 # pacman or pm
 alias pacman='sudo pacman'
-alias pac='sudo pacman'
+alias pac='sudo pacman -S'
 alias pm='sudo pacman'
-alias pmrr='sudo pacman -Rns'
+alias pmr='sudo pacman -Rns'
 alias update='sudo pacman -Syyu'
 
 # Fzf

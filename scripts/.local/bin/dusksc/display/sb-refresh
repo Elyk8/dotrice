@@ -1,0 +1,5 @@
+#!/bin/sh
+pidsig=$(awk "/$1/ {print \$4}" $HOME/.local/src/dwmblocks-async/config.h)
+# pidsig=$(awk "/$1/ {print \$4}" $HOME/.local/src/dwmblocks/blocks.h)
+SUM=`expr $pidsig + '34'`
+kill -$SUM $(pidof dwmblocks)

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Prints the current volume or 🔇 if muted.
+
+vol="$(pamixer --get-volume)"
+
+if [ "$(pamixer --get-mute)" = true ]; then
+  icon="🔇"
+elif [ "$vol" -gt "70" ]; then
+	icon="🔊"
+elif [ "$vol" -lt "20" ]; then
+	icon="🔈"
+else
+	icon="🔉"
+fi
+
+echo "$icon$vol%"

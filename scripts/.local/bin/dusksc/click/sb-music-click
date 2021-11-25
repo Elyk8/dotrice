@@ -1,0 +1,14 @@
+#!/bin/sh
+
+case $BLOCK_BUTTON in
+	1) "$TERMINAL" --class music -e ncmpcpp ;;
+	2) notify-send "🎵 Music module" "\- Shows mpd song playing.
+- ⏸ when paused.
+- Left click opens ncmpcpp.
+- Right click pauses.
+- Scroll changes volume." ;;
+	3) mpc toggle >/dev/null 2>&1 ;;
+	4) mpc volume +3 >/dev/null 2>&1 ;;
+	5) mpc volume -3 >/dev/null 2>&1 ;;
+	10) setsid -f "$TERMINAL" -e "$EDITOR" $0 ;;
+esac

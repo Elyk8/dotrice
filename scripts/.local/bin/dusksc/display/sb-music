@@ -1,0 +1,18 @@
+#!/bin/sh
+
+icon="🎶"
+pidof -x sb-musicup >/dev/null 2>&1 || sb-musicup >/dev/null 2>&1 &
+
+mpc | grep -q "\[paused\]" && icon="⏸"
+currentSong="$(mpc -f "%title% - %Artist%" current)"
+vol="$(mpc volume | grep -o '[0-9]\+%')"
+
+if [ "$vol" -gt "70" ]; then
+	volicon="🔊"
+elif [ "$vol" -lt "20" ]; then
+	volicon="🔈"
+else
+	volicon="🔉"
+fi
+
+[ -z "$currentSong" ] && echo "$icon Mpd module" || echo "$icon $currentSong $volicon$vol"

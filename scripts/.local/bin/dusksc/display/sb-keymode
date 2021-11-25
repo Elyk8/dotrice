@@ -1,0 +1,2 @@
+#!/bin/sh
+printf "$(shotkey-mode mode)"

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Prints the current volume or 🔇 if muted.
+SETSTATUS="duskc --ignore-reply run_command setstatus"
+
+case $BLOCK_BUTTON in
+	1) setsid -f pavucontrol ;;
+	2) notify-send "📢 Volume module" "\- Shows volume 🔊, 🔇 if muted.
+- Middle click to mute.
+- Scroll to change." ;;
+	3) pamixer -t ;;
+	4) pamixer -i 3 ;;
+	5) pamixer -d 3 ;;
+	10) setsid -f "$TERMINAL" -e "$EDITOR" $0 ;;
+esac
+
+$SETSTATUS 5 "$(sb-volume)"

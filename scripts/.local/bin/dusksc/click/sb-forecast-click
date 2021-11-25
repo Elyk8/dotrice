@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# Displays todays precipication chance (☔) and daily low (🥶) and high (🌞).
+# Usually intended for the statusbar.
+
+# If we have internet, get a weather report from wttr.in and store it locally.
+# You could set up a shell alias to view the full file in a pager in the
+# terminal if desired. This function will only be run once a day when needed.
+weatherreport="/tmp/weatherreport"
+getforecast() { curl -sf "wttr.in/$LOCATION" > "$weatherreport" || exit 1 ;}
+
+case $BLOCK_BUTTON in
+	1) setsid -f "$TERMINAL" --class \"weatherdisplay\" -e less -Srf "$weatherreport" ;;
+	2) notify-send "🌈 Weather module" "\- Left click for full forecast.
+- Middle click to update forecast.
+☔: Chance of rain/snow
+🥶: Daily low
+🌞: Daily high" ;;
+	3) getforecast ;;
+	6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
+esac

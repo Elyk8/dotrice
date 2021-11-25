@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Prints all batteries, their percentage remaining and an emoji corresponding
+# to charge status (🔌 for plugged up, 🔋 for discharging on battery, etc.).
+
+case $BLOCK_BUTTON in
+	1) notify-send "$(acpi -bat)" ;;
+	2) notify-send "🔋 Battery module" "Displays battery percentage
+🛑: not charging
+🔌: charging
+⚡: charged
+❗: battery very low!" ;;
+	3) notify-send "$(df -H)" ;;
+	10) setsid -f "$TERMINAL" -e "$EDITOR" $0 ;;
+esac

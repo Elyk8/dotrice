@@ -10,6 +10,7 @@ lxsession &
 nm-applet &
 picom -b &
 safeeyes -e &
+greenclip daemon &
 
 for program in $autostart; do
 	pidof -s "$program" || setsid -f "$program"

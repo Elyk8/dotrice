@@ -1,0 +1,20 @@
+#!/bin/sh
+SETSTATUS="duskc --ignore-reply run_command setstatus"
+
+toggleredshift() {
+	pidof redshift >/dev/null && killall redshift || setsid redshift
+}
+
+case $BLOCK_BUTTON in
+    1) notify-send "$(redshift -p)" ;;
+    2) notify-send "💡 Redshift module" "\- Displays current redshift status
+    - 🌙 at night.
+    - 💡 during transition phase.
+    - ☀  when it is day time." ;;
+    3) toggleredshift ;;
+    # 4)  ;;
+    # 5)  ;;
+    6) setsid -f "$TERMINAL" -e "$EDITOR" $0 ;;
+esac
+
+$SETSTATUS 7 "$(sb-redshiftstatus)"

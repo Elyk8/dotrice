@@ -1,0 +1,4 @@
+#!/bin/sh
+
+. "$HOME/.config/rofi/configuration.sh"
+rofi -modi "clipboard:greenclip print" -theme "$dir"/"$theme" -show clipboard -run-command '{cmd}'

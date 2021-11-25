@@ -1,0 +1,16 @@
+#!/bin/sh
+
+SETSTATUS="duskc --ignore-reply run_command setstatus"
+
+# This loop will update the music statusbar module whenever a command changes the
+# music player's status. mpd must be running on X's start for this to work.
+
+count=0
+while [ $count -lt 3 ]; do
+	if mpc idle >/dev/null; then
+		$SETSTATUS 1 "$(sb-music)"
+	else
+		( (count++))
+		sleep $count
+	fi
+done &

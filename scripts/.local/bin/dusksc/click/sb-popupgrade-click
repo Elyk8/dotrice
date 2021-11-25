@@ -1,0 +1,11 @@
+#!/bin/sh
+SETSTATUS="duskc --ignore-reply run_command setstatus"
+
+printf "Beginning upgrade.\\n"
+
+paru -Syu
+
+printf "\\nUpgrade complete.\\nPress <Enter> to exit window.\\n\\n"
+read -r _
+
+$SETSTATUS 0 "$(sb-pacpackages)"
