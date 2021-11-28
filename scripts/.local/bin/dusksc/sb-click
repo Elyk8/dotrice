@@ -1,16 +1,17 @@
 #!/bin/sh
 case $BLOCK_STATUS in
-  0) sb-pacpackages-click ;;
-  1) sb-music-click ;;
-  2) sb-radio-click ;;
-  3) sb-forecast-click ;;
-  4) sb-mailbox ;;
-  5) sb-volume-click ;;
-  6) sb-microphone-click ;;
-  7) sb-redshiftstatus-click ;;
-  8) sb-brightness-click ;;
-  9) sb-battery-click ;;
-  10) sb-keymode-click ;;
-  15) sb-clock-click ;;
-	*)  notify-send -t 2000 "Unknown status $BLOCK_STATUS clicked $BLOCK_BUTTON" & ;;
+	# Top bar
+	0) sb-clock-click ;;
+	1) sb-battery-click ;;
+	2) sb-volume-click ;;
+	3) sb-microphone-click ;;
+	4) sb-brightness-click ;;
+	5) sb-redshiftstatus-click ;;
+	7) rofi-bluetooth & ;;
+	8) sb-pacpackages-click & ;;
+
+	# Bottom bar
+	11) sb-music-click ;;
+
+	*) notify-send -t 2000 "Unknown status $BLOCK_STATUS clicked $BLOCK_BUTTON" & ;;
 esac

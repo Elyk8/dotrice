@@ -5,4 +5,5 @@ configuration {
   icon-theme:         "Beautyline";
   matching:           "fuzzy";
   case-sensitive:     false;
+  theme:              "themes/kde_krunner.rasi";
 }

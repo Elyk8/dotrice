@@ -17,4 +17,4 @@ case $BLOCK_BUTTON in
     6) setsid -f "$TERMINAL" -e "$EDITOR" $0 ;;
 esac
 
-$SETSTATUS 7 "$(sb-redshiftstatus)"
+$SETSTATUS 5 "$(sb-redshiftstatus)"

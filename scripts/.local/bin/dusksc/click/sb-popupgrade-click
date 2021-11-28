@@ -8,4 +8,4 @@ paru -Syu
 printf "\\nUpgrade complete.\\nPress <Enter> to exit window.\\n\\n"
 read -r _
 
-$SETSTATUS 0 "$(sb-pacpackages)"
+$SETSTATUS 8 "$(sb-pacpackages)"

@@ -1,5 +1,4 @@
 #!/bin/sh
-. "$HOME/.config/rofi/configuration.sh"
 
 if [ "$TERMINAL" = "alacritty" ]; then
 	argument="alacritty --working-directory"
@@ -7,6 +6,6 @@ elif [ "$TERMINAL" = "st" ]; then
 	argument="st -d"
 fi
 
-directory=$(rofi -dmenu -i -theme "$dir"/"$theme" <~/.fzf-marks  | cut -d' ' -f 3 | sort)
+directory=$(rofi -dmenu -i <~/.fzf-marks  | cut -d' ' -f 3 | sort)
 
 $argument "$directory"

@@ -17,7 +17,7 @@ configuration {
     sidebar-mode:                   false;
 }
 
-@import "tokyonight.rasi"
+@import "colors/doom-one.rasi"
 
 window {
     transparency:                   "real";

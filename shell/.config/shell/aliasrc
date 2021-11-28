@@ -103,16 +103,11 @@ alias mirrorxx="sudo reflector --age 6 --latest 20  --fastest 20 --threads 20 --
 alias ram='rate-mirrors --allow-root arch | sudo tee /etc/pacman.d/mirrorlist'
 
 # Youtube downloader
-alias yta-aac="youtube-dl --add-metadata -i --extract-audio --audio-format aac --external-downloader axel --external-downloader-args '-n 15 -a -k'"
-alias yta-best="youtube-dl --add-metadata -i --extract-audio --audio-format best --xattrs --embed-thumbnail --external-downloader axel --external-downloader-args '-n 15 -a -k'"
-alias yta-flac="youtube-dl --add-metadata -i --extract-audio --audio-format flac --external-downloader axel --external-downloader-args '-n 15 -a -k'"
-alias yta-m4a="youtube-dl --add-metadata -i --extract-audio --audio-format m4a --external-downloader axel --external-downloader-args '-n 15 -a -k'"
-alias yta-mp3="youtube-dl --add-metadata -i --extract-audio --audio-format mp3 --external-downloader axel --external-downloader-args '-n 15 -a -k'"
-alias yta-opus="youtube-dl --add-metadata -i --extract-audio --audio-format opus --external-downloader axel --external-downloader-args '-n 15 -a -k'"
-alias yta-vorbis="youtube-dl --add-metadata -i --extract-audio --audio-format vorbis --external-downloader axel --external-downloader-args '-n 15 -a -k'"
-alias yta-wav="youtube-dl --add-metadata -i --extract-audio --audio-format wav --external-downloader axel --external-downloader-args '-n 15 -a -k'"
-alias ytv-best="youtube-dl -f bestvideo+bestaudio --add-metadata -i --external-downloader axel --external-downloader-args '-n 15 -a -k'"
-alias ytv="youtube-dl --add-metadata -i --external-downloader axel --external-downloader-args '-n 15 -a -k'"
+alias yta-aac="yt-dlp --extract-audio --audio-format aac "
+alias yta-best="yt-dlp --extract-audio --audio-format best "
+alias yta-flac="yt-dlp --extract-audio --audio-format flac "
+alias yta-mp3="yt-dlp --extract-audio --audio-format mp3 "
+alias ytv-best="yt-dlp -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --merge-output-format mp4 "
 
 # Recent Installed Packages
 alias rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"

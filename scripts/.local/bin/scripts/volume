@@ -52,5 +52,5 @@ case $1 in
 		;;
 esac
 
-#SETSTATUS="duskc --ignore-reply run_command setstatus"
-#$SETSTATUS 5 "$(sb-volume)"
+# SETSTATUS="duskc --ignore-reply run_command setstatus"
+# $SETSTATUS 2 "$(sb-volume)"

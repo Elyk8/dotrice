@@ -1,8 +1,4 @@
 #!/bin/sh
-export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u "$USER")/bus
-export DISPLAY=:0
-# . $HOME/.dbus/session-bus/*-0
-
 # Syncs repositories and downloads updates, meant to be run as a cronjob.
 ping -q -c 1 archlinux.org > /dev/null || exit
 
@@ -20,4 +16,4 @@ else
 fi
 
 sleep 1
-duskc --ignore-reply run_command setstatus 0 "$(sb-pacpackages)"
+env DISPLAY=:0 /usr/local/bin/duskc --ignore-reply run_command setstatus 8 "$(sh -c \$HOME/.local/bin/dusksc/display/sb-pacpackages)"

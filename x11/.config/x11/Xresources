@@ -15,7 +15,7 @@ Xcursor.theme: Bibata-Modern-Ice
 st.alpha: 0.95
 
 /* #include "./Xresources.d/nvcode.xresources" */
-#include "./Xresources.d/tokyonight.xresources"
-/* #include "./Xresources.d/doom.xresources" */
+/* #include "./Xresources.d/tokyonight.xresources" */
+#include "./Xresources.d/doom.xresources"
 /* #include "./Xresources.d/git.xresources" */
 /* #include "./Xresources.d/gitdark.xresources" */

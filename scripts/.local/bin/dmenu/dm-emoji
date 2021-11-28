@@ -4,19 +4,4 @@
 
 # Get user selection via dmenu from emoji file.
 
-. "$HOME/.config/rofi/configuration.sh"
-rofi_cmd() { rofi -no-lazy-grab -dmenu -theme "$dir"/"$theme"; }
-
-chosen=$(cut -d ';' -f1 ~/.local/share/emojis/emoji | rofi_cmd | sed "s/ .*//")
-
-# Exit if none chosen.
-[ -z "$chosen" ] && exit
-
-# If you run this command with an argument, it will automatically insert the
-# character. Otherwise, show a message that the emoji has been copied.
-if [ -n "$1" ]; then
-	xdotool type "$chosen"
-else
-	echo "$chosen" | xclip -selection clipboard
-	notify-send "'$chosen' copied to clipboard." &
-fi
+rofi -show emoji -no-lazy-grab -matching normal

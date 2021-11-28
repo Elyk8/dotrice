@@ -6,5 +6,4 @@
 rofi -dmenu \
 	-password \
 	-no-fixed-num-lines \
-  -theme "${XDG_CONFIG_HOME:-$HOME/.config}/rofi/themes/pass" \
 	-p "$(printf %s "$1" | sed s/://)"

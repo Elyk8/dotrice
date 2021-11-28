@@ -15,4 +15,4 @@ else
 	volicon="🔉"
 fi
 
-[ -z "$currentSong" ] && echo "$icon Mpd module" || echo "$icon $currentSong $volicon$vol"
+[ -z "$currentSong" ] || echo "$icon $currentSong $volicon$vol"

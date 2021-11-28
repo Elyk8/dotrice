@@ -13,4 +13,4 @@ export DISPLAY=:0
 ```
 
 This will also make sure that environment variables and xdotool commands
-functino properly.
+function properly.

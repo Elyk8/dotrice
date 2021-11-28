@@ -56,7 +56,7 @@ ACTION_INPUT_TYPE=input+type
 # Remove font
 # rofi -i -font "ypn envypn 13"
 
-. "$HOME/.config/rofi/configuration.sh"
+
 
 run_rofi () {
 	rofi -theme "$dir"/"$theme" \

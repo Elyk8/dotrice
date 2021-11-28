@@ -1,5 +1,4 @@
 #!/bin/sh
-. "$HOME/.config/rofi/configuration.sh"
 
 # add more args here according to preference
 ARGS="--volume=30"
@@ -20,7 +19,7 @@ menu() {
 }
 
 main() {
-	choice=$(menu | rofi -dmenu -i -l 8 -theme "$dir"/"$theme" -p "Play 🎼:" | cut -d. -f1)
+	choice=$(menu | rofi -dmenu -i -l 8 -p "Play 🎼:" | cut -d. -f1)
 	case $choice in
 		1)
 			notification "Lofi Girl ☕️🎶"

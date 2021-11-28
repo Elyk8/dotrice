@@ -24,4 +24,4 @@ case $BLOCK_BUTTON in
 	10) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
 esac
 
-$SETSTATUS 8 "$(sb-brightness)"
+$SETSTATUS 4 "$(sb-brightness)"

@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
-. "$HOME/.config/rofi/configuration.sh"
 
 # Dmenu for easily finding a manual to open from a list of all manuals.
 
@@ -8,7 +7,7 @@
 
 # man -k . | rofi -dmenu -i -theme "$dir"/"$theme" -p " " | awk '{print $1}' | xargs alacritty --class floating -e man
 
-man -k . | awk '{ print $1 " " $2 }' | rofi -dmenu -i -theme "$dir"/"$theme" -p " " | awk '{ print $2 " " $1 }' | tr -d '()' | xargs alacritty --class floating -e man
+man -k . | awk '{ print $1 " " $2 }' | rofi -dmenu -i -p " " | awk '{ print $2 " " $1 }' | tr -d '()' | xargs alacritty --class floating -e man
 
 # Probably the most useful script ever.
 

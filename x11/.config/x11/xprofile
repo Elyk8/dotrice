@@ -1,7 +1,7 @@
 #!/bin/sh
 xrdb -merge ~/.config/x11/Xresources
 
-autostart="mpd mpDris2 shotkey dunst"
+autostart="shotkey dunst"
 
 feh --recursive --no-fehbg --bg-scale --randomize "${XDG_PICTURES_DIR:="$HOME/pix"}/wallpapers" &
 
@@ -10,6 +10,7 @@ lxsession &
 nm-applet &
 picom -b &
 safeeyes -e &
+redshift &
 greenclip daemon &
 
 for program in $autostart; do

@@ -1,20 +1,35 @@
 # Colors (Doom One)
 colors:
-  # Default colors
   primary:
     background: '#282c34'
     foreground: '#bbc2cf'
 
-  # Normal colors
+  cursor:
+    text: CellBackground
+
+  selection:
+    text: CellForeground
+    background: '#3e4451'
+
   normal:
-    black:   '#282c34'
+    black:   '#1c1f24'
     red:     '#ff6c6b'
     green:   '#98be65'
-    yellow:  '#ecbe7b'
+    yellow:  '#da8548'
     blue:    '#51afef'
     magenta: '#c678dd'
-    cyan:    '#46d9ff'
+    cyan:    '#5699af'
     white:   '#bbc2cf'
+
+  bright:
+    black:   '#5b6268'
+    red:     '#da8548'
+    green:   '#4db5bd'
+    yellow:  '#ecbe7b'
+    blue:    '#3071db'   # This is 2257a0 in Doom Emacs but I lightened it.
+    magenta: '#a9a1e1'
+    cyan:    '#46d9ff'
+    white:   '#dfdfdf'
 
 background_opacity: 0.95
 
@@ -67,7 +82,7 @@ window:
 
   dimensions:
     columns: 125
-    lines: 40
+    lines: 34
 
   #position:
   #  x: 0
