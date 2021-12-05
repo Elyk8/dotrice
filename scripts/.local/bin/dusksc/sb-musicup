@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SETSTATUS="duskc --ignore-reply run_command setstatus 11"
+SETSTATUS="duskc --ignore-reply run_command setstatus 9"
 
 # This loop will update the music statusbar module whenever a command changes the
 # music player's status. mpd must be running on X's start for this to work.

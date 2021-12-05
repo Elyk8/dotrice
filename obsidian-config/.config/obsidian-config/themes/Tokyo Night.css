@@ -116,13 +116,13 @@
 }
 
 .theme-dark {
-  --background-code: #1A1B26;
+  --background-code: #222436;
   --background-code-preview: #222436;
-  --background-preview: #1A1B26;
-  --background-primary: #1A1B26;
-  --background-primary-alt: #1A1B26;
-  --background-secondary: #222436;
-  --background-secondary-alt: #222436;
+  --background-preview: #222436;
+  --background-primary: #222436;
+  --background-primary-alt: #222436;
+  --background-secondary: #1e2030;
+  --background-secondary-alt: #1e2030;
   --background-tag: #131421;
   --background-quick: #191a2a;
   --background-modifier-cover: rgba(0, 0, 0, 0.8);

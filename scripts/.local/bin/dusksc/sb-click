@@ -9,9 +9,9 @@ case $BLOCK_STATUS in
 	5) sb-redshiftstatus-click ;;
 	7) rofi-bluetooth & ;;
 	8) sb-pacpackages-click & ;;
+	9) sb-music-click ;;
 
 	# Bottom bar
-	11) sb-music-click ;;
 
 	*) notify-send -t 2000 "Unknown status $BLOCK_STATUS clicked $BLOCK_BUTTON" & ;;
 esac

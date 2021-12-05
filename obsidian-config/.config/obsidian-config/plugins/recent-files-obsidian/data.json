@@ -1,6 +1,66 @@
 {
   "recentFiles": [
     {
+      "basename": "031s Turtlebot Robot Project",
+      "path": "031s Turtlebot Robot Project.md"
+    },
+    {
+      "basename": "031s Justification Essay",
+      "path": "031s Justification Essay.md"
+    },
+    {
+      "basename": "031s Capstone Milestones",
+      "path": "031s Capstone Milestones.md"
+    },
+    {
+      "basename": "Literature Review",
+      "path": "Victoria University/NEE4101(Research Proposal)/Literature Review.md"
+    },
+    {
+      "basename": "Kanban Template",
+      "path": "Templates 🗒️/Kanban Template.md"
+    },
+    {
+      "basename": "Eisenhower Matrix ✅",
+      "path": "Templates 🗒️/Eisenhower Matrix ✅.md"
+    },
+    {
+      "basename": "Daily Template",
+      "path": "Templates 🗒️/Daily Template.md"
+    },
+    {
+      "basename": "Cornell Notes",
+      "path": "Templates 🗒️/Cornell Notes.md"
+    },
+    {
+      "basename": "Project Template",
+      "path": "Templates 🗒️/Project Template.md"
+    },
+    {
+      "basename": "030s Warehouse robot design",
+      "path": "030s Warehouse robot design.md"
+    },
+    {
+      "basename": "Advanced Medical Robotic Nursing Assistant",
+      "path": "Victoria University/NEE4101(Research Proposal)/Literature Review/Fleeting Notes/Advanced Medical Robotic Nursing Assistant.md"
+    },
+    {
+      "basename": "An_advanced_medical_robotic_system_augmenting_healthcare_capabilities_-_robotic_nursing_assistant",
+      "path": "Victoria University/NEE4101(Research Proposal)/Literature Review/Articles/An_advanced_medical_robotic_system_augmenting_healthcare_capabilities_-_robotic_nursing_assistant.pdf"
+    },
+    {
+      "basename": "NEE4101(Research Proposal)",
+      "path": "Victoria University/NEE4101(Research Proposal)/NEE4101(Research Proposal).md"
+    },
+    {
+      "basename": "W46-2021",
+      "path": "002 Weeklys 📝/W46-2021.md"
+    },
+    {
+      "basename": "W42-2021",
+      "path": "002 Weeklys 📝/W42-2021.md"
+    },
+    {
       "basename": "5 - 21-11-03",
       "path": "Victoria University/NEE4101(Research Proposal)/Meetings with Supervisor/5 - 21-11-03.md"
     },
@@ -13,24 +73,12 @@
       "path": "Victoria University/NEE4101(Research Proposal)/Literature Review/Literature Review.md"
     },
     {
-      "basename": "Advanced Medical Robotic Nursing Assistant",
-      "path": "Victoria University/NEE4101(Research Proposal)/Literature Review/Fleeting Notes/Advanced Medical Robotic Nursing Assistant.md"
-    },
-    {
-      "basename": "Fleeting Notes",
-      "path": "Victoria University/NEE4101(Research Proposal)/Literature Review/Fleeting Notes/Fleeting Notes.md"
-    },
-    {
       "basename": "3 - 21-09-06",
       "path": "Victoria University/NEE4101(Research Proposal)/Meetings with Supervisor/3 - 21-09-06.md"
     },
     {
       "basename": "4 - 21-10-20",
       "path": "Victoria University/NEE4101(Research Proposal)/Meetings with Supervisor/4 - 21-10-20.md"
-    },
-    {
-      "basename": "NEE4101(Research Proposal)",
-      "path": "Victoria University/NEE4101(Research Proposal)/NEE4101(Research Proposal).md"
     },
     {
       "basename": "Meetings with Supervisor",
@@ -53,10 +101,6 @@
       "path": "Victoria University/NEE4101(Research Proposal)/Meetings with Supervisor/2 - 21-09-29.md"
     },
     {
-      "basename": "Literature Review",
-      "path": "Victoria University/NEE4101(Research Proposal)/Literature Review.md"
-    },
-    {
       "basename": "Design Proposal",
       "path": "Victoria University/NEE4101(Research Proposal)/Design Proposal.md"
     },
@@ -71,10 +115,6 @@
     {
       "basename": "010s Linux",
       "path": "010s Linux.md"
-    },
-    {
-      "basename": "W46-2021",
-      "path": "002 Weeklys 📝/W46-2021.md"
     },
     {
       "basename": "Weekly Template",
@@ -105,14 +145,6 @@
       "path": "Templates 🗒️/Note Template.md"
     },
     {
-      "basename": "Project Template",
-      "path": "Templates 🗒️/Project Template.md"
-    },
-    {
-      "basename": "Daily Template",
-      "path": "Templates 🗒️/Daily Template.md"
-    },
-    {
       "basename": "To Do's - Misc",
       "path": "To Do's - Misc.md"
     },
@@ -123,10 +155,6 @@
     {
       "basename": "W43-2021",
       "path": "002 Weeklys 📝/W43-2021.md"
-    },
-    {
-      "basename": "Eisenhower Matrix ✅",
-      "path": "Templates 🗒️/Eisenhower Matrix ✅.md"
     },
     {
       "basename": "010s Linux",
@@ -171,34 +199,6 @@
     {
       "basename": "020s NEE3208 Signal Processing",
       "path": "020s NEE3208 Signal Processing.md"
-    },
-    {
-      "basename": "Atmel-42735-8-bit-AVR-Microcontroller-ATmega328-328P_Datasheet",
-      "path": "Victoria University/NEE3203(Embedded Systems)/Datasheets/Atmel-42735-8-bit-AVR-Microcontroller-ATmega328-328P_Datasheet.pdf"
-    },
-    {
-      "basename": "Laboratory 1",
-      "path": "Victoria University/NEE3208(Signal Processing)/Laboratory 1.md"
-    },
-    {
-      "basename": "000s INDEX",
-      "path": "000s INDEX.md"
-    },
-    {
-      "basename": "030s Turtlebot features",
-      "path": "030s Turtlebot features.md"
-    },
-    {
-      "basename": "Laboratory 5 - Report",
-      "path": "Victoria University/NEE3208(Signal Processing)/Laboratory 5 - Report.md"
-    },
-    {
-      "basename": "Pasted image 20211027100646",
-      "path": "Attachments 📎/Pasted image 20211027100646.png"
-    },
-    {
-      "basename": "Pasted image 20211026154407",
-      "path": "Attachments 📎/Pasted image 20211026154407.png"
     }
   ],
   "omittedPaths": [],

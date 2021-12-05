@@ -9,13 +9,15 @@
 
 configuration {
     font:                           "Noto Sans 16";
-    show-icons:                     true;
+    show-icons:                     false;
     icon-theme:                     "Beautyline";
     display-drun:                   "";
     drun-display-format:            "{name}";
     disable-history:                false;
     sidebar-mode:                   false;
 }
+
+@import "colors/doom-one.rasi"
 
 window {
     transparency:                   "real";
@@ -42,7 +44,7 @@ entry {
     background-color:               @background-alt;
     text-color:                     @foreground;
     placeholder-color:              @foreground;
-    expand:                         true;
+    expand:                         false;
     horizontal-align:               0;
     placeholder:                    "Search Applications";
     padding:                        -0.10% 0% 0% 0%;
@@ -63,7 +65,7 @@ inputbar {
 
 listview {
     background-color:               @background-alt;
-    columns:                        12;
+    columns:                        1;
     lines:                          2;
     spacing:                        0%;
     cycle:                          false;

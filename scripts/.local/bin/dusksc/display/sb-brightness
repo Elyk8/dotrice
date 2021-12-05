@@ -9,4 +9,4 @@ else
 	icon="🔅"
 fi
 
-echo "$icon$BNESS"
+echo "^C2^$icon$BNESS"

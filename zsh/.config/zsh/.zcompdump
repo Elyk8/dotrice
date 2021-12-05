@@ -932,7 +932,6 @@ _comps=(
 'pkginfo' '_pkginfo'
 'pkgrm' '_pkgrm'
 'pkill' '_pgrep'
-'playerctl' '_playerctl'
 'pldd' '_pids'
 'pmake' '_make'
 'pman' '_perl_modules'
@@ -962,6 +961,7 @@ _comps=(
 'print' '_print'
 'printenv' '_printenv'
 'printf' '_print'
+'profile-sync-daemon' '_psd'
 'prompt' '_prompt'
 'prove' '_prove'
 'prs' '_sccs'
@@ -977,6 +977,7 @@ _comps=(
 'ps2pdfwr' '_postscript'
 'ps2ps' '_postscript'
 'psbook' '_psutils'
+'psd' '_psd'
 'psed' '_sed'
 'psig' '_pids'
 'psmerge' '_psutils'
@@ -1639,7 +1640,7 @@ autoload -Uz _alacritty _archinstallscripts _bat _bluetoothctl _bootctl \
             _exa _hostnamectl _journalctl _kdeconnect _kernel-install \
             _lf _libinput _localectl _loginctl _machinectl \
             _mkinitcpio _mpv _networkctl _notmuch _nvme \
-            _pacman _paru _pass _playerctl _pulseaudio \
+            _pacman _paru _pass _psd _pulseaudio \
             _qpdf _resolvectl _rg _sd_hosts_or_user_at_host _sd_machines \
             _sd_outputmodes _sd_unit_files _systemctl _systemd _systemd-analyze \
             _systemd-delta _systemd-inhibit _systemd-nspawn _systemd-path _systemd-run \

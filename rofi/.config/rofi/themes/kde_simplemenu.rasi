@@ -7,16 +7,6 @@
  *
  */
 
-configuration {
-    font:                           "Sans 10";
-    show-icons:                     true;
-    icon-theme:                     "Beautyline";
-    display-drun:                   "🔎";
-    drun-display-format:            "{name}";
-    disable-history:                false;
-    sidebar-mode:                   false;
-}
-
 window {
     transparency:                   "real";
     background-color:               @background;

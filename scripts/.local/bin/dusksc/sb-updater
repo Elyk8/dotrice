@@ -13,6 +13,7 @@ sleep 0.5
 SETSTATUS="duskc --ignore-reply run_command setstatus"
 
 # Top bar
+$SETSTATUS 9 "$(sb-music)" &
 $SETSTATUS 1 "$(sb-keymode)" &
 killall pulseaudio-control; pulseaudio-control &
 $SETSTATUS 3 "$(sb-microphone)" &
@@ -21,7 +22,6 @@ $SETSTATUS 7 "$(rofi-bluetooth --status)" &
 $SETSTATUS 8 "$(sb-pacpackages)" &
 
 # Bottom bar
-$SETSTATUS 11 "$(sb-music)" &
 
 secs=0
 while true; do

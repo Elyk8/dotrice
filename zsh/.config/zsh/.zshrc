@@ -1,6 +1,4 @@
 #!/bin/sh
-alsi -n
-
 export ZDOTDIR=$HOME/.config/zsh
 
 HISTFILE=~/.cache/zsh-history

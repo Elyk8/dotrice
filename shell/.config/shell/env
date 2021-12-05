@@ -72,6 +72,11 @@ export _ZL_DATA="${XDG_DATA_HOME:-$HOME/.local/share}/z.lua"
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 export UNCRUSTIFY_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/uncrustify/uncrustify.cfg"
 
+# todo.txt
+export TODO_DIR="$HOME/.local/opt/share/todo"
+export TODO_FILE="$TODO_DIR/todo.txt"
+export DONE_FILE="$TODO_DIR/done.txt"
+
 # Default programs:
 export VISUAL="lvim"
 export EDITOR="lvim"

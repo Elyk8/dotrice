@@ -1,8 +1,8 @@
 {
-  "baseFontSize": 22,
+  "baseFontSize": 20,
   "translucency": false,
   "theme": "obsidian",
-  "cssTheme": "Obsidian Nord",
+  "cssTheme": "Tokyo Night",
   "baseFontSizeAction": true,
   "enabledCssSnippets": [
     "custom",

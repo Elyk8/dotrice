@@ -17,6 +17,8 @@ configuration {
     sidebar-mode:                   false;
 }
 
+@import "tokyonight.rasi"
+
 window {
     transparency:                   "real";
     background-color:               @background;
