@@ -8,7 +8,7 @@ configuration {
     sidebar-mode:                   false;
 }
 
-@import "colors/doom-one.rasi"
+@import "colors/darkplus.rasi"
 
 window {
     transparency:                   "real";

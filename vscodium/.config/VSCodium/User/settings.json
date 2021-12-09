@@ -1173,5 +1173,4 @@
   "editor.insertSpaces": false,
   "tabnine.experimentalAutoImports": true,
   "workbench.iconTheme": "material-icon-theme",
-  "workbench.colorTheme": "doom-one",
 }

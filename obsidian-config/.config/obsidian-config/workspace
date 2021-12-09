@@ -4,12 +4,13 @@
     "type": "split",
     "children": [
       {
-        "id": "80325dafa4ee3328",
+        "id": "2c3060c8003eb3c6",
         "type": "leaf",
         "state": {
-          "type": "kanban",
+          "type": "markdown",
           "state": {
-            "file": "031s Turtlebot Robot Project.md"
+            "file": "People Notes/Al Che.md",
+            "mode": "source"
           }
         }
       }
@@ -92,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "031s Turtlebot Robot Project.md",
+                "file": "People Notes/Al Che.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -109,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "031s Turtlebot Robot Project.md",
+                "file": "People Notes/Al Che.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -121,7 +122,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "031s Turtlebot Robot Project.md"
+                "file": "People Notes/Al Che.md"
               }
             }
           },
@@ -160,17 +161,17 @@
     "width": 300,
     "collapsed": true
   },
-  "active": "80325dafa4ee3328",
+  "active": "2c3060c8003eb3c6",
   "lastOpenFiles": [
-    "031s Turtlebot Robot Project.md",
-    "031s Justification Essay.md",
-    "031s Capstone Milestones.md",
-    "Victoria University/NEE4101(Research Proposal)/Literature Review.md",
-    "Object Detection System.md",
-    "Templates 🗒️/Kanban Template.md",
-    "Templates 🗒️/Eisenhower Matrix ✅.md",
-    "Templates 🗒️/Daily Template.md",
-    "Templates 🗒️/Cornell Notes.md",
-    "Templates 🗒️/Project Template.md"
+    "People Notes/Al Che.md",
+    "Frameworks/HORNIER Goals.md",
+    "Frameworks/My Laws.md",
+    "010s Linux.md",
+    "010s Courses.md",
+    "Quest to Growth/Socratic Questioning.md",
+    "People Notes/Untitled.md",
+    "000s INDEX.md",
+    "Victoria University/NEE4101(Research Proposal)/Literature Review/Fleeting Notes/Automated Guided Vehicle Using Robot Operating System.md",
+    "Templates 🗒️/Note Template.md"
   ]
 }

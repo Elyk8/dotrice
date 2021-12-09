@@ -1,15 +1,18 @@
 /* colors */
 
 * {
-  al:      #000000;
-  bg:      #1E1E1E;
-  se:      #1E1E1E;
-  fg:      #D8DEE9;
-  ac:      #29B8DB;
-  red:     #569CD6;
-  green:   #23D18B;
-  yellow:  #FDD835;
-  blue:    #29B8DB;
-  purple:  #BA68C8;
-  cyan:    #4DD0E1;
+  background:            #1E1E1Eff;
+  background-alt:        #00000000;
+  background-bar:        #3B4252FF;
+  foreground:            #D8DEE9FF;
+  accent:                #D546464d;
+  border:                #C586C0FF;
+  selected:              #3B4252ff;
+  red:                   #569CD6;
+  green:                 #23D18B;
+  yellow:                #FDD835;
+  blue:                  #29B8DB;
+  purple:                #BA68C8;
+  cyan:                  #4DD0E1;
 }
+

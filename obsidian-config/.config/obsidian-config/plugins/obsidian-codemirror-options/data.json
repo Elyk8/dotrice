@@ -26,8 +26,9 @@
   "renderMathPreview": true,
   "renderBanner": false,
   "renderEmbeds": false,
+  "renderEmoji": false,
   "renderTasks": false,
-  "showBacklinks": true,
+  "showBacklinks": false,
   "styleCheckBox": true,
   "allowedYamlKeys": "document-font-size",
   "tokenList": "em|strong|strikethrough|code|linkText|task|internalLink|highlight"

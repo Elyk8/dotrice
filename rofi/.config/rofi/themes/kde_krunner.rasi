@@ -8,7 +8,7 @@
  */
 
 
-@import "colors/doom-one.rasi"
+@import "colors/darkplus.rasi"
 
 window {
     transparency:                   "real";
@@ -20,7 +20,7 @@ window {
     width:                          38%;
     location:                       north;
     x-offset:                       0;
-    y-offset:                       33;
+    y-offset:                       30;
 }
 
 prompt {

@@ -8,7 +8,7 @@ configuration {
     sidebar-mode:                   false;
 }
 
-@import "tokyonight.rasi"
+@import "colors/tokyonight.rasi"
 
 /* -- Classical -- */
 * {

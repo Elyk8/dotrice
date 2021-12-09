@@ -11,7 +11,7 @@ export DESKTOP_SESSION=dusk
 if pacman -Qs libxft-bgra >/dev/null 2>&1; then
 	if [ -z "${DISPLAY}" ] && [ "$(tty)" = "/dev/tty1" ]; then
 		pidof -s Xorg &> /dev/null && exit 0
-		# sudo /usr/bin/prime-switch &> /dev/null
+		sudo /usr/bin/prime-switch &> /dev/null
 		exec startx "${XDG_CONFIG_HOME:-$HOME/.config}/x11/xinitrc" &> /dev/null
 	fi
 else

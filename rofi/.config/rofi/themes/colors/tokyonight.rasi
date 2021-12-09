@@ -5,8 +5,8 @@
   background-alt:        #00000000;
   background-bar:        #4E5173FF;
   foreground:            #A9B1D6FF;
-  accent:			           #32344A4d;
-  border:		             #61AFEFFF;
+  accent:                #32344A4d;
+  border:                #61AFEFFF;
   selected:              #4E5173ff;
 }
 

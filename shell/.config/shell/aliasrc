@@ -216,7 +216,7 @@ alias e="\$EDITOR"
 alias v="\$EDITOR"
 alias a='alias'
 alias lf='lfcd'
-alias f='fzm'
+alias t='taskell'
 
 se() { find -L ~/.config/* -type d -name "BraveSoftware" -prune -o -name "discord" -prune -o -type f -print | fzf | xargs -r "$EDITOR"; }
 sr() { find -L ~/.local/bin/* -type f | fzf | xargs -r "$EDITOR"; }

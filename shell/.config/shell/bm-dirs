@@ -1,0 +1,20 @@
+# You can add comments to these files with #
+fdcap      $HOME/vic/y4/capstone
+fdcf       $HOME/.config
+fdcurr     $HOME/vic/current
+fddusk     $HOME/.local/src/dusk
+fdint      $HOME/.local/src/interception-k2k
+fdkey      $HOME/.local/src/shotkey
+fdlf       $HOME/.config/lf
+fdlvc      $HOME/.config/lvim
+fdrofi     $HOME/.config/rofi
+fdsc       $HOME/.local/bin/scripts
+fdst       $HOME/.local/src/st
+fdstf      $HOME/.local/src/st-flexipatch
+fdsh       $HOME/.config/shell
+fdrr       $HOME/.local/src
+fdx        $HOME/.config/x11
+fdy2       $HOME/vic/y2
+fdy3       $HOME/vic/y3
+fdy4       $HOME/vic/y4
+fdz        $ZDOTDIR
