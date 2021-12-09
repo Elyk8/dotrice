@@ -49,7 +49,6 @@ source "$ZDOTDIR/zsh-functions"
 zsh_add_file "zsh-vim-mode"
 zsh_add_file "zsh-chpwd"
 zsh_add_file "zsh-prompt"
-zsh_add_file "zsh-kanban"
 
 # Plugins
 zsh_add_plugin "zsh-users/zsh-autosuggestions"
