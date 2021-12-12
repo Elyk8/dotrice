@@ -3505,6 +3505,7 @@ var require_StatusSummary = __commonJS({
         this.behind = 0;
         this.current = null;
         this.tracking = null;
+        this.detached = false;
       }
       isClean() {
         return !this.files.length;
@@ -3580,6 +3581,7 @@ var require_StatusSummary = __commonJS({
         result.tracking = regexResult && regexResult[1];
         regexResult = onEmptyBranchReg.exec(line);
         result.current = regexResult && regexResult[1] || result.current;
+        result.detached = /\(no branch\)/.test(line);
       }]
     ]);
     var parseStatusSummary = function(text2) {
@@ -6438,7 +6440,7 @@ var ObsidianGitSettingsTab = class extends import_obsidian.PluginSettingTab {
     const plugin = this.plugin;
     containerEl.empty();
     containerEl.createEl("h2", { text: "Git Backup settings" });
-    new import_obsidian.Setting(containerEl).setName("Vault backup interval (minutes)").setDesc("Commit and push changes every X minutes. To disable automatic backup, specify negative value or zero (default)").addText((text2) => text2.setValue(String(plugin.settings.autoSaveInterval)).onChange((value) => {
+    new import_obsidian.Setting(containerEl).setName("Vault backup interval (minutes)").setDesc("Commit and push changes every X minutes. (See below setting for further configuration!) To disable automatic backup, specify negative value or zero (default)").addText((text2) => text2.setValue(String(plugin.settings.autoSaveInterval)).onChange((value) => {
       if (!isNaN(Number(value))) {
         plugin.settings.autoSaveInterval = Number(value);
         plugin.saveSettings();
@@ -6446,11 +6448,19 @@ var ObsidianGitSettingsTab = class extends import_obsidian.PluginSettingTab {
           plugin.clearAutoBackup();
           plugin.startAutoBackup(plugin.settings.autoSaveInterval);
           new import_obsidian.Notice(`Automatic backup enabled! Every ${plugin.settings.autoSaveInterval} minutes.`);
-        } else if (plugin.settings.autoSaveInterval <= 0 && plugin.timeoutIDBackup) {
+        } else if (plugin.settings.autoSaveInterval <= 0) {
           plugin.clearAutoBackup() && new import_obsidian.Notice("Automatic backup disabled!");
         }
       } else {
         new import_obsidian.Notice("Please specify a valid number.");
+      }
+    }));
+    new import_obsidian.Setting(containerEl).setName("If turned on, do auto backup every X minutes after last change. Prevents auto backup while editing a file. If turned off, do auto backup every X minutes. It's independent from last change.").addToggle((toggle) => toggle.setValue(plugin.settings.autoBackupAfterFileChange).onChange((value) => {
+      plugin.settings.autoBackupAfterFileChange = value;
+      plugin.saveSettings();
+      plugin.clearAutoBackup();
+      if (plugin.settings.autoSaveInterval > 0) {
+        plugin.startAutoBackup(plugin.settings.autoSaveInterval);
       }
     }));
     new import_obsidian.Setting(containerEl).setName("Auto pull interval (minutes)").setDesc("Pull changes every X minutes. To disable automatic pull, specify negative value or zero (default)").addText((text2) => text2.setValue(String(plugin.settings.autoPullInterval)).onChange((value) => {
@@ -6461,20 +6471,23 @@ var ObsidianGitSettingsTab = class extends import_obsidian.PluginSettingTab {
           plugin.clearAutoPull();
           plugin.startAutoPull(plugin.settings.autoPullInterval);
           new import_obsidian.Notice(`Automatic pull enabled! Every ${plugin.settings.autoPullInterval} minutes.`);
-        } else if (plugin.settings.autoPullInterval <= 0 && plugin.timeoutIDPull) {
+        } else if (plugin.settings.autoPullInterval <= 0) {
           plugin.clearAutoPull() && new import_obsidian.Notice("Automatic pull disabled!");
         }
       } else {
         new import_obsidian.Notice("Please specify a valid number.");
       }
     }));
-    new import_obsidian.Setting(containerEl).setName("Commit message").setDesc("Specify custom commit message. Available placeholders: {{date}} (see below) and {{numFiles}} (number of changed files in the commit)").addText((text2) => text2.setPlaceholder("vault backup").setValue(plugin.settings.commitMessage ? plugin.settings.commitMessage : "").onChange((value) => {
+    new import_obsidian.Setting(containerEl).setName("Commit message").setDesc("Specify custom commit message. Available placeholders: {{date}} (see below), {{hostname}} (see below) and {{numFiles}} (number of changed files in the commit)").addText((text2) => text2.setPlaceholder("vault backup").setValue(plugin.settings.commitMessage ? plugin.settings.commitMessage : "").onChange((value) => {
       plugin.settings.commitMessage = value;
       plugin.saveSettings();
     }));
     new import_obsidian.Setting(containerEl).setName("{{date}} placeholder format").setDesc('Specify custom date format. E.g. "YYYY-MM-DD HH:mm:ss"').addText((text2) => text2.setPlaceholder(plugin.settings.commitDateFormat).setValue(plugin.settings.commitDateFormat).onChange((value) => __async(this, null, function* () {
       plugin.settings.commitDateFormat = value;
       yield plugin.saveSettings();
+    })));
+    new import_obsidian.Setting(containerEl).setName("{{hostname}} placeholder replacement").setDesc("Specify custom hostname for every device.").addText((text2) => text2.setValue(localStorage.getItem(plugin.manifest.id + ":hostname")).onChange((value) => __async(this, null, function* () {
+      localStorage.setItem(plugin.manifest.id + ":hostname", value);
     })));
     new import_obsidian.Setting(containerEl).setName("Preview commit message").addButton((button) => button.setButtonText("Preview").onClick(() => __async(this, null, function* () {
       let commitMessagePreview = yield plugin.gitManager.formatCommitMessage();
@@ -6528,8 +6541,8 @@ var ObsidianGitSettingsTab = class extends import_obsidian.PluginSettingTab {
       cb.setPlaceholder("git");
       cb.onChange((value) => {
         plugin.settings.gitPath = value;
-        plugin.gitManager.updateGitPath(value || "git");
         plugin.saveSettings();
+        plugin.gitManager.updateGitPath(value || "git");
       });
     });
   }
@@ -6700,7 +6713,8 @@ var DEFAULT_SETTINGS = {
   showStatusBar: true,
   updateSubmodules: false,
   gitPath: "",
-  customMessageOnAutoBackup: false
+  customMessageOnAutoBackup: false,
+  autoBackupAfterFileChange: false
 };
 var VIEW_CONFIG = {
   type: "git-view",
@@ -6727,6 +6741,10 @@ var GitManager = class {
         status = yield this.status();
         let numFiles = status.staged.length;
         template = template.replace("{{numFiles}}", String(numFiles));
+      }
+      if (template.includes("{{hostname}}")) {
+        const hostname = localStorage.getItem(this.plugin.manifest.id + ":hostname") || "";
+        template = template.replace("{{hostname}}", hostname);
       }
       if (template.includes("{{files}}")) {
         status = status != null ? status : yield this.status();
@@ -6759,12 +6777,16 @@ var GitManager = class {
 var SimpleGit = class extends GitManager {
   constructor(plugin) {
     super(plugin);
-    const adapter = this.app.vault.adapter;
-    const path3 = adapter.getBasePath();
+    this.setGitInstance();
+  }
+  setGitInstance() {
     if (this.isGitInstalled()) {
+      const adapter = this.app.vault.adapter;
+      const path3 = adapter.getBasePath();
       this.git = (0, simple.default)({
         baseDir: path3,
-        binary: this.plugin.settings.gitPath || void 0
+        binary: this.plugin.settings.gitPath || void 0,
+        config: ["core.quotepath=off"]
       });
     }
   }
@@ -7003,10 +7025,10 @@ var SimpleGit = class extends GitManager {
     });
   }
   updateGitPath(gitPath) {
-    return this.git.customBinary(gitPath);
+    this.setGitInstance();
   }
   isGitInstalled() {
-    const command = (0, import_child_process.spawnSync)("git", ["--version"], {
+    const command = (0, import_child_process.spawnSync)(this.plugin.settings.gitPath || "git", ["--version"], {
       stdio: "ignore"
     });
     if (command.error) {
@@ -7052,32 +7074,22 @@ function createNewMDNote(app, newName, currFilePath = "") {
   });
 }
 var addMD = (noteName) => {
-  let withMD = noteName.slice();
-  if (!withMD.endsWith(".md")) {
-    withMD += ".md";
-  }
-  return withMD;
-};
-var stripMD = (noteName) => {
-  if (noteName.endsWith(".md")) {
-    return noteName.split(".md").slice(0, -1).join(".md");
-  } else
-    return noteName;
+  return noteName.endsWith(".md") ? noteName : noteName + ".md";
 };
 function openOrSwitch(_0, _1, _2) {
   return __async(this, arguments, function* (app, dest, event, options = { createNewFile: true }) {
     const { workspace } = app;
-    const destStripped = stripMD(dest);
-    let destFile = app.metadataCache.getFirstLinkpathDest(destStripped, "");
+    let destFile = app.metadataCache.getFirstLinkpathDest(dest, "");
     if (!destFile && options.createNewFile) {
-      destFile = yield createNewMDNote(app, destStripped);
-    } else if (!destFile && options.createNewFile)
+      destFile = yield createNewMDNote(app, dest);
+    } else if (!destFile && !options.createNewFile)
       return;
     const leavesWithDestAlreadyOpen = [];
     workspace.iterateAllLeaves((leaf) => {
-      var _a, _b;
+      var _a;
       if (leaf.view instanceof import_obsidian4.MarkdownView) {
-        if (((_b = (_a = leaf.view) === null || _a === void 0 ? void 0 : _a.file) === null || _b === void 0 ? void 0 : _b.basename) === destStripped) {
+        const file = (_a = leaf.view) === null || _a === void 0 ? void 0 : _a.file;
+        if (file && file.basename + "." + file.extension === dest) {
           leavesWithDestAlreadyOpen.push(leaf);
         }
       }
@@ -9140,8 +9152,8 @@ var ObsidianGit = class extends import_obsidian11.Plugin {
     return __async(this, null, function* () {
       this.app.workspace.unregisterHoverLinkSource(VIEW_CONFIG.type);
       this.app.workspace.detachLeavesOfType(VIEW_CONFIG.type);
-      window.clearTimeout(this.timeoutIDBackup);
-      window.clearTimeout(this.timeoutIDPull);
+      this.clearAutoPull();
+      this.clearAutoBackup();
       console.log("unloading " + this.manifest.name + " plugin");
     });
   }
@@ -9344,12 +9356,23 @@ var ObsidianGit = class extends import_obsidian11.Plugin {
     });
   }
   startAutoBackup(minutes) {
-    this.timeoutIDBackup = window.setTimeout(() => {
-      this.promiseQueue.addTask(() => this.createBackup(true));
-      this.saveLastAuto(new Date(), "backup");
-      this.saveSettings();
-      this.startAutoBackup();
-    }, (minutes != null ? minutes : this.settings.autoSaveInterval) * 6e4);
+    const time = (minutes != null ? minutes : this.settings.autoSaveInterval) * 6e4;
+    if (this.settings.autoBackupAfterFileChange) {
+      if (minutes === 0) {
+        this.doAutoBackup();
+      } else {
+        this.onFileModifyEventRef = this.app.vault.on("modify", () => this.autoBackupDebouncer());
+        this.autoBackupDebouncer = (0, import_obsidian11.debounce)(() => this.doAutoBackup(), time, true);
+      }
+    } else {
+      this.timeoutIDBackup = window.setTimeout(() => this.doAutoBackup(), time);
+    }
+  }
+  doAutoBackup() {
+    this.promiseQueue.addTask(() => this.createBackup(true));
+    this.saveLastAuto(new Date(), "backup");
+    this.saveSettings();
+    this.startAutoBackup();
   }
   startAutoPull(minutes) {
     this.timeoutIDPull = window.setTimeout(() => {
@@ -9360,15 +9383,25 @@ var ObsidianGit = class extends import_obsidian11.Plugin {
     }, (minutes != null ? minutes : this.settings.autoPullInterval) * 6e4);
   }
   clearAutoBackup() {
+    var _a;
+    let wasActive = false;
     if (this.timeoutIDBackup) {
       window.clearTimeout(this.timeoutIDBackup);
-      return true;
+      this.timeoutIDBackup = void 0;
+      wasActive = true;
     }
-    return false;
+    if (this.onFileModifyEventRef) {
+      (_a = this.autoBackupDebouncer) == null ? void 0 : _a.cancel();
+      this.app.vault.offref(this.onFileModifyEventRef);
+      this.onFileModifyEventRef = void 0;
+      wasActive = true;
+    }
+    return wasActive;
   }
   clearAutoPull() {
     if (this.timeoutIDPull) {
       window.clearTimeout(this.timeoutIDPull);
+      this.timeoutIDPull = void 0;
       return true;
     }
     return false;

@@ -7,10 +7,9 @@
         "id": "2c3060c8003eb3c6",
         "type": "leaf",
         "state": {
-          "type": "markdown",
+          "type": "kanban",
           "state": {
-            "file": "People Notes/Al Che.md",
-            "mode": "source"
+            "file": "022s Turtlebot Robot Project.md"
           }
         }
       }
@@ -31,7 +30,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#td",
+                "query": "tag:#project",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -63,14 +62,6 @@
               "type": "recent-files",
               "state": {}
             }
-          },
-          {
-            "id": "bc3c914ad17307e6",
-            "type": "leaf",
-            "state": {
-              "type": "file-tree-view",
-              "state": {}
-            }
           }
         ],
         "currentTab": 2
@@ -93,7 +84,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "People Notes/Al Che.md",
+                "file": "022s Turtlebot Robot Project.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +101,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "People Notes/Al Che.md",
+                "file": "022s Turtlebot Robot Project.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -122,7 +113,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "People Notes/Al Che.md"
+                "file": "022s Turtlebot Robot Project.md"
               }
             }
           },
@@ -154,24 +145,23 @@
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 5
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 205.94332885742188
   },
   "active": "2c3060c8003eb3c6",
   "lastOpenFiles": [
-    "People Notes/Al Che.md",
-    "Frameworks/HORNIER Goals.md",
+    "022s Turtlebot Robot Project.md",
+    "022s Warehouse robot design.md",
+    "To Do's.md",
+    "002 Weeklys 📝/W46-2021.md",
     "Frameworks/My Laws.md",
-    "010s Linux.md",
-    "010s Courses.md",
+    "Frameworks/HORNIER Goals.md",
+    "People Notes/Al Che.md",
     "Quest to Growth/Socratic Questioning.md",
-    "People Notes/Untitled.md",
-    "000s INDEX.md",
-    "Victoria University/NEE4101(Research Proposal)/Literature Review/Fleeting Notes/Automated Guided Vehicle Using Robot Operating System.md",
-    "Templates 🗒️/Note Template.md"
+    "Templates 🗒️/Weekly Template.md",
+    "Templates 🗒️/Cornell Notes.md"
   ]
 }
