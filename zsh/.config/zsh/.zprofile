@@ -6,7 +6,8 @@ export QT_QPA_PLATFORMTHEME="qt5ct"
 #export GDK_SCALE=1
 #export GDK_DPI_SCALE=1
 
-export DESKTOP_SESSION=dusk
+# export DESKTOP_SESSION=dusk
+# export XDG_SESSION_TYPE=x11
 
 if pacman -Qs libxft-bgra >/dev/null 2>&1; then
 	if [ -z "${DISPLAY}" ] && [ "$(tty)" = "/dev/tty1" ]; then

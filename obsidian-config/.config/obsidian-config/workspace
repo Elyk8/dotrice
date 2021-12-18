@@ -1,15 +1,16 @@
 {
   "main": {
-    "id": "a4eaad72d05befaf",
+    "id": "c63df8be1a5a7ffd",
     "type": "split",
     "children": [
       {
-        "id": "2c3060c8003eb3c6",
+        "id": "bd9cefe734a7a652",
         "type": "leaf",
         "state": {
-          "type": "kanban",
+          "type": "markdown",
           "state": {
-            "file": "022s Turtlebot Robot Project.md"
+            "file": "_Home.md",
+            "mode": "preview"
           }
         }
       }
@@ -68,7 +69,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 268.00468826293945
+    "width": 268.00468826293945,
+    "collapsed": true
   },
   "right": {
     "id": "1c064167f54edd19",
@@ -84,7 +86,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "022s Turtlebot Robot Project.md",
+                "file": "_Home.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -101,7 +103,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "022s Turtlebot Robot Project.md",
+                "file": "_Home.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -113,7 +115,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "022s Turtlebot Robot Project.md"
+                "file": "_Home.md"
               }
             }
           },
@@ -137,10 +139,10 @@
             }
           },
           {
-            "id": "7cd4d91dcb582147",
+            "id": "653bd66c3b1af4cc",
             "type": "leaf",
             "state": {
-              "type": "reminder-list",
+              "type": "advanced-tables-toolbar",
               "state": {}
             }
           }
@@ -149,19 +151,20 @@
       }
     ],
     "direction": "horizontal",
-    "width": 205.94332885742188
+    "width": 205.94332885742188,
+    "collapsed": true
   },
-  "active": "2c3060c8003eb3c6",
+  "active": "bd9cefe734a7a652",
   "lastOpenFiles": [
-    "022s Turtlebot Robot Project.md",
-    "022s Warehouse robot design.md",
-    "To Do's.md",
-    "002 Weeklys 📝/W46-2021.md",
-    "Frameworks/My Laws.md",
-    "Frameworks/HORNIER Goals.md",
-    "People Notes/Al Che.md",
-    "Quest to Growth/Socratic Questioning.md",
-    "Templates 🗒️/Weekly Template.md",
-    "Templates 🗒️/Cornell Notes.md"
+    "_Home.md",
+    "Capstone Project.md",
+    "14-12-2021 - Capstone Meeting.md",
+    "TODOs.md",
+    "Templates/Cornell Notes.md",
+    "_Inbox/Ricing.md",
+    "_Inbox/Notes.md",
+    "_Inbox/Applications.md",
+    "My Laws.md",
+    "System Design.md"
   ]
 }

@@ -77,7 +77,7 @@
   "templater-obsidian:insert-templater": [
     {
       "modifiers": [
-        "Alt"
+        "Mod"
       ],
       "key": "D"
     }
@@ -96,24 +96,6 @@
         "Alt"
       ],
       "key": "S"
-    }
-  ],
-  "app:go-back": [
-    {
-      "modifiers": [
-        "Alt",
-        "Mod"
-      ],
-      "key": "H"
-    }
-  ],
-  "app:go-forward": [
-    {
-      "modifiers": [
-        "Alt",
-        "Mod"
-      ],
-      "key": "L"
     }
   ],
   "markdown-prettifier:markdown-prettifier-run": [
@@ -159,14 +141,6 @@
       "key": "Z"
     }
   ],
-  "leader-hotkeys-obsidian:leader": [
-    {
-      "modifiers": [
-        "Mod"
-      ],
-      "key": "E"
-    }
-  ],
   "editor:focus-left": [
     {
       "modifiers": [
@@ -202,27 +176,10 @@
   "workspace:split-vertical": [
     {
       "modifiers": [
-        "Alt",
+        "Mod",
         "Shift"
       ],
       "key": "V"
-    }
-  ],
-  "workspace:split-horizontal": [
-    {
-      "modifiers": [
-        "Alt",
-        "Shift"
-      ],
-      "key": "H"
-    }
-  ],
-  "markdown:toggle-preview": [
-    {
-      "modifiers": [
-        "Alt"
-      ],
-      "key": " "
     }
   ],
   "obsidian-excalidraw-plugin:excalidraw-autocreate-and-embed-on-current": [
@@ -239,6 +196,56 @@
         "Mod"
       ],
       "key": "T"
+    }
+  ],
+  "ghost-fade-focus:toggle-plugin": [
+    {
+      "modifiers": [
+        "Alt"
+      ],
+      "key": "G"
+    }
+  ],
+  "leader-hotkeys-obsidian:leader": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": " "
+    }
+  ],
+  "markdown:toggle-preview": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": " "
+    }
+  ],
+  "editor:delete-paragraph": [],
+  "workspace:split-horizontal": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "H"
+    }
+  ],
+  "app:go-back": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "O"
+    }
+  ],
+  "app:go-forward": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "P"
     }
   ]
 }

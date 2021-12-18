@@ -79,7 +79,7 @@ mainbox {
 
 listview {
     lines:                          10;
-    columns:                        2;
+    columns:                        1;
     fixed-height:                   0;
     border:                         0px;
     border-color:                   @accent;

@@ -4,7 +4,7 @@ icon="🎶"
 pidof -x sb-musicup >/dev/null 2>&1 || sb-musicup >/dev/null 2>&1 &
 
 mpc | grep -q "\[paused\]" && icon="⏸"
-currentSong="$(mpc -f "%title% - %Artist%" current)"
+currentSong="$(mpc -f "%title%" current | cut -c -30)"
 vol="$(mpc volume | grep -o '[0-9]\+%')"
 
 if [ "$vol" -gt "70" ]; then

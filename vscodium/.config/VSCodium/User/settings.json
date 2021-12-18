@@ -4,6 +4,7 @@
   "whichkey.sortOrder": "alphabetically",
   "whichkey.delay": 0,
   "whichkey.bindings": [
+
     {
       "key": ";",
       "name": "commands",
@@ -14,7 +15,8 @@
       "key": "/",
       "name": "comment",
       "type": "command",
-      "command": "vscode-neovim.send",
+      "command": "editor.action.commentLine",
+      "when": "vim.mode == 'Normal' || vim.mode == 'Visual'",
       "args": "<C-/>"
     },
     {

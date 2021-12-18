@@ -49,7 +49,6 @@ alias merge="xrdb -merge ~/.Xresources"
 
 # Aliases for software managment
 # pacman or pm
-alias pacman='sudo pacman'
 alias pac='sudo pacman -S'
 alias pm='sudo pacman'
 alias pmr='sudo pacman -Rns'
@@ -103,11 +102,11 @@ alias mirrorxx="sudo reflector --age 6 --latest 20  --fastest 20 --threads 20 --
 alias ram='rate-mirrors --allow-root arch | sudo tee /etc/pacman.d/mirrorlist'
 
 # Youtube downloader
-alias yta-aac="yt-dlp --extract-audio --audio-format aac "
-alias yta-best="yt-dlp --extract-audio --audio-format best "
-alias yta-flac="yt-dlp --extract-audio --audio-format flac "
-alias yta-mp3="yt-dlp --extract-audio --audio-format mp3 "
-alias ytv-best="yt-dlp -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --merge-output-format mp4 "
+alias yta-aac="yt-dlp --embed-metadata --extract-audio --audio-format aac "
+alias yta-best="yt-dlp --embed-metadata --extract-audio --audio-format best "
+alias yta-flac="yt-dlp --embed-metadata --extract-audio --audio-format flac "
+alias yta-mp3="yt-dlp --embed-metadata --extract-audio --audio-format mp3 "
+alias ytv-best="yt-dlp --embed-metadata -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio' --merge-output-format mp4 "
 
 # Recent Installed Packages
 alias rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"

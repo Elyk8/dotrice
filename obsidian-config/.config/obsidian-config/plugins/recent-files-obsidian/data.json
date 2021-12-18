@@ -1,20 +1,104 @@
 {
   "recentFiles": [
     {
-      "basename": "022s Turtlebot Robot Project",
-      "path": "022s Turtlebot Robot Project.md"
+      "basename": "_Home",
+      "path": "_Home.md"
     },
     {
-      "basename": "022s Warehouse robot design",
-      "path": "022s Warehouse robot design.md"
+      "basename": "Capstone Project",
+      "path": "Capstone Project.md"
     },
     {
-      "basename": "To Do's",
-      "path": "To Do's.md"
+      "basename": "14-12-2021 - Capstone Meeting",
+      "path": "14-12-2021 - Capstone Meeting.md"
     },
     {
-      "basename": "W46-2021",
-      "path": "002 Weeklys 📝/W46-2021.md"
+      "basename": "Cornell Notes",
+      "path": "Templates/Cornell Notes.md"
+    },
+    {
+      "basename": "Ricing",
+      "path": "_Inbox/Ricing.md"
+    },
+    {
+      "basename": "Notes",
+      "path": "_Inbox/Notes.md"
+    },
+    {
+      "basename": "Applications",
+      "path": "_Inbox/Applications.md"
+    },
+    {
+      "basename": "My Laws",
+      "path": "My Laws.md"
+    },
+    {
+      "basename": "System Design",
+      "path": "System Design.md"
+    },
+    {
+      "basename": "Mobile robot burger",
+      "path": "Mobile robot burger.md"
+    },
+    {
+      "basename": "Project Requirements",
+      "path": "Project Requirements.md"
+    },
+    {
+      "basename": "Linux",
+      "path": "Linux.md"
+    },
+    {
+      "basename": "Socratic Questioning",
+      "path": "Socratic Questioning.md"
+    },
+    {
+      "basename": "Al Che",
+      "path": "Al Che.md"
+    },
+    {
+      "basename": "Note Template",
+      "path": "Templates/Note Template.md"
+    },
+    {
+      "basename": "Literature Review",
+      "path": "Literature Review.md"
+    },
+    {
+      "basename": "Eisenhower Matrix",
+      "path": "Templates/Eisenhower Matrix.md"
+    },
+    {
+      "basename": "Index Template",
+      "path": "Templates/Index Template.md"
+    },
+    {
+      "basename": "Laboratory 2 - Report",
+      "path": "Victoria University/NEE3208(Signal Processing)/Laboratory 2 - Report.md"
+    },
+    {
+      "basename": "020s NEE3208 Signal Processing",
+      "path": "020s NEE3208 Signal Processing.md"
+    },
+    {
+      "basename": "020s NEE3203 Embedded Systems",
+      "path": "020s NEE3203 Embedded Systems.md"
+    },
+    {
+      "basename": "To Do's - Eisenhower",
+      "path": "To Do's - Eisenhower.md"
+    },
+    {
+      "basename": "To Do's - Misc",
+      "path": "To Do's - Misc.md"
+    },
+    {
+      "basename": "010s Courses",
+      "path": "010s Courses.md"
+    },
+    {
+      "basename": "Socratic Questioning",
+      "path": "Quest to Growth/Socratic Questioning.md"
     },
     {
       "basename": "My Laws",
@@ -25,44 +109,68 @@
       "path": "Frameworks/HORNIER Goals.md"
     },
     {
-      "basename": "Al Che",
-      "path": "People Notes/Al Che.md"
+      "basename": "010s Linux",
+      "path": "010s Linux.md"
     },
     {
-      "basename": "Socratic Questioning",
-      "path": "Quest to Growth/Socratic Questioning.md"
+      "basename": "000s INDEX",
+      "path": "000s INDEX.md"
     },
     {
-      "basename": "Weekly Template",
-      "path": "Templates 🗒️/Weekly Template.md"
+      "basename": "022s Warehouse robot design",
+      "path": "022s Warehouse robot design.md"
     },
     {
-      "basename": "Cornell Notes",
-      "path": "Templates 🗒️/Cornell Notes.md"
+      "basename": "021s Turtlebot features",
+      "path": "021s Turtlebot features.md"
     },
     {
-      "basename": "Daily Template",
-      "path": "Templates 🗒️/Daily Template.md"
-    },
-    {
-      "basename": "Eisenhower Matrix ✅",
-      "path": "Templates 🗒️/Eisenhower Matrix ✅.md"
-    },
-    {
-      "basename": "Kanban Template",
-      "path": "Templates 🗒️/Kanban Template.md"
+      "basename": "020s NEE4101 Capstone",
+      "path": "020s NEE4101 Capstone.md"
     },
     {
       "basename": "Literature Review",
       "path": "Victoria University/NEE4101(Research Proposal)/Literature Review.md"
     },
     {
-      "basename": "Project Template",
-      "path": "Templates 🗒️/Project Template.md"
+      "basename": "Project Requirements",
+      "path": "Victoria University/NEE4101(Research Proposal)/Project Requirements.md"
     },
     {
-      "basename": "020s NEE4101 Capstone",
-      "path": "020s NEE4101 Capstone.md"
+      "basename": "010s Projects",
+      "path": "010s Projects.md"
+    },
+    {
+      "basename": "Al Che",
+      "path": "People Notes/Al Che.md"
+    },
+    {
+      "basename": "021s Justification Essay",
+      "path": "021s Justification Essay.md"
+    },
+    {
+      "basename": "022s Turtlebot Robot Project",
+      "path": "022s Turtlebot Robot Project.md"
+    },
+    {
+      "basename": "W46-2021",
+      "path": "002 Weeklys 📝/W46-2021.md"
+    },
+    {
+      "basename": "Weekly Template",
+      "path": "Templates/Weekly Template.md"
+    },
+    {
+      "basename": "Daily Template",
+      "path": "Templates 🗒️/Daily Template.md"
+    },
+    {
+      "basename": "Kanban Template",
+      "path": "Templates/Kanban Template.md"
+    },
+    {
+      "basename": "Project Template",
+      "path": "Templates/Project Template.md"
     },
     {
       "basename": "W43-2021",
@@ -73,32 +181,8 @@
       "path": "002 Weeklys 📝/W42-2021.md"
     },
     {
-      "basename": "To Do's - Eisenhower",
-      "path": "To Do's - Eisenhower.md"
-    },
-    {
-      "basename": "Laboratory 2 - Report",
-      "path": "Victoria University/NEE3208(Signal Processing)/Laboratory 2 - Report.md"
-    },
-    {
-      "basename": "010s Linux",
-      "path": "010s Linux.md"
-    },
-    {
-      "basename": "010s Courses",
-      "path": "010s Courses.md"
-    },
-    {
-      "basename": "000s INDEX",
-      "path": "000s INDEX.md"
-    },
-    {
       "basename": "Automated Guided Vehicle Using Robot Operating System",
       "path": "Victoria University/NEE4101(Research Proposal)/Literature Review/Fleeting Notes/Automated Guided Vehicle Using Robot Operating System.md"
-    },
-    {
-      "basename": "Note Template",
-      "path": "Templates 🗒️/Note Template.md"
     },
     {
       "basename": "Advanced Medical Robotic Nursing Assistant",
@@ -111,94 +195,6 @@
     {
       "basename": "Design Proposal",
       "path": "Victoria University/NEE4101(Research Proposal)/Design Proposal.md"
-    },
-    {
-      "basename": "021s Justification Essay",
-      "path": "021s Justification Essay.md"
-    },
-    {
-      "basename": "021s Turtlebot features",
-      "path": "021s Turtlebot features.md"
-    },
-    {
-      "basename": "MOC Template",
-      "path": "Templates 🗒️/MOC Template.md"
-    },
-    {
-      "basename": "Meeting Agenda Template",
-      "path": "Templates 🗒️/Meeting Agenda Template.md"
-    },
-    {
-      "basename": "020s NEE3208 Signal Processing",
-      "path": "020s NEE3208 Signal Processing.md"
-    },
-    {
-      "basename": "020s NEE3203 Embedded Systems",
-      "path": "020s NEE3203 Embedded Systems.md"
-    },
-    {
-      "basename": "010s Projects",
-      "path": "010s Projects.md"
-    },
-    {
-      "basename": "An_advanced_medical_robotic_system_augmenting_healthcare_capabilities_-_robotic_nursing_assistant",
-      "path": "Victoria University/NEE4101(Research Proposal)/Literature Review/Articles/An_advanced_medical_robotic_system_augmenting_healthcare_capabilities_-_robotic_nursing_assistant.pdf"
-    },
-    {
-      "basename": "5 - 21-11-03",
-      "path": "Victoria University/NEE4101(Research Proposal)/Meetings with Supervisor/5 - 21-11-03.md"
-    },
-    {
-      "basename": "1 - 21-09-15",
-      "path": "Victoria University/NEE4101(Research Proposal)/Meetings with Supervisor/1 - 21-09-15.md"
-    },
-    {
-      "basename": "Literature Review",
-      "path": "Victoria University/NEE4101(Research Proposal)/Literature Review/Literature Review.md"
-    },
-    {
-      "basename": "3 - 21-09-06",
-      "path": "Victoria University/NEE4101(Research Proposal)/Meetings with Supervisor/3 - 21-09-06.md"
-    },
-    {
-      "basename": "4 - 21-10-20",
-      "path": "Victoria University/NEE4101(Research Proposal)/Meetings with Supervisor/4 - 21-10-20.md"
-    },
-    {
-      "basename": "Meetings with Supervisor",
-      "path": "Victoria University/NEE4101(Research Proposal)/Meetings with Supervisor/Meetings with Supervisor.md"
-    },
-    {
-      "basename": "Project Sponsor",
-      "path": "Victoria University/NEE4101(Research Proposal)/Project Sponsor.md"
-    },
-    {
-      "basename": "Project Requirements",
-      "path": "Victoria University/NEE4101(Research Proposal)/Project Requirements.md"
-    },
-    {
-      "basename": "2 - 21-09-29",
-      "path": "Victoria University/NEE4101(Research Proposal)/Meetings with Supervisor/2 - 21-09-29.md"
-    },
-    {
-      "basename": "Arduino Embedded System",
-      "path": "Victoria University/NEE3203(Embedded Systems)/Arduino Embedded System.md"
-    },
-    {
-      "basename": "Workshop 3",
-      "path": "Victoria University/NEE3203(Embedded Systems)/Workshop 3.md"
-    },
-    {
-      "basename": "Drawing 2021-11-06 20.53.36.excalidraw",
-      "path": "Excalidraw/Drawing 2021-11-06 20.53.36.excalidraw.md"
-    },
-    {
-      "basename": "To Do's - Misc",
-      "path": "To Do's - Misc.md"
-    },
-    {
-      "basename": "Weekly Template_2021-11-15 19.58.31.excalidraw",
-      "path": "Attachments 📎/Weekly Template_2021-11-15 19.58.31.excalidraw.md"
     }
   ],
   "omittedPaths": [],

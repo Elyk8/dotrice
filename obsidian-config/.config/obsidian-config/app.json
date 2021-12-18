@@ -18,7 +18,7 @@
     "margin": "0",
     "downscalePercent": 100
   },
-  "defaultViewMode": "preview",
+  "defaultViewMode": "source",
   "useMarkdownLinks": false,
   "trashOption": "local"
 }

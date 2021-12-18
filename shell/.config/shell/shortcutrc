@@ -20,6 +20,7 @@ fdy4="cd /home/elyk/vic/y4" \
 fdz="cd /home/elyk/.config/zsh" \
 bf="$EDITOR /home/elyk/.config/shell/bm-files" \
 bd="$EDITOR /home/elyk/.config/shell/bm-dirs" \
+wiki="$EDITOR /home/elyk/wiki/index.md" \
 jka="$EDITOR /home/elyk/.config/shell/aliasrc" \
 jkd="$EDITOR /home/elyk/.config/dunst/dunstrc" \
 jke="$EDITOR /home/elyk/.config/lvim/config.lua" \

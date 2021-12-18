@@ -1,16 +1,16 @@
 #!/bin/sh
+/usr/bin/prime-offload
+multi-monitor
 xrdb -merge ~/.config/x11/Xresources
+feh --recursive --no-fehbg --bg-fill --randomize "${XDG_PICTURES_DIR:="$HOME/pix"}/wallpapers" &
 
 autostart="shotkey dunst lxsession nm-applet picom redshift"
 
 remaps &
 safeeyes -e &
 greenclip daemon &
+flameshot &
 
 for program in $autostart; do
 	pidof -s "$program" || setsid -f "$program"
 done >/dev/null 2>&1
-
-/usr/bin/prime-offload
-multi-monitor
-feh --recursive --no-fehbg --bg-fill --randomize "${XDG_PICTURES_DIR:="$HOME/pix"}/wallpapers" &

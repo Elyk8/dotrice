@@ -2,11 +2,18 @@
   "baseFontSize": 20,
   "translucency": false,
   "theme": "obsidian",
-  "cssTheme": "Obsidianite",
+  "cssTheme": "Minimal",
   "baseFontSizeAction": true,
   "enabledCssSnippets": [
     "custom",
     "font",
-    "cursor"
+    "collapsing-sidebar",
+    "cursor",
+    "custom-icons-differing-files-and-folders",
+    "outliner-for-the-outline-and-file-explorer",
+    "smaller-scrollbar",
+    "tag-pills",
+    "source-font",
+    "headings"
   ]
 }

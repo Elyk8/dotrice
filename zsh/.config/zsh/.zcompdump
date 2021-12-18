@@ -1,4 +1,4 @@
-#files: 794	version: 5.8
+#files: 791	version: 5.8
 
 _comps=(
 '-' '_precommand'
@@ -24,7 +24,6 @@ _comps=(
 'add-zle-hook-widget' '_add-zle-hook-widget'
 'add-zsh-hook' '_add-zsh-hook'
 'admin' '_sccs'
-'alacritty' '_alacritty'
 'ali' '_mh'
 'alias' '_alias'
 'amaya' '_webbrowser'
@@ -192,7 +191,6 @@ _comps=(
 'composite' '_imagemagick'
 'compress' '_compress'
 'conch' '_twisted'
-'conda' '_conda'
 '-condition-' '_condition'
 'config.status' '_configure'
 'configure' '_configure'
@@ -350,7 +348,6 @@ _comps=(
 'fmttest' '_mh'
 'fned' '_zed'
 'fnext' '_mh'
-'fnm' '_fnm'
 'fold' '_fold'
 'folder' '_mh'
 'folders' '_mh'
@@ -417,6 +414,8 @@ _comps=(
 'ggetopt' '_getopt'
 'ggrep' '_grep'
 'ggv' '_gnome-gv'
+'_gh' '_gh'
+'gh' '_gh'
 'ghead' '_head'
 'ghostscript' '_ghostscript'
 'ghostview' '_pspdf'
@@ -629,8 +628,6 @@ _comps=(
 'join' '_join'
 'journalctl' '_journalctl'
 'jq' '_jq'
-'k' '_kanban'
-'kanban' '_kanban'
 'kdeconnect-cli' '_kdeconnect'
 'kernel-install' '_kernel-install'
 'keystone' '_openstack'
@@ -718,7 +715,6 @@ _comps=(
 'make' '_make'
 'makeinfo' '_texinfo'
 'makepkg' '_pacman'
-'mamba' '_conda'
 'man' '_man'
 'manage.py' '_django'
 'manila' '_openstack'
@@ -740,6 +736,7 @@ _comps=(
 'mencal' '_mencal'
 'mere' '_mere'
 'merge' '_rcs'
+'meson' '_meson'
 'metaflac' '_flac'
 'mformat' '_mtools'
 'mgv' '_pspdf'
@@ -832,6 +829,7 @@ _comps=(
 'nginx' '_nginx'
 'ngrep' '_ngrep'
 'nice' '_nice'
+'ninja' '_ninja'
 'nkf' '_nkf'
 'nl' '_nl'
 'nm' '_nm'
@@ -841,7 +839,6 @@ _comps=(
 'nocorrect' '_precommand'
 'noglob' '_precommand'
 'nohup' '_precommand'
-'notmuch' '_notmuch'
 'nova' '_openstack'
 'npm' '_npm'
 'ns' '_hosts'
@@ -1506,7 +1503,6 @@ _comps=(
 'zle' '_zle'
 'zlistattr' '_zattr'
 'zln' '_zmv'
-'_zlua' '_zlua_zsh_tab_completion'
 'zmail' '_mail'
 'zmodload' '_zmodload'
 'zmv' '_zmv'
@@ -1573,7 +1569,6 @@ _services=(
 
 _patcomps=(
 '*/(init|rc[0-9S]#).d/*' '_init_d'
-'notmuch-*' '_notmuch'
 )
 
 _postpatcomps=(
@@ -1636,11 +1631,11 @@ bindkey '^[,' _history-complete-newer
 bindkey '^[/' _history-complete-older
 bindkey '^[~' _bash_complete-word
 
-autoload -Uz _alacritty _archinstallscripts _bat _bluetoothctl _bootctl \
-            _busctl _bwrap _coredumpctl _curl _email-notmuch \
-            _exa _hostnamectl _journalctl _kdeconnect _kernel-install \
-            _lf _libinput _localectl _loginctl _machinectl \
-            _mkinitcpio _mpv _networkctl _notmuch _nvme \
+autoload -Uz _archinstallscripts _bat _bluetoothctl _bootctl _busctl \
+            _bwrap _coredumpctl _curl _exa _gh \
+            _hostnamectl _journalctl _kdeconnect _kernel-install _lf \
+            _libinput _localectl _loginctl _machinectl _meson \
+            _mkinitcpio _mpv _networkctl _ninja _nvme \
             _pacman _paru _pass _psd _pulseaudio \
             _qpdf _resolvectl _rg _sd_hosts_or_user_at_host _sd_machines \
             _sd_outputmodes _sd_unit_files _systemctl _systemd _systemd-analyze \
@@ -1793,8 +1788,7 @@ autoload -Uz _alacritty _archinstallscripts _bat _bluetoothctl _bootctl \
             _vars _wait _which _widgets _zargs \
             _zattr _zcalc _zcalc_line _zcompile _zed \
             _zftp _zle _zmodload _zmv _zparseopts \
-            _zpty _zsh-mime-handler _zsocket _zstyle _ztodo \
-            _conda _conda _fnm
+            _zpty _zsh-mime-handler _zsocket _zstyle _ztodo
 autoload -Uz +X _call_program
 
 typeset -gUa _comp_assocs
