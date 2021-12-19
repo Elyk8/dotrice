@@ -10,7 +10,7 @@ fdlvc      $HOME/.config/lvim
 fdrofi     $HOME/.config/rofi
 fdsc       $HOME/.local/bin/scripts
 fdst       $HOME/.local/src/st
-fdstf      $HOME/.local/src/st-flexipatch
+fdstf      $HOME/.local/src/st
 fdsh       $HOME/.config/shell
 fdrr       $HOME/.local/src
 fdx        $HOME/.config/x11

@@ -5,6 +5,14 @@
       "path": "_Home.md"
     },
     {
+      "basename": "Python",
+      "path": "Python.md"
+    },
+    {
+      "basename": "Linux",
+      "path": "Linux.md"
+    },
+    {
       "basename": "Capstone Project",
       "path": "Capstone Project.md"
     },
@@ -43,10 +51,6 @@
     {
       "basename": "Project Requirements",
       "path": "Project Requirements.md"
-    },
-    {
-      "basename": "Linux",
-      "path": "Linux.md"
     },
     {
       "basename": "Socratic Questioning",

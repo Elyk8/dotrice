@@ -14,4 +14,4 @@ else
 	. "$HOME/.xprofile"
 fi
 
-exec dbus-launch xmonad
+exec dbus-launch dusk

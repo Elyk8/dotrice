@@ -1,6 +1,4 @@
 #!/bin/sh
-export ZDOTDIR=$HOME/.config/zsh
-
 HISTFILE=~/.cache/zsh-history
 setopt appendhistory
 
@@ -71,6 +69,7 @@ bindkey -s '^n' 'lvim $(sk)^M'
 bindkey -s '^v' 'lvim\n'
 bindkey -s '^f' 'cd "$(dirname "$(sk)")"^M'
 bindkey -s '^z' 'zi^M'
+bindkey -s '^w' '!!^M'
 bindkey '^[[P' delete-char
 bindkey "^p" up-line-or-beginning-search # Up
 bindkey "^n" down-line-or-beginning-search # Down
