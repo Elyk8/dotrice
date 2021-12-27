@@ -1,4 +1,6 @@
 #!/bin/sh
+colorscript -r
+
 HISTFILE=~/.cache/zsh-history
 setopt appendhistory
 

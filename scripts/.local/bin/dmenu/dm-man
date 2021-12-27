@@ -5,8 +5,8 @@
 # Set a character width for this script if needed:
 #export MANWIDTH=80
 
-#man -k . | awk '{ print $1 " " $2 }' | rofi -dmenu -i -p " " | awk '{ print $2 " " $1 }' | tr -d '()' | xargs alacritty --class floating -e man
-man -k . | awk '{ print $1 " " $2 }' | rofi -dmenu -i -p " " | awk '{ print $2 " " $1 }' | tr -d '()' | xargs st -n floating -e man
+man -k . | awk '{ print $1 " " $2 }' | rofi -dmenu -i -p " " | awk '{ print $2 " " $1 }' | tr -d '()' | xargs alacritty --class floating -e man
+# man -k . | awk '{ print $1 " " $2 }' | rofi -theme prompt -dmenu -i -p " " | awk '{ print $2 " " $1 }' | tr -d '()' | xargs st -n floating -e man
 
 # Probably the most useful script ever.
 

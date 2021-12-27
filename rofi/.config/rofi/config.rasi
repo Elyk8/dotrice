@@ -1,15 +1,11 @@
-/** Basic config file **/
-
 configuration {
-  font:                           "Noto Sans 16";
-  show-icons:                     false;
-  icon-theme:                     "Beautyline";
-  display-drun:                   "";
-  drun-display-format:            "{name}";
-  disable-history:                false;
-  sidebar-mode:                   false;
-  matching:                       "fuzzy";
-  case-sensitive:                 false;
+	modi: "run,drun";
+	run-list-command: ". rofi-aliases.sh";
+	run-shell-command: "{terminal} -e '{cmd}'";
+	run-command: "/bin/sh -i -c '{cmd}'";
+	terminal: "rofi-sensible-terminal";
+	show-icons: true;
+	icon-theme: "Arcolinux-candy-beauty";
 }
 
-@theme "kde_krunner.rasi"
+@theme "themes/launcher"

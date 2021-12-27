@@ -14,7 +14,7 @@ case $BLOCK_BUTTON in
     3) toggleredshift ;;
     # 4)  ;;
     # 5)  ;;
-    6) setsid -f "$TERMINAL" -e "$EDITOR" $0 ;;
+    10) setsid -f "$TERMINAL" -e "$EDITOR" $0 ;;
 esac
 
 $SETSTATUS 5 "$(sb-redshiftstatus)"

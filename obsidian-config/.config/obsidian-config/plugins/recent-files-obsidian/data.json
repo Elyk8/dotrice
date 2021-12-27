@@ -1,30 +1,6 @@
 {
   "recentFiles": [
     {
-      "basename": "_Home",
-      "path": "_Home.md"
-    },
-    {
-      "basename": "Python",
-      "path": "Python.md"
-    },
-    {
-      "basename": "Linux",
-      "path": "Linux.md"
-    },
-    {
-      "basename": "Capstone Project",
-      "path": "Capstone Project.md"
-    },
-    {
-      "basename": "14-12-2021 - Capstone Meeting",
-      "path": "14-12-2021 - Capstone Meeting.md"
-    },
-    {
-      "basename": "Cornell Notes",
-      "path": "Templates/Cornell Notes.md"
-    },
-    {
       "basename": "Ricing",
       "path": "_Inbox/Ricing.md"
     },
@@ -37,12 +13,12 @@
       "path": "_Inbox/Applications.md"
     },
     {
-      "basename": "My Laws",
-      "path": "My Laws.md"
+      "basename": "_Home",
+      "path": "_Home.md"
     },
     {
-      "basename": "System Design",
-      "path": "System Design.md"
+      "basename": "Capstone Project",
+      "path": "Capstone Project.md"
     },
     {
       "basename": "Mobile robot burger",
@@ -51,6 +27,46 @@
     {
       "basename": "Project Requirements",
       "path": "Project Requirements.md"
+    },
+    {
+      "basename": "Literature Review",
+      "path": "Literature Review.md"
+    },
+    {
+      "basename": "Open CV Object Detection",
+      "path": "Open CV Object Detection.md"
+    },
+    {
+      "basename": "Python",
+      "path": "Python.md"
+    },
+    {
+      "basename": "Untitled 1",
+      "path": "Untitled 1.md"
+    },
+    {
+      "basename": "Untitled",
+      "path": "Untitled.md"
+    },
+    {
+      "basename": "System Design",
+      "path": "System Design.md"
+    },
+    {
+      "basename": "Linux",
+      "path": "Linux.md"
+    },
+    {
+      "basename": "14-12-2021 - Capstone Meeting",
+      "path": "14-12-2021 - Capstone Meeting.md"
+    },
+    {
+      "basename": "Cornell Notes",
+      "path": "Templates/Cornell Notes.md"
+    },
+    {
+      "basename": "My Laws",
+      "path": "My Laws.md"
     },
     {
       "basename": "Socratic Questioning",
@@ -63,10 +79,6 @@
     {
       "basename": "Note Template",
       "path": "Templates/Note Template.md"
-    },
-    {
-      "basename": "Literature Review",
-      "path": "Literature Review.md"
     },
     {
       "basename": "Eisenhower Matrix",
@@ -187,18 +199,6 @@
     {
       "basename": "Automated Guided Vehicle Using Robot Operating System",
       "path": "Victoria University/NEE4101(Research Proposal)/Literature Review/Fleeting Notes/Automated Guided Vehicle Using Robot Operating System.md"
-    },
-    {
-      "basename": "Advanced Medical Robotic Nursing Assistant",
-      "path": "Victoria University/NEE4101(Research Proposal)/Literature Review/Fleeting Notes/Advanced Medical Robotic Nursing Assistant.md"
-    },
-    {
-      "basename": "Automated_Guided_Vehicle_Using_Robot_Operating_Systems",
-      "path": "Victoria University/NEE4101(Research Proposal)/Literature Review/Articles/Automated_Guided_Vehicle_Using_Robot_Operating_Systems.pdf"
-    },
-    {
-      "basename": "Design Proposal",
-      "path": "Victoria University/NEE4101(Research Proposal)/Design Proposal.md"
     }
   ],
   "omittedPaths": [],

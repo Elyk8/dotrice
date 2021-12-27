@@ -9,7 +9,7 @@
         "state": {
           "type": "markdown",
           "state": {
-            "file": "_Home.md",
+            "file": "_Inbox/Ricing.md",
             "mode": "preview"
           }
         }
@@ -69,8 +69,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 268.00468826293945,
-    "collapsed": true
+    "width": 268.00468826293945
   },
   "right": {
     "id": "1c064167f54edd19",
@@ -86,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "_Home.md",
+                "file": "_Inbox/Ricing.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -103,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "_Home.md",
+                "file": "_Inbox/Ricing.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -115,7 +114,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "_Home.md"
+                "file": "_Inbox/Ricing.md"
               }
             }
           },
@@ -156,15 +155,15 @@
   },
   "active": "bd9cefe734a7a652",
   "lastOpenFiles": [
-    "_Home.md",
-    "Python.md",
-    "Linux.md",
-    "Capstone Project.md",
-    "14-12-2021 - Capstone Meeting.md",
-    "TODOs.md",
-    "Templates/Cornell Notes.md",
     "_Inbox/Ricing.md",
     "_Inbox/Notes.md",
-    "_Inbox/Applications.md"
+    "_Inbox/Applications.md",
+    "_Home.md",
+    "Capstone Project.md",
+    "Mobile robot burger.md",
+    "Project Requirements.md",
+    "Literature Review.md",
+    "Open CV Object Detection.md",
+    "Python.md"
   ]
 }

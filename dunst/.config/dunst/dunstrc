@@ -289,20 +289,20 @@
 [urgency_low]
     # IMPORTANT: colors have to be defined in quotation marks.
     # Otherwise the "#" and following would be interpreted as a comment.
-    foreground = "#bbc2cf"
-    background = "#282c34"
+    foreground = "#D8DEE9"
+    background = "#1E1E1E"
     frame_color = "#181A20"
     timeout = 10
 
 [urgency_normal]
-    background = "#282c34"
-    foreground = "#bbc2cf"
+    background = "#1E1E1E"
+    foreground = "#D8DEE9"
     frame_color = "#181A20"
     timeout = 10
 
 [urgency_critical]
-    background = "#282c34"
-    foreground = "#bbc2cf" #FDF1DB #f5bfd2 #ff8585   #ffdfd3  #fec8d8      #FDF1DB #8fbcbb
+    background = "#1E1E1E"
+    foreground = "#D8DEE9" #FDF1DB #f5bfd2 #ff8585   #ffdfd3  #fec8d8      #FDF1DB #8fbcbb
     frame_color = "#ff6c6b"
     timeout = 0
 

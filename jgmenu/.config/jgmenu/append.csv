@@ -1,0 +1,6 @@
+^sep()
+Restart,/usr/bin/systemctl reboot
+Lock,sh ~/.config/i3lock/lock.sh && sleep 1,lock-screen
+log Out,pkill xmonad
+Power Off,/usr/bin/systemctl poweroff
+

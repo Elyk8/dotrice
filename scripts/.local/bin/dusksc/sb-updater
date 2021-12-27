@@ -18,10 +18,7 @@ $SETSTATUS 1 "$(sb-keymode)" &
 killall pulseaudio-control; pulseaudio-control &
 $SETSTATUS 3 "$(sb-microphone)" &
 $SETSTATUS 4 "$(sb-brightness)" &
-$SETSTATUS 7 "$(rofi-bluetooth --status)" &
 $SETSTATUS 8 "$(sb-pacpackages)" &
-
-# Bottom bar
 
 secs=0
 while true; do

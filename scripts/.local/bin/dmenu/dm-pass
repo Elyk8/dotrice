@@ -4,6 +4,7 @@
 # the sed piece just removes the colon from the provided
 # prompt: rofi -p already gives us a colon
 rofi -dmenu \
+	-theme prompt \
 	-password \
 	-no-fixed-num-lines \
 	-p "$(printf %s "$1" | sed s/://)"

@@ -4,4 +4,4 @@
 
 # Get user selection via dmenu from emoji file.
 
-rofi -show emoji -no-lazy-grab -matching normal
+rofi -theme prompt -show emoji -no-lazy-grab -matching normal

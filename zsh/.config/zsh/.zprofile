@@ -9,15 +9,15 @@ export QT_QPA_PLATFORMTHEME="qt5ct"
 # export DESKTOP_SESSION=dusk
 # export XDG_SESSION_TYPE=x11
 
-if pacman -Qs libxft-bgra >/dev/null 2>&1; then
+# if pacman -Qs libxft-bgra >/dev/null 2>&1; then
 	if [ -z "${DISPLAY}" ] && [ "$(tty)" = "/dev/tty1" ]; then
 		pidof -s Xorg &> /dev/null && exit 0
 		sudo /usr/bin/prime-switch &> /dev/null
 		exec startx "${XDG_CONFIG_HOME:-$HOME/.config}/x11/xinitrc" &> /dev/null
 	fi
-else
-	echo "\033[31mIMPORTANT\033[0m: Note that \033[32m\`libxft-bgra\`\033[0m must be installed for this build of dusk.
-Please run:
-	\033[32mparu -S libxft-bgra-git\033[0m
-and replace \`libxft\`. Afterwards, you may start the graphical server by running \`startx\`."
-fi
+# else
+# 	echo "\033[31mIMPORTANT\033[0m: Note that \033[32m\`libxft-bgra\`\033[0m must be installed for this build of dusk.
+# Please run:
+# 	\033[32mparu -S libxft-bgra-git\033[0m
+# and replace \`libxft\`. Afterwards, you may start the graphical server by running \`startx\`."
+# fi

@@ -1,3 +1,3 @@
 #!/bin/sh
 
-rofi -theme "$HOME/.config/rofi/themes/text_style_1.rasi" -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
+rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'

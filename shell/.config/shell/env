@@ -72,17 +72,19 @@ export _ZL_DATA="${XDG_DATA_HOME:-$HOME/.local/share}/z.lua"
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 export UNCRUSTIFY_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/uncrustify/uncrustify.cfg"
 
-# Taskwarrior
-export TASKRC="${XDG_CONFIG_HOME:-$HOME/.config}/task/taskrc"
+# Xmonad
+export XMONAD_DATA_DIR="$HOME/.config/xmonad"
+export XMONAD_CONFIG_DIR="$HOME/.config/xmonad"
+export XMONAD_CACHE_DIR="$HOME/.config/xmonad"
 
 # Default programs:
 export VISUAL="lvim"
 export EDITOR="lvim"
 export READER="zathura"
-export TERMINAL="st"
+export TERMINAL="alacritty"
 export BROWSER="brave"
 export VIDEO="mpv"
-export IMAGE="sxiv"
+export IMAGE="nsxiv"
 export OPENER="xdg-open"
 export PAGER="less -S"
 export MANPAGER="lvim -c 'set ft=man nonumber nolist ts=8 laststatus=1 showtabline=1' '+Man!' -"

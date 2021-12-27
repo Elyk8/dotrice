@@ -1,0 +1,5 @@
+@import "launcher"
+
+element-icon {
+    enabled: false;
+}
