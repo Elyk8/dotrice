@@ -26,7 +26,7 @@ function run {
 
 # pactl set-default-sink alsa_output.pci-0000_00_1b.0.analog-stereo &
 
-run trayer --edge top --align right --widthtype request --padding 3 --SetDockType true --SetPartialStrut true --expand true --transparent true --alpha 0 --tint 0x282a33 --monitor 1 --height 30 --iconspacing 4 &
+# run trayer --edge top --align right --widthtype request --padding 3 --SetDockType true --SetPartialStrut true --expand true --transparent true --alpha 0 --tint 0x282a33 --monitor 1 --height 30 --iconspacing 4 &
 
 xsetroot -cursor_name left_ptr &
 

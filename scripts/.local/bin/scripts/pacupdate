@@ -1,2 +1,3 @@
 #!/bin/sh
-pacman -Qu | grep -Fcv "[ignored]"
+cupd=$(checkupdates+aur | wc -l)
+echo "$cupd updates "

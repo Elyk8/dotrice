@@ -22,14 +22,3 @@
 *color13:   #C586C0
 *color14:   #29B8DB
 *color15:   #ECEFF4
-
-
-! dmenu
-dmenu.normbackground    :#1E1E1E
-dmenu.normforeground    :#D8DEE9
-dmenu.selbackground     :#3B4252
-dmenu.selforeground     :#ECEFF4
-dmenu.selhlforeground   :#D7BA7D
-dmenu.selhlbackground   :#3B4252
-dmenu.hlforeground      :#D7BA7D
-dmenu.hlbackground      :#1E1E1E

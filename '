@@ -2,8 +2,8 @@
 
 Config { font = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:hinting=true"
        , additionalFonts = [ "xft:Iosevka Nerd Font:weight=heavy:pixelsize=18:antialias=true:hinting=true"
-                           , "xft:Font Awesome 5 Free Solid:pixelsize=16"
-                           , "xft:Font Awesome 5 Brands:pixelsize=16"
+                           , "xft:Font Awesome 5 Free Solid:pixelsize=14"
+                           , "xft:Font Awesome 5 Brands:pixelsize=14"
                            ]
        , bgColor          = "#1E1E1E"
        , fgColor          = "#569CD6"
@@ -11,7 +11,7 @@ Config { font = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:hinting=true
        , borderWidth      = 1
        , border           = BottomB
        , textOffset       = -1
-       , iconOffset       = -1
+       , iconOffset       = -8
        , alpha            = 255
        , position         = TopSize L 100 30
        , lowerOnStart     = True
@@ -26,10 +26,10 @@ Config { font = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:hinting=true
        , commands         =
                     [	                  
                       Run Date " %a %d %b  <fc=#aac0f0> <fn=2>\xF073 </fn></fc> %l:%M:%S %p " "date" 1
-                    , Run Brightness [ "-t", "<fn=1>\xF5DF </fn><percent>%", "--", "-D", "intel_backlight" ] 5
+                    , Run Brightness [ "-t", "<bar>%", "--", "-D", "intel_backlight" ] 5
                     , Run MPD ["-t",
                                "<title> (<artist>) <statei> [<flags>]",
-                               "--", "-P", "<fn=2>\xF144 </fn>", "-Z", "<fn=2>\xF28B </fn>", "-S", "<fn=2>\xF28D </fn>"] 10
+                               "--", "-P", "<fn=2>\xF144 </fn>", "-Z", "<fn=2>\xF28B </fn>", "-S", "><"] 10
                     , Run Com ".config/xmobar/trayer-padding-icon.sh" [] "trayerpad" 20
                     , Run UnsafeXPropertyLog "_XMONAD_LOG_0"
                     ]

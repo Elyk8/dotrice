@@ -1,7 +1,7 @@
-*.foreground:    #A9B1D6
-*.background:    #1A1B26
-*.cursorColor:   #A9B1D6
-*.highlightColor:#3A3F4B
+*foreground:    #A9B1D6
+*background:    #1A1B26
+*cursorColor:   #A9B1D6
+*highlightColor:#3A3F4B
 
 !*fading:                  40
 !*fadeColor:               S_base03
@@ -43,13 +43,3 @@
 ! White colours
 *color7:        #ACB0D0
 *color15:       #ABB2BF
-
-! dmenu
-dmenu.normbackground    :#1A1B26
-dmenu.normforeground    :#A9B1D6
-dmenu.selbackground     :#32344A
-dmenu.selforeground     :#ABB2BF
-dmenu.selhlforeground   :#98C379
-dmenu.selhlbackground   :#4E5173
-dmenu.hlforeground      :#98C379
-dmenu.hlbackground      :#1A1B26

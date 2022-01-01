@@ -1,3 +1,0 @@
-#!/bin/sh
-
-pidof -x dm-beats >/dev/null 2>&1 && echo "☕️🎶 Playing Radio"

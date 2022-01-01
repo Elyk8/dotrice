@@ -4,12 +4,13 @@ multi-monitor
 xrdb -merge ~/.config/x11/Xresources
 feh --recursive --no-fehbg --bg-fill --randomize "${XDG_PICTURES_DIR:="$HOME/pix"}/wallpapers" &
 
-autostart="shotkey dunst lxsession nm-applet picom redshift"
+autostart="shotkey dunst lxsession nm-applet picom redshift mictray"
 
 remaps &
 safeeyes -e &
 greenclip daemon &
 flameshot &
+sleep 5 && volctl &
 
 for program in $autostart; do
 	pidof -s "$program" || setsid -f "$program"

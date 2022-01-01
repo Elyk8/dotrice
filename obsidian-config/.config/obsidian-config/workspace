@@ -9,8 +9,8 @@
         "state": {
           "type": "markdown",
           "state": {
-            "file": "_Inbox/Ricing.md",
-            "mode": "preview"
+            "file": "_Home.md",
+            "mode": "source"
           }
         }
       }
@@ -69,7 +69,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 268.00468826293945
+    "width": 268.00468826293945,
+    "collapsed": true
   },
   "right": {
     "id": "1c064167f54edd19",
@@ -85,7 +86,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "_Inbox/Ricing.md",
+                "file": "_Home.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +103,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "_Inbox/Ricing.md",
+                "file": "_Home.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -114,7 +115,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "_Inbox/Ricing.md"
+                "file": "_Home.md"
               }
             }
           },
@@ -155,10 +156,10 @@
   },
   "active": "bd9cefe734a7a652",
   "lastOpenFiles": [
+    "_Home.md",
     "_Inbox/Ricing.md",
     "_Inbox/Notes.md",
     "_Inbox/Applications.md",
-    "_Home.md",
     "Capstone Project.md",
     "Mobile robot burger.md",
     "Project Requirements.md",

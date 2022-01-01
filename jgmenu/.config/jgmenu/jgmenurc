@@ -1,10 +1,10 @@
 
-stay_alive           = 1
+stay_alive           = 0
 #hide_on_startup     = 0
 #csv_cmd              = pmenu
 #tint2_look           = 1
 position_mode        = pointer
-terminal_exec        = kitty
+terminal_exec        = alacritty
 terminal_args        = -e
 #monitor             = 0
 
@@ -37,7 +37,7 @@ item_border          = 0
 
 sep_height           = 5
 
-font                 = Roboto 14px
+font                 = Roboto 18px
 #font_fallback       = xtg
 icon_size            = 24
 #icon_text_spacing   = 10
@@ -48,20 +48,21 @@ icon_size            = 24
 
 ## -------------------------------
 ## colors
-icon_theme           = Tela-Mist-Dark
+icon_theme           = Arcolinux-candy-beauty
 
-color_menu_bg        = #282a33 100
+# color_menu_bg        = #282a33 100
+color_menu_bg        = #1E1E1E 100
 #color_menu_bg        = #272730 100
 color_menu_fg        = #dddddd 100
 
 color_menu_border    = #699fe0   25
 
-color_norm_bg        = #282a33 100
+color_norm_bg        = #1E1E1E 100
 #color_norm_bg        = #272730 100
 color_norm_fg        = #dddddd 100
 
 color_sel_bg         = #699fe0  100
-color_sel_fg         = #282a33 100
+color_sel_fg         = #1E1E1E 100
 #color_sel_fg         = #272730 100
 #color_sel_border     = #282828 0
 

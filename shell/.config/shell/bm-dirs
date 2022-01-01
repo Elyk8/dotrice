@@ -14,6 +14,8 @@ fdstf      $HOME/.local/src/st
 fdsh       $HOME/.config/shell
 fdrr       $HOME/.local/src
 fdx        $HOME/.config/x11
+fdxm       $HOME/.config/xmonad
+fdxb       $HOME/.config/xmobar
 fdy2       $HOME/vic/y2
 fdy3       $HOME/vic/y3
 fdy4       $HOME/vic/y4

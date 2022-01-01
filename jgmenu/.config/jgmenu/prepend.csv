@@ -1,5 +1,4 @@
 Web browser,brave,web-browser-symbolic
-File manager,thunar,system-file-manager-symbolic
-Terminal,kitty,utilities-terminal-symbolic
+File manager,alacritty -e lf-run,system-file-manager-symbolic
+Terminal,alacritty,utilities-terminal-symbolic
 ^sep()
-

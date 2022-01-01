@@ -137,11 +137,11 @@ cmd remove_from_repo ${{
   git --git-dir=$HOME/.local/share/dotrice --work-tree=$HOME rm -rf --cached "$fx"
 }}
 
-cmd dragon %dragon-drag-and-drop -a -x $fx
-cmd dragon-stay %dragon-drag-and-drop -a $fx
-cmd dragon-individual %dragon-drag-and-drop $fx
-cmd cpdragon %cpdragon
-cmd mvdragon %mvdragon
+cmd dragon %setsid -f dragon-drag-and-drop -a -x $fx
+cmd dragon-stay %setsid -f dragon-drag-and-drop -a $fx
+cmd dragon-individual %setsid -f dragon-drag-and-drop $fx
+cmd cpdragon %setsid -f cpdragon
+cmd mvdragon %setsid -f mvdragon
 cmd dlfile %dlfile
 
 # Archive bindings
