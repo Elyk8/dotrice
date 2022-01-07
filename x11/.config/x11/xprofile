@@ -1,17 +1,25 @@
 #!/bin/sh
+run() {
+    if ! pgrep "$1" > /dev/null ;
+    then
+        "$@"&
+    fi
+}
+
 /usr/bin/prime-offload
 multi-monitor
 xrdb -merge ~/.config/x11/Xresources
-feh --recursive --no-fehbg --bg-fill --randomize "${XDG_PICTURES_DIR:="$HOME/pix"}/wallpapers" &
+
+run safeeyes -e &
+run greenclip daemon &
+run flameshot &
+run feh --recursive --no-fehbg --bg-fill --randomize "${XDG_PICTURES_DIR:="$HOME/pix"}/wallpapers" &
+run remaps &
+run /usr/bin/emacs -nw --daemon &
+run xsetroot -cursor_name left_ptr &
+sleep 3 && run volctl &
 
 autostart="shotkey dunst lxsession nm-applet picom redshift mictray"
-
-remaps &
-safeeyes -e &
-greenclip daemon &
-flameshot &
-sleep 5 && volctl &
-
 for program in $autostart; do
 	pidof -s "$program" || setsid -f "$program"
 done >/dev/null 2>&1

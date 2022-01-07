@@ -66,17 +66,16 @@ zsh_add_completion "esc/conda-zsh-completion" false
 # Key-bindings
 bindkey -s '^o' 'lfcd^M'
 bindkey -s '^f' 'zi^M'
-bindkey -s '^s' 'ncdu^M'
-bindkey -s '^n' 'lvim $(sk)^M'
+bindkey -s '^n' 'lvim $(fzf)^M'
 bindkey -s '^v' 'lvim\n'
-bindkey -s '^f' 'cd "$(dirname "$(sk)")"^M'
+bindkey -s '^f' 'cd "$(dirname "$(fzf)")"^M'
 bindkey -s '^z' 'zi^M'
 bindkey -s '^w' '!!^M'
 bindkey '^[[P' delete-char
 bindkey "^p" up-line-or-beginning-search # Up
 bindkey "^n" down-line-or-beginning-search # Down
 bindkey "^k" up-line-or-beginning-search # Up
-bindkey "^j" down-line-or-beginning-search # Down
+# bindkey "^j" down-line-or-beginning-search # Down
 bindkey -r "^u"
 bindkey -r "^d"
 bindkey -M main ' ' expand-alias

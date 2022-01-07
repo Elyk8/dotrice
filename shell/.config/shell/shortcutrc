@@ -7,6 +7,7 @@ fdint="cd /home/elyk/.local/src/interception-k2k" \
 fdkey="cd /home/elyk/.local/src/shotkey" \
 fdlf="cd /home/elyk/.config/lf" \
 fdlvc="cd /home/elyk/.config/lvim" \
+fdlvl="cd /home/elyk/.local/share/lunarvim/lvim" \
 fdrofi="cd /home/elyk/.config/rofi" \
 fdsc="cd /home/elyk/.local/bin/scripts" \
 fdst="cd /home/elyk/.local/src/st" \

@@ -1,12 +1,48 @@
 {
   "recentFiles": [
     {
+      "basename": "Open CV Object Detection",
+      "path": "Open CV Object Detection.md"
+    },
+    {
+      "basename": "Python",
+      "path": "Python.md"
+    },
+    {
       "basename": "_Home",
       "path": "_Home.md"
     },
     {
+      "basename": "My Laws",
+      "path": "My Laws.md"
+    },
+    {
+      "basename": "Capstone Project",
+      "path": "Capstone Project.md"
+    },
+    {
+      "basename": "14-12-2021 - Capstone Meeting",
+      "path": "14-12-2021 - Capstone Meeting.md"
+    },
+    {
+      "basename": "Mobile Robot Platform with Arduino Uno and Raspberry Pi for Autonomous Navigation",
+      "path": "Mobile Robot Platform with Arduino Uno and Raspberry Pi for Autonomous Navigation.md"
+    },
+    {
+      "basename": "Literature Review",
+      "path": "Literature Review.md"
+    },
+    {
+      "basename": "Linux",
+      "path": "Linux.md"
+    },
+    {
       "basename": "Ricing",
       "path": "_Inbox/Ricing.md"
+    },
+    {
+      "basename": "Project Requirements",
+      "path": "Project Requirements.md"
     },
     {
       "basename": "Notes",
@@ -17,28 +53,8 @@
       "path": "_Inbox/Applications.md"
     },
     {
-      "basename": "Capstone Project",
-      "path": "Capstone Project.md"
-    },
-    {
       "basename": "Mobile robot burger",
       "path": "Mobile robot burger.md"
-    },
-    {
-      "basename": "Project Requirements",
-      "path": "Project Requirements.md"
-    },
-    {
-      "basename": "Literature Review",
-      "path": "Literature Review.md"
-    },
-    {
-      "basename": "Open CV Object Detection",
-      "path": "Open CV Object Detection.md"
-    },
-    {
-      "basename": "Python",
-      "path": "Python.md"
     },
     {
       "basename": "Untitled 1",
@@ -53,20 +69,8 @@
       "path": "System Design.md"
     },
     {
-      "basename": "Linux",
-      "path": "Linux.md"
-    },
-    {
-      "basename": "14-12-2021 - Capstone Meeting",
-      "path": "14-12-2021 - Capstone Meeting.md"
-    },
-    {
       "basename": "Cornell Notes",
       "path": "Templates/Cornell Notes.md"
-    },
-    {
-      "basename": "My Laws",
-      "path": "My Laws.md"
     },
     {
       "basename": "Socratic Questioning",
@@ -195,10 +199,6 @@
     {
       "basename": "W42-2021",
       "path": "002 Weeklys 📝/W42-2021.md"
-    },
-    {
-      "basename": "Automated Guided Vehicle Using Robot Operating System",
-      "path": "Victoria University/NEE4101(Research Proposal)/Literature Review/Fleeting Notes/Automated Guided Vehicle Using Robot Operating System.md"
     }
   ],
   "omittedPaths": [],

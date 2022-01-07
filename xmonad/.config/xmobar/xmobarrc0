@@ -11,7 +11,7 @@ Config { font = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:hinting=true
        , borderWidth      = 1
        , border           = BottomB
        , textOffset       = -1
-       , iconOffset       = -1
+       , iconOffset       = -8
        , alpha            = 255
        , position         = TopSize L 100 30
        , lowerOnStart     = True
@@ -34,19 +34,16 @@ Config { font = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:hinting=true
                     , Run UnsafeXPropertyLog "_XMONAD_LOG_0"
                     ]
                     
-      , template = " <action=`jgmenu_run`><icon=haskell_22.xpm/></action> \
-                    \ <fc=#666666>|</fc> \
+      , template = " <action=`jgmenu_run`><icon=haskell_20.xpm/></action> \
                     \ <fn=1>%_XMONAD_LOG_0%</fn>}\
 
 
                     \<box type=Bottom width=2 mb=2 color=#51afef><fc=#5294e2> <action=`sh -c thunderbird`>%date%</action></fc></box>{\
 
 
-                    \<fc=#D7BA7D> <action=`alacritty -e gotop`>%bright%</action></fc> \
-                    \ <fc=#666666>|</fc> \
+                    \<box type=Bottom width=2 mb=2 color=#D7BA7D><fc=#D7BA7D> <action=`st -e gotop`>%bright%</action></fc></box>    \
 
-                    \<fc=#aac0f0> <action=`alacritty -e ncmpcpp`><action=`mpc toggle` button=3>%mpd%</action></action></fc> \
-                    \ <fc=#666666>|</fc> \
+                    \<box type=Bottom width=2 mb=2 color=#bbc2cf><fc=#bbc2cf> <action=`st -e ncmpcpp`><action=`mpc toggle` button=3>%mpd%</action></action></fc></box>\
 
                     \%trayerpad% "
                     } 

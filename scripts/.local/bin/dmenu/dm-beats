@@ -64,4 +64,4 @@ main() {
 	esac
 	mpv $ARGS --no-video --title="radio-mpv" "$URL"
 }
-pkill -f radio-mpv || main
+pkill -f radio-mpv && notify-send "Player stopped" || main

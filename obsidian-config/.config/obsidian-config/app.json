@@ -21,6 +21,6 @@
   "defaultViewMode": "source",
   "useMarkdownLinks": false,
   "trashOption": "local",
-  "legacyEditor": true,
+  "legacyEditor": false,
   "livePreview": false
 }

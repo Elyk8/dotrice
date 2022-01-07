@@ -2,6 +2,8 @@
 *background: #1E1E1E
 *foreground: #D8DEE9
 
+trayerColor: 0x1E1E1E
+
 ! terminal padding color
 *borderColor: #1E1E1E
 

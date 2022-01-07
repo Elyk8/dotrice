@@ -25,24 +25,37 @@ import System.Exit (exitSuccess)
 import System.IO (hPutStrLn)
 import System.Posix.Files
 import XMonad
-
+import XMonad.Actions.CycleWS
+import XMonad.Actions.DwmPromote
+import qualified XMonad.Actions.FlexibleResize as Flex
 import XMonad.Actions.FloatKeys
 import XMonad.Actions.MouseResize
 import XMonad.Actions.PhysicalScreens
-import XMonad.Actions.DwmPromote
 import XMonad.Actions.RotSlaves (rotAllDown, rotSlavesDown)
-import XMonad.Actions.SwapWorkspaces
 import XMonad.Actions.SwapPromote
+import XMonad.Actions.SwapWorkspaces
 import XMonad.Actions.UpdatePointer (updatePointer)
 import XMonad.Actions.WindowGo (runOrRaise)
 import XMonad.Actions.WithAll (killAll, sinkAll)
-
+import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.InsertPosition
+import XMonad.Hooks.ManageDocks (ToggleStruts (..), avoidStruts, docks, docksEventHook, manageDocks)
+import XMonad.Hooks.ManageHelpers (Side (CE, NW), composeOne, doCenterFloat, doFullFloat, doSideFloat, isDialog, isFullscreen, isInProperty, transience', (-?>))
+import XMonad.Hooks.PositionStoreHooks
+import XMonad.Hooks.RefocusLast (refocusLastLogHook)
+import XMonad.Hooks.Rescreen
+import XMonad.Hooks.SetWMName (setWMName)
+import XMonad.Hooks.StatusBar (StatusBarConfig, dynamicEasySBs, dynamicSBs, statusBarProp, statusBarPropTo, withSB)
+import XMonad.Hooks.StatusBar.PP
+import XMonad.Hooks.WindowSwallowing
+import XMonad.Hooks.WorkspaceHistory
 import XMonad.Layout.Accordion
 import XMonad.Layout.GridVariants (Grid (Grid))
 import XMonad.Layout.LayoutModifier
 import XMonad.Layout.LimitWindows (decreaseLimit, increaseLimit, limitWindows)
 import XMonad.Layout.Magnifier
 import XMonad.Layout.MultiToggle (EOT (EOT), mkToggle, single, (??))
+import qualified XMonad.Layout.MultiToggle as MT (Toggle (..))
 import XMonad.Layout.MultiToggle.Instances (StdTransformers (MIRROR, NBFULL, NOBORDERS))
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Renamed
@@ -55,30 +68,13 @@ import XMonad.Layout.Spiral
 import XMonad.Layout.SubLayouts
 import XMonad.Layout.Tabbed
 import XMonad.Layout.ThreeColumns
+import qualified XMonad.Layout.ToggleLayouts as T (ToggleLayout (Toggle), toggleLayouts)
 import XMonad.Layout.WindowArranger (WindowArrangerMsg (..), windowArrange)
 import XMonad.Layout.WindowNavigation
-
-import XMonad.Hooks.EwmhDesktops
-import XMonad.Hooks.InsertPosition
-import XMonad.Hooks.ManageDocks (ToggleStruts (..), avoidStruts, docks, docksEventHook, manageDocks)
-import XMonad.Hooks.ManageHelpers (Side (CE), composeOne, doCenterFloat, doFullFloat, doSideFloat, isDialog, isFullscreen, isInProperty, transience', (-?>))
-import XMonad.Hooks.PositionStoreHooks
-import XMonad.Hooks.RefocusLast (refocusLastLogHook)
-import XMonad.Hooks.Rescreen
-import XMonad.Hooks.SetWMName (setWMName)
-import XMonad.Hooks.StatusBar (StatusBarConfig, dynamicEasySBs, dynamicSBs, statusBarProp, statusBarPropTo, withSB)
-import XMonad.Hooks.StatusBar.PP
-import XMonad.Hooks.WindowSwallowing
-import XMonad.Hooks.WorkspaceHistory
-
-import qualified XMonad.Actions.FlexibleResize as Flex
-import qualified XMonad.Layout.MultiToggle as MT (Toggle (..))
-import qualified XMonad.Layout.ToggleLayouts as T (ToggleLayout (Toggle), toggleLayouts)
 import qualified XMonad.StackSet as W
+import XMonad.Util.EZConfig (additionalKeysP)
 import qualified XMonad.Util.ExtensibleState as XS
 import qualified XMonad.Util.Hacks as Hacks
-
-import XMonad.Util.EZConfig (additionalKeysP)
 import XMonad.Util.Loggers
 import XMonad.Util.NamedScratchpad
 import XMonad.Util.Run (runProcessWithInput, safeSpawn, spawnPipe)
@@ -89,7 +85,7 @@ import XMonad.Util.WindowProperties
 myFont :: String
 myFont = "xft:Ubuntu Nerd Font:regular:size=9:antialias=true:hinting=true"
 
-myBoldFont = "xft:JetBrains Mono Nerd Font:weight=bold:size=50"
+myBoldFont = "xft:Mononoki Nerd Font:weight=bold:size=50"
 
 myModMask :: KeyMask
 myModMask = mod4Mask
@@ -125,7 +121,7 @@ mySpacing' i = spacingRaw True (Border i i i i) True (Border i i i i) True
 myStartupHook :: X ()
 myStartupHook = do
   spawn "killall trayer"
-  spawn ("sleep 1 && trayer --edge top --align right --widthtype request --padding 5 --SetDockType true --SetPartialStrut true --expand true --transparent true --alpha 0 --tint 0x282c34 --monitor 1 --height 30 --iconspacing 4")
+  spawn ("sleep 1 && trayer -l --edge top --align right --widthtype request --padding 5 --SetDockType true --SetPartialStrut true --expand true --transparent true --alpha 0 --tint " ++ colorTrayer ++ " --monitor 1 --height 30 --iconspacing 4")
   spawnOnce "~/.config/xmonad/scripts/autostart.sh"
 
 ------------------------------------------
@@ -152,36 +148,36 @@ myUpdatePointer refPos ratio =
 ---           Multi Monitors           ---
 ------------------------------------------
 
-multiScreenFocusHook :: Event -> X All
-multiScreenFocusHook MotionEvent {ev_x = x, ev_y = y} = do
-  ms <- getScreenForPos x y
-  case ms of
-    Just cursorScreen -> do
-      let cursorScreenID = W.screen cursorScreen
-      focussedScreenID <- gets (W.screen . W.current . windowset)
-      when (cursorScreenID /= focussedScreenID) (focusWS $ W.tag $ W.workspace cursorScreen)
-      return (All True)
-    _ -> return (All True)
-  where
-    getScreenForPos ::
-      CInt ->
-      CInt ->
-      X (Maybe (W.Screen WorkspaceId (Layout Window) Window ScreenId ScreenDetail))
-    getScreenForPos x y = do
-      ws <- windowset <$> get
-      let screens = W.current ws : W.visible ws
-          inRects = map (inRect x y . screenRect . W.screenDetail) screens
-      return $ fst <$> find snd (zip screens inRects)
-    inRect :: CInt -> CInt -> Rectangle -> Bool
-    inRect x y rect =
-      let l = fromIntegral (rect_x rect)
-          r = l + fromIntegral (rect_width rect)
-          t = fromIntegral (rect_y rect)
-          b = t + fromIntegral (rect_height rect)
-       in x >= l && x < r && y >= t && y < b
-    focusWS :: WorkspaceId -> X ()
-    focusWS ids = windows (W.view ids)
-multiScreenFocusHook _ = return (All True)
+-- multiScreenFocusHook :: Event -> X All
+-- multiScreenFocusHook MotionEvent {ev_x = x, ev_y = y} = do
+--   ms <- getScreenForPos x y
+--   case ms of
+--     Just cursorScreen -> do
+--       let cursorScreenID = W.screen cursorScreen
+--       focussedScreenID <- gets (W.screen . W.current . windowset)
+--       when (cursorScreenID /= focussedScreenID) (focusWS $ W.tag $ W.workspace cursorScreen)
+--       return (All True)
+--     _ -> return (All True)
+--   where
+--     getScreenForPos ::
+--       CInt ->
+--       CInt ->
+--       X (Maybe (W.Screen WorkspaceId (Layout Window) Window ScreenId ScreenDetail))
+--     getScreenForPos x y = do
+--       ws <- windowset <$> get
+--       let screens = W.current ws : W.visible ws
+--           inRects = map (inRect x y . screenRect . W.screenDetail) screens
+--       return $ fst <$> find snd (zip screens inRects)
+--     inRect :: CInt -> CInt -> Rectangle -> Bool
+--     inRect x y rect =
+--       let l = fromIntegral (rect_x rect)
+--           r = l + fromIntegral (rect_width rect)
+--           t = fromIntegral (rect_y rect)
+--           b = t + fromIntegral (rect_height rect)
+--        in x >= l && x < r && y >= t && y < b
+--     focusWS :: WorkspaceId -> X ()
+--     focusWS ids = windows (W.view ids)
+-- multiScreenFocusHook _ = return (All True)
 
 ------------------------------------------
 ---               Theme                ---
@@ -252,7 +248,7 @@ myXmobarPP :: ScreenId -> PP
 myXmobarPP s =
   filterOutWsPP [scratchpadWorkspaceTag] $
     def
-      { ppSep = "<fc=#666666> <fn=1>|</fn> </fc>",
+      { ppSep = " ",
         ppWsSep = "",
         ppCurrent = xmobarColor base04 "" . clickable wsIconFull,
         ppVisible = xmobarColor base04 "" . clickable wsIconHidden,
@@ -262,12 +258,13 @@ myXmobarPP s =
         ppUrgent = xmobarColor base05 "" . (wrap "!" "!" . clickable wsIconFull),
         ppOrder = \(ws : _ : _ : extras) -> ws : extras,
         ppExtras =
-          [ wrapL (actionPrefix ++ "n" ++ actionButton ++ "1>") actionSuffix $
+          [ logCurrentOnScreen s,
+            wrapL (actionPrefix ++ "n" ++ actionButton ++ "1>") actionSuffix $
               wrapL (actionPrefix ++ "Left" ++ actionButton ++ "4>") actionSuffix $
                 wrapL (actionPrefix ++ "Right" ++ actionButton ++ "5>") actionSuffix $
-                  layoutColorIsActive s (logLayoutOnScreen s),
+                  wrapL "<fc=#666666><fn=1>|</fn> </fc>" "<fc=#666666> <fn=1>|</fn></fc>" $ layoutColorIsActive s (logLayoutOnScreen s),
             wrapL (actionPrefix ++ "q" ++ actionButton ++ "2>") actionSuffix $
-              titleColorIsActive s (shortenL 90 $ logTitleOnScreen s)
+              titleColorIsActive s (shortenL 60 $ logTitleOnScreen s) .| logWhenActive 0 (logConst "*") .| logConst "There's nothing here"
           ]
       }
   where
@@ -326,7 +323,7 @@ myLayoutHook =
   where
     myDefaultLayout =
       withBorder myBorderWidth tall
-        ||| taller
+        ||| zoom
         ||| noBorders monocle
         ||| noBorders tabs
         ||| grid
@@ -347,8 +344,8 @@ tall =
               mySpacing 8 $
                 ResizableTall 1 (3 / 100) (1 / 2) []
 
-taller =
-  renamed [Replace "taller"] $
+zoom =
+  renamed [Replace "zoom"] $
     avoidStruts $
       smartBorders $
         addTabs shrinkText myTabTheme $
@@ -416,7 +413,8 @@ tabs =
     tabbed shrinkText myTabTheme
 
 tallAccordion =
-  renamed [Replace "tallAccordion"] $
+  renamed
+    [Replace "tallAccordion"]
     Accordion
 
 wideAccordion =
@@ -429,39 +427,49 @@ wideAccordion =
 
 myManageHook :: XMonad.Query (Data.Monoid.Endo WindowSet)
 myManageHook =
-  composeAll
-    [ className =? "Brave-browser" --> doShift (myWorkspaces !! 3),
-      className =? "Mozzilla Firefox" --> doShift (myWorkspaces !! 3),
-      className =? "Virt-manager" --> doShift (myWorkspaces !! 3),
-      className =? "obsidian" --> doShift (head myWorkspaces),
-      className =? "VSCodium" --> doShift (myWorkspaces !! 1),
-      className =? "zoom" --> doShift (myWorkspaces !! 6),
-      className =? "discord" --> doShift (myWorkspaces !! 7),
-      className =? "Thunderbird" --> doShift (myWorkspaces !! 8),
-      className =? "Pycalendar.py" --> doCenterFloat,
-      className =? "notification" --> doCenterFloat,
-      className =? "Yad" --> doCenterFloat,
-      className =? "Xfce4-power-manager-settings" --> doCenterFloat,
-      className =? "Dragon-drag-and-drop" --> doCenterFloat,
-      className =? "scratchpad" --> doFloat,
-      className =? "ncmpcpp" --> doFloat,
-      title =? "SafeEyes-0" --> doIgnore,
-      title =? "SafeEyes-1" --> doIgnore,
-      className =? "confirm" --> doFloat,
-      className =? "file_progress" --> doFloat,
-      className =? "dialog" --> doFloat,
-      className =? "download" --> doFloat,
-      className =? "error" --> doFloat,
-      className =? "toolbar" --> doFloat,
-      className =? "Gmrun" --> doFloat,
-      stringProperty "WM_NAME" =? "LINE" --> doFloat,
-      stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog" --> doFloat,
-      stringProperty "WM_WINDOW_ROLE" =? "pop-up" --> doCenterFloat,
-      stringProperty "WM_ICON_NAME" =? "Gvim        " --> doFloat,
-      stringProperty "WM_ICON_NAME" =? "Launch Application" --> doFloat,
-      (className =? "firefox" <&&> appName =? "Dialog") --> doFloat,
-      isFullscreen --> doFullFloat
+  composeAll . concat $
+    [ [title =? t --> doIgnore | t <- myIgnores],
+      [className =? c --> doShift (head myWorkspaces) | c <- myW1S],
+      [className =? c --> doShift (myWorkspaces !! 3) | c <- myW4S],
+      [className =? c --> doShift (myWorkspaces !! 4) | c <- myW5S],
+      [className =? c --> doShift (myWorkspaces !! 5) | c <- myW6S],
+      [className =? c --> doShift (myWorkspaces !! 6) | c <- myW7S],
+      [className =? c --> doShift (myWorkspaces !! 7) | c <- myW8S],
+      [className =? c --> doShift (myWorkspaces !! 8) | c <- myW9S],
+      [className =? c --> doFloat | c <- myFloatC],
+      [className =? c --> doCenterFloat | c <- myFloatCC],
+      [name =? n --> doSideFloat NW | n <- myFloatSN],
+      [name =? n --> doF W.focusDown | n <- myFocusDC],
+      [role =? "LINE" --> doFloat],
+      [role =? "GtkFileChooserDialog" --> doFloat],
+      [role =? "pop-up" --> doCenterFloat],
+      [iconName =? "Gvim        " --> doFloat],
+      [iconName =? "Launch Application" --> doFloat],
+      [isFullscreen --> doFullFloat]
     ]
+  where
+    name = stringProperty "WM_NAME"
+    role = stringProperty "WM_WINDOW_ROLE"
+    iconName = stringProperty "WM_ICON_NAME"
+    myIgnores = ["SafeEyes-0", "SafeEyes-1"]
+    myW1S = ["obsidian"]
+    myW4S = ["Brave-browser"]
+    myW5S = ["VirtualBox Manager", "VirtualBox Machine"]
+    myW6S = ["qBittorrent"]
+    myW7S = ["zoom"]
+    myW8S = ["discord"]
+    myW9S = ["Thunderbird"]
+    myFloatC = ["confirm", "file_progress", "dialog", "download", "error", "toolbar", "Gmrun"]
+    myFloatCC =
+      [ "notification",
+        "Yad",
+        "Xfce4-power-manager-settings",
+        "Dragon-drag-and-drop",
+        "scratchpad",
+        "ncmpcpp"
+      ]
+    myFloatSN = ["Event Tester"]
+    myFocusDC = ["Event Tester", "Notify-osd"]
 
 myHandleEventHook :: Event -> X All
 myHandleEventHook =
@@ -492,37 +500,30 @@ myScratchPads =
 -- START_KEYS
 myAdditionalKeys :: [(String, X ())]
 myAdditionalKeys =
-  -- KB_GROUP Xmonad
-  [ ("M-C-r", spawn "xmonad --restart; killall xmobar"),
+  [ -- Xmonad
+    ("M-C-r", spawn "xmonad --restart; killall xmobar"),
     ("M-S-<Esc>", io exitSuccess),
-    -- KB_GROUP Kill windows
+    -- Kill windows
     ("M-q", kill), -- Kill the currently focused client
     ("M-S-q", killAll), -- Kill all windows on current workspace
 
-    -- KB_GROUP Workspaces
-    --, ("M-.", nextScreen)  -- Switch focus to next monitor
-    --, ("M-,", prevScreen)  -- Switch focus to prev monitor
-    --, ("M-S-<KP_Add>", shiftTo Next nonNSP >> moveTo Next nonNSP)       -- Shifts focused window to next ws
-    --, ("M-S-<KP_Subtract>", shiftTo Prev nonNSP >> moveTo Prev nonNSP)  -- Shifts focused window to prev ws
-
-    -- KB_GROUP dual monitor swicher
+    -- Dual monitor switcher
     ("M-w", onNextNeighbour def W.view),
     ("M-S-w", onNextNeighbour def W.shift),
-    ("M-e", onPrevNeighbour def W.greedyView),
-    ("M-S-e", onPrevNeighbour def W.shift),
-
-    -- KB_GROUP Floating windows
+    ("M-r", onNextNeighbour def W.greedyView),
+    ("M-S-r", onNextNeighbour def W.shift),
+    -- Floating windows
     ("M-f", sendMessage (T.Toggle "floats")), -- Toggles my 'floats' layout
     ("M-t", withFocused $ windows . W.sink), -- Push floating window back to tile
     ("M-C-s", sinkAll), -- Push ALL floating windows to tile
 
-    -- KB_GROUP Increase/decrease spacing (gaps)
+    -- Increase/decrease spacing (gaps)
     ("C-M1-j", decWindowSpacing 4), -- Decrease window spacing
     ("C-M1-k", incWindowSpacing 4), -- Increase window spacing
     ("C-M1-h", decScreenSpacing 4), -- Decrease screen spacing
     ("C-M1-l", incScreenSpacing 4), -- Increase screen spacing
 
-    -- KB_GROUP Windows navigation
+    -- Windows navigation
     ("M-n", windows W.focusMaster), -- Move focus to the master window
     ("M-j", windows W.focusDown), -- Move focus to the next window
     ("M-k", windows W.focusUp), -- Move focus to the prev window
@@ -533,24 +534,23 @@ myAdditionalKeys =
     ("M-S-<Tab>", rotSlavesDown), -- Rotate all windows except master and keep focus in place
     ("M-C-<Tab>", rotAllDown), -- Rotate all the windows in the current stack
 
-    -- KB_GROUP Layouts
+    -- Layouts
     ("M-<Space>", sendMessage NextLayout), -- Switch to next layout
-    -- , ("M-S-<Space>", setLayout $ XMonad.layoutHook Tall)
     ("M-<Tab>", sendMessage (MT.Toggle NBFULL) >> sendMessage ToggleStruts), -- Toggles noborder/full
 
-    -- KB_GROUP Increase/decrease windows in the master pane or the stack
+    -- Increase/decrease windows in the master pane or the stack
     ("M-S-<Up>", sendMessage (IncMasterN 1)), -- Increase # of clients master pane
     ("M-S-<Down>", sendMessage (IncMasterN (-1))), -- Decrease # of clients master pane
     ("M-C-<Up>", increaseLimit), -- Increase # of windows
     ("M-C-<Down>", decreaseLimit), -- Decrease # of windows
 
-    -- KB_GROUP Window resizing
+    -- Window resizing
     ("M-h", sendMessage Shrink), -- Shrink horiz window width
     ("M-l", sendMessage Expand), -- Expand horiz window width
     ("M-M1-j", sendMessage MirrorShrink), -- Shrink vert window width
     ("M-M1-k", sendMessage MirrorExpand), -- Expand vert window width
 
-    -- KB_GROUP Sublayouts
+    -- Sublayouts
     -- This is used to push windows to tabbed sublayouts, or pull them out of it.
     ("M-C-h", sendMessage $ pullGroup L),
     ("M-C-l", sendMessage $ pullGroup R),
@@ -562,23 +562,44 @@ myAdditionalKeys =
     ("M-C-.", onGroup W.focusUp'), -- Switch focus to next tab
     ("M-C-,", onGroup W.focusDown'), -- Switch focus to prev tab
 
-    -- KB_GROUP Scratchpad windows
+    -- Scratchpad windows
     ("M-s n", namedScratchpadAction myScratchPads "ncmpcpp"), -- Ncmpcpp Player
     ("M-s t", namedScratchpadAction myScratchPads "terminal") -- Terminal
   ]
 
 -- END_KEYS
 
-myKeys conf = let modm = modMask conf in M.fromList $
+-- Workspaces
+-- ("M-.", nextScreen), -- Switch focus to next monitor
+-- ("M-,", prevScreen), -- Switch focus to prev monitor
+-- ("M-S-<KP_Add>", shiftTo Next nonNSP >> moveTo Next nonNSP), -- Shifts focused window to next ws
+-- ("M-S-<KP_Subtract>", shiftTo Prev nonNSP >> moveTo Prev nonNSP), -- Shifts focused window to prev ws
+
+myKeys conf =
+  let modm = modMask conf
+   in M.fromList $
         ((modm .|. shiftMask, xK_space), setLayout $ XMonad.layoutHook conf) :
-        [ ((m .|. modm, k), windows $ f i)
-          | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9],
-            (f, m) <- [ (W.greedyView                   , controlMask)
-                      , (W.view                         , 0)
-                      , (liftM2 (.) W.view W.shift      , shiftMask)
-                      , (swapWithCurrent                , mod1Mask)
-                      ]
-         ]
+          [ ((m .|. modm, k), windows $ f i)
+            | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9],
+              (f, m) <-
+                [ (W.greedyView, controlMask),
+                  (W.view, 0),
+                  (liftM2 (.) W.view W.shift, shiftMask),
+                  (swapWithCurrent, mod1Mask)
+                ]
+          ]
+
+myMouseBindings :: XConfig Layout -> M.Map (KeyMask, Button) (Window -> X ())
+myMouseBindings (XConfig {XMonad.modMask = modMask}) =
+  M.fromList
+    [ ((modMask, button1), \w -> focus w >> mouseMoveWindow w >> windows W.shiftMaster), --Set the window to floating mode and move by dragging
+      ((modMask, button2), \w -> focus w >> windows W.shiftMaster), --Raise the window to the top of the stack
+      ((modMask, button3), \w -> focus w >> Flex.mouseResizeWindow w), --Set the window to floating mode and resize by dragging
+      ((modMask, button4), const prevWS), --Switch to previous workspace
+      ((modMask, button5), const nextWS), --Switch to next workspace
+      ((modMask .|. shiftMask, button4), const shiftToPrev), --Send client to previous workspace
+      ((modMask .|. shiftMask, button5), const shiftToNext) --Send client to next workspace
+    ]
 
 ------------------------------------------
 ---               Main                 ---
@@ -595,6 +616,7 @@ main = do
         terminal = myTerminal,
         startupHook = myStartupHook,
         keys = myKeys,
+        mouseBindings = myMouseBindings,
         handleEventHook = myHandleEventHook,
         layoutHook = showWName' myShowWNameTheme $ myLayoutHook,
         workspaces = myWorkspaces,

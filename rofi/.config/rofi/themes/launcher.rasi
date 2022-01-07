@@ -2,7 +2,7 @@ window {
 	font: "monospace 16";
 	width: env(WIDTH, 40%);
 	transparency: "real";
-	background-color: #1b1d1eee;
+	background-color: #1E1E1EEE;
 	spacing: 0;
 	children: [inputbar, listview];
 }
@@ -55,5 +55,5 @@ element-text {
 	vertical-align: 0.6;
 }
 element selected {
-	background-color: #2326273f;
+	background-color: #3B4252;
 }

@@ -1,0 +1,14 @@
+#!/bin/sh
+sed -n '/Key keys/,/};/p;/Key modes/,/};/p' ~/.local/src/shotkey/config.h |
+	grep '^\s*{\|^\s*// [A-Za-z]\|^$' |
+	sed -e 's/.*Super,.*XK\_/Super+/' \
+		-e 's/.*Super|Shift,.*XK\_/Super+Shift+/' \
+		-e 's/.*Super|Ctrl,.*XK\_/Super+Ctrl+/' \
+		-e 's/.*Shift,.*XK\_/Shift+/' \
+		-e 's/.*CtrlMask,.*XK\_/Ctrl+/' \
+		-e 's/.*XF86XK\_/Fn+/' \
+		-e 's/.*XK\_//' \
+		-e 's/^\s\+\/\//\/\//' \
+		-e 's/,/ :/' |
+	awk '! /^\s*\/\// {$1 = sprintf("%-25s", $1)} 1' |
+	yad --text-info --back=#282c34 --fore=#bbc2cf --geometry=1200x800 --lang c --theme "Oblivion"

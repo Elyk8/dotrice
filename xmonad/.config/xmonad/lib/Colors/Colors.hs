@@ -19,12 +19,14 @@ module Colors.Colors ( basebg
                      , base13
                      , base14
                      , base15
+                     , colorTrayer
                      ) where
 
 import Colors.Xresources (xprop)
 import XMonad
 
-basebg, basefg, base00, base01, base02, base03, base04, base05, base06, base07, base08, base09, base10, base11, base12, base13, base14, base15 :: String
+basebg, basefg, base00, base01, base02, base03, base04, base05, base06, base07, base08, base09, base10, base11, base12, base13, base14, base15, colorTrayer :: String
+colorTrayer = xprop "trayerColor"
 basebg = xprop "*background"
 basefg = xprop "*foreground"
 basecr = xprop "*cursorColor"

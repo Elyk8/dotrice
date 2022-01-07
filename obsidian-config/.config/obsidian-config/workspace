@@ -9,8 +9,9 @@
         "state": {
           "type": "markdown",
           "state": {
-            "file": "_Home.md",
-            "mode": "source"
+            "file": "Open CV Object Detection.md",
+            "mode": "preview",
+            "source": true
           }
         }
       }
@@ -86,7 +87,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "_Home.md",
+                "file": "Open CV Object Detection.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -103,7 +104,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "_Home.md",
+                "file": "Open CV Object Detection.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -115,7 +116,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "_Home.md"
+                "file": "Open CV Object Detection.md"
               }
             }
           },
@@ -156,15 +157,15 @@
   },
   "active": "bd9cefe734a7a652",
   "lastOpenFiles": [
-    "_Home.md",
-    "_Inbox/Ricing.md",
-    "_Inbox/Notes.md",
-    "_Inbox/Applications.md",
-    "Capstone Project.md",
-    "Mobile robot burger.md",
-    "Project Requirements.md",
-    "Literature Review.md",
     "Open CV Object Detection.md",
-    "Python.md"
+    "Python.md",
+    "_Home.md",
+    "My Laws.md",
+    "Capstone Project.md",
+    "14-12-2021 - Capstone Meeting.md",
+    "Mobile Robot Platform with Arduino Uno and Raspberry Pi for Autonomous Navigation.md",
+    "Literature Review.md",
+    "Linux.md",
+    "_Inbox/Ricing.md"
   ]
 }

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# period="$(redshift -p | awk '$0 ~ "Period" {print $2}')"
+temperature="$(redshift -p | awk '$0 ~ "Color temperature" {print $3}')"
+period="$(redshift -p | awk '$0 ~ "Period" {print $2}')"
+
+pidof redshift >/dev/null && echo "$temperature" || echo "Off"

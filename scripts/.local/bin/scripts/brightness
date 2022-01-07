@@ -30,6 +30,6 @@ case "$1" in
 esac
 
 cur=$(xbacklight -get)
-SETSTATUS="duskc --ignore-reply run_command setstatus"
-$SETSTATUS 4 "$(sb-brightness)"
+# SETSTATUS="duskc --ignore-reply run_command setstatus"
+# $SETSTATUS 4 "$(sb-brightness)"
 dunstify "$cur %" -i "$icon_name" -t 2000 -h int:value:"$cur" --replace=555

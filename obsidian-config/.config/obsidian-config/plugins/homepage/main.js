@@ -1543,6 +1543,19 @@ function getWorkspacePlugin(app) {
   var _a, _b;
   return (_b = (_a = app == null ? void 0 : app.internalPlugins) == null ? void 0 : _a.plugins) == null ? void 0 : _b.workspaces;
 }
+function disableSetting(setting) {
+  setting.settingEl.setAttribute("style", "opacity: .5; pointer-events: none !important");
+}
+function upgradeSettings(plugin) {
+  return __async(this, null, function* () {
+    plugin.settings.workspace = plugin.settings.defaultNote;
+    if (plugin.settings.alwaysPreview) {
+      plugin.settings.openMode = View.Reading;
+    }
+    plugin.settings.version = 2;
+    yield plugin.saveSettings();
+  });
+}
 
 // src/suggest.ts
 var Suggest = class {
@@ -1673,12 +1686,21 @@ var Mode;
   Mode2["ReplaceLast"] = "Replace last note";
   Mode2["Retain"] = "Keep open notes";
 })(Mode || (Mode = {}));
+var View;
+(function(View2) {
+  View2["Default"] = "Default view";
+  View2["Reading"] = "Reading view";
+  View2["Source"] = "Editing view (Source)";
+  View2["LivePreview"] = "Editing view (Live Preview)";
+})(View || (View = {}));
 var DEFAULT = {
+  version: 0,
   defaultNote: "Home",
+  workspace: "Home",
   workspaceEnabled: false,
   hasRibbonIcon: true,
   openMode: Mode.ReplaceAll,
-  alwaysPreview: false
+  view: View.Default
 };
 var HomepageSettingTab = class extends import_obsidian2.PluginSettingTab {
   constructor(app, plugin) {
@@ -1686,48 +1708,61 @@ var HomepageSettingTab = class extends import_obsidian2.PluginSettingTab {
     this.plugin = plugin;
     this.settings = plugin.settings;
   }
-  isInvalidNote(newNote) {
-    return newNote === null || newNote.match(/^\s*$/) !== null;
+  sanitiseNote(value) {
+    if (value === null || value.match(/^\s*$/) !== null) {
+      return null;
+    }
+    return (0, import_obsidian2.normalizePath)(value);
   }
   display() {
     var _a;
-    let { containerEl } = this;
-    containerEl.empty();
-    new import_obsidian2.Setting(containerEl).setName("Open on startup").setDesc(this.plugin.workspacesMode() ? "The name of the workspace to open on startup." : "The name of the note to open on startup. If it doesn't exist, a new note will be created.").addText((text) => {
-      const suggestType = !this.plugin.workspacesMode() ? FileSuggest : WorkspaceSuggest;
-      new suggestType(this.app, text.inputEl);
-      text.setPlaceholder("Home").setValue(DEFAULT.defaultNote == this.settings.defaultNote ? "" : this.settings.defaultNote).onChange((value) => __async(this, null, function* () {
-        this.settings.defaultNote = this.isInvalidNote(value) ? DEFAULT.defaultNote : (0, import_obsidian2.normalizePath)(value);
+    const workspacesMode = this.plugin.workspacesMode();
+    this.containerEl.empty();
+    const suggestor = workspacesMode ? WorkspaceSuggest : FileSuggest;
+    const homepageDesc = workspacesMode ? "The name of the workspace to open on startup." : "The name of the note to open on startup. If it doesn't exist, a new note will be created.";
+    const homepage = workspacesMode ? "workspace" : "defaultNote";
+    new import_obsidian2.Setting(this.containerEl).setName("Homepage").setDesc(homepageDesc).addText((text) => {
+      new suggestor(this.app, text.inputEl);
+      text.setPlaceholder(DEFAULT[homepage]).setValue(DEFAULT[homepage] == this.settings[homepage] ? "" : this.settings[homepage]).onChange((value) => __async(this, null, function* () {
+        this.settings[homepage] = this.sanitiseNote(value) || DEFAULT[homepage];
         yield this.plugin.saveSettings();
       }));
     });
     if ((_a = this.plugin.workspacePlugin) == null ? void 0 : _a.enabled) {
-      new import_obsidian2.Setting(containerEl).setName("Use workspaces").setDesc("Open a workspace, instead of a note, as the homepage.").addToggle((toggle) => toggle.setValue(this.settings.workspaceEnabled).onChange((value) => __async(this, null, function* () {
+      new import_obsidian2.Setting(this.containerEl).setName("Use workspaces").setDesc("Open a workspace, instead of a note, as the homepage.").addToggle((toggle) => toggle.setValue(this.settings.workspaceEnabled).onChange((value) => __async(this, null, function* () {
         this.settings.workspaceEnabled = value;
         yield this.plugin.saveSettings();
         this.display();
       })));
     }
-    let ribbonSetting = new import_obsidian2.Setting(containerEl).setName("Display ribbon icon").setDesc("Show a little house on the ribbon, allowing you to quickly access the homepage.").addToggle((toggle) => toggle.setValue(this.settings.hasRibbonIcon).onChange((value) => __async(this, null, function* () {
+    let ribbonSetting = new import_obsidian2.Setting(this.containerEl).setName("Display ribbon icon").setDesc("Show a little house on the ribbon, allowing you to quickly access the homepage.").addToggle((toggle) => toggle.setValue(this.settings.hasRibbonIcon).onChange((value) => __async(this, null, function* () {
       this.settings.hasRibbonIcon = value;
       yield this.plugin.saveSettings();
     })));
+    ribbonSetting.settingEl.setAttribute("style", "padding-top: 70px; border-top: none !important");
     ribbonSetting.descEl.createDiv({ text: "Takes effect on startup.", attr: { class: "mod-warning" } });
-    if (!this.plugin.workspacesMode()) {
-      new import_obsidian2.Setting(containerEl).setName("Open in preview mode").setDesc("When opening the homepage, always do so in preview mode.").addToggle((toggle) => toggle.setValue(this.settings.alwaysPreview).onChange((value) => __async(this, null, function* () {
-        this.settings.alwaysPreview = value;
+    let viewSetting = new import_obsidian2.Setting(this.containerEl).setName("Homepage view").setDesc("Choose what view to open the homepage in.").addDropdown((dropdown) => __async(this, null, function* () {
+      for (let key of Object.values(View)) {
+        dropdown.addOption(key, key);
+      }
+      dropdown.setValue(this.settings.view);
+      dropdown.onChange((option) => __async(this, null, function* () {
+        this.settings.view = option;
         yield this.plugin.saveSettings();
-      })));
-      new import_obsidian2.Setting(containerEl).setName("Opening mode").setDesc("Determine how existing notes are affected on startup.").addDropdown((dropdown) => __async(this, null, function* () {
-        for (let key of Object.values(Mode)) {
-          dropdown.addOption(key, key);
-        }
-        dropdown.setValue(this.settings.openMode);
-        dropdown.onChange((option) => __async(this, null, function* () {
-          this.settings.openMode = option;
-          yield this.plugin.saveSettings();
-        }));
       }));
+    }));
+    let modeSetting = new import_obsidian2.Setting(this.containerEl).setName("Opening method").setDesc("Determine how existing notes are affected on startup.").addDropdown((dropdown) => __async(this, null, function* () {
+      for (let key of Object.values(Mode)) {
+        dropdown.addOption(key, key);
+      }
+      dropdown.setValue(this.settings.openMode);
+      dropdown.onChange((option) => __async(this, null, function* () {
+        this.settings.openMode = option;
+        yield this.plugin.saveSettings();
+      }));
+    }));
+    if (workspacesMode) {
+      [viewSetting, modeSetting].forEach(disableSetting);
     }
   }
 };
@@ -1777,31 +1812,34 @@ var Homepage = class extends import_obsidian3.Plugin {
     this.openHomepage = () => __async(this, null, function* () {
       var _a;
       if (this.workspacesMode()) {
-        if (!(this.settings.defaultNote in ((_a = this.workspacePlugin) == null ? void 0 : _a.instance.workspaces))) {
-          new import_obsidian3.Notice(`Cannot find the workspace "${this.settings.defaultNote}" to use as the homepage.`);
+        if (!(this.settings.workspace in ((_a = this.workspacePlugin) == null ? void 0 : _a.instance.workspaces))) {
+          new import_obsidian3.Notice(`Cannot find the workspace "${this.settings.workspace}" to use as the homepage.`);
           return;
         }
-        this.workspacePlugin.instance.loadWorkspace(this.settings.defaultNote);
+        this.workspacePlugin.instance.loadWorkspace(this.settings.workspace);
         return;
       } else if (this.settings.openMode != Mode.ReplaceAll) {
-        const extant = this.app.workspace.getLeavesOfType("markdown").find((leaf) => trimFile(leaf.view.file) == this.settings.defaultNote);
-        if (extant !== void 0) {
-          this.app.workspace.setActiveLeaf(extant);
-          this.setHomepageMode();
+        const alreadyOpened = this.getOpenedHomepage();
+        if (alreadyOpened !== void 0) {
+          this.app.workspace.setActiveLeaf(alreadyOpened);
+          yield this.setHomepageMode();
           return;
         }
       } else {
         this.app.workspace.detachLeavesOfType("markdown");
       }
       yield this.app.workspace.openLinkText(this.settings.defaultNote, "", this.settings.openMode == Mode.Retain, { active: true });
-      this.setHomepageMode();
+      yield this.setHomepageMode();
     });
   }
   onload() {
     return __async(this, null, function* () {
+      this.settings = Object.assign({}, DEFAULT, yield this.loadData());
       this.workspacePlugin = getWorkspacePlugin(this.app);
-      yield this.loadSettings();
       this.addSettingTab(new HomepageSettingTab(this.app, this));
+      if (this.settings.version < 2) {
+        yield upgradeSettings(this);
+      }
       this.addCommand({
         id: "open-homepage",
         name: "Open homepage",
@@ -1814,12 +1852,7 @@ var Homepage = class extends import_obsidian3.Plugin {
       if (this.app.workspace.activeLeaf == null) {
         this.app.workspace.onLayoutReady(this.openHomepage);
       }
-      console.log(`Homepage: ${this.settings.defaultNote}(mode: ${this.settings.openMode}, workspaces: ${this.settings.workspaceEnabled})`);
-    });
-  }
-  loadSettings() {
-    return __async(this, null, function* () {
-      this.settings = Object.assign({}, DEFAULT, yield this.loadData());
+      console.log(`Homepage: ${this.settings.defaultNote} (method: ${this.settings.openMode}, view: ${this.settings.view}, workspaces: ${this.settings.workspaceEnabled})`);
     });
   }
   saveSettings() {
@@ -1827,13 +1860,27 @@ var Homepage = class extends import_obsidian3.Plugin {
       yield this.saveData(this.settings);
     });
   }
+  getOpenedHomepage() {
+    return this.app.workspace.getLeavesOfType("markdown").find((leaf) => trimFile(leaf.view.file) == this.settings.defaultNote);
+  }
   setHomepageMode() {
-    const leaf = this.app.workspace.activeLeaf;
-    if (!this.settings.alwaysPreview || !(leaf.view instanceof import_obsidian3.MarkdownView))
-      return;
-    const state = leaf.view.getState();
-    state.mode = "preview";
-    leaf.setViewState({ type: leaf.view.getViewType(), state });
+    return __async(this, null, function* () {
+      const leaf = this.app.workspace.activeLeaf;
+      if (this.settings.openMode == View.Default || !(leaf.view instanceof import_obsidian3.MarkdownView))
+        return;
+      const state = leaf.view.getState();
+      switch (this.settings.view) {
+        case View.LivePreview:
+        case View.Source:
+          state.mode = "source";
+          state.source = this.settings.view != View.LivePreview;
+          break;
+        case View.Reading:
+          state.mode = "preview";
+          break;
+      }
+      yield leaf.setViewState({ type: "markdown", state });
+    });
   }
   workspacesMode() {
     var _a;

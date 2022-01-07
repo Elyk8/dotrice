@@ -1,6 +1,4 @@
 #!/bin/sh
-SETSTATUS="duskc --ignore-reply run_command setstatus"
-
 MODE_FILE=/tmp/shotkey-mode
 
 NORMAL_MODE=
@@ -13,8 +11,8 @@ get_mode() {
 save_mode() {
 	mode_label=$SHOTKEY_MODE_LABEL
 	echo "${mode_label:-$NORMAL_MODE}" >$MODE_FILE
-	# notify-send -t 1000 "${mode_label:-$NORMAL_MODE}" -h string:x-canonical-private-synchronous:anything
-	$SETSTATUS 1 "$(sb-keymode)"
+	notify-send -t 1000 "${mode_label:-$NORMAL_MODE}" -h string:x-canonical-private-synchronous:anything
+	# $SETSTATUS 1 "$(sb-keymode)"
 	# polybar-msg hook keymode 1
 }
 

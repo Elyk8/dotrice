@@ -8,7 +8,7 @@ Xft.lcdfilter: lcdfilter
 Xcursor.theme: Bibata-Modern-Ice
 
 ! Font Settings
-*font: JetBrainsMono Nerd Font:medium:size=12:antialias=true:autohint=true
+*font: Mononoki Nerd Font:size=13:antialias=true:autohint=true
 *font2: Braille:pixelsize=19:antialias=true:autohint=true
 
 ! general
