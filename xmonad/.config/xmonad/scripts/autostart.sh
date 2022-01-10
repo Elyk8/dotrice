@@ -9,7 +9,6 @@ function run {
 
 # run picom --experimental-backends &
 # run nitrogen --restore &
-run xsetroot -cursor_name left_ptr &
 # run xfce4-power-manager &
 # run xss-lock ~/.config/i3lock/lock.sh &
 # run ~/.config/conky/hybrid-compact/startup/hybrid-compact-startup.sh &

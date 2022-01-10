@@ -49,43 +49,6 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-(package! gitconfig-mode
-	  :recipe (:host github :repo "magit/git-modes"
-			 :files ("gitconfig-mode.el")))
-(package! gitignore-mode
-	  :recipe (:host github :repo "magit/git-modes"
-			 :files ("gitignore-mode.el")))
-(package! flycheck-aspell)
-(package! async)
-(package! calfw)
-(package! calfw-org)
 (package! dashboard)
 (package! dired-open)
 (package! dired-subtree)
-(package! elfeed-goodies)
-(package! elpher)
-(package! emojify)
-(package! evil-tutor)
-(package! ivy-posframe)
-(package! mw-thesaurus)
-
-(package! org-roam-bibtex
-  :recipe (:host github :repo "org-roam/org-roam-bibtex"))
-(package! org-ref)
-;; When using org-roam via the `+roam` flag
-(unpin! org-roam)
-;; When using bibtex-completion via the `biblio` module
-(unpin! bibtex-completion helm-bibtex ivy-bibtex)
-
-(package! ox-gemini)
-(package! pacmacs)
-(package! peep-dired)
-(package! password-store)
-(package! rainbow-mode)
-(package! resize-window)
-(package! tldr)
-(package! wc-mode)
-
-
-;; Disabled packages
-(package! eshell :disable t)

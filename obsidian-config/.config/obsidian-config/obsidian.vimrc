@@ -1,3 +1,5 @@
+set leader <space>
+
 nmap <s-l> g$
 nmap <s-h> g0
 nmap j gj

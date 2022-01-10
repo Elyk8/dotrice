@@ -34,7 +34,8 @@ import XMonad.Actions.PhysicalScreens
 import XMonad.Actions.RotSlaves (rotAllDown, rotSlavesDown)
 import XMonad.Actions.SwapPromote
 import XMonad.Actions.SwapWorkspaces
-import XMonad.Actions.UpdatePointer (updatePointer)
+-- import XMonad.Actions.UpdatePointer (updatePointer)
+import XMonad.Actions.Warp
 import XMonad.Actions.WindowGo (runOrRaise)
 import XMonad.Actions.WithAll (killAll, sinkAll)
 import XMonad.Hooks.EwmhDesktops
@@ -72,6 +73,7 @@ import qualified XMonad.Layout.ToggleLayouts as T (ToggleLayout (Toggle), toggle
 import XMonad.Layout.WindowArranger (WindowArrangerMsg (..), windowArrange)
 import XMonad.Layout.WindowNavigation
 import qualified XMonad.StackSet as W
+import XMonad.Util.Cursor
 import XMonad.Util.EZConfig (additionalKeysP)
 import qualified XMonad.Util.ExtensibleState as XS
 import qualified XMonad.Util.Hacks as Hacks
@@ -120,29 +122,10 @@ mySpacing' i = spacingRaw True (Border i i i i) True (Border i i i i) True
 
 myStartupHook :: X ()
 myStartupHook = do
+  setDefaultCursor xC_left_ptr
   spawn "killall trayer"
   spawn ("sleep 1 && trayer -l --edge top --align right --widthtype request --padding 5 --SetDockType true --SetPartialStrut true --expand true --transparent true --alpha 0 --tint " ++ colorTrayer ++ " --monitor 1 --height 30 --iconspacing 4")
   spawnOnce "~/.config/xmonad/scripts/autostart.sh"
-
-------------------------------------------
----           Pointer Update           ---
-------------------------------------------
-
-newtype MyUpdatePointerActive = MyUpdatePointerActive Bool
-
-instance ExtensionClass MyUpdatePointerActive where
-  initialValue = MyUpdatePointerActive True
-
-myUpdatePointer :: (Rational, Rational) -> (Rational, Rational) -> X ()
-myUpdatePointer refPos ratio =
-  whenX isActive $ do
-    dpy <- asks display
-    root <- asks theRoot
-    (_, _, _, _, _, _, _, m) <- io $ queryPointer dpy root
-    unless (testBit m 9 || testBit m 8 || testBit m 10) $ -- unless the mouse is clicking
-      updatePointer refPos ratio
-  where
-    isActive = (\(MyUpdatePointerActive b) -> b) <$> XS.get
 
 ------------------------------------------
 ---           Multi Monitors           ---
@@ -178,6 +161,26 @@ myUpdatePointer refPos ratio =
 --     focusWS :: WorkspaceId -> X ()
 --     focusWS ids = windows (W.view ids)
 -- multiScreenFocusHook _ = return (All True)
+
+------------------------------------------
+---           Pointer Update           ---
+------------------------------------------
+
+-- newtype MyUpdatePointerActive = MyUpdatePointerActive Bool
+
+-- instance ExtensionClass MyUpdatePointerActive where
+--   initialValue = MyUpdatePointerActive True
+
+-- myUpdatePointer :: (Rational, Rational) -> (Rational, Rational) -> X ()
+-- myUpdatePointer refPos ratio =
+--   whenX isActive $ do
+--     dpy <- asks display
+--     root <- asks theRoot
+--     (_, _, _, _, _, _, _, m) <- io $ queryPointer dpy root
+--     unless (testBit m 9 || testBit m 8 || testBit m 10) $ -- unless the mouse is clicking
+--       updatePointer refPos ratio
+--   where
+--     isActive = (\(MyUpdatePointerActive b) -> b) <$> XS.get
 
 ------------------------------------------
 ---               Theme                ---
@@ -221,8 +224,8 @@ toggleFloat x w =
 -- isOnScreen :: ScreenId -> WindowSpace -> Bool
 -- isOnScreen s ws = s == unmarshallS (W.tag ws)
 
--- currentScreen :: X ScreenId
--- currentScreen = gets (W.screen . W.current . windowset)
+currentScreen :: X ScreenId
+currentScreen = gets (W.screen . W.current . windowset)
 
 -- workspaceOnCurrentScreen :: WSType
 -- workspaceOnCurrentScreen = WSIs $ do
@@ -523,6 +526,9 @@ myAdditionalKeys =
     ("C-M1-h", decScreenSpacing 4), -- Decrease screen spacing
     ("C-M1-l", incScreenSpacing 4), -- Increase screen spacing
 
+    -- Window Warp
+    ("M-b", warpToWindow (1%2) (1%2)), -- Warp to focused window
+
     -- Windows navigation
     ("M-n", windows W.focusMaster), -- Move focus to the master window
     ("M-j", windows W.focusDown), -- Move focus to the next window
@@ -595,11 +601,13 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) =
     [ ((modMask, button1), \w -> focus w >> mouseMoveWindow w >> windows W.shiftMaster), --Set the window to floating mode and move by dragging
       ((modMask, button2), \w -> focus w >> windows W.shiftMaster), --Raise the window to the top of the stack
       ((modMask, button3), \w -> focus w >> Flex.mouseResizeWindow w), --Set the window to floating mode and resize by dragging
-      ((modMask, button4), const prevWS), --Switch to previous workspace
-      ((modMask, button5), const nextWS), --Switch to next workspace
-      ((modMask .|. shiftMask, button4), const shiftToPrev), --Send client to previous workspace
-      ((modMask .|. shiftMask, button5), const shiftToNext) --Send client to next workspace
+      ((modMask, button4), const $ moveTo Prev nonNSP), --Switch to previous workspace
+      ((modMask, button5), const $ moveTo Next nonNSP), --Switch to next workspace
+      ((modMask .|. shiftMask, button4), const $ shiftTo Prev nonNSP), --Send client to previous workspace
+      ((modMask .|. shiftMask, button5), const $ shiftTo Next nonNSP) --Send client to next workspace
     ]
+    where nonNSP = WSIs (return (\ws -> W.tag ws /= "NSP"))
+          nonEmptyNonNSP  = WSIs (return (\ws -> isJust (W.stack ws) && W.tag ws /= "NSP"))
 
 ------------------------------------------
 ---               Main                 ---
@@ -625,7 +633,7 @@ main = do
         focusedBorderColor = myFocusColor,
         logHook =
           logHook def
-            <+> myUpdatePointer (0.75, 0.75) (0, 0)
+            -- <+> myUpdatePointer (0.5, 0.5) (0, 0)
             <+> masterHistoryHook
             <+> refocusLastLogHook
             >> nsHideOnFocusLoss myScratchPads

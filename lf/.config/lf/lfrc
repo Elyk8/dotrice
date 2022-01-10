@@ -13,7 +13,6 @@ set ratios 1:3:4
 
 set previewer ~/.config/lf/previewer
 set cleaner ~/.config/lf/cleaner
-&stpvimg --listen $id
 
 # cmds/functions
 # Makes use of file extensions for easier application control

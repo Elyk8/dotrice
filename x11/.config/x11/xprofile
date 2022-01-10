@@ -16,7 +16,7 @@ run flameshot &
 run feh --recursive --no-fehbg --bg-fill --randomize "${XDG_PICTURES_DIR:="$HOME/pix"}/wallpapers" &
 run remaps &
 run /usr/bin/emacs -nw --daemon &
-run xsetroot -cursor_name left_ptr &
+run xbanish &
 sleep 3 && run volctl &
 
 autostart="shotkey dunst lxsession nm-applet picom redshift mictray"

@@ -222,11 +222,8 @@ alias wion='nmcli radio wifi on'
 alias wiof='nmcli radio wifi off'
 alias xp='chmod +x'
 alias ffmpeg="ffmpeg -hide_banner"
-alias e="\$EDITOR"
-alias v="\$EDITOR"
 alias a='alias'
 alias lf='lfcd'
-alias t='taskell'
 
 se() { find -L ~/.config/* -type d -name "BraveSoftware" -prune -o -name "discord" -prune -o -type f -print | fzf | xargs -r "$EDITOR"; }
 sr() { find -L ~/.local/bin/* -type f | fzf | xargs -r "$EDITOR"; }

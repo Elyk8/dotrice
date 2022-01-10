@@ -4,12 +4,12 @@
     "type": "split",
     "children": [
       {
-        "id": "bd9cefe734a7a652",
+        "id": "931c3658838e61bf",
         "type": "leaf",
         "state": {
           "type": "markdown",
           "state": {
-            "file": "Open CV Object Detection.md",
+            "file": "My Laws.md",
             "mode": "preview",
             "source": true
           }
@@ -87,7 +87,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Open CV Object Detection.md",
+                "file": "My Laws.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Open CV Object Detection.md",
+                "file": "My Laws.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -116,7 +116,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Open CV Object Detection.md"
+                "file": "My Laws.md"
               }
             }
           },
@@ -155,17 +155,17 @@
     "width": 205.94332885742188,
     "collapsed": true
   },
-  "active": "bd9cefe734a7a652",
+  "active": "931c3658838e61bf",
   "lastOpenFiles": [
-    "Open CV Object Detection.md",
-    "Python.md",
-    "_Home.md",
     "My Laws.md",
-    "Capstone Project.md",
-    "14-12-2021 - Capstone Meeting.md",
-    "Mobile Robot Platform with Arduino Uno and Raspberry Pi for Autonomous Navigation.md",
-    "Literature Review.md",
+    "_Home.md",
     "Linux.md",
-    "_Inbox/Ricing.md"
+    "Capstone Project.md",
+    "Mobile robot burger.md",
+    "System Design.md",
+    "Literature Review.md",
+    "Mobile Robot Platform with Arduino Uno and Raspberry Pi for Autonomous Navigation.md",
+    "202201091601_Haskell.md",
+    "14-12-2021 - Capstone Meeting.md"
   ]
 }

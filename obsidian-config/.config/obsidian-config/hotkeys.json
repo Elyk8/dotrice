@@ -247,5 +247,7 @@
       ],
       "key": "P"
     }
-  ]
+  ],
+  "file-explorer:new-file-in-new-pane": [],
+  "zk-prefixer": []
 }

@@ -87,6 +87,17 @@ bindkey -M main ' ' expand-alias
 [ -f /usr/share/doc/fzf/examples/key-bindings.zsh ] && source /usr/share/doc/fzf/examples/key-bindings.zsh
 [ -f $ZDOTDIR/completion/_fnm ] && fpath+="$ZDOTDIR/completion/"
 # export FZF_DEFAULT_COMMAND='rg --hidden -l ""'
+#
+fmz() {
+    tmp=$(mktemp)
+    command fmz --cd "$tmp" "$@"
+    res=$(tail -n 1 "$tmp")
+    if [ -d "$res" ] && [ "$res" != "$PWD" ]; then
+        echo cd "$res"
+        cd "$res" || return 1
+    fi
+    rm "$tmp"
+}
 
 # Edit line in vim with ctrl-e:
 autoload edit-command-line; zle -N edit-command-line >/dev/null

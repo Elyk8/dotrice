@@ -79,18 +79,18 @@ export XMONAD_CONFIG_DIR="$HOME/.config/xmonad"
 export XMONAD_CACHE_DIR="$HOME/.config/xmonad"
 
 # Default programs:
-# export EDITOR="lvim"
-# export VISUAL="lvim"
-export EDITOR="emacsedit"              # $EDITOR use Emacs in terminal
-export VISUAL="emacsedit"           # $VISUAL use Emacs in GUI mode
-export READER="zathura"
+export EDITOR="lvim"
+export VISUAL="lvim"
+#export EDITOR="emacsedit"              # $EDITOR use Emacs in terminal
+#export VISUAL="emacsedit"           # $VISUAL use Emacs in GUI mode
+export READER="okular"
 export TERMINAL="st"
 export BROWSER="brave"
 export VIDEO="mpv"
 export IMAGE="nsxiv"
 export OPENER="xdg-open"
 export PAGER="less -S"
-export MANPAGER="lvim -c 'set ft=man nonumber nolist ts=8 laststatus=1 showtabline=1' '+Man!' -"
+export MANPAGER="nvim -c 'set ft=man nonumber nolist ts=8 laststatus=1 showtabline=1' '+Man!' -"
 # Others
 export MOZ_USE_XINPUT2="1"		              # Mozilla smooth scrolling/touchpads.
 export AWT_TOOLKIT="MToolkit wmname LG3D"	  # May have to install wmname
@@ -216,20 +216,4 @@ ex=🎯:\
 *.torrent=🔽:\
 *.jar=♨:\
 *.java=♨:\
-"
-export LF_COLORS="\
-~/dox=01;31:\
-~/dl=01;31:\
-~/.local/share=01;31:\
-~/.config/lf/lfrc=31:\
-.git/=01;32:\
-.git=32:\
-.gitignore=32:\
-Makefile=32:\
-README.*=33:\
-*.txt=34:\
-*.md=34:\
-ln=01;36:\
-di=01;34:\
-ex=01;32:\
 "

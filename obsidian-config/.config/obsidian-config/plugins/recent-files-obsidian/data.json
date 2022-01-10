@@ -1,40 +1,84 @@
 {
   "recentFiles": [
     {
-      "basename": "Open CV Object Detection",
-      "path": "Open CV Object Detection.md"
-    },
-    {
-      "basename": "Python",
-      "path": "Python.md"
+      "basename": "My Laws",
+      "path": "My Laws.md"
     },
     {
       "basename": "_Home",
       "path": "_Home.md"
     },
     {
-      "basename": "My Laws",
-      "path": "My Laws.md"
+      "basename": "Linux",
+      "path": "Linux.md"
     },
     {
       "basename": "Capstone Project",
       "path": "Capstone Project.md"
     },
     {
-      "basename": "14-12-2021 - Capstone Meeting",
-      "path": "14-12-2021 - Capstone Meeting.md"
+      "basename": "Mobile robot burger",
+      "path": "Mobile robot burger.md"
     },
     {
-      "basename": "Mobile Robot Platform with Arduino Uno and Raspberry Pi for Autonomous Navigation",
-      "path": "Mobile Robot Platform with Arduino Uno and Raspberry Pi for Autonomous Navigation.md"
+      "basename": "System Design",
+      "path": "System Design.md"
     },
     {
       "basename": "Literature Review",
       "path": "Literature Review.md"
     },
     {
-      "basename": "Linux",
-      "path": "Linux.md"
+      "basename": "Mobile Robot Platform with Arduino Uno and Raspberry Pi for Autonomous Navigation",
+      "path": "Mobile Robot Platform with Arduino Uno and Raspberry Pi for Autonomous Navigation.md"
+    },
+    {
+      "basename": "202201091601_Haskell",
+      "path": "202201091601_Haskell.md"
+    },
+    {
+      "basename": "14-12-2021 - Capstone Meeting",
+      "path": "14-12-2021 - Capstone Meeting.md"
+    },
+    {
+      "basename": "Zettlecasten Note Template",
+      "path": "Templates/Zettlecasten Note Template.md"
+    },
+    {
+      "basename": "Al Che",
+      "path": "Al Che.md"
+    },
+    {
+      "basename": "Weekly Template",
+      "path": "Templates/Weekly Template.md"
+    },
+    {
+      "basename": "Cornell Notes",
+      "path": "Templates/Cornell Notes.md"
+    },
+    {
+      "basename": "Index Template",
+      "path": "Templates/Index Template.md"
+    },
+    {
+      "basename": "Project Template",
+      "path": "Templates/Project Template.md"
+    },
+    {
+      "basename": "Socratic Questioning",
+      "path": "Socratic Questioning.md"
+    },
+    {
+      "basename": "Kanban Template",
+      "path": "Templates/Kanban Template.md"
+    },
+    {
+      "basename": "Open CV Object Detection",
+      "path": "Open CV Object Detection.md"
+    },
+    {
+      "basename": "Python",
+      "path": "Python.md"
     },
     {
       "basename": "Ricing",
@@ -51,46 +95,6 @@
     {
       "basename": "Applications",
       "path": "_Inbox/Applications.md"
-    },
-    {
-      "basename": "Mobile robot burger",
-      "path": "Mobile robot burger.md"
-    },
-    {
-      "basename": "Untitled 1",
-      "path": "Untitled 1.md"
-    },
-    {
-      "basename": "Untitled",
-      "path": "Untitled.md"
-    },
-    {
-      "basename": "System Design",
-      "path": "System Design.md"
-    },
-    {
-      "basename": "Cornell Notes",
-      "path": "Templates/Cornell Notes.md"
-    },
-    {
-      "basename": "Socratic Questioning",
-      "path": "Socratic Questioning.md"
-    },
-    {
-      "basename": "Al Che",
-      "path": "Al Che.md"
-    },
-    {
-      "basename": "Note Template",
-      "path": "Templates/Note Template.md"
-    },
-    {
-      "basename": "Eisenhower Matrix",
-      "path": "Templates/Eisenhower Matrix.md"
-    },
-    {
-      "basename": "Index Template",
-      "path": "Templates/Index Template.md"
     },
     {
       "basename": "Laboratory 2 - Report",
@@ -167,38 +171,6 @@
     {
       "basename": "021s Justification Essay",
       "path": "021s Justification Essay.md"
-    },
-    {
-      "basename": "022s Turtlebot Robot Project",
-      "path": "022s Turtlebot Robot Project.md"
-    },
-    {
-      "basename": "W46-2021",
-      "path": "002 Weeklys 📝/W46-2021.md"
-    },
-    {
-      "basename": "Weekly Template",
-      "path": "Templates/Weekly Template.md"
-    },
-    {
-      "basename": "Daily Template",
-      "path": "Templates 🗒️/Daily Template.md"
-    },
-    {
-      "basename": "Kanban Template",
-      "path": "Templates/Kanban Template.md"
-    },
-    {
-      "basename": "Project Template",
-      "path": "Templates/Project Template.md"
-    },
-    {
-      "basename": "W43-2021",
-      "path": "002 Weeklys 📝/W43-2021.md"
-    },
-    {
-      "basename": "W42-2021",
-      "path": "002 Weeklys 📝/W42-2021.md"
     }
   ],
   "omittedPaths": [],
