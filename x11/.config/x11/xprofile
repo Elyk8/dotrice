@@ -9,7 +9,6 @@ run() {
 /usr/bin/prime-offload
 multi-monitor
 xrdb -merge ~/.config/x11/Xresources
-
 run safeeyes -e &
 run greenclip daemon &
 run flameshot &

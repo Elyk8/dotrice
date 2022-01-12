@@ -255,7 +255,7 @@ map d
 map c
 
 # File Openers
-map e $vscodium "$fx"
+map e $emacsedit "$fx"
 map u $view "$f"
 map ` push :open-with<space>
 

@@ -3,10 +3,6 @@
 ------------------------------------------
 {-# LANGUAGE LambdaCase #-}
 
--- set turn tile
-
---(workspaceHistoryHook)
-
 import qualified Codec.Binary.UTF8.String as UTF8
 import Colors.Colors
 import Control.Monad
@@ -99,7 +95,7 @@ myTerminalClass :: String
 myTerminalClass = "St"
 
 myBorderWidth :: Dimension
-myBorderWidth = 2
+myBorderWidth = 3
 
 myNormalColor :: String
 myNormalColor = basebg
@@ -125,7 +121,6 @@ myStartupHook = do
   setDefaultCursor xC_left_ptr
   spawn "killall trayer"
   spawn ("sleep 1 && trayer -l --edge top --align right --widthtype request --padding 5 --SetDockType true --SetPartialStrut true --expand true --transparent true --alpha 0 --tint " ++ colorTrayer ++ " --monitor 1 --height 30 --iconspacing 4")
-  spawnOnce "~/.config/xmonad/scripts/autostart.sh"
 
 ------------------------------------------
 ---           Multi Monitors           ---
@@ -244,7 +239,7 @@ myStatusBarSpawner (S s) = do
   pure $
     statusBarPropTo
       ("_XMONAD_LOG_" ++ show s)
-      ("xmobar -x " ++ show s ++ " ~/.config/xmobar/xmobarrc" ++ show s)
+      ("xmobar -x " ++ show s ++ " ~/.config/xmobar/xmobar" ++ show s ++ ".hs")
       (pure $ myXmobarPP (S s))
 
 myXmobarPP :: ScreenId -> PP
@@ -267,7 +262,7 @@ myXmobarPP s =
                 wrapL (actionPrefix ++ "Right" ++ actionButton ++ "5>") actionSuffix $
                   wrapL "<fc=#666666><fn=1>|</fn> </fc>" "<fc=#666666> <fn=1>|</fn></fc>" $ layoutColorIsActive s (logLayoutOnScreen s),
             wrapL (actionPrefix ++ "q" ++ actionButton ++ "2>") actionSuffix $
-              titleColorIsActive s (shortenL 60 $ logTitleOnScreen s) .| logWhenActive 0 (logConst "*") .| logConst "There's nothing here"
+              titleColorIsActive s (shortenL 50 $ logTitleOnScreen s) .| logWhenActive 0 (logConst "*") .| logConst "There's nothing here"
           ]
       }
   where
@@ -619,7 +614,7 @@ main = do
         keys = myKeys,
         mouseBindings = myMouseBindings,
         handleEventHook = myHandleEventHook,
-        layoutHook = showWName' myShowWNameTheme $ myLayoutHook,
+        layoutHook = showWName' myShowWNameTheme myLayoutHook,
         workspaces = myWorkspaces,
         borderWidth = myBorderWidth,
         normalBorderColor = myNormalColor,

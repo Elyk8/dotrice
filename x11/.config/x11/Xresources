@@ -12,7 +12,7 @@ Xcursor.theme: Bibata-Modern-Ice
 *font2: Braille:pixelsize=19:antialias=true:autohint=true
 
 ! general
-st.alpha: 0.95
+st.alpha: 1
 
 #include "./Xresources.d/nvcode.xresources"
 ! #include "./Xresources.d/tokyonight.xresources"
