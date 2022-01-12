@@ -12,11 +12,15 @@
        :desc "Toggle truncate lines" "t" #'toggle-truncate-lines)
 
 ;; MODELINE
-(set-face-attribute 'mode-line nil :font "Ubuntu Mono-13")
-(setq doom-modeline-height 30     ;; sets modeline height
+(set-face-attribute 'mode-line nil :font "Ubuntu Mono-12")
+(setq doom-modeline-height 20     ;; sets modeline height
       doom-modeline-bar-width 5   ;; sets right bar width
       doom-modeline-persp-name t  ;; adds perspective name to modeline
       doom-modeline-persp-icon t) ;; adds folder icon next to persp name
+
+;; MOUSE
+(map! :n [mouse-8] #'better-jumper-jump-backward
+      :n [mouse-9] #'better-jumper-jump-forward)
 
 ;; SETTINGS
 (setq-default
@@ -27,20 +31,27 @@
 
 (setq undo-limit 80000000                         ; Raise undo-limit to 80Mb
       evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
-      auto-save-default t                         ; Nobody likes to loose work, I certainly don't
+      ;; auto-save-default t                         ; Nobody likes to loose work, I certainly don't
       truncate-string-ellipsis "…"                ; Unicode ellispis are nicer than "...", and also save /precious/ space
       password-cache-expiry nil                   ; I can trust my computers ... can't I?
-      ;; scroll-preserve-screen-position 'always     ; Don't have `point' jump around
+      scroll-preserve-screen-position 'always     ; Don't have `point' jump around
       scroll-margin 2)                            ; It's nice to maintain a little margin
 (global-subword-mode 1)                           ; Iterate through CamelCase words
 
+;; EVIL
+(after! evil
+  (setq evil-ex-substitute-global t     ; I like my s/../.. to by global by default
+        evil-kill-on-visual-paste nil)) ; Don't put overwritten text in the kill ring
+
 ;; FONTS AND THEMES
+;; Themes
 (setq doom-theme 'doom-dark+)
 (remove-hook 'window-setup-hook #'doom-init-theme-h)
 (add-hook 'after-init-hook #'doom-init-theme-h 'append)
 (map! :leader
       :desc "Load new theme" "h t" #'counsel-load-theme)
 
+;; Fonts
 (setq doom-font (font-spec :family "Mononoki Nerd Font" :size 22)
       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 22)
       doom-unicode-font (font-spec :family "JuliaMono")
@@ -67,12 +78,24 @@
 (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
 
 ;; WINDOWS
-(defun prefer-horizontal-split ()
-  (set-variable 'split-height-threshold nil t)
-  (set-variable 'split-width-threshold 40 t)) ; make this as low as needed
-(add-hook 'markdown-mode-hook 'prefer-horizontal-split)
+(setq split-height-threshold 0)
+(setq split-width-threshold 0)
 (map! :leader
       :desc "Clone indirect buffer other window" "b c" #'clone-indirect-buffer-other-window)
+
+;; WINDOW TITLE
+(setq frame-title-format
+      '(""
+        (:eval
+         (if (s-contains-p org-roam-directory (or buffer-file-name ""))
+             (replace-regexp-in-string
+              ".*/[0-9]*-?" "☰ "
+              (subst-char-in-string ?_ ?  buffer-file-name))
+           "%b"))
+        (:eval
+         (let ((project-name (projectile-project-name)))
+           (unless (string= "-" project-name)
+             (format (if (buffer-modified-p)  " ◉ %s" " ● %s") project-name))))))
 
 ;; WHICH KEY
 (setq which-key-idle-delay 0.1) ;; I need the help, I really do
@@ -103,8 +126,9 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-(load! "modules/ibuffer.el")
 (load! "modules/dashboard.el")
+(load! "modules/emacseverywhere.el")
+(load! "modules/ibuffer.el")
 (load! "modules/neotree.el")
 (load! "modules/org.el")
 (load! "modules/dired.el")

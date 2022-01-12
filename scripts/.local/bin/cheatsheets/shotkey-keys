@@ -11,4 +11,4 @@ sed -n '/Key keys/,/};/p;/Key modes/,/};/p' ~/.local/src/shotkey/config.h |
 		-e 's/^\s\+\/\//\/\//' \
 		-e 's/,/ :/' |
 	awk '! /^\s*\/\// {$1 = sprintf("%-25s", $1)} 1' |
-	yad --text-info --back=#282c34 --fore=#bbc2cf --geometry=1200x800 --lang c --theme "Oblivion"
+	yad --text-info --back=#1E1E1E --fore=#D8DEE9 --geometry=1200x800 --lang c --theme "Oblivion"

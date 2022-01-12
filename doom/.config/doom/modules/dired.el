@@ -35,9 +35,10 @@
 ;; Get file icons in dired
 (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
 ;; With dired-open plugin, you can launch external programs for certain extensions
-;; For example, I set all .png files to open in 'sxiv' and all .mp4 files to open in 'mpv'
-(setq dired-open-extensions '(("gif" . "sxiv")
-                              ("jpg" . "sxiv")
-                              ("png" . "sxiv")
+;; For example, I set all .png files to open in 'nsxiv' and all .mp4 files to open in 'mpv'
+(setq dired-open-extensions '(("gif" . "nsxiv")
+                              ("jpg" . "nsxiv")
+                              ("png" . "nsxiv")
+                              ("pdf" . "okular")
                               ("mkv" . "mpv")
                               ("mp4" . "mpv")))

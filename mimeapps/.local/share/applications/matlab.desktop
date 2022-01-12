@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=R2021b
+Type=Application
+Terminal=false
+MimeType=text/x-matlab
+Exec=env MESA_LOADER_DRIVER_OVERRIDE=i965 /media/matlab/bin/matlab -desktop -nosplash -useStartupFolderPref
+Name=MATLAB
+Icon=matlab
+Categories=Development;Math;Science
+Comment=Scientific computing environment
+StartupNotify=true

@@ -1,8 +1,8 @@
 #!/bin/sh
 
-sed -n '/myAdditionalKeys = \[/,/\]/p' ~/.config/xmonad/xmonad.hs |
+sed -n '/START_KEYS/,/END_KEYS/p' ~/.config/xmonad/xmonad.hs |
 	grep '^\s*("\|^\s*\-\- [A-Za-z]\|^$' |
 	sed -e 's/^\s*//' \
 		-e 's/\[ (/(/' |
 	awk -F", " '! /^\s*\-\-/ {$1 = sprintf("%-20s", $1)} 1' |
-	yad --text-info --back=#282c34 --fore=#bbc2cf --geometry=1200x800 --lang haskell --theme "Oblivion"
+	yad --text-info --back=#1E1E1E --fore=#D8DEE9 --geometry=1200x800 --lang haskell --theme "Oblivion"

@@ -79,10 +79,10 @@ export XMONAD_CONFIG_DIR="$HOME/.config/xmonad"
 export XMONAD_CACHE_DIR="$HOME/.config/xmonad"
 
 # Default programs:
-export EDITOR="lvim"
-export VISUAL="lvim"
-#export EDITOR="emacsedit"              # $EDITOR use Emacs in terminal
-#export VISUAL="emacsedit"           # $VISUAL use Emacs in GUI mode
+#export EDITOR="lvim"
+#export VISUAL="lvim"
+export EDITOR="emacsedit"
+export VISUAL="emacsedit"
 export READER="okular"
 export TERMINAL="st"
 export BROWSER="brave"
@@ -90,7 +90,7 @@ export VIDEO="mpv"
 export IMAGE="nsxiv"
 export OPENER="xdg-open"
 export PAGER="less -S"
-export MANPAGER="nvim -c 'set ft=man nonumber nolist ts=8 laststatus=1 showtabline=1' '+Man!' -"
+export MANPAGER="lvim -c 'set ft=man nonumber nolist ts=8 laststatus=1 showtabline=1' '+Man!' -"
 # Others
 export MOZ_USE_XINPUT2="1"		              # Mozilla smooth scrolling/touchpads.
 export AWT_TOOLKIT="MToolkit wmname LG3D"	  # May have to install wmname

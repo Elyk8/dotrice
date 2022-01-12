@@ -34,8 +34,7 @@ import XMonad.Actions.PhysicalScreens
 import XMonad.Actions.RotSlaves (rotAllDown, rotSlavesDown)
 import XMonad.Actions.SwapPromote
 import XMonad.Actions.SwapWorkspaces
--- import XMonad.Actions.UpdatePointer (updatePointer)
-import XMonad.Actions.Warp
+import XMonad.Actions.UpdatePointer (updatePointer)
 import XMonad.Actions.WindowGo (runOrRaise)
 import XMonad.Actions.WithAll (killAll, sinkAll)
 import XMonad.Hooks.EwmhDesktops
@@ -83,6 +82,7 @@ import XMonad.Util.Run (runProcessWithInput, safeSpawn, spawnPipe)
 import XMonad.Util.Scratchpad
 import XMonad.Util.SpawnOnce
 import XMonad.Util.WindowProperties
+import XMonad.Util.WorkspaceCompare
 
 myFont :: String
 myFont = "xft:Ubuntu Nerd Font:regular:size=9:antialias=true:hinting=true"
@@ -166,21 +166,21 @@ myStartupHook = do
 ---           Pointer Update           ---
 ------------------------------------------
 
--- newtype MyUpdatePointerActive = MyUpdatePointerActive Bool
+newtype MyUpdatePointerActive = MyUpdatePointerActive Bool
 
--- instance ExtensionClass MyUpdatePointerActive where
---   initialValue = MyUpdatePointerActive True
+instance ExtensionClass MyUpdatePointerActive where
+  initialValue = MyUpdatePointerActive True
 
--- myUpdatePointer :: (Rational, Rational) -> (Rational, Rational) -> X ()
--- myUpdatePointer refPos ratio =
---   whenX isActive $ do
---     dpy <- asks display
---     root <- asks theRoot
---     (_, _, _, _, _, _, _, m) <- io $ queryPointer dpy root
---     unless (testBit m 9 || testBit m 8 || testBit m 10) $ -- unless the mouse is clicking
---       updatePointer refPos ratio
---   where
---     isActive = (\(MyUpdatePointerActive b) -> b) <$> XS.get
+myUpdatePointer :: (Rational, Rational) -> (Rational, Rational) -> X ()
+myUpdatePointer refPos ratio =
+  whenX isActive $ do
+    dpy <- asks display
+    root <- asks theRoot
+    (_, _, _, _, _, _, _, m) <- io $ queryPointer dpy root
+    unless (testBit m 9 || testBit m 8 || testBit m 10) $ -- unless the mouse is clicking
+      updatePointer refPos ratio
+  where
+    isActive = (\(MyUpdatePointerActive b) -> b) <$> XS.get
 
 ------------------------------------------
 ---               Theme                ---
@@ -261,7 +261,7 @@ myXmobarPP s =
         ppUrgent = xmobarColor base05 "" . (wrap "!" "!" . clickable wsIconFull),
         ppOrder = \(ws : _ : _ : extras) -> ws : extras,
         ppExtras =
-          [ logCurrentOnScreen s,
+          [ windowCount,
             wrapL (actionPrefix ++ "n" ++ actionButton ++ "1>") actionSuffix $
               wrapL (actionPrefix ++ "Left" ++ actionButton ++ "4>") actionSuffix $
                 wrapL (actionPrefix ++ "Right" ++ actionButton ++ "5>") actionSuffix $
@@ -312,6 +312,13 @@ clickable icon ws = addActions [(show i, 1), ("q", 2), ("Left", 4), ("Right", 5)
   where
     i = fromJust $ M.lookup ws myWorkspaceIndices
 
+myFilter = filterOutWs [scratchpadWorkspaceTag]
+
+workspaceOnCurrentScreen :: WSType
+workspaceOnCurrentScreen = WSIs $ do
+  s <- currentScreen
+  return $ \x -> W.tag x /= "NSP"
+
 ------------------------------------------
 ---              Layouts               ---
 ------------------------------------------
@@ -331,35 +338,35 @@ myLayoutHook =
         ||| noBorders tabs
         ||| grid
         ||| spirals
-        ||| threeCol
-        ||| threeRow
-        ||| tallAccordion
-        ||| wideAccordion
+        ||| three
+        ||| accordion
         ||| floats
 
 tall =
-  renamed [Replace "tall"] $
+  renamed [Replace "Tall"] $
     avoidStruts $
       smartBorders $
         addTabs shrinkText myTabTheme $
           subLayout [] (smartBorders Simplest) $
-            limitWindows 12 $
-              mySpacing 8 $
-                ResizableTall 1 (3 / 100) (1 / 2) []
+            mkToggle (single MIRROR) $
+              limitWindows 12 $
+                mySpacing 8 $
+                  ResizableTall 1 (3 / 100) (1 / 2) []
 
 zoom =
-  renamed [Replace "zoom"] $
+  renamed [Replace "Zoom"] $
     avoidStruts $
       smartBorders $
         addTabs shrinkText myTabTheme $
           subLayout [] (smartBorders Simplest) $
             magnifier $
-              limitWindows 12 $
-                mySpacing 8 $
-                  ResizableTall 1 (3 / 100) (1 / 2) []
+              mkToggle (single MIRROR) $
+                limitWindows 12 $
+                  mySpacing 8 $
+                    ResizableTall 1 (3 / 100) (1 / 2) []
 
 monocle =
-  renamed [Replace "monocle"] $
+  renamed [Replace "Monocle"] $
     avoidStruts $
       smartBorders $
         addTabs shrinkText myTabTheme $
@@ -367,7 +374,7 @@ monocle =
             limitWindows 20 Full
 
 grid =
-  renamed [Replace "grid"] $
+  renamed [Replace "Grid"] $
     avoidStruts $
       smartBorders $
         addTabs shrinkText myTabTheme $
@@ -378,51 +385,41 @@ grid =
                   Grid (16 / 10)
 
 spirals =
-  renamed [Replace "spirals"] $
+  renamed [Replace "Fibonacci"] $
     avoidStruts $
       smartBorders $
         addTabs shrinkText myTabTheme $
           subLayout [] (smartBorders Simplest) $
-            mySpacing' 8 $
-              spiral (6 / 7)
+            mkToggle (single MIRROR) $
+              mySpacing' 8 $
+                spiral (6 / 7)
 
-threeCol =
-  renamed [Replace "threeCol"] $
+three =
+  renamed [Replace "Three"] $
     avoidStruts $
       smartBorders $
         addTabs shrinkText myTabTheme $
           subLayout [] (smartBorders Simplest) $
             limitWindows 7 $
-              ThreeCol 1 (3 / 100) (1 / 2)
-
-threeRow =
-  renamed [Replace "threeRow"] $
-    avoidStruts $
-      smartBorders $
-        addTabs shrinkText myTabTheme $
-          subLayout [] (smartBorders Simplest) $
-            limitWindows 7 $
-              Mirror $
+              mkToggle (single MIRROR) $
                 ThreeCol 1 (3 / 100) (1 / 2)
 
 floats =
-  renamed [Replace "floats"] $
+  renamed [Replace "Floats"] $
     avoidStruts $
       smartBorders $
         limitWindows 20 simplestFloat
 
 tabs =
-  renamed [Replace "tabs"] $
+  renamed [Replace "Tabs"] $
     tabbed shrinkText myTabTheme
 
-tallAccordion =
+accordion =
   renamed
-    [Replace "tallAccordion"]
-    Accordion
-
-wideAccordion =
-  renamed [Replace "wideAccordion"] $
-    Mirror Accordion
+    [Replace "accordion"]
+    $ mkToggle
+      (single MIRROR)
+      Accordion
 
 ------------------------------------------
 ---            Window Rules            ---
@@ -500,7 +497,7 @@ myScratchPads =
 ------------------------------------------
 ---                Keys                ---
 ------------------------------------------
--- START_KEYS
+--START_KEYS
 myAdditionalKeys :: [(String, X ())]
 myAdditionalKeys =
   [ -- Xmonad
@@ -513,8 +510,8 @@ myAdditionalKeys =
     -- Dual monitor switcher
     ("M-w", onNextNeighbour def W.view),
     ("M-S-w", onNextNeighbour def W.shift),
-    ("M-r", onNextNeighbour def W.greedyView),
-    ("M-S-r", onNextNeighbour def W.shift),
+    ("M-a", onNextNeighbour def W.greedyView),
+    ("M-S-a", onNextNeighbour def W.shift),
     -- Floating windows
     ("M-f", sendMessage (T.Toggle "floats")), -- Toggles my 'floats' layout
     ("M-t", withFocused $ windows . W.sink), -- Push floating window back to tile
@@ -525,9 +522,6 @@ myAdditionalKeys =
     ("C-M1-k", incWindowSpacing 4), -- Increase window spacing
     ("C-M1-h", decScreenSpacing 4), -- Decrease screen spacing
     ("C-M1-l", incScreenSpacing 4), -- Increase screen spacing
-
-    -- Window Warp
-    ("M-b", warpToWindow (1%2) (1%2)), -- Warp to focused window
 
     -- Windows navigation
     ("M-n", windows W.focusMaster), -- Move focus to the master window
@@ -543,6 +537,7 @@ myAdditionalKeys =
     -- Layouts
     ("M-<Space>", sendMessage NextLayout), -- Switch to next layout
     ("M-<Tab>", sendMessage (MT.Toggle NBFULL) >> sendMessage ToggleStruts), -- Toggles noborder/full
+    ("M-r", sendMessage $ MT.Toggle MIRROR), -- Rotate
 
     -- Increase/decrease windows in the master pane or the stack
     ("M-S-<Up>", sendMessage (IncMasterN 1)), -- Increase # of clients master pane
@@ -573,7 +568,7 @@ myAdditionalKeys =
     ("M-s t", namedScratchpadAction myScratchPads "terminal") -- Terminal
   ]
 
--- END_KEYS
+--END_KEYS
 
 -- Workspaces
 -- ("M-.", nextScreen), -- Switch focus to next monitor
@@ -590,7 +585,7 @@ myKeys conf =
               (f, m) <-
                 [ (W.greedyView, controlMask),
                   (W.view, 0),
-                  (liftM2 (.) W.view W.shift, shiftMask),
+                  (W.shift, shiftMask),
                   (swapWithCurrent, mod1Mask)
                 ]
           ]
@@ -601,13 +596,11 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) =
     [ ((modMask, button1), \w -> focus w >> mouseMoveWindow w >> windows W.shiftMaster), --Set the window to floating mode and move by dragging
       ((modMask, button2), \w -> focus w >> windows W.shiftMaster), --Raise the window to the top of the stack
       ((modMask, button3), \w -> focus w >> Flex.mouseResizeWindow w), --Set the window to floating mode and resize by dragging
-      ((modMask, button4), const $ moveTo Prev nonNSP), --Switch to previous workspace
-      ((modMask, button5), const $ moveTo Next nonNSP), --Switch to next workspace
-      ((modMask .|. shiftMask, button4), const $ shiftTo Prev nonNSP), --Send client to previous workspace
-      ((modMask .|. shiftMask, button5), const $ shiftTo Next nonNSP) --Send client to next workspace
+      ((modMask, button4), const $ moveTo Prev workspaceOnCurrentScreen), --Switch to previous workspace
+      ((modMask, button5), const $ moveTo Next workspaceOnCurrentScreen), --Switch to next workspace
+      ((modMask .|. shiftMask, button4), const $ shiftTo Prev workspaceOnCurrentScreen), --Send client to previous workspace
+      ((modMask .|. shiftMask, button5), const $ shiftTo Next workspaceOnCurrentScreen) --Send client to next workspace
     ]
-    where nonNSP = WSIs (return (\ws -> W.tag ws /= "NSP"))
-          nonEmptyNonNSP  = WSIs (return (\ws -> isJust (W.stack ws) && W.tag ws /= "NSP"))
 
 ------------------------------------------
 ---               Main                 ---
@@ -615,7 +608,7 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) =
 
 main :: IO ()
 main = do
-  xmonad . ewmh . docks . dynamicSBs myStatusBarSpawner $
+  xmonad . addEwmhWorkspaceSort (pure myFilter) . ewmh . docks . dynamicSBs myStatusBarSpawner $
     def
       { manageHook = myManageHook <+> manageDocks,
         focusFollowsMouse = True,
@@ -633,7 +626,7 @@ main = do
         focusedBorderColor = myFocusColor,
         logHook =
           logHook def
-            -- <+> myUpdatePointer (0.5, 0.5) (0, 0)
+            <+> myUpdatePointer (0.5, 0.5) (0, 0)
             <+> masterHistoryHook
             <+> refocusLastLogHook
             >> nsHideOnFocusLoss myScratchPads

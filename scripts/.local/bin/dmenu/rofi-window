@@ -1,0 +1,3 @@
+#!/bin/sh
+
+rofi -show window -window-format "{w} - {c} - {t}" -theme screen -window-thumbnail

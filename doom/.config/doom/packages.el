@@ -52,3 +52,6 @@
 (package! dashboard)
 (package! dired-open)
 (package! dired-subtree)
+(package! emacs-everywhere :recipe (:local-repo "lisp/emacs-everywhere"))
+(unpin! emacs-everywhere)
+(package! org-appear :recipe (:host github :repo "awth13/org-appear") :pin "148aa124901ae598f69320e3dcada6325cdc2cf0")

@@ -42,7 +42,6 @@
         (:tangle . "no")
         (:comments . "link")))
 
-
 (custom-set-faces!
   '(outline-1 :weight extra-bold :height 1.6)
   '(outline-2 :weight bold :height 1.5)
@@ -57,8 +56,28 @@
 (remove-hook 'text-mode-hook #'visual-line-mode)
 (add-hook 'text-mode-hook #'auto-fill-mode)
 
+;; ORG APPEAR
+(use-package! org-appear
+  :hook (org-mode . org-appear-mode)
+  :config
+  (setq org-appear-autoemphasis t
+        org-appear-autosubmarkers t
+        org-appear-autolinks nil)
+  ;; for proper first-time setup, `org-appear--set-elements'
+  ;; needs to be run after other hooks have acted.
+  (run-at-time nil nil #'org-appear--set-elements))
+
 ;; ORG ROAM
-(setq org-roam-directory "~/nc/Roam")
+  (setq org-roam-directory "~/nc/Roam"
+        org-roam-capture-templates
+   '(("d" "default" plain
+      "%?"
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n")
+      :unnarrowed t)
+     ("p" "project" plain "* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
+      :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: Project")
+      :unnarrowed t)))
+
 (defadvice! doom-modeline--buffer-file-name-roam-aware-a (orig-fun)
   :around #'doom-modeline-buffer-file-name ; takes no args
   (if (s-contains-p org-roam-directory (or buffer-file-name ""))
@@ -249,7 +268,7 @@ made unique when necessary."
           (inc-suffixf ref)))
       ref)))
 
-(add-hook 'org-load-hook #'unpackaged/org-export-html-with-useful-ids-mode)
+(add-hook 'with-eval-after-load #'unpackaged/org-export-html-with-useful-ids-mode)
 
 
 (defadvice! org-export-format-reference-a (reference)
