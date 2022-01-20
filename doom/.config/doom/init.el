@@ -13,7 +13,6 @@
 ;;
 ;;      Alternatively, press 'gd' (or 'C-c c d') on a module to browse its
 ;;      directory (for easy access to its source code).
-
 (doom! :input
       ;;chinese
       ;;japanese
@@ -95,7 +94,7 @@
       (eval +overlay)     ; run code, run (also, repls)
       ;;gist              ; interacting with github gists
       lookup              ; navigate your code and its documentation
-      lsp               ; M-x vscode
+      (lsp +eglot)        ; M-x vscode
       magit             ; a git porcelain for Emacs
       ;;make              ; run make tasks from Emacs
       ;;pass              ; password manager for nerds
@@ -108,7 +107,7 @@
       ;;upload            ; map local to remote projects via ssh/ftp
 
       :os
-      (:if IS-MAC macos)  ; improve compatibility with macOS
+      ;;(:if IS-MAC macos)  ; improve compatibility with macOS
       tty                 ; improve the terminal Emacs experience
 
       :lang
@@ -125,7 +124,7 @@
       ;;dhall
       ;;elixir            ; erlang done right
       ;;elm               ; care for a cup of TEA?
-      emacs-lisp        ; drown in parentheses
+      emacs-lisp          ; drown in parentheses
       ;;erlang            ; an elegant language for a more civilized age
       ;;ess               ; emacs speaks statistics
       ;;factor
@@ -135,7 +134,7 @@
       ;;fstar             ; (dependent) types and (monadic) effects and Z3
       ;;gdscript          ; the language you waited for
       ;;(go +lsp)         ; the hipster dialect
-      (haskell +lsp)      ; a language that's lazier than I am
+      (haskell +dante +lsp)     ; a language that's lazier than I am
       ;;hy                ; readability of scheme w/ speed of python
       ;;idris             ; a language you can depend on
       ;;json              ; At least it ain't XML
@@ -146,7 +145,7 @@
       ;;latex             ; writing papers in Emacs has never been so fun
       ;;lean              ; for folks with too much to prove
       ;;ledger            ; be audit you can be
-      ;;lua               ; one-based indices? one-based indices
+      lua                 ; one-based indices? one-based indices
       markdown            ; writing docs for people to ignore
       ;;nim               ; python + lisp at the speed of c
       nix                 ; I hereby declare "nix geht mehr!"
@@ -175,7 +174,7 @@
       ;;rust              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
       ;;scala             ; java, but good
       ;;(scheme +guile)   ; a fully conniving family of lisps
-      (sh +lsp)           ; she sells {ba,z,fi}sh shells on the C xor
+      (sh +lsp)                 ; she sells {ba,z,fi}sh shells on the C xor
       ;;sml
       ;;solidity          ; do you need a blockchain? No.
       ;;swift             ; who asked for emoji variables?

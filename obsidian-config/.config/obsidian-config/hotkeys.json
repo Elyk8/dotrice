@@ -79,7 +79,7 @@
       "modifiers": [
         "Mod"
       ],
-      "key": "D"
+      "key": "T"
     }
   ],
   "switcher:open": [
@@ -240,14 +240,15 @@
       "key": "O"
     }
   ],
+  "file-explorer:new-file-in-new-pane": [],
+  "zk-prefixer": [],
   "app:go-forward": [
     {
       "modifiers": [
         "Mod"
       ],
-      "key": "P"
+      "key": "I"
     }
   ],
-  "file-explorer:new-file-in-new-pane": [],
-  "zk-prefixer": []
+  "editor:toggle-italics": []
 }

@@ -9,10 +9,10 @@
 /* Flat font */
 /* Requires: https://icomoon.io/#icons-icomoon/liga-font */
 .nav-folder-children .nav-file-title-content:first-child::before {
-  content: "📃 ";
+  content: "📃";
   font-family: "JoyPixels";
 }
 .nav-folder-children .nav-folder-title-content::before {
-  content: "📂 ";
+  content: "📂";
   font-family: "JoyPixels";
 }

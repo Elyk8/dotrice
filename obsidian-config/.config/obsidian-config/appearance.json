@@ -1,5 +1,5 @@
 {
-  "baseFontSize": 20,
+  "baseFontSize": 27,
   "translucency": false,
   "theme": "obsidian",
   "cssTheme": "Minimal",
@@ -7,13 +7,11 @@
   "enabledCssSnippets": [
     "custom",
     "font",
-    "collapsing-sidebar",
-    "cursor",
-    "custom-icons-differing-files-and-folders",
-    "outliner-for-the-outline-and-file-explorer",
     "smaller-scrollbar",
     "tag-pills",
-    "source-font",
-    "headings"
+    "custom-icons-differing-files-and-folders",
+    "outliner-for-the-outline-and-file-explorer",
+    "org-sidian",
+    "org-sidian-preview"
   ]
 }

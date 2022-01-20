@@ -26,7 +26,7 @@ Config { font = "xft:Ubuntu:weight=bold:pixelsize=13:antialias=true:hinting=true
        , commands         =
                     [
                       Run Network "wlps7" ["-t", "<fn=1>\xfd3f</fn> <dev>"] 20 
-                      -- Run Date " %a %d %b  <fc=#aac0f0> <fn=1>\xF073 </fn></fc> %l:%M:%S:%p " "date" 1
+                    , Run Date "%l:%M:%S:%p " "date" 1
                     , Run Com "uname" ["-r"] "" 3600
                     , Run UnsafeXPropertyLog "_XMONAD_LOG_1"
                     ]
@@ -36,6 +36,6 @@ Config { font = "xft:Ubuntu:weight=bold:pixelsize=13:antialias=true:hinting=true
                     \ <fn=1>%_XMONAD_LOG_1%</fn>}{\
 
 
-                    \<box type=Bottom width=2 mb=2 color=#51afef><fc=#aac0f0><fn=3> </fn>  <action=`st -e gotop`>%uname%</action></fc></box>"
-
+                    \<box type=Bottom width=2 mb=2 color=#51afef><fc=#aac0f0><fn=3> </fn>  <action=`st -e gotop`>%uname%</action></fc></box>    \
+                    \<box type=Bottom width=2 mb=2 color=#51afef><fc=#5294e2> <action=`sh -c thunderbird`>%date%</action></fc></box>"
                     }

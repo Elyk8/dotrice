@@ -49,9 +49,21 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
+(unpin! emacs-everywhere)
+(unpin! org-roam)
+
 (package! dashboard)
 (package! dired-open)
 (package! dired-subtree)
 (package! emacs-everywhere :recipe (:local-repo "lisp/emacs-everywhere"))
-(unpin! emacs-everywhere)
-(package! org-appear :recipe (:host github :repo "awth13/org-appear") :pin "148aa124901ae598f69320e3dcada6325cdc2cf0")
+(package! org-appear :recipe (:host github :repo "awth13/org-appear"))
+(package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
+
+(package! org-roam-bibtex :recipe (:host github :repo "org-roam/org-roam-bibtex"))
+(unpin! bibtex-completion helm-bibtex ivy-bibtex)
+
+(package! websocket) ; dependency of `org-roam-ui'
+(package! org-ref)
+(package! citar)
+(package! citeproc)
+(package! org-cite-csl-activate :recipe (:host github :repo "andras-simonyi/org-cite-csl-activate"))

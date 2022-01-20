@@ -57,7 +57,7 @@ main() {
 			break
 			;;
 		8)
-			notification "ChillSynth FM ☕️🎶"
+			notification "Progressive House ☕️🎶"
 			URL="https://www.youtube.com/watch?v=KvRVky0r7YM"
 			break
 			;;

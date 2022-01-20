@@ -1,12 +1,27 @@
 {
   "collapse-filter": false,
-  "search": "",
+  "search": "- path:Templates -path:Citations",
   "showTags": false,
   "showAttachments": false,
   "hideUnresolved": false,
   "showOrphans": true,
   "collapse-color-groups": false,
-  "colorGroups": [],
+  "colorGroups": [
+    {
+      "query": "tag:#🌱",
+      "color": {
+        "a": 1,
+        "rgb": 16756495
+      }
+    },
+    {
+      "query": "tag:#🌲",
+      "color": {
+        "a": 1,
+        "rgb": 7572544
+      }
+    }
+  ],
   "collapse-display": false,
   "showArrow": true,
   "textFadeMultiplier": 0.2,
@@ -17,6 +32,6 @@
   "repelStrength": 20,
   "linkStrength": 0.240480708412397,
   "linkDistance": 358,
-  "scale": 0.14531589030994208,
+  "scale": 0.22737735259441272,
   "close": true
 }

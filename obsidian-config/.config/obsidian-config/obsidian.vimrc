@@ -1,5 +1,3 @@
-set leader <space>
-
 nmap <s-l> g$
 nmap <s-h> g0
 nmap j gj
@@ -11,6 +9,8 @@ imap jk <Esc>
 imap kj <Esc>
 
 nmap Y y$
+
+map Q gq
 
 " Yank to system clipboard
 set clipboard=unnamed

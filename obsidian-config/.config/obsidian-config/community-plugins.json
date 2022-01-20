@@ -38,9 +38,12 @@
   "find-unlinked-files",
   "obsidian-auto-link-title",
   "ghost-fade-focus",
-  "cm-typewriter-scroll-obsidian",
   "hotkey-helper",
   "key-promoter",
   "metaedit",
-  "todoist-sync-plugin"
+  "todoist-sync-plugin",
+  "obsidian-embedded-note-titles",
+  "obsidian-minimal-settings",
+  "obsidian-hider",
+  "obsidian-extract-pdf-highlights"
 ]

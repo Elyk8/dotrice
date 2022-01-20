@@ -1,4 +1,14 @@
-.markdown-source-view {
-  font-family: 'JetBrains Mono Nerd Font', monospace;
-  color: white;
+/* .view-content { */
+/*   font-family: 'Mononoki Nerd Font', monospace !important; */
+/* } */
+
+/* .markdown-source-view, .cm-inline-code, .HyperMD-codeblock { */
+/*     font-family: 'Mononoki Nerd Font' !important; */
+/*     font-size: var(--editor-font-size) !important; */
+/* } */
+
+.cm-s-obsidian {
+  font-family: 'Mononoki Nerd Font', monospace !important;
 }
+
+.markdown-source-view { font-family: 'Mononoki Nerd Font', monospace; }

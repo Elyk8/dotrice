@@ -4,14 +4,12 @@
     "type": "split",
     "children": [
       {
-        "id": "931c3658838e61bf",
+        "id": "723bd47cad033c1a",
         "type": "leaf",
         "state": {
-          "type": "markdown",
+          "type": "pdf",
           "state": {
-            "file": "14-12-2021 - Capstone Meeting.md",
-            "mode": "preview",
-            "source": true
+            "file": "Attachments/Kornia_an_Open_Source_Differentiable_Computer_Vision_Library_for_PyTorch.pdf"
           }
         }
       }
@@ -32,7 +30,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#project",
+                "query": "tag:#🌲",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -70,7 +68,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 268.00468826293945,
+    "width": 215,
     "collapsed": true
   },
   "right": {
@@ -87,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "14-12-2021 - Capstone Meeting.md",
+                "file": "Attachments/Kornia_an_Open_Source_Differentiable_Computer_Vision_Library_for_PyTorch.pdf",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "14-12-2021 - Capstone Meeting.md",
+                "file": "Attachments/Kornia_an_Open_Source_Differentiable_Computer_Vision_Library_for_PyTorch.pdf",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -116,7 +114,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "14-12-2021 - Capstone Meeting.md"
+                "file": "Attachments/Kornia_an_Open_Source_Differentiable_Computer_Vision_Library_for_PyTorch.pdf"
               }
             }
           },
@@ -155,17 +153,17 @@
     "width": 205.94332885742188,
     "collapsed": true
   },
-  "active": "931c3658838e61bf",
+  "active": "723bd47cad033c1a",
   "lastOpenFiles": [
-    "14-12-2021 - Capstone Meeting.md",
-    "Capstone Project.md",
-    "_Home.md",
-    "My Laws.md",
-    "Linux.md",
-    "Mobile robot burger.md",
-    "System Design.md",
-    "Literature Review.md",
-    "Mobile Robot Platform with Arduino Uno and Raspberry Pi for Autonomous Navigation.md",
-    "202201091601_Haskell.md"
+    "Attachments/Kornia_an_Open_Source_Differentiable_Computer_Vision_Library_for_PyTorch.pdf",
+    "+202201181601_Kornia.md",
+    "_HOME.md",
+    "202112130912_Capstone_Project.md",
+    "_Inbox/Discipline.md",
+    "202112131212_My_Laws.md",
+    "202112131212_Al_Che.md",
+    "202201131601_Literature_Review.md",
+    "18-01-2022-Capstone_Meeting.md",
+    "202201031001_Mobile_Robot_Platform_with_Arduino_Uno_and_Raspberry_Pi_for_Autonomous_Navigation.md"
   ]
 }

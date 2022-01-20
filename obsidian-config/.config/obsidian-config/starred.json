@@ -19,6 +19,21 @@
       "type": "file",
       "title": "~ Courses",
       "path": "010s Courses.md"
+    },
+    {
+      "type": "search",
+      "title": "tag:#🌱",
+      "query": "tag:#🌱"
+    },
+    {
+      "type": "search",
+      "title": "tag:#📥",
+      "query": "tag:#📥"
+    },
+    {
+      "type": "search",
+      "title": "tag:#🌲",
+      "query": "tag:#🌲"
     }
   ]
 }
