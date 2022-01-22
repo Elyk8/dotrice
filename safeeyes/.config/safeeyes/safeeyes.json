@@ -68,7 +68,7 @@
             "version": "0.0.3"
         },
         {
-            "enabled": false,
+            "enabled": true,
             "id": "smartpause",
             "settings": {
                 "idle_time": 30.0,
@@ -146,6 +146,6 @@
     "shortcut_disable_time": 2,
     "shortcut_postpone": 65,
     "shortcut_skip": 9,
-    "strict_break": false,
+    "strict_break": true,
     "use_rpc_server": true
 }

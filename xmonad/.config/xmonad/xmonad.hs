@@ -33,6 +33,7 @@ import System.Exit (exitSuccess)
 import System.IO (hPutStrLn)
 import System.Posix.Files
 import XMonad
+import XMonad.Actions.CopyWindow
 import XMonad.Actions.CycleWS
 import XMonad.Actions.DwmPromote
 import qualified XMonad.Actions.FlexibleResize as Flex
@@ -105,8 +106,18 @@ import qualified XMonad.Util.ExtensibleState as XS
 import qualified XMonad.Util.Hacks as Hacks
 import XMonad.Util.Loggers
 import XMonad.Util.NamedScratchpad
+  ( NamedScratchpad (..),
+    NamedScratchpads,
+    customFloating,
+    namedScratchpadAction,
+    namedScratchpadFilterOutWorkspacePP,
+    namedScratchpadManageHook,
+    nsHideOnFocusLoss,
+    scratchpadWorkspaceTag,
+  )
 import XMonad.Util.Run (runProcessWithInput, safeSpawn, spawnPipe)
 import XMonad.Util.Scratchpad
+import XMonad.Util.Scratchpad (scratchpadManageHook)
 import XMonad.Util.SpawnOnce
 import XMonad.Util.WindowProperties
 import XMonad.Util.WorkspaceCompare
@@ -507,9 +518,7 @@ myManageHook =
       [ "notification",
         "Yad",
         "Xfce4-power-manager-settings",
-        "Dragon-drag-and-drop",
-        "scratchpad",
-        "ncmpcpp"
+        "Dragon-drag-and-drop"
       ]
     myFloatSN = ["Event Tester"]
     myFocusDC = ["Event Tester", "Notify-osd"]
@@ -529,21 +538,21 @@ myScratchPads =
   [ NS
       "ncmpcpp"
       launchNcmpcpp
-      (className =? "ncmpcpp")
-      (customFloating $ W.RationalRect h w t l),
+      (appName =? "ncmpcpp")
+      (customFloating $ W.RationalRect l t w h),
     NS
       "terminal"
       launchTerminal
-      (className =? "scratchpad")
-      (customFloating $ W.RationalRect h w t l)
+      (appName =? "scratchpad")
+      (customFloating $ W.RationalRect l t w h)
   ]
   where
-    launchNcmpcpp = myTerminal ++ " -c ncmpcpp -e ncmpcpp"
-    launchTerminal = myTerminal ++ " -c scratchpad"
+    launchNcmpcpp = myTerminal ++ " -n ncmpcpp -e ncmpcpp"
+    launchTerminal = myTerminal ++ " -n scratchpad"
     h = 0.8
-    w = 0.8
-    t = 0.95 - h
-    l = 0.95 - w
+    w = 0.6
+    t = (1 - h) / 2
+    l = (1 - w) / 2
 
 ------------------------------------------
 ---                Keys                ---
@@ -556,8 +565,12 @@ myAdditionalKeys =
     ("M-S-<Esc>", io exitSuccess),
     ("M-S-<Backspace>", toggledisplay "HDMI-0"),
     -- Kill windows
-    ("M-q", kill), -- Kill the currently focused client
+    ("M-q", kill1), -- Kill the currently focused client
     ("M-S-q", killAll), -- Kill all windows on current workspace
+
+    -- Sticky Windows
+    ("M-v", windows copyToAll), -- Make focused window always visible in all workspaces
+    ("M-S-v", killAllOtherCopies), -- Toggle window state back
 
     -- Floating windows
     ("M-f", sendMessage (T.Toggle "floats")), -- Toggles my 'floats' layout
@@ -624,7 +637,8 @@ myAdditionalKeys =
          | (tag, key) <- zip myWorkspaces "12345",
            (otherModMasks, action) <-
              [ ("", windows . W.view), -- was W.greedyView
-               ("S-", windows . W.shift)
+               ("S-", windows . W.shift),
+               ("C-", windows . copy)
              ]
        ]
     ++ [ (mask ++ "M-" ++ [key], screenWorkspace scr >>= flip whenJust (windows . action))
@@ -633,7 +647,7 @@ myAdditionalKeys =
              [ (W.greedyView, "C-"),
                (W.view, ""),
                (W.shift, "S-"),
-               (swapWithCurrent, "M1-")
+               (swapWithCurrent, "C-S-")
              ]
        ]
   where
@@ -684,7 +698,10 @@ main =
     . rescreenHook rescreenCfg
     . dynamicSBs myStatusBarSpawner
     $ def
-      { manageHook = myManageHook <+> manageDocks,
+      { manageHook =
+          myManageHook
+            <+> namedScratchpadManageHook myScratchPads
+            <+> manageDocks,
         focusFollowsMouse = True,
         clickJustFocuses = False,
         modMask = myModMask,

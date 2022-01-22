@@ -11,7 +11,6 @@
   "cm-editor-syntax-highlight-obsidian",
   "obsidian-embedded-code-title",
   "obsidian-icons-plugin",
-  "obsidian-outliner",
   "pdf-to-markdown-plugin",
   "templater-obsidian",
   "recent-files-obsidian",
@@ -28,7 +27,6 @@
   "obsidian-tidy-footnotes",
   "unique-attachments",
   "obsidian-excalidraw-plugin",
-  "sliding-panes-obsidian",
   "obsidian-focus-mode",
   "periodic-notes",
   "obsidian-text-format",
@@ -45,5 +43,8 @@
   "obsidian-embedded-note-titles",
   "obsidian-minimal-settings",
   "obsidian-hider",
-  "obsidian-extract-pdf-highlights"
+  "obsidian-dynamic-toc",
+  "pane-relief",
+  "cm-typewriter-scroll-obsidian",
+  "sliding-panes-obsidian"
 ]

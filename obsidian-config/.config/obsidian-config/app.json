@@ -10,7 +10,7 @@
   "lineWrap": true,
   "strictLineBreaks": true,
   "readableLineLength": true,
-  "showFrontmatter": true,
+  "showFrontmatter": false,
   "fileSortOrder": "alphabetical",
   "pdfExportSettings": {
     "pageSize": "A4",
@@ -21,7 +21,7 @@
   "defaultViewMode": "source",
   "useMarkdownLinks": false,
   "trashOption": "local",
-  "legacyEditor": false,
+  "legacyEditor": true,
   "livePreview": false,
   "newFileFolderPath": "_Inbox"
 }

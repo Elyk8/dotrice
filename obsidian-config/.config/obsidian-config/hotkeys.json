@@ -135,10 +135,9 @@
   "obsidian-focus-mode:toggle-super-focus-mode": [
     {
       "modifiers": [
-        "Alt",
-        "Shift"
+        "Alt"
       ],
-      "key": "Z"
+      "key": "C"
     }
   ],
   "editor:focus-left": [
@@ -162,7 +161,7 @@
       "modifiers": [
         "Alt"
       ],
-      "key": "W"
+      "key": "E"
     }
   ],
   "app:toggle-right-sidebar": [
@@ -170,7 +169,7 @@
       "modifiers": [
         "Alt"
       ],
-      "key": "E"
+      "key": "R"
     }
   ],
   "workspace:split-vertical": [
@@ -250,5 +249,32 @@
       "key": "I"
     }
   ],
-  "editor:toggle-italics": []
+  "file-explorer:open": [],
+  "app:open-help": [],
+  "templater-obsidian:replace-in-file-templater": [],
+  "editor:toggle-italics": [
+    {
+      "modifiers": [
+        "Alt"
+      ],
+      "key": "I"
+    }
+  ],
+  "convert-url-to-iframe:url-to-iframe": [
+    {
+      "modifiers": [
+        "Alt",
+        "Shift"
+      ],
+      "key": "I"
+    }
+  ],
+  "editor:toggle-bold": [
+    {
+      "modifiers": [
+        "Alt"
+      ],
+      "key": "B"
+    }
+  ]
 }

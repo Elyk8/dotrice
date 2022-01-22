@@ -4,13 +4,83 @@
     "type": "split",
     "children": [
       {
-        "id": "723bd47cad033c1a",
+        "id": "332aa93c26192e7a",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "+202201181601_Kornia.md",
+            "mode": "source",
+            "backlinks": true
+          }
+        },
+        "pane-relief:history-v1": {
+          "pos": 0,
+          "stack": [
+            {
+              "leaf": "332aa93c26192e7a",
+              "group": null,
+              "state": "{\"type\":\"markdown\",\"state\":{\"file\":\"+202201181601_Kornia.md\",\"mode\":\"source\",\"backlinks\":true}}",
+              "eState": "{\"cursor\":{\"from\":{\"line\":45,\"ch\":1},\"to\":{\"line\":45,\"ch\":1}},\"scroll\":43.06383364710537}"
+            },
+            {
+              "leaf": "332aa93c26192e7a",
+              "group": null,
+              "state": "{\"type\":\"markdown\",\"state\":{\"file\":\"_Inbox/_202201212101_English_Dictionary.md\",\"mode\":\"preview\",\"backlinks\":true}}",
+              "eState": "{\"scroll\":1.2236729804407231}"
+            },
+            {
+              "leaf": "332aa93c26192e7a",
+              "group": null,
+              "state": "{\"type\":\"markdown\",\"state\":{\"file\":\"Templates/Zettlecasten Misc Template.md\",\"mode\":\"source\",\"backlinks\":true}}",
+              "eState": "{\"cursor\":{\"from\":{\"line\":12,\"ch\":19},\"to\":{\"line\":12,\"ch\":19}},\"scroll\":0.6528518875731447}"
+            },
+            {
+              "leaf": "332aa93c26192e7a",
+              "group": null,
+              "state": "{\"type\":\"markdown\",\"state\":{\"file\":\"_Inbox/_202201212101_English_Dictionary.md\",\"mode\":\"source\",\"backlinks\":true}}",
+              "eState": "{\"scroll\":0.032100955208579265}"
+            },
+            {
+              "leaf": "332aa93c26192e7a",
+              "group": null,
+              "state": "{\"type\":\"markdown\",\"state\":{\"file\":\"+202201181601_Kornia.md\",\"mode\":\"preview\",\"backlinks\":true}}",
+              "eState": "{\"scroll\":21.772063929006595}"
+            },
+            {
+              "leaf": "332aa93c26192e7a",
+              "group": null,
+              "state": "{\"type\":\"pdf\",\"state\":{\"file\":\"Attachments/Kornia_an_Open_Source_Differentiable_Computer_Vision_Library_for_PyTorch.pdf\"}}",
+              "eState": "{}"
+            },
+            {
+              "leaf": "332aa93c26192e7a",
+              "group": null,
+              "state": "{\"type\":\"empty\",\"state\":{}}",
+              "eState": "{}"
+            }
+          ]
+        }
+      },
+      {
+        "id": "0330f7752956433f",
         "type": "leaf",
         "state": {
           "type": "pdf",
           "state": {
             "file": "Attachments/Kornia_an_Open_Source_Differentiable_Computer_Vision_Library_for_PyTorch.pdf"
           }
+        },
+        "pane-relief:history-v1": {
+          "pos": 0,
+          "stack": [
+            {
+              "leaf": "0330f7752956433f",
+              "group": null,
+              "state": "{\"type\":\"pdf\",\"state\":{\"file\":\"Attachments/Kornia_an_Open_Source_Differentiable_Computer_Vision_Library_for_PyTorch.pdf\"}}",
+              "eState": "{}"
+            }
+          ]
         }
       }
     ],
@@ -30,13 +100,17 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#🌲",
+                "query": "tag:#",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical"
               }
+            },
+            "pane-relief:history-v1": {
+              "pos": 0,
+              "stack": []
             }
           },
           {
@@ -45,6 +119,10 @@
             "state": {
               "type": "starred",
               "state": {}
+            },
+            "pane-relief:history-v1": {
+              "pos": 0,
+              "stack": []
             }
           },
           {
@@ -53,6 +131,10 @@
             "state": {
               "type": "file-explorer",
               "state": {}
+            },
+            "pane-relief:history-v1": {
+              "pos": 0,
+              "stack": []
             }
           },
           {
@@ -61,6 +143,10 @@
             "state": {
               "type": "recent-files",
               "state": {}
+            },
+            "pane-relief:history-v1": {
+              "pos": 0,
+              "stack": []
             }
           }
         ],
@@ -85,7 +171,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Attachments/Kornia_an_Open_Source_Differentiable_Computer_Vision_Library_for_PyTorch.pdf",
+                "file": "+202201181601_Kornia.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -94,6 +180,10 @@
                 "backlinkCollapsed": false,
                 "unlinkedCollapsed": false
               }
+            },
+            "pane-relief:history-v1": {
+              "pos": 0,
+              "stack": []
             }
           },
           {
@@ -102,10 +192,14 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Attachments/Kornia_an_Open_Source_Differentiable_Computer_Vision_Library_for_PyTorch.pdf",
+                "file": "+202201181601_Kornia.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
+            },
+            "pane-relief:history-v1": {
+              "pos": 0,
+              "stack": []
             }
           },
           {
@@ -114,8 +208,12 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Attachments/Kornia_an_Open_Source_Differentiable_Computer_Vision_Library_for_PyTorch.pdf"
+                "file": "+202201181601_Kornia.md"
               }
+            },
+            "pane-relief:history-v1": {
+              "pos": 0,
+              "stack": []
             }
           },
           {
@@ -127,6 +225,10 @@
                 "sortOrder": "frequency",
                 "useHierarchy": false
               }
+            },
+            "pane-relief:history-v1": {
+              "pos": 0,
+              "stack": []
             }
           },
           {
@@ -135,6 +237,10 @@
             "state": {
               "type": "calendar",
               "state": {}
+            },
+            "pane-relief:history-v1": {
+              "pos": 0,
+              "stack": []
             }
           },
           {
@@ -143,6 +249,10 @@
             "state": {
               "type": "advanced-tables-toolbar",
               "state": {}
+            },
+            "pane-relief:history-v1": {
+              "pos": 0,
+              "stack": []
             }
           }
         ],
@@ -153,17 +263,17 @@
     "width": 205.94332885742188,
     "collapsed": true
   },
-  "active": "723bd47cad033c1a",
+  "active": "332aa93c26192e7a",
   "lastOpenFiles": [
-    "Attachments/Kornia_an_Open_Source_Differentiable_Computer_Vision_Library_for_PyTorch.pdf",
     "+202201181601_Kornia.md",
     "_HOME.md",
-    "202112130912_Capstone_Project.md",
-    "_Inbox/Discipline.md",
-    "202112131212_My_Laws.md",
-    "202112131212_Al_Che.md",
-    "202201131601_Literature_Review.md",
-    "18-01-2022-Capstone_Meeting.md",
-    "202201031001_Mobile_Robot_Platform_with_Arduino_Uno_and_Raspberry_Pi_for_Autonomous_Navigation.md"
+    "_Inbox/_202201212101_English_Dictionary.md",
+    "Templates/Zettlecasten Misc Template.md",
+    "Attachments/Kornia_an_Open_Source_Differentiable_Computer_Vision_Library_for_PyTorch.pdf",
+    "Templates/Zettlecasten Note Template.md",
+    "_Inbox/Untitled.md",
+    "Templates/Zettlecasten Articles Template.md",
+    "Templates/Zettlecasten Book Template.md",
+    "Templates/Zettlecasten Podcasts Template.md"
   ]
 }

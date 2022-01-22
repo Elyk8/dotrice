@@ -16,7 +16,7 @@ run feh --recursive --no-fehbg --bg-fill --randomize "${XDG_PICTURES_DIR:="$HOME
 run remaps &
 run /usr/bin/emacs -nw --daemon &
 run xbanish &
-sleep 3 && run volctl &
+sleep 5 && run volctl &
 
 autostart="shotkey dunst lxsession nm-applet picom redshift mictray"
 for program in $autostart; do
