@@ -1,5 +1,6 @@
 # vim: filetype=sh
-alias fdcap="cd /home/elyk/vic/y4/capstone" \
+alias fdar="cd /home/elyk/.config/aconfmgr" \
+fdcap="cd /home/elyk/vic/y4/capstone" \
 fdcf="cd /home/elyk/.config" \
 fdcurr="cd /home/elyk/vic/current" \
 fddusk="cd /home/elyk/.local/src/dusk" \

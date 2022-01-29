@@ -14,7 +14,7 @@ run greenclip daemon &
 run flameshot &
 run feh --recursive --no-fehbg --bg-fill --randomize "${XDG_PICTURES_DIR:="$HOME/pix"}/wallpapers" &
 run remaps &
-run /usr/bin/emacs -nw --daemon &
+# run /usr/bin/emacs -nw --daemon &
 run xbanish &
 sleep 5 && run volctl &
 

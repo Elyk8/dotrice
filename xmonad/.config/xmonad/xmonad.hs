@@ -124,18 +124,18 @@ import XMonad.Util.WorkspaceCompare
 import qualified XMonad.Util.XRandRUtils as UXRR
 
 myFont :: String
-myFont = "xft:Ubuntu Nerd Font:regular:size=9:antialias=true:hinting=true"
+myFont = "xft:Ubuntu:regular:size=9:antialias=true:hinting=true"
 
-myBoldFont = "xft:Mononoki Nerd Font:weight=bold:size=50"
+myBoldFont = "xft:monospace:weight=bold:size=50"
 
 myModMask :: KeyMask
 myModMask = mod4Mask
 
 myTerminal :: String
-myTerminal = "st"
+myTerminal = "alacritty"
 
 myTerminalClass :: String
-myTerminalClass = "St"
+myTerminalClass = "Alacritty"
 
 myBorderWidth :: Dimension
 myBorderWidth = 3
@@ -325,8 +325,6 @@ myXmobarPP s =
                     layoutColorIsActive s (logLayoutOnScreen s),
             wrapL (actionPrefix ++ "q" ++ actionButton ++ "2>") actionSuffix $
               titleColorIsActive s (shortenL 50 $ logTitleOnScreen s)
-                .| logWhenActive 0 (logConst "*")
-                .| logConst "There's nothing here"
           ]
       }
   where
@@ -547,8 +545,8 @@ myScratchPads =
       (customFloating $ W.RationalRect l t w h)
   ]
   where
-    launchNcmpcpp = myTerminal ++ " -n ncmpcpp -e ncmpcpp"
-    launchTerminal = myTerminal ++ " -n scratchpad"
+    launchNcmpcpp = myTerminal ++ " --class ncmpcpp -e ncmpcpp"
+    launchTerminal = myTerminal ++ " --class scratchpad"
     h = 0.8
     w = 0.6
     t = (1 - h) / 2

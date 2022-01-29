@@ -1,9 +1,0 @@
-{
-  "citationExportFormat": "biblatex",
-  "literatureNoteTitleTemplate": "@{{citekey}}",
-  "literatureNoteFolder": "Citations",
-  "literatureNoteContentTemplate": "---\nTitle: {{title}}\nAuthors: {{authorString}}\nYear: {{year}}\n---\n\n{{abstract}}",
-  "markdownCitationTemplate": "[[@{{citekey}}|{{title}}]]",
-  "alternativeMarkdownCitationTemplate": "@{{citekey}}",
-  "citationExportPath": "/home/elyk/nc/Bib/Capstone Project.bib"
-}

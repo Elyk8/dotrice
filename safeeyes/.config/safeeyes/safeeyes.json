@@ -146,6 +146,6 @@
     "shortcut_disable_time": 2,
     "shortcut_postpone": 65,
     "shortcut_skip": 9,
-    "strict_break": true,
+    "strict_break": false,
     "use_rpc_server": true
 }
