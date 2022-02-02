@@ -30,6 +30,7 @@ jkd="$EDITOR /home/elyk/.config/dunst/dunstrc" \
 jke="$EDITOR /home/elyk/.config/lvim/config.lua" \
 jkenv="$EDITOR /home/elyk/.config/shell/env" \
 jkf="$EDITOR /home/elyk/.config/shell/files" \
+jkk="$EDITOR /home/elyk/.local/src/shotkey/config.h" \
 jkl="$EDITOR /home/elyk/.config/lf/lfrc" \
 jkp="$EDITOR /home/elyk/.config/picom/picom.conf" \
 jkt="$EDITOR /home/elyk/.config/alacritty/alacritty.yml" \

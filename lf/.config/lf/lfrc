@@ -155,6 +155,7 @@ cmd unarchive ${{
         *.tar) tar -xvf "$file" ;;
         *.tar.zst) tar -xvf "$file" ;;
         *.rar) unrar x "$file";;
+        *.7z) 7z e "$file";;
         *) echo "Unsupported format" ;;
       esac
   done

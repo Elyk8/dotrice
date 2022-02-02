@@ -1,6 +1,7 @@
 ------------------------------------------
 ---              Imports               ---
 ------------------------------------------
+
 {-# LANGUAGE CPP #-}
 -- {-# LANGUAGE DeriveDataTypeable #-}
 -- {-# LANGUAGE EmptyDataDecls #-}
@@ -81,7 +82,7 @@ import XMonad.Layout.Accordion
 import XMonad.Layout.GridVariants (Grid (Grid))
 import XMonad.Layout.LayoutModifier
 import XMonad.Layout.LimitWindows (decreaseLimit, increaseLimit, limitWindows)
-import XMonad.Layout.Magnifier
+import qualified XMonad.Layout.Magnifier as Mag
 import XMonad.Layout.MultiToggle (EOT (EOT), mkToggle, single, (??))
 import qualified XMonad.Layout.MultiToggle as MT (Toggle (..))
 import XMonad.Layout.MultiToggle.Instances (StdTransformers (MIRROR, NBFULL, NOBORDERS))
@@ -387,7 +388,6 @@ myLayoutHook =
   where
     myDefaultLayout =
       withBorder myBorderWidth tall
-        ||| zoom
         ||| noBorders monocle
         ||| noBorders tabs
         ||| grid
@@ -397,30 +397,19 @@ myLayoutHook =
         ||| floats
 
 tall =
-  renamed [Replace "Tall"] $
+  renamed [Replace "tall"] $
     avoidStruts $
       smartBorders $
         addTabs shrinkText myTabTheme $
           subLayout [] (smartBorders Simplest) $
-            mkToggle (single MIRROR) $
-              limitWindows 12 $
-                mySpacing myGaps $
-                  ResizableTall 1 (3 / 100) (1 / 2) []
-
-zoom =
-  renamed [Replace "Zoom"] $
-    avoidStruts $
-      smartBorders $
-        addTabs shrinkText myTabTheme $
-          subLayout [] (smartBorders Simplest) $
-            magnifier $
+            Mag.magnifierOff $
               mkToggle (single MIRROR) $
-                limitWindows 12 $
+                limitWindows 5 $
                   mySpacing myGaps $
                     ResizableTall 1 (3 / 100) (1 / 2) []
 
 monocle =
-  renamed [Replace "Monocle"] $
+  renamed [Replace "monocle"] $
     avoidStruts $
       smartBorders $
         addTabs shrinkText myTabTheme $
@@ -428,45 +417,49 @@ monocle =
             limitWindows 20 Full
 
 grid =
-  renamed [Replace "Grid"] $
+  renamed [Replace "grid"] $
     avoidStruts $
       smartBorders $
         addTabs shrinkText myTabTheme $
           subLayout [] (smartBorders Simplest) $
             limitWindows 12 $
               mySpacing myGaps $
-                mkToggle (single MIRROR) $
-                  Grid (16 / 10)
+                Mag.magnifierOff $
+                  mkToggle (single MIRROR) $
+                    Grid (16 / 10)
 
 spirals =
-  renamed [Replace "Fibonacci"] $
+  renamed [Replace "fibonacci"] $
     avoidStruts $
       smartBorders $
         addTabs shrinkText myTabTheme $
           subLayout [] (smartBorders Simplest) $
-            mkToggle (single MIRROR) $
-              mySpacing' myGaps $
-                spiral (6 / 7)
+            Mag.magnifierOff $
+              mkToggle (single MIRROR) $
+                mySpacing' myGaps $
+                  spiral (6 / 7)
 
 three =
-  renamed [Replace "Three"] $
+  renamed [Replace "three"] $
     avoidStruts $
       smartBorders $
         addTabs shrinkText myTabTheme $
           subLayout [] (smartBorders Simplest) $
             limitWindows 7 $
-              mkToggle (single MIRROR) $
-                ThreeCol 1 (3 / 100) (1 / 2)
+              Mag.magnifierOff $
+                mkToggle (single MIRROR) $
+                  ThreeCol 1 (3 / 100) (1 / 2)
 
 floats =
-  renamed [Replace "Floats"] $
+  renamed [Replace "floats"] $
     avoidStruts $
-      smartBorders $
-        limitWindows
-          20
-          simplestFloat
+      Mag.magnifierOff $
+        smartBorders $
+          limitWindows
+            20
+            simplestFloat
 
-tabs = renamed [Replace "Tabs"] $ tabbed shrinkText myTabTheme
+tabs = renamed [Replace "tabs"] $ tabbed shrinkText myTabTheme
 
 accordion = renamed [Replace "accordion"] $ mkToggle (single MIRROR) Accordion
 
@@ -585,6 +578,7 @@ myAdditionalKeys =
     -- Dual monitor switcher
     ("M-w", onNextNeighbour def W.greedyView),
     ("M-S-w", onNextNeighbour def W.shift),
+    ("M-s", onNextNeighbour def W.view),
     -- Windows navigation
     ("M-b", windows W.focusMaster), -- Move focus to the master window
     ("M-j", windows W.focusDown), -- Move focus to the next window
@@ -600,6 +594,7 @@ myAdditionalKeys =
     ("M-<Space>", sendMessage NextLayout), -- Switch to next layout
     ("M-<Tab>", sendMessage (MT.Toggle NBFULL) >> sendMessage ToggleStruts), -- Toggles noborder/full
     ("M-r", sendMessage $ MT.Toggle MIRROR), -- Rotate
+    ("M-c", sendMessage Mag.Toggle), -- Zoom focused client
 
     -- Increase/decrease windows in the master pane or the stack
     ("M-S-<Up>", sendMessage (IncMasterN 1)), -- Increase # of clients master pane
@@ -637,15 +632,6 @@ myAdditionalKeys =
              [ ("", windows . W.view), -- was W.greedyView
                ("S-", windows . W.shift),
                ("C-", windows . copy)
-             ]
-       ]
-    ++ [ (mask ++ "M-" ++ [key], screenWorkspace scr >>= flip whenJust (windows . action))
-         | (key, scr) <- zip "as" [1, 0], -- was [0..] *** change to match your screen order ***
-           (action, mask) <-
-             [ (W.greedyView, "C-"),
-               (W.view, ""),
-               (W.shift, "S-"),
-               (swapWithCurrent, "C-S-")
              ]
        ]
   where

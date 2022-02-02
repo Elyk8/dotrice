@@ -11,6 +11,7 @@ jkd    $HOME/.config/dunst/dunstrc
 jke    $HOME/.config/lvim/config.lua
 jkenv  $HOME/.config/shell/env
 jkf    $HOME/.config/shell/files
+jkk    $HOME/.local/src/shotkey/config.h
 jkl    $HOME/.config/lf/lfrc
 jkp    $HOME/.config/picom/picom.conf
 jkt    $HOME/.config/alacritty/alacritty.yml

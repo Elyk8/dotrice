@@ -1,6 +1,6 @@
 -- vim: ft=haskell
 
-Config { font = "xft:Noto Sans:weight=bold:pixelsize=16:antialias=true:hinting=true"
+Config { font = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:hinting=true"
        , additionalFonts = [ "xft:Iosevka Nerd Font:weight=heavy:pixelsize=18:antialias=true:hinting=true"
                            , "xft:Font Awesome 5 Free Solid:pixelsize=16"
                            , "xft:Font Awesome 5 Brands:pixelsize=16"
