@@ -30,7 +30,6 @@ Config { font = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:hinting=true
                                "<title> (<artist>) <statei> [<flags>]",
                                "--", "-P", "<fn=2>\xF144 </fn>", "-Z", "<fn=2>\xF28B </fn>", "-S", "<fn=2>\xF28D </fn>"] 10
                     , Run Com ".config/xmobar/trayer-padding-icon.sh" [] "trayerpad" 20
-                    , Run Com ".local/bin/scripts/pacupdate" [] "pacupdate" 5000
                     , Run UnsafeXPropertyLog "_XMONAD_LOG_0"
                     ]
                     
@@ -41,9 +40,7 @@ Config { font = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:hinting=true
                     \<box type=Bottom width=2 mb=2 color=#51afef><fc=#5294e2> <action=`sh -c thunderbird`>%date%</action></fc></box>{\
 
 
-                    \<box type=Bottom width=2 mb=2 color=#bbc2cf><fc=#bbc2cf> <action=`alacritty -e ncmpcpp`><action=`mpc toggle` button=3>%mpd%</action></action></fc></box>    \
-
-                    \<box type=Bottom width=2 mb=2 color=#51afef><fc=#aac0f0><fn=1> </fn>  <action=`alacritty -e paru -Syu`>%pacupdate%</action></fc></box>\
+                    \<box type=Bottom width=2 mb=2 color=#bbc2cf><fc=#bbc2cf> <action=`alacritty -e ncmpcpp`><action=`mpc toggle` button=3>%mpd%</action></action></fc></box>\
 
                     \%trayerpad% "
                     } 

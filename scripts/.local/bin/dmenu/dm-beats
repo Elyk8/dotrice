@@ -61,6 +61,11 @@ main() {
 			URL="https://www.youtube.com/watch?v=KvRVky0r7YM"
 			break
 			;;
+		9)
+			notification "Study Music 24/7, Relax ☕️🎶"
+			URL="https://www.youtube.com/watch?v=1whRqmxVAAU"
+			break
+			;;
 	esac
 	mpv $ARGS --no-video --title="radio-mpv" "$URL"
 }

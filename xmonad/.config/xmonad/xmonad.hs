@@ -117,7 +117,6 @@ import XMonad.Util.NamedScratchpad
     scratchpadWorkspaceTag,
   )
 import XMonad.Util.Run (runProcessWithInput, safeSpawn, spawnPipe)
-import XMonad.Util.Scratchpad
 import XMonad.Util.Scratchpad (scratchpadManageHook)
 import XMonad.Util.SpawnOnce
 import XMonad.Util.WindowProperties
@@ -142,7 +141,7 @@ myBorderWidth :: Dimension
 myBorderWidth = 3
 
 myNormalColor :: String
-myNormalColor = basebg
+myNormalColor = base08
 
 myFocusColor :: String
 myFocusColor = base05
@@ -218,25 +217,6 @@ myAfterRescreenHook = spawn "setwallpaper"
 
 myRandrChangeHook :: X ()
 myRandrChangeHook = spawn "autorandr --change"
-
-------------------------------------------
----           Pointer Update           ---
-------------------------------------------
-
-newtype MyUpdatePointerActive = MyUpdatePointerActive Bool
-
-instance ExtensionClass MyUpdatePointerActive where
-  initialValue = MyUpdatePointerActive True
-
-myUpdatePointer :: (Rational, Rational) -> (Rational, Rational) -> X ()
-myUpdatePointer refPos ratio = whenX isActive $ do
-  dpy <- asks display
-  root <- asks theRoot
-  (_, _, _, _, _, _, _, m) <- io $ queryPointer dpy root
-  unless (testBit m 9 || testBit m 8 || testBit m 10) $ -- unless the mouse is clicking
-    updatePointer refPos ratio
-  where
-    isActive = (\(MyUpdatePointerActive b) -> b) <$> XS.get
 
 ------------------------------------------
 ---               Theme                ---
@@ -472,10 +452,10 @@ myManageHook =
   composeAll
     . concat
     $ [ [title =? t --> doIgnore | t <- myIgnores],
-        [className =? c --> doShift (head myWorkspaces) | c <- myW1S],
-        [className =? c --> doShift (myWorkspaces !! 2) | c <- myW3S],
-        [className =? c --> doShift (myWorkspaces !! 3) | c <- myW4S],
-        [className =? c --> doShift (myWorkspaces !! 4) | c <- myW5S],
+        [className =? c --> doShift (head myWorkspaces) | c <- myW1C],
+        [className =? c --> doShift (myWorkspaces !! 2) | c <- myW3C],
+        [className =? c --> doShift (myWorkspaces !! 3) | c <- myW4C],
+        [className =? c --> doShift (myWorkspaces !! 4) | c <- myW5C],
         [className =? c --> doFloat | c <- myFloatC],
         [className =? c --> doCenterFloat | c <- myFloatCC],
         [name =? n --> doSideFloat NW | n <- myFloatSN],
@@ -492,10 +472,10 @@ myManageHook =
     role = stringProperty "WM_WINDOW_ROLE"
     iconName = stringProperty "WM_ICON_NAME"
     myIgnores = ["SafeEyes-0", "SafeEyes-1"]
-    myW1S = [""]
-    myW3S = ["Brave-browser"]
-    myW4S = ["zoom", "discord"]
-    myW5S = ["VirtualBox Manager", "VirtualBox Machine", "Thunderbird"]
+    myW1C = ["Minecraft Launcher", "ftb-app"]
+    myW3C = ["Brave-browser"]
+    myW4C = ["zoom", "discord"]
+    myW5C = ["VirtualBox Manager", "VirtualBox Machine", "Thunderbird"]
     myFloatC =
       [ "confirm",
         "file_progress",
@@ -683,7 +663,8 @@ main =
     . dynamicSBs myStatusBarSpawner
     $ def
       { manageHook =
-          myManageHook
+          insertPosition Master Newer
+            <+> myManageHook
             <+> namedScratchpadManageHook myScratchPads
             <+> manageDocks,
         focusFollowsMouse = True,
@@ -700,7 +681,7 @@ main =
         focusedBorderColor = myFocusColor,
         logHook =
           logHook def
-            <+> myUpdatePointer (0.5, 0.5) (0, 0)
+            <+> updatePointer (0.5, 0.5) (0, 0)
             <+> masterHistoryHook
             <+> refocusLastLogHook
             >> nsHideOnFocusLoss myScratchPads
