@@ -1,8 +1,0 @@
-#!/usr/bin/env xdg-open
-[Desktop Entry]
-Type=Application
-Name=FTBApp
-Exec="/media/ftb/FTBApp" %U
-Icon=/media/ftb/.install4j/FTBApp.png
-Categories=Application;
-StartupWMClass=install4j-net-creeperhost-creeperlauncher-CreeperLauncher

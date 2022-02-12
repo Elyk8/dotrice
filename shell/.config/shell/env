@@ -1,6 +1,6 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 # Adds `~/.local/bin` to $PATH
-export PATH="$PATH:${$(find -L $HOME/.local/bin -type d -printf %p:)%%:}"
+export PATH="$PATH:$HOME/.ghcup/bin:$HOME/.cabal/bin:${$(find -L $HOME/.local/bin -type d -printf %p:)%%:}"
 
 unsetopt PROMPT_SP
 

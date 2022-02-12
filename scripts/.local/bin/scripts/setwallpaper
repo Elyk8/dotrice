@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 # # //// CONFIGURABLE VARIABLES ////////////
 
 # # location of wallpapers folder
@@ -22,4 +22,10 @@
 #   d.writeConfig("Image", "file://'''$location'''/'${wallpaper}'");
 # }'
 
-feh --recursive --no-fehbg --bg-scale --randomize "${XDG_PICTURES_DIR:="$HOME/pix"}/wallpapers" &
+pixdir=${XDG_PICTURES_DIR:="$HOME/pix"}
+
+if [ -z "$1" ]; then
+	feh --recursive --no-fehbg --bg-scale --randomize "$pixdir/wallpapers" &
+else
+	feh --recursive --no-fehbg --bg-scale --randomize "$pixdir/wallpapers/$1" &
+fi

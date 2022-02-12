@@ -1,9 +1,9 @@
 -- vim: ft=haskell
 
 Config { font = "xft:Ubuntu:weight=bold:pixelsize=13:antialias=true:hinting=true"
-       , additionalFonts = [ "xft:Iosevka Nerd Font:weight=heavy::pixelsize=15:antialias=true:hinting=true"
-                           , "xft:Font Awesome 5 Free Solid:pixelsize=15"
-                           , "xft:Font Awesome 5 Brands:pixelsize=15"
+       , additionalFonts = [ "xft:Iosevka Nerd Font:weight=heavy::pixelsize=16:antialias=true:hinting=true"
+                           , "xft:Font Awesome 6 Free Solid:pixelsize=15"
+                           , "xft:Font Awesome 6 Brands:pixelsize=15"
                            ]
        , bgColor          = "#1E1E1E"
        , fgColor          = "#569CD6"

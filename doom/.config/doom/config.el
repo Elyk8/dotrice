@@ -52,10 +52,10 @@
       :desc "Load new theme" "h t" #'counsel-load-theme)
 
 ;; Fonts
-(setq doom-font (font-spec :family "Mononoki Nerd Font" :size 22)
+(setq doom-font (font-spec :family "Ubuntu Nerd Font" :size 22)
       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 22)
-      doom-unicode-font (font-spec :family "JuliaMono")
-      doom-big-font (font-spec :family "Mononoki" :size 32))
+      ;; doom-unicode-font (font-spec :family "JuliaMono")
+      doom-big-font (font-spec :family "Ubuntu Nerd Font" :size 32))
 (after! doom-themes
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t))

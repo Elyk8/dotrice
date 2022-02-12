@@ -15,7 +15,7 @@
     #
     # If this option is set to mouse or keyboard, the monitor option
     # will be ignored.
-    follow = mouse
+    follow = none
 
     ### Geometry ###
 
@@ -58,7 +58,6 @@
     # Set the maximum width for the progress bar
     progress_bar_max_width = 300
 
-
     # Show how many messages are currently hidden (because of
     # notification_limit).
     indicate_hidden = yes
@@ -87,7 +86,7 @@
     frame_width = 3
 
     # Defines color of the frame around the notification window.
-    frame_color = "#4E5173"
+    frame_color = "#000000"
 
     # Define a color for the separator.
     # possible values are:
@@ -95,7 +94,7 @@
     #  * foreground: use the same color as the foreground;
     #  * frame: use the same color as the frame;
     #  * anything else will be interpreted as a X color.
-    separator_color = auto
+    separator_color = frame
 
     # Sort messages by urgency.
     sort = yes
@@ -227,7 +226,7 @@
     # corners.
     # The radius will be automatically lowered if it exceeds half of the
     # notification height to avoid clipping text and/or icons.
-    corner_radius = 0
+    corner_radius = 12
 
     # Ignore the dbus closeNotification message.
     # Useful to enforce the timeout set by dunst configuration. Without this
@@ -289,22 +288,28 @@
 [urgency_low]
     # IMPORTANT: colors have to be defined in quotation marks.
     # Otherwise the "#" and following would be interpreted as a comment.
-    foreground = "#bbc2cf" #D8DEE9
-    background = "#282c34"  #1E1E1E
-    frame_color = "#3071db"
+    foreground = "#ffd5cd"
+    background = "#121212"
+    frame_color = "#181A20"
     timeout = 10
+    # Icon for notifications with low urgency, uncomment to enable
+    icon = ~/.config/dunst/images/notification.png
 
 [urgency_normal]
-    foreground = "#bbc2cf" #D8DEE9
-    background = "#282c34"  #1E1E1E
-    frame_color = "#3071db"
+    foreground = "#ffd5cd"
+    background = "#121212"
+    frame_color = "#181A20"
     timeout = 10
+    # Icon for notifications with low urgency, uncomment to enable
+    icon = ~/.config/dunst/images/notification.png
 
 [urgency_critical]
-    background = "#1E1E1E"
-    foreground = "#D8DEE9" #FDF1DB #f5bfd2 #ff8585   #ffdfd3  #fec8d8      #FDF1DB #8fbcbb
-    frame_color = "#ff6c6b"
+    background = "#121212"
+    foreground = "#ffd5cd" #FDF1DB #f5bfd2 #ff8585   #ffdfd3  #fec8d8      #FDF1DB #8fbcbb
+    frame_color = "#181A20"
     timeout = 0
+    # Icon for notifications with low urgency, uncomment to enable
+    icon = ~/.config/dunst/images/notification.png
 
 # Every section that isn't one of the above is interpreted as a rules to
 # override settings for certain messages.

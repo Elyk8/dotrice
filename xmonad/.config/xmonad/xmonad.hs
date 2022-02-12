@@ -7,7 +7,6 @@
 -- {-# LANGUAGE EmptyDataDecls #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 -- {-# LANGUAGE PatternGuards #-}
 -- {-# LANGUAGE RecursiveDo #-}
@@ -16,7 +15,6 @@
 
 -- {-# LANGUAGE TupleSections #-}
 
-import qualified Codec.Binary.UTF8.String as UTF8
 import Colors.Colors
 import Control.Monad
 import Data.Bits (testBit)
@@ -78,8 +76,6 @@ import XMonad.Hooks.StatusBar.PP
 import XMonad.Hooks.UrgencyHook
 import XMonad.Hooks.WindowSwallowing
 import XMonad.Hooks.WorkspaceHistory
-import XMonad.Layout.Accordion
-import XMonad.Layout.GridVariants (Grid (Grid))
 import XMonad.Layout.LayoutModifier
 import XMonad.Layout.LimitWindows (decreaseLimit, increaseLimit, limitWindows)
 import qualified XMonad.Layout.Magnifier as Mag
@@ -93,10 +89,8 @@ import XMonad.Layout.ShowWName
 import XMonad.Layout.Simplest
 import XMonad.Layout.SimplestFloat
 import XMonad.Layout.Spacing
-import XMonad.Layout.Spiral
 import XMonad.Layout.SubLayouts
 import XMonad.Layout.Tabbed
-import XMonad.Layout.ThreeColumns
 import qualified XMonad.Layout.ToggleLayouts as T (ToggleLayout (Toggle), toggleLayouts)
 import XMonad.Layout.WindowArranger (WindowArrangerMsg (..), windowArrange)
 import XMonad.Layout.WindowNavigation
@@ -121,7 +115,6 @@ import XMonad.Util.Scratchpad (scratchpadManageHook)
 import XMonad.Util.SpawnOnce
 import XMonad.Util.WindowProperties
 import XMonad.Util.WorkspaceCompare
-import qualified XMonad.Util.XRandRUtils as UXRR
 
 myFont :: String
 myFont = "xft:Ubuntu:regular:size=9:antialias=true:hinting=true"
@@ -368,13 +361,14 @@ myLayoutHook =
   where
     myDefaultLayout =
       withBorder myBorderWidth tall
+        ||| wide
         ||| noBorders monocle
-        ||| noBorders tabs
-        ||| grid
-        ||| spirals
-        ||| three
-        ||| accordion
-        ||| floats
+        -- ||| noBorders tabs
+        -- ||| grid
+        -- ||| spirals
+        -- ||| three
+        -- ||| accordion
+        -- ||| floats
 
 tall =
   renamed [Replace "tall"] $
@@ -388,6 +382,18 @@ tall =
                   mySpacing myGaps $
                     ResizableTall 1 (3 / 100) (1 / 2) []
 
+wide =
+  renamed [Replace "wide"] $
+    avoidStruts $
+      smartBorders $
+        addTabs shrinkText myTabTheme $
+          subLayout [] (smartBorders Simplest) $
+            Mag.magnifierOff $
+              Mirror $
+                limitWindows 5 $
+                  mySpacing myGaps $
+                    ResizableTall 1 (3 / 100) (1 / 2) []
+
 monocle =
   renamed [Replace "monocle"] $
     avoidStruts $
@@ -396,39 +402,39 @@ monocle =
           subLayout [] (smartBorders Simplest) $
             limitWindows 20 Full
 
-grid =
-  renamed [Replace "grid"] $
-    avoidStruts $
-      smartBorders $
-        addTabs shrinkText myTabTheme $
-          subLayout [] (smartBorders Simplest) $
-            limitWindows 12 $
-              mySpacing myGaps $
-                Mag.magnifierOff $
-                  mkToggle (single MIRROR) $
-                    Grid (16 / 10)
+-- grid =
+--   renamed [Replace "grid"] $
+--     avoidStruts $
+--       smartBorders $
+--         addTabs shrinkText myTabTheme $
+--           subLayout [] (smartBorders Simplest) $
+--             limitWindows 12 $
+--               mySpacing myGaps $
+--                 Mag.magnifierOff $
+--                   mkToggle (single MIRROR) $
+--                     Grid (16 / 10)
 
-spirals =
-  renamed [Replace "fibonacci"] $
-    avoidStruts $
-      smartBorders $
-        addTabs shrinkText myTabTheme $
-          subLayout [] (smartBorders Simplest) $
-            Mag.magnifierOff $
-              mkToggle (single MIRROR) $
-                mySpacing' myGaps $
-                  spiral (6 / 7)
+-- spirals =
+--   renamed [Replace "fibonacci"] $
+--     avoidStruts $
+--       smartBorders $
+--         addTabs shrinkText myTabTheme $
+--           subLayout [] (smartBorders Simplest) $
+--             Mag.magnifierOff $
+--               mkToggle (single MIRROR) $
+--                 mySpacing' myGaps $
+--                   spiral (6 / 7)
 
-three =
-  renamed [Replace "three"] $
-    avoidStruts $
-      smartBorders $
-        addTabs shrinkText myTabTheme $
-          subLayout [] (smartBorders Simplest) $
-            limitWindows 7 $
-              Mag.magnifierOff $
-                mkToggle (single MIRROR) $
-                  ThreeCol 1 (3 / 100) (1 / 2)
+-- three =
+--   renamed [Replace "three"] $
+--     avoidStruts $
+--       smartBorders $
+--         addTabs shrinkText myTabTheme $
+--           subLayout [] (smartBorders Simplest) $
+--             limitWindows 7 $
+--               Mag.magnifierOff $
+--                 mkToggle (single MIRROR) $
+--                   ThreeCol 1 (3 / 100) (1 / 2)
 
 floats =
   renamed [Replace "floats"] $
@@ -439,9 +445,9 @@ floats =
             20
             simplestFloat
 
-tabs = renamed [Replace "tabs"] $ tabbed shrinkText myTabTheme
+-- tabs = renamed [Replace "tabs"] $ tabbed shrinkText myTabTheme
 
-accordion = renamed [Replace "accordion"] $ mkToggle (single MIRROR) Accordion
+-- accordion = renamed [Replace "accordion"] $ mkToggle (single MIRROR) Accordion
 
 ------------------------------------------
 ---            Window Rules            ---
@@ -534,7 +540,6 @@ myAdditionalKeys =
   [ -- Xmonad
     ("M-C-r", spawn "xmonad --restart; killall xmobar"),
     ("M-S-<Esc>", io exitSuccess),
-    ("M-S-<Backspace>", toggledisplay "HDMI-0"),
     -- Kill windows
     ("M-q", kill1), -- Kill the currently focused client
     ("M-S-q", killAll), -- Kill all windows on current workspace
@@ -573,8 +578,7 @@ myAdditionalKeys =
     -- Layouts
     ("M-<Space>", sendMessage NextLayout), -- Switch to next layout
     ("M-<Tab>", sendMessage (MT.Toggle NBFULL) >> sendMessage ToggleStruts), -- Toggles noborder/full
-    ("M-r", sendMessage $ MT.Toggle MIRROR), -- Rotate
-    ("M-c", sendMessage Mag.Toggle), -- Zoom focused client
+    ("M-r", sendMessage Mag.Toggle), -- Zoom focused client
 
     -- Increase/decrease windows in the master pane or the stack
     ("M-S-<Up>", sendMessage (IncMasterN 1)), -- Increase # of clients master pane
@@ -614,17 +618,6 @@ myAdditionalKeys =
                ("C-", windows . copy)
              ]
        ]
-  where
-    toggledisplay d = do
-      UXRR.getXRRConnStatus d >>= \case
-        Nothing -> pure () -- no such output
-        Just UXRR.XCSOff -> pure () -- nothing there to turn on
-        Just UXRR.XCSDiscon -> off
-        Just UXRR.XCSConn ->
-          spawn $ "xrandr --output " ++ d ++ " --mode 1366x768 --pos 0x312 --rotate normal --output eDP-1-1 --primary --mode 1920x1080 --pos 1366x0 --rotate normal --output DP-1-1 --off && setwallpaper"
-        Just UXRR.XCSEna -> off
-      where
-        off = spawn $ "xrandr --output " ++ d ++ " --off && setwallpaper"
 
 myRemovedKeys :: [String]
 myRemovedKeys = ["M-e", "M-S-e"]
