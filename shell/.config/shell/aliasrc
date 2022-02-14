@@ -224,10 +224,11 @@ alias xp='chmod +x'
 alias ffmpeg="ffmpeg -hide_banner"
 alias a='alias'
 alias lf='lfcd'
-alias e='emacsedit'
+alias e='$EDITOR'
 
-se() { find -L ~/.config/* -type d -name "BraveSoftware" -prune -o -name "discord" -prune -o -type f -print | fzf | xargs -r "$EDITOR"; }
-sr() { find -L ~/.local/bin/* -type f | fzf | xargs -r "$EDITOR"; }
+se() { $EDITOR $(fd -atf --base-directory ~/.config | fzy); }
+sr() { $EDITOR $(fd -atf --base-directory ~/.local/bin | fzy); }
+f() { cd $(fd . -Hd 5 -td | fzy); }
 # xevv() { xev | awk -F'[ )]+' '/^KeyPress/ { a[NR+2] } NR in a { printf "%-3s %s\n", $5, $8 }'; }
 
 riceros() {
