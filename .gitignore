@@ -10,9 +10,9 @@
 /safeeyes/.config/safeeyes/plugins
 
 # VSCodium
-/vscodium/.config/VSCodium/*
-!/vscodium/.config/VSCodium/product.json
-!/vscodium/.config/VSCodium/User/
-/vscodium/.config/VSCodium/User/*
-!/vscodium/.config/VSCodium/User/keybindings.json
-!/vscodium/.config/VSCodium/User/settings.json
+/codium/.config/VSCodium/*
+!/codium/.config/VSCodium/product.json
+!/codium/.config/VSCodium/User/
+/codium/.config/VSCodium/User/*
+!/codium/.config/VSCodium/User/keybindings.json
+!/codium/.config/VSCodium/User/settings.json

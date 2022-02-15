@@ -1,0 +1,60 @@
+{
+    // ----------------------------------------------------------
+    //                         VSpaceCode
+    // ----------------------------------------------------------
+    
+    // Vim easymotion is required for Jump menu - <SPC> j
+    "vim.easymotion": true,
+    // Use system clipboard for vim
+    "vim.useSystemClipboard": true,
+    // Trigger the main which key menu with in the active editor with vim
+    // This cannot be put into keybindings.json because it will
+    // create conflict with Vim.
+    // https://github.com/stevenguh/spacecode/issues/3
+    "vim.normalModeKeyBindingsNonRecursive": [
+        {
+            "before": ["<space>"],
+            "commands": ["vspacecode.space"]
+        },
+        {
+            "before": [","],
+            "commands": [
+                "vspacecode.space",
+                {
+                    "command": "whichkey.triggerKey",
+                    "args": "m"
+                }
+            ]
+        }
+    ],
+    "vim.visualModeKeyBindingsNonRecursive": [
+        {
+            "before": ["<space>"],
+            "commands": ["vspacecode.space"]
+        },
+        {
+            "before": [","],
+            "commands": [
+                "vspacecode.space",
+                {
+                    "command": "whichkey.triggerKey",
+                    "args": "m"
+                }
+            ]
+        }
+    ],
+    // ----------------------------------------------------------
+    //
+    // ----------------------------------------------------------
+    "python.languageServer": "Jedi",
+    "file-browser.hideDotfiles": false,
+    "editor.cursorBlinking": "solid",
+    "vim.highlightedyank.enable": true,
+    "editor.minimap.renderCharacters": false,
+    "editor.minimap.scale": 2,
+    "workbench.tips.enabled": false,
+    "window.menuBarVisibility": "hidden",
+    "tabnine.experimentalAutoImports": true,
+    "terminal.explorerKind": "external"
+
+}
