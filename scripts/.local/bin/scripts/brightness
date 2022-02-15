@@ -5,7 +5,7 @@
 
 # Increment to use.
 incr=3
-icon_name="/usr/share/icons/Faba/48x48/notifications/notification-display-brightness.svg"
+icon_name="/usr/share/icons/BeautyLine/apps/scalable/mate-brightness-applet.svg"
 
 cur=$(xbacklight -get)
 case "$1" in

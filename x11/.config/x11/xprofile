@@ -6,7 +6,7 @@ run() {
     fi
 }
 
-/usr/bin/prime-offload
+# /usr/bin/prime-offload
 multi-monitor
 xrdb -merge ~/.config/x11/Xresources
 run safeeyes -e &
@@ -14,7 +14,6 @@ run greenclip daemon &
 run flameshot &
 run setwallpaper a2n &
 run remaps &
-# run /usr/bin/emacs -nw --daemon &
 run xbanish &
 sleep 5 && run volctl &
 

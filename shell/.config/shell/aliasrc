@@ -25,11 +25,11 @@ alias vim="nvim"
 alias resmacs="killall emacs; /usr/bin/emacs -nw --daemon"
 alias em="/usr/bin/emacs -nw"
 alias emacs="emacsclient -c -a 'emacs'"
-alias doom="~/.emacs.d/bin/doom"
-alias doomsync="~/.emacs.d/bin/doom sync"
-alias doomdoctor="~/.emacs.d/bin/doom doctor"
-alias doomupgrade="~/.emacs.d/bin/doom upgrade"
-alias doompurge="~/.emacs.d/bin/doom purge"
+alias doom="/media/emacs-conf/doom-emacs/bin/doom"
+alias doomsync="/media/emacs-conf/doom-emacs/bin/doom sync"
+alias doomdoctor="/media/emacs-conf/doom-emacs/bin/doom doctor"
+alias doomupgrade="/media/emacs-conf/doom-emacs/bin/doom upgrade"
+alias doompurge="/media/emacs-conf/doom-emacs/bin/doom purge"
 
 # z.lua useful aliases
 alias j='z -I'
@@ -86,7 +86,7 @@ alias update-grub="sudo grub-mkconfig -o /boot/grub/grub.cfg"
 alias update-fc='sudo fc-cache -fv'
 
 # kill commands
-alias keyreload='killall shotkey && sleep 0.1 && setsid -f /usr/local/bin/shotkey'
+alias keyreload='killall shotkey && sleep 0.1 && setsid -f shotkey'
 
 # hardware info --short
 alias hw="hwinfo --short"
