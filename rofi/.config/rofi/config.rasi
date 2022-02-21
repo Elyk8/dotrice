@@ -1,6 +1,5 @@
 configuration {
 	modi: "run,drun";
-	run-list-command: ". rofi-aliases.sh";
 	run-shell-command: "{terminal} -e '{cmd}'";
 	run-command: "/bin/sh -i -c '{cmd}'";
 	terminal: "rofi-sensible-terminal";
@@ -8,4 +7,4 @@ configuration {
 	icon-theme: "Arcolinux-candy-beauty";
 }
 
-@theme "themes/launcher"
+@theme "themes/dm-dmenu"

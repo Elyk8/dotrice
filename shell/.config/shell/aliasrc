@@ -22,14 +22,14 @@ alias upal="paru -Syu --noconfirm"
 
 # vim and emacs
 alias vim="nvim"
-alias resmacs="killall emacs; /usr/bin/emacs -nw --daemon"
+alias resmacs="killall emacs; sleep 1 && /usr/bin/emacs --daemon"
 alias em="/usr/bin/emacs -nw"
 alias emacs="emacsclient -c -a 'emacs'"
-alias doom="/media/emacs-conf/doom-emacs/bin/doom"
-alias doomsync="/media/emacs-conf/doom-emacs/bin/doom sync"
-alias doomdoctor="/media/emacs-conf/doom-emacs/bin/doom doctor"
-alias doomupgrade="/media/emacs-conf/doom-emacs/bin/doom upgrade"
-alias doompurge="/media/emacs-conf/doom-emacs/bin/doom purge"
+alias doom="~/.emacs.d/bin/doom"
+alias doomsync="~/.emacs.d/bin/doom sync"
+alias doomdoctor="~/.emacs.d/bin/doom doctor"
+alias doomupgrade="~/.emacs.d/bin/doom upgrade"
+alias doompurge="~/.emacs.d/bin/doom purge"
 
 # z.lua useful aliases
 alias j='z -I'
@@ -226,9 +226,9 @@ alias a='alias'
 alias lf='lfcd'
 alias e='$EDITOR'
 
-se() { $EDITOR $(fd -atf --base-directory ~/.config | fzy); }
-sr() { $EDITOR $(fd -atf --base-directory ~/.local/bin | fzy); }
-f() { cd $(fd . -Hd 5 -td | fzy); }
+se() { fd -atf --base-directory ~/.config | fzy | xargs -r $EDITOR; }
+sr() { fd -atf --base-directory ~/.local/bin | fzy | xargs -r $EDITOR; }
+f() { xargs -r cd $(fd . -Hd 5 -td | fzf); }
 # xevv() { xev | awk -F'[ )]+' '/^KeyPress/ { a[NR+2] } NR in a { printf "%-3s %s\n", $5, $8 }'; }
 
 riceros() {

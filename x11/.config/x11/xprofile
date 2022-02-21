@@ -12,12 +12,15 @@ xrdb -merge ~/.config/x11/Xresources
 run safeeyes -e &
 run greenclip daemon &
 run flameshot &
-run setwallpaper a2n &
 run remaps &
 run xbanish &
+run redshift &
+run /usr/bin/emacs --daemon &
 sleep 5 && run volctl &
 
-autostart="shotkey dunst lxsession nm-applet picom redshift mictray"
+autostart="dunst lxsession nm-applet picom mictray"
 for program in $autostart; do
 	pidof -s "$program" || setsid -f "$program"
 done >/dev/null 2>&1
+
+run setwallpaper a2n &
