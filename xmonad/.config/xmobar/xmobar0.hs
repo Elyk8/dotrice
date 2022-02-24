@@ -5,8 +5,6 @@ Config { font = "xft:Iosevka Nerd Font:weight=bold:pixelsize=18:antialias=true:h
                            , "xft:Font Awesome 6 Free Solid:pixelsize=18"
                            , "xft:Font Awesome 6 Brands:pixelsize=18"
                            ]
-       , bgColor          = "#1E1E1E"
-       , fgColor          = "#569CD6"
        , borderColor      = "black"
        , borderWidth      = 0
        , border           = BottomB
@@ -27,7 +25,7 @@ Config { font = "xft:Iosevka Nerd Font:weight=bold:pixelsize=18:antialias=true:h
                     [	                  
                       Run Date "%a %d %b<fc=#aac0f0> <fn=2>\xF073</fn></fc>%l:%M:%S%p " "date" 1
                     , Run Battery [
-                      "-t", "<acstatus> <left>% <fn=1>\xF64F </fn> <timeleft>",
+                      "-t", "<acstatus> <left>% <fn=1>\xF64F </fn><timeleft>",
                       "--",
                       "-O", "<fn=1>\xF585 </fn>", -- Charging
                       "-o", "<fn=1>\xF58D </fn>", -- Discharning

@@ -49,7 +49,8 @@ export XDG_VIDEOS_DIR=${XDG_VIDEOS_DIR:="$HOME/vids"}
 # Other program settings:
 export DICS="/usr/share/stardict/dic/"
 export SUDO_ASKPASS="$HOME/.local/bin/dmenu/dm-pass"
-export FZF_DEFAULT_OPTS='--height 40% --layout=reverse'
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --ansi'
+export FZF_DEFAULT_COMMAND="fd --type file --color=always --follow --hidden --exclude .git"
 export LESS=-R
 # Start blinking
 export LESS_TERMCAP_mb=$(tput bold; tput setaf 2) # green
@@ -69,6 +70,9 @@ export LESSOPEN="| /usr/bin/highlight -O ansi %s 2>/dev/null"
 export _ZL_DATA="${XDG_DATA_HOME:-$HOME/.local/share}/z.lua"
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 export UNCRUSTIFY_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/uncrustify/uncrustify.cfg"
+
+# Clipmenu
+export CM_DIR=${XDG_CACHE_HOME:-"$HOME/.cache"}
 
 # Xmonad
 export XMONAD_DATA_DIR="$HOME/.config/xmonad"
@@ -92,8 +96,6 @@ export MANPAGER="lvim -c 'set ft=man nonumber nolist ts=8 laststatus=1 showtabli
 export MOZ_USE_XINPUT2="1"		              # Mozilla smooth scrolling/touchpads.
 export AWT_TOOLKIT="MToolkit wmname LG3D"	  # May have to install wmname
 export _JAVA_AWT_WM_NONREPARENTING=1	      # Fix for Java applications in dwm
-
-# [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ] && . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
 
 # This is the list for lf icons:
 # export LF_ICONS="di=📁:\

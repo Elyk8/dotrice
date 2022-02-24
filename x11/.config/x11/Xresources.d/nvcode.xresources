@@ -24,3 +24,9 @@ trayerColor: 0x1E1E1E
 *color13:   #C586C0
 *color14:   #29B8DB
 *color15:   #ECEFF4
+
+dmenu.selbackground:  #3B4252
+dmenu.selforeground:  #ECEFF4
+
+dmenu.selhlbackground:  #005577
+dmenu.selhlforeground:  #D7BA7D

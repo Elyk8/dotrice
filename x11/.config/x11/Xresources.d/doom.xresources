@@ -1,39 +1,32 @@
 ! Doom one theme
 ! general
-*foreground:   #bbc2cf
-*background:   #282c34
-*cursorColor:  #bbc2cf
+*foreground:   #BBC2CF
+*background:   #282C34
+*cursorColor:  #51afef
 
-trayerColor:   0x282c34
 
-! black
-*color0:       #282c34  /* #1c1f24 */
-*color8:       #5b6268
+trayerColor:   0X282C34
 
-! red
-*color1:       #ff6c6b
-*color9:       #da8548
+*color0:       #282C34
+*color1:       #FF6C6B
+*color2:       #98BE65
+*color3:       #ECBE7B
+*color4:       #51AFEF
+*color5:       #A9A1E1
+*color6:       #46D9FF
+*color7:       #BBC2CF
 
-! green
-*color2:       #98be65
-*color10:      #4db5bd
+*color8:       #3F444A
+*color9:       #FF6C6B
+*color10:      #98BE65
+*color11:      #DA8548
+*color12:      #51AFEF
+*color13:      #A9A1E1
+*color14:      #46D9FF
+*color15:      #EFEFEF
 
-! yellow
-*color3:       #da8548
-*color11:      #ecbe7b
+dmenu.selbackground:  #3F444A
+dmenu.selforeground:  #BBC2CF
 
-! blue
-*color4:       #51afef
-*color12:      #3071db
-
-! magenta
-*color5:       #c678dd
-*color13:      #a9a1e1
-
-! cyan
-*color6:       #5699af
-*color14:      #46d9ff
-
-! white
-*color7:       #bbc2cf
-*color15:      #dfdfdf
+dmenu.selhlbackground:  #005577
+dmenu.selhlforeground:  #ECBE7B

@@ -8,13 +8,18 @@
 - [[#simple-settings][Simple Settings]]
 - [[#dashboard][Dashboard]]
   - [[#configuring-dashboard][Configuring Dashboard]]
-  - [[#dashboard-in-emacsclient][Dashboard in Emacsclient]]
 - [[#dired][Dired]]
   - [[#keybindings-to-open-dired][Keybindings To Open Dired]]
   - [[#keybindings-within-dired][Keybindings Within Dired]]
   - [[#keybindings-within-dired-with-peep-dired-mode-enabled][Keybindings Within Dired With Peep-Dired-Mode Enabled]]
 - [[#fonts-and-appearance][Fonts and Appearance]]
 - [[#line-settings][Line Settings]]
+- [[#open-specific-files][Open Specific Files]]
+- [[#org][Org]]
+  - [[#set-font-sizes-for-each-header-level-in-org][Set font sizes for each header level in Org]]
+  - [[#org-export][Org-export]]
+  - [[#org-journal][Org-journal]]
+  - [[#org-roam][Org-roam]]
 - [[#which-key][Which-key]]
 
 * Lexical Keybinds
@@ -42,16 +47,10 @@ These are better defaults (or preferences for me) which I would want to be on al
 
 (setq undo-limit 80000000                         ; Raise undo-limit to 80Mb
     evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
-    auto-save-default t                         ; Nobody likes to loose work, I certainly don't
     truncate-string-ellipsis "…"                ; Unicode ellispis are nicer than "...", and also save /precious/ space
     password-cache-expiry nil                   ; I can trust my computers ... can't I?
-    scroll-preserve-screen-position 'always     ; Don't have `point' jump around
+    ;; scroll-preserve-screen-position 'always     ; Don't have `point' jump around
     scroll-margin 2)                            ; It's nice to maintain a little margin
-
-(display-time-mode 1)                             ; Enable time in the mode-line
-(unless (string-match-p "^Power N/A" (battery))   ; On laptops...
-    (display-battery-mode 1))                       ; it's nice to know how much power you have
-(global-subword-mode 1)                           ; Iterate through CamelCase words
 #+end_src
 
 * Dashboard
@@ -59,7 +58,7 @@ Emacs Dashboard is an extensible startup screen showing you recent files, bookma
 
 ** Configuring Dashboard
 #+begin_src emacs-lisp
-(use-package dashboard
+(use-package! dashboard
     :init      ;; tweak dashboard config before loading it
     (setq dashboard-set-heading-icons t)
     (setq dashboard-set-file-icons t)
@@ -77,41 +76,35 @@ Emacs Dashboard is an extensible startup screen showing you recent files, bookma
                                     (bookmarks . "book"))))
 #+end_src
 
-** Dashboard in Emacsclient
-This setting ensures that emacsclient always opens on *dashboard* rather than *scratch*.
-#+begin_src emacs-lisp
-(setq doom-fallback-buffer "*dashboard*")
-#+end_src
-
 * Dired
 Dired is the file manager within Emacs.  Below, I setup keybindings for image previews (peep-dired).  Doom Emacs does not use 'SPC d' for any of its keybindings, so I've chosen the format of 'SPC d' plus 'key'.
 
 ** Keybindings To Open Dired
 
-| COMMAND    | DESCRIPTION                        | KEYBINDING |
-|------------+------------------------------------+------------|
+| COMMAND    | DESCRIPTION                          | KEYBINDING |
+|------------+--------------------------------------+------------|
 | dired      | /Open dired file manager/            | SPC d d    |
 | dired-jump | /Jump to current directory in dired/ | SPC d j    |
 
 ** Keybindings Within Dired
 *** Basic dired commands
 
-| COMMAND                 | DESCRIPTION                                 | KEYBINDING |
-|-------------------------+---------------------------------------------+------------|
-| dired-view-file         | /View file in dired/                          | SPC d v    |
-| dired-up-directory      | /Go up in directory tree/                     | h          |
-| dired-find-file         | /Go down in directory tree (or open if file)/ | l          |
-| dired-next-line         | Move down to next line                      | j          |
-| dired-previous-line     | Move up to previous line                    | k          |
-| dired-mark              | Mark file at point                          | m          |
-| dired-unmark            | Unmark file at point                        | u          |
-| dired-do-copy           | Copy current file or marked files           | C          |
-| dired-do-rename         | Rename current file or marked files         | R          |
-| dired-hide-details      | Toggle detailed listings on/off             | (          |
-| dired-git-info-mode     | Toggle git information on/off               | )          |
-| dired-create-directory  | Create new empty directory                  | +          |
-| dired-diff              | Compare file at point with another          | =          |
-| dired-subtree-toggle    | Toggle viewing subtree at point             | TAB        |
+| COMMAND                | DESCRIPTION                                   | KEYBINDING |
+|------------------------+-----------------------------------------------+------------|
+| dired-view-file        | /View file in dired/                          | SPC d v    |
+| dired-up-directory     | /Go up in directory tree/                     | h          |
+| dired-find-file        | /Go down in directory tree (or open if file)/ | l          |
+| dired-next-line        | Move down to next line                        | j          |
+| dired-previous-line    | Move up to previous line                      | k          |
+| dired-mark             | Mark file at point                            | m          |
+| dired-unmark           | Unmark file at point                          | u          |
+| dired-do-copy          | Copy current file or marked files             | C          |
+| dired-do-rename        | Rename current file or marked files           | R          |
+| dired-hide-details     | Toggle detailed listings on/off               | (          |
+| dired-git-info-mode    | Toggle git information on/off                 | )          |
+| dired-create-directory | Create new empty directory                    | +          |
+| dired-diff             | Compare file at point with another            | =          |
+| dired-subtree-toggle   | Toggle viewing subtree at point               | TAB        |
 
 *** Dired commands using regex
 
@@ -176,8 +169,8 @@ Dired is the file manager within Emacs.  Below, I setup keybindings for image pr
 ** Keybindings Within Dired With Peep-Dired-Mode Enabled
 If peep-dired is enabled, you will get image previews as you go up/down with 'j' and 'k'
 
-| COMMAND              | DESCRIPTION                              | KEYBINDING |
-|----------------------+------------------------------------------+------------|
+| COMMAND              | DESCRIPTION                                | KEYBINDING |
+|----------------------+--------------------------------------------+------------|
 | peep-dired           | /Toggle previews within dired/             | SPC d p    |
 | peep-dired-next-file | /Move to next file in peep-dired-mode/     | j          |
 | peep-dired-prev-file | /Move to previous file in peep-dired-mode/ | k          |
@@ -212,16 +205,14 @@ Settings related to fonts within Doom Emacs:
 Set the theme of doom emacs to be similar to the default VSCode theme. To try out new themes, I set a keybinding for counsel-load-theme with 'SPC h t'.
 
 #+BEGIN_SRC emacs-lisp
-(setq doom-theme 'doom-dark+)
-(map! :leader
-      :desc "Load new theme" "h t" #'counsel-load-theme)
+(setq doom-theme 'doom-vibrant)
 #+END_SRC
 
 * Line Settings
 I set comment-line to 'SPC TAB TAB' which is a rather comfortable keybinding for me on my ZSA Moonlander keyboard.  The standard Emacs keybinding for comment-line is 'C-x C-;'.  The other keybindings are for commands that toggle on/off various line-related settings.  Doom Emacs uses 'SPC t' for "toggle" commands, so I choose 'SPC t' plus 'key' for those bindings.
 
-| COMMAND                  | DESCRIPTION                               | KEYBINDING  |
-|--------------------------+-------------------------------------------+-------------|
+| COMMAND                  | DESCRIPTION                                 | KEYBINDING  |
+|--------------------------+---------------------------------------------+-------------|
 | comment-line             | /Comment or uncomment lines/                | SPC TAB TAB |
 | hl-line-mode             | /Toggle line highlighting in current frame/ | SPC t h     |
 | global-hl-line-mode      | /Toggle line highlighting globally/         | SPC t H     |
@@ -239,11 +230,115 @@ I set comment-line to 'SPC TAB TAB' which is a rather comfortable keybinding for
      :desc "Toggle truncate lines" "t" #'toggle-truncate-lines))
 #+END_SRC
 
+* Open Specific Files
+
+Keybindings to open files that I work with all the time using the find-file command, which is the interactive file search that opens with 'C-x C-f' in GNU Emacs or 'SPC f f' in Doom Emacs.  These keybindings use find-file non-interactively since we specify exactly what file to open.  The format I use for these bindings is 'SPC =' plus 'key' since Doom Emacs does not use 'SPC ='.
+
+| PATH TO FILE                   | DESCRIPTION           | KEYBINDING |
+|--------------------------------+-----------------------+------------|
+| ~/org/agenda.org               | /Edit agenda file/      | SPC = a    |
+| ~/.config/doom/config.org"     | /Edit doom config.org/  | SPC = c    |
+| ~/.config/doom/init.el"        | /Edit doom init.el/     | SPC = i    |
+| ~/.config/doom/packages.el"    | /Edit doom packages.el/ | SPC = p    |
+
+#+BEGIN_SRC emacs-lisp
+(map! :leader
+      (:prefix ("=" . "open file")
+       :desc "Edit agenda file" "a" #'(lambda () (interactive) (find-file "~/org/agenda.org"))
+       :desc "Edit doom config.org" "c" #'(lambda () (interactive) (find-file "~/.config/doom/config.org"))
+       :desc "Edit doom init.el" "i" #'(lambda () (interactive) (find-file "~/.config/doom/init.el"))
+       :desc "Edit doom packages.el" "p" #'(lambda () (interactive) (find-file "~/.config/doom/packages.el"))))
+#+END_SRC
+
+* Org
+
+I wrapped most of this block in (after! org).  Without this, my settings might be evaluated too early, which will result in my settings being overwritten by Doom's defaults.  I have also enabled org-journal, org-superstar and org-roam by adding (+journal +pretty +roam2) to the org section of my Doom Emacs init.el.
+
+=NOTE:= I have the location of my Org directory and Roam directory in $HOME/nc/ which is a Nextcloud folder that allows me to instantly sync all of my Org work between my home computer and my office computer.
+
+#+BEGIN_SRC emacs-lisp
+(map! :leader
+      :desc "Org babel tangle" "m B" #'org-babel-tangle)
+(after! org
+  (setq org-directory "~/org/"
+        org-agenda-files '("~/org/agenda.org")
+        org-default-notes-file (expand-file-name "notes.org" org-directory)
+        org-ellipsis " ▼ "
+        org-superstar-headline-bullets-list '("◉" "●" "○" "◆" "●" "○" "◆")
+        org-superstar-item-bullet-alist '((?+ . ?➤) (?- . ?✦)) ; changes +/- symbols in item lists
+        org-log-done 'time
+        org-hide-emphasis-markers t
+        ;; ex. of org-link-abbrev-alist in action
+        ;; [[arch-wiki:Name_of_Page][Description]]
+        org-link-abbrev-alist    ; This overwrites the default Doom org-link-abbrev-list
+          '(("google" . "http://www.google.com/search?q=")
+            ("arch-wiki" . "https://wiki.archlinux.org/index.php/")
+            ("ddg" . "https://duckduckgo.com/?q=")
+            ("wiki" . "https://en.wikipedia.org/wiki/"))
+        org-todo-keywords        ; This overwrites the default Doom org-todo-keywords
+          '((sequence
+             "TODO(t)"           ; A task that is ready to be tackled
+             "BLOG(b)"           ; Blog writing assignments
+             "GYM(g)"            ; Things to accomplish at the gym
+             "PROJ(p)"           ; A project that contains other tasks
+             "VIDEO(v)"          ; Video assignments
+             "WAIT(w)"           ; Something is holding up this task
+             "|"                 ; The pipe necessary to separate "active" states and "inactive" states
+             "DONE(d)"           ; Task has been completed
+             "CANCELLED(c)" )))) ; Task has been cancelled
+#+END_SRC
+
+** Set font sizes for each header level in Org
+You can set the Org heading levels to be different font sizes.  So I choose to have level 1 headings to be 140% in height, level 2 to be 130%, etc.  Other interesting things you could play with include adding :foreground color and/or :background color if you want to override the theme colors.
+#+begin_src emacs-lisp
+(custom-set-faces
+  '(org-level-1 ((t (:inherit outline-1 :height 1.4))))
+  '(org-level-2 ((t (:inherit outline-2 :height 1.3))))
+  '(org-level-3 ((t (:inherit outline-3 :height 1.2))))
+  '(org-level-4 ((t (:inherit outline-4 :height 1.1))))
+  '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
+)
+#+end_src
+
+** Org-export
+We need ox-man for "Org eXporting" to manpage format and ox-gemini for exporting to gemtext (for the gemini protocol).
+
+=NOTE:= I also enable ox-publish for converting an Org site into an HTML site, but that is done in init.el (org +publish).
+
+#+BEGIN_SRC emacs-lisp
+(use-package ox-man)
+(use-package ox-gemini)
+#+END_SRC
+
+** Org-journal
+#+begin_src emacs-lisp
+(setq org-journal-dir "~/nc/Org/journal/"
+      org-journal-date-prefix "* "
+      org-journal-time-prefix "** "
+      org-journal-date-format "%B %d, %Y (%A) "
+      org-journal-file-format "%Y-%m-%d.org")
+#+end_src
+
+** Org-roam
+| COMMAND                         | DESCRIPTION                     | KEYBINDING  |
+|---------------------------------+---------------------------------+-------------|
+| org-roam-find-file              | org roam find file              | SPC n r f   |
+| org-roam-insert                 | org roam insert                 | SPC n r i   |
+| org-roam-dailies-find-date      | org roam dailies find date      | SPC n r d d |
+| org-roam-dailies-find-today     | org roam dailies find today     | SPC n r d t |
+| org-roam-dailies-find-tomorrow  | org roam dailies find tomorrow  | SPC n r d m |
+| org-roam-dailies-find-yesterday | org roam dailies find yesterday | SPC n r d y |
+
+#+begin_src emacs-lisp
+(after! org-roam
+  (setq org-roam-directory "~/org/roam"))
+#+end_src
+
 * Which-key
 
 I hate when which-key takes too long to show up. Make it faster!!!
 
 #+begin_src elisp
-(require 'which-key)
+(after! 'which-key)
 (setq which-key-idle-delay 0.1)
 #+end_src

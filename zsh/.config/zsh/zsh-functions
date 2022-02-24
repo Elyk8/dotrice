@@ -29,19 +29,3 @@ function zsh_add_completion() {
 	completion_file="$(basename "${completion_file_path}")"
 	if [ "$2" = true ] && compinit "${completion_file:1}"
 }
-
-# Use lf to switch directories and bind it to ctrl-o
-function lfcd () {
-    tmp="$(mktemp)"
-    lf-run -last-dir-path="$tmp" "$@"
-    if [ -f "$tmp" ]; then
-        dir="$(cat "$tmp")"
-        rm -f "$tmp" >/dev/null
-        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
-    fi
-}
-
-function expand-alias() {
-	zle _expand_alias
-	zle self-insert
-}

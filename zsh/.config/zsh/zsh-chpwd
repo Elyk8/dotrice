@@ -3,7 +3,7 @@
 
 # wrap command `ls` into a function
 _ls_on_cwd_change() {
-  exa --group-directories-first --git;
+  exa --group-directories-first -a --icons --git;
 }
 
 # load add-zsh-hook if it's not available yet

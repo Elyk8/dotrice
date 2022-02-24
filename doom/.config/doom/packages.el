@@ -49,9 +49,12 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-(package! async)
 (package! dashboard)
 (package! dired-open)
 (package! dired-subtree)
 (package! elfeed-goodies)
 (package! emojify)
+
+(disable-packages!
+ solaire-mode
+ evil-snipe)

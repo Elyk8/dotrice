@@ -16,6 +16,7 @@ jkl    $HOME/.config/lf/lfrc
 jkp    $HOME/.config/picom/picom.conf
 jkt    $HOME/.config/alacritty/alacritty.yml
 jkx    $HOME/.config/x11/xinitrc
+jkxm   $HOME/.config/xmonad/xmonad.hs
 jkxp   $HOME/.config/x11/xprofile
 jkX    $HOME/.config/x11/Xresources
 jkz    $HOME/.config/zsh/.zshrc

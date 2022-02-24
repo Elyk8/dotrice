@@ -6,13 +6,14 @@ run() {
     fi
 }
 
-# /usr/bin/prime-offload
+/usr/bin/prime-offload
 multi-monitor
 xrdb -merge ~/.config/x11/Xresources
 run safeeyes -e &
 run greenclip daemon &
 run flameshot &
 run remaps &
+run clipmenud &
 run xbanish &
 run redshift &
 run /usr/bin/emacs --daemon &

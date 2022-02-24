@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 all_packages=( $(pacman -Qqe) )
 base_devel_packages=( $(pacman -Sg base-devel | cut -f 2 -d " ") )
 # Removes dupes from other array

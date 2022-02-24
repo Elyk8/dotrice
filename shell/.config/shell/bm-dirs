@@ -1,5 +1,4 @@
 # You can add comments to these files with #
-fdar       $HOME/.config/aconfmgr
 fdcap      $HOME/vic/y4/capstone
 fdcf       $HOME/.config
 fdcurr     $HOME/vic/current
@@ -9,8 +8,8 @@ fdkey      $HOME/.local/src/shotkey
 fdlf       $HOME/.config/lf
 fdlvc      $HOME/.config/lvim
 fdlvl      $HOME/.local/share/lunarvim/lvim
-fdrofi     $HOME/.config/rofi
 fdsc       $HOME/.local/bin/scripts
+fddm       $HOME/.local/bin/dmenu
 fdst       $HOME/.local/src/st
 fdstf      $HOME/.local/src/st
 fdsh       $HOME/.config/shell

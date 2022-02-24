@@ -1,37 +1,25 @@
-# Colors (One Darker)
-# Note I am using alacritty-ligatures until ligatures make it upstream
 colors:
-  # Default colors
   primary:
-    # background: "#232731"
-    background: "#1E1E1E"
-    foreground: "#abb2bf"
-
+    background:	"#282C34"
+    foreground:	"#BBC2CF"
   normal:
-    black: "#4b5263"
-    red: "#e06c75"
-    green: "#98C379"
-    yellow: "#E5C07B"
-    blue: "#61AFEF"
-    magenta: "#C678DD"
-    cyan: "#56B6C2"
-    white: "#abb2bf"
-
-  # Bright colors
+    black:	"#282C34"
+    red:	"#FF6C6B"
+    green:	"#98BE65"
+    yellow:	"#ECBE7B"
+    blue:	"#51AFEF"
+    magenta:	"#A9A1E1"
+    cyan:	"#46D9FF"
+    white:	"#BBC2CF"
   bright:
-    black: "#4b5263"
-    red: "#e06c75"
-    green: "#98C379"
-    yellow: "#E5C07B"
-    blue: "#61AFEF"
-    magenta: "#C678DD"
-    cyan: "#56B6C2"
-    white: "#abb2bf"
-
-  # Change cursor colors
-  cursor:
-    text: "#3B4252"
-    cursor: "#ECEFF4"
+    black:	"#3F444A"
+    red:	"#FF6C6B"
+    green:	"#98BE65"
+    yellow:	"#DA8548"
+    blue:	"#51AFEF"
+    magenta:	"#A9A1E1"
+    cyan:	"#46D9FF"
+    white:	"#EFEFEF"
 
 cursor:
   style:
@@ -111,6 +99,8 @@ key_bindings:
   - { key: Equals, mods: Control, action: IncreaseFontSize }
   - { key: Minus, mods: Control, action: DecreaseFontSize }
   - { key: Return,   mods: Alt, action: SpawnNewInstance }
+  - { key: K,   mods: Alt, action: ScrollLineUp }
+  - { key: J,   mods: Alt, action: ScrollLineDown }
   # - { key: Add, mods: Control, action: IncreaseFontSize }
   # - { key: Subtract, mods: Control, action: DecreaseFontSize }
   # - { key: N, mods: Control, action: SpawnNewInstance }

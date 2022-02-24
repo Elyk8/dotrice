@@ -55,20 +55,19 @@ zsh_add_plugin "zsh-users/zsh-autosuggestions"
 zsh_add_plugin "zsh-users/zsh-syntax-highlighting"
 zsh_add_plugin "hlissner/zsh-autopair"
 zsh_add_plugin "skywind3000/z.lua"
+zsh_add_plugin "changyuheng/zsh-interactive-cd"
 zsh_add_completion "esc/conda-zsh-completion" false
 # For more plugins: https://github.com/unixorn/awesome-zsh-plugins
 # More completions https://github.com/zsh-users/zsh-completions
 
 # Shortcuts
 [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/shell/aliasrc" ] && source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/aliasrc"
-[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/shell/shortcutrc" ] && source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/shortcutrc"
+[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/shell/apparix" ] && source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/apparix"
 
 # Key-bindings
-bindkey -s '^o' 'lfcd^M'
-bindkey -s '^f' 'zi^M'
 bindkey -s '^n' 'lvim $(fzf)^M'
 bindkey -s '^v' 'lvim\n'
-bindkey -s '^f' 'cd "$(dirname "$(fzf)")"^M'
+bindkey -s '^f' 'cd .\t'
 bindkey -s '^z' 'zi^M'
 bindkey -s '^w' '!!^M'
 bindkey '^[[P' delete-char
@@ -78,7 +77,6 @@ bindkey "^k" up-line-or-beginning-search # Up
 # bindkey "^j" down-line-or-beginning-search # Down
 bindkey -r "^u"
 bindkey -r "^d"
-bindkey -M main ' ' expand-alias
 
 # FZF
 [ -f /usr/share/fzf/completion.zsh ] && source /usr/share/fzf/completion.zsh

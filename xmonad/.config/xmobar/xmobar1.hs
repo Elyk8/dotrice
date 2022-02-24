@@ -5,8 +5,6 @@ Config { font = "xft:Iosevka Nerd Font:weight=bold:pixelsize=18:antialias=true:h
                            , "xft:Font Awesome 6 Free Solid:pixelsize=18"
                            , "xft:Font Awesome 6 Brands:pixelsize=18"
                            ]
-       , bgColor          = "#1E1E1E"
-       , fgColor          = "#569CD6"
        , borderColor      = "black"
        , borderWidth      = 1
        , border           = BottomB
@@ -32,7 +30,6 @@ Config { font = "xft:Iosevka Nerd Font:weight=bold:pixelsize=18:antialias=true:h
                     ]
                     
        , template = " <action=`jgmenu_run`><icon=haskell_20.xpm/></action> \
-                    \<fc=#666666>|</fc> \
                     \%_XMONAD_LOG_1%}{\
 
 

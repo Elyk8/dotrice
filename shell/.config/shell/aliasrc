@@ -23,7 +23,7 @@ alias upal="paru -Syu --noconfirm"
 # vim and emacs
 alias vim="nvim"
 alias resmacs="killall emacs; sleep 1 && /usr/bin/emacs --daemon"
-alias em="/usr/bin/emacs -nw"
+alias em="/usr/bin/emacs"
 alias emacs="emacsclient -c -a 'emacs'"
 alias doom="~/.emacs.d/bin/doom"
 alias doomsync="~/.emacs.d/bin/doom sync"
@@ -32,15 +32,14 @@ alias doomupgrade="~/.emacs.d/bin/doom upgrade"
 alias doompurge="~/.emacs.d/bin/doom purge"
 
 # z.lua useful aliases
-alias j='z -I'
+alias j='z -I' # use fzf to select in multiple matches
 alias zz='z -c' # restrict matches to subdirs of $PWD
 alias zi='z -i' # cd with interactive selection
-alias zf='z -I' # use fzf to select in multiple matches
 alias zb='z -b' # quickly cd to the parent directory
 
 # readable output
 alias df='df -h'
-alias free="free -mt"
+alias free="free -mth"
 
 # pacman unlock
 alias unlock="sudo rm /var/lib/pacman/db.lck"
@@ -93,11 +92,6 @@ alias hw="hwinfo --short"
 
 # skip integrity check
 alias paruskip='paru -S --mflags --skipinteg'
-alias yayskip='yay -S --mflags --skipinteg'
-alias trizenskip='trizen -S --skipinteg'
-
-# skip integrity check
-alias paruskip='paru -S --mflags --skipinteg'
 
 # check vulnerabilities microcode
 alias microcode='grep . /sys/devices/system/cpu/vulnerabilities/*'
@@ -139,8 +133,6 @@ alias nconfgrub="sudoedit /boot/grub/grub.cfg"
 alias nmkinitcpio="sudoedit /etc/mkinitcpio.conf"
 alias nmirrorlist="sudoedit /etc/pacman.d/mirrorlist"
 alias narcomirrorlist='sudoedit /etc/pacman.d/arcolinux-mirrorlist'
-alias nsddm="sudoedit /etc/sddm.conf"
-alias nsddmk="sudoedit /etc/sddm.conf.d/kde_settings.conf"
 alias nfstab="sudoedit /etc/fstab"
 alias nnsswitch="sudoedit /etc/nsswitch.conf"
 alias nsamba="sudoedit /etc/samba/smb.conf"
@@ -195,9 +187,9 @@ alias gpl='git pull'
 alias lg='lazygit'
 
 # Colorize commands when possible.
-alias ls='exa --group-directories-first --git'
 alias l='exa --group-directories-first --git'
-alias ll='exa -l --all --group-directories-first --git'
+alias ll='exa --icons --group-directories-first --git'
+alias ls='exa --icons --all --group-directories-first --git'
 alias lt='exa -T --git-ignore --level=2 --group-directories-first'
 alias llt='exa -lT --git-ignore --level=2 --group-directories-first'
 alias lT='exa -T --git-ignore --level=4 --group-directories-first'
@@ -222,13 +214,11 @@ alias wion='nmcli radio wifi on'
 alias wiof='nmcli radio wifi off'
 alias xp='chmod +x'
 alias ffmpeg="ffmpeg -hide_banner"
-alias a='alias'
-alias lf='lfcd'
 alias e='$EDITOR'
+alias br='bulk-rename'
 
-se() { fd -atf --base-directory ~/.config | fzy | xargs -r $EDITOR; }
-sr() { fd -atf --base-directory ~/.local/bin | fzy | xargs -r $EDITOR; }
-f() { xargs -r cd $(fd . -Hd 5 -td | fzf); }
+se() { fd -atf --base-directory ~/.config | fzf | xargs -r "$EDITOR"; }
+sr() { fd -atf --base-directory ~/.local/bin | fzf | xargs -r "$EDITOR"; }
 # xevv() { xev | awk -F'[ )]+' '/^KeyPress/ { a[NR+2] } NR in a { printf "%-3s %s\n", $5, $8 }'; }
 
 riceros() {
@@ -239,7 +229,7 @@ riceros() {
 
 riceconda() {
 	# Miniconda
-	__conda_setup="$('$HOME/.miniconda/bin/conda' 'shell.zsh' 'hook' 2>/dev/null)"
+	__conda_setup="$("$HOME/.miniconda/bin/conda" 'shell.zsh' 'hook' 2>/dev/null)"
 	if [ $? -eq 0 ]; then
 		eval "$__conda_setup"
 	else
