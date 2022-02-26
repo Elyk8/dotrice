@@ -1,0 +1,26 @@
+#+TITLE: My Personal dotfiles
+
+
+* INSTALLATION
+
+You will need =git= and =stow= to be installed on your system.
+
+Just copy paste the following command in the terminal to clone the repository.
+
+#+begin_src bash
+git clone https://github.com/Elyk8/dotrice --recursive ~
+#+end_src
+
+Notice the =--recursive= option, which is required in this config as it contains many submodules, such as [[https://github.com/plexus/chemacs2	][Chemacs2]] and [[https://github.com/NTBBloodbath/cheovim][Cheovim]].
+
+Then, run =stow= to symlink everything
+
+#+begin_src bash
+stow */ # Everything (the '/' ignores all other files)
+#+end_src
+
+or individual configurations, dependings on your needs
+
+#+begin_src bash
+stow zsh # Just my zsh config
+#+end_src

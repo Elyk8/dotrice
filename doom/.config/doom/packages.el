@@ -54,6 +54,7 @@
 (package! dired-subtree)
 (package! elfeed-goodies)
 (package! emojify)
+(package! frames-only-mode)
 
 (disable-packages!
  solaire-mode

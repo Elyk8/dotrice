@@ -10,6 +10,7 @@ import           Data.Maybe                     ( fromJust
                                                 , isJust
                                                 )
 import           Data.Monoid
+import           Data.Ratio   -- Require for rational (%) operator
 import           Data.Semigroup
 import           Foreign.C                      ( CInt )
 import           System.Directory
@@ -25,8 +26,8 @@ import           XMonad
 import           XMonad.Actions.CopyWindow
 import           XMonad.Actions.CycleWS
 import           XMonad.Actions.DwmPromote
-import           XMonad.Actions.EasyMotion      ( EasyMotionConfig(..)
-                                                , ChordKeys( PerScreenKeys )
+import           XMonad.Actions.EasyMotion      ( ChordKeys(PerScreenKeys)
+                                                , EasyMotionConfig(..)
                                                 , selectWindow
                                                 )
 import qualified XMonad.Actions.FlexibleResize as Flex
@@ -38,7 +39,7 @@ import           XMonad.Actions.RotSlaves       ( rotAllDown
 import           XMonad.Actions.Submap
 import           XMonad.Actions.SwapPromote
 import           XMonad.Actions.SwapWorkspaces
-import           XMonad.Actions.UpdatePointer   ( updatePointer )
+import           XMonad.Actions.Warp
 import           XMonad.Actions.WindowGo        ( runOrRaise )
 import           XMonad.Actions.WithAll         ( killAll
                                                 , sinkAll
@@ -105,12 +106,7 @@ import qualified XMonad.Layout.MultiToggle     as MT
                                                 , Transformer
                                                 )
 import           XMonad.Layout.MultiToggle.Instances
-                                                ( StdTransformers
-                                                  ( MIRROR
-                                                  , NBFULL
-                                                  , NOBORDERS
-                                                  )
-                                                )
+                                                ( StdTransformers(MIRROR, NBFULL, NOBORDERS) )
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.Renamed
 import           XMonad.Layout.ResizableTile
@@ -175,7 +171,7 @@ myTerminalClass :: String
 myTerminalClass = "Alacritty"
 
 myEmacs :: String
-myEmacs = "emacsclient -c -a 'emacs' "  -- Makes emacs keybindings easier to type
+myEmacs = "emacsclient -cne "  -- Makes emacs keybindings easier to type
 
 myBorderWidth :: Dimension
 myBorderWidth = 2
@@ -189,11 +185,11 @@ myFocusColor = base05
 myLeader :: String
 myLeader = "M-<Space>"
 
-myEasyMotionTheme :: EasyMotionConfig
-myEasyMotionTheme = def
+ezmTheme :: EasyMotionConfig
+ezmTheme = def
   { emFont = "xft: Monospace-40"
-  , sKeys = PerScreenKeys $ M.fromList
-              [(1, [xK_f, xK_d, xK_s, xK_a]), (0, [xK_h, xK_j, xK_k, xK_l])]
+  , sKeys = PerScreenKeys
+              $ M.fromList [(1, [xK_f, xK_d, xK_s, xK_a]), (0, [xK_h, xK_j, xK_k, xK_l])]
   , txtCol = basefg
   , bgCol = basebg
   , borderCol = base08
@@ -203,15 +199,7 @@ myEasyMotionTheme = def
 
 windowCount :: X (Maybe String)
 windowCount =
-  gets
-    $ Just
-    . show
-    . length
-    . W.integrate'
-    . W.stack
-    . W.workspace
-    . W.current
-    . windowset
+  gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
 
 mySpacing :: Integer -> l a -> XMonad.Layout.LayoutModifier.ModifiedLayout Spacing l a
 mySpacing i = spacingRaw False (Border i i i i) True (Border i i i i) True
@@ -221,6 +209,9 @@ mySpacing' i = spacingRaw True (Border i i i i) True (Border i i i i) True
 
 myGaps :: Integer
 myGaps = 8
+
+myWarp :: X ()
+myWarp = warpToWindow (1 % 2) (1 % 2)
 -- }}}
 
 -- {{{ STARTUP 
@@ -238,15 +229,12 @@ multiScreenFocusHook MotionEvent { ev_x = x, ev_y = y } = do
     Just cursorScreen -> do
       let cursorScreenID = W.screen cursorScreen
       focussedScreenID <- gets (W.screen . W.current . windowset)
-      when (cursorScreenID /= focussedScreenID)
-           (focusWS $ W.tag $ W.workspace cursorScreen)
+      when (cursorScreenID /= focussedScreenID) (focusWS $ W.tag $ W.workspace cursorScreen)
       return (All True)
     _ -> return (All True)
  where
   getScreenForPos
-    :: CInt
-    -> CInt
-    -> X (Maybe (W.Screen WorkspaceId (Layout Window) Window ScreenId ScreenDetail))
+    :: CInt -> CInt -> X (Maybe (W.Screen WorkspaceId (Layout Window) Window ScreenId ScreenDetail))
   getScreenForPos x y = do
     ws <- windowset <$> get
     let screens = W.current ws : W.visible ws
@@ -263,8 +251,7 @@ multiScreenFocusHook MotionEvent { ev_x = x, ev_y = y } = do
   focusWS ids = windows (W.view ids)
 multiScreenFocusHook _ = return (All True)
 
-rescreenCfg =
-  def { afterRescreenHook = myAfterRescreenHook, randrChangeHook = myRandrChangeHook }
+rescreenCfg = def { afterRescreenHook = myAfterRescreenHook, randrChangeHook = myRandrChangeHook }
 
 myAfterRescreenHook :: X ()
 myAfterRescreenHook = spawn "setwallpaper"
@@ -336,9 +323,7 @@ myXmobarPP :: ScreenId -> PP
 myXmobarPP s = filterOutWsPP [scratchpadWorkspaceTag] $ def
   { ppSep = "<fc=" ++ base08 ++ "> <fn=1>|</fn> </fc>"
   , ppCurrent = xmobarColor base03 ""
-                  . wrap
-                      ("<box type=Bottom width=2 mb=2 color=" ++ base03 ++ ">")
-                      "</box>"
+                  . wrap ("<box type=Bottom width=2 mb=2 color=" ++ base03 ++ ">") "</box>"
   , ppVisible = xmobarColor basefg ""
                 . wrap ("<box type=Top width=2 mt=2 color=" ++ basefg ++ ">") "</box>"
                 . clickable
@@ -386,7 +371,7 @@ tall =
     $ mkToggle (single MIRROR)
     $ limitWindows 5
     $ mySpacing myGaps
-    $ ResizableTall 1 (3 / 100) (1 / 2) []
+    $ ResizableTall 1 (3 % 100) (1 % 2) []
 
 wide =
   renamed [Replace "wide"]
@@ -397,7 +382,7 @@ wide =
     $ Mirror
     $ limitWindows 5
     $ mySpacing myGaps
-    $ ResizableTall 1 (3 / 100) (1 / 2) []
+    $ ResizableTall 1 (3 % 100) (1 % 2) []
 
 -- monocle =
 --   renamed [Replace "monocle"]
@@ -415,7 +400,7 @@ grid =
     $ mySpacing myGaps
     $ Mag.magnifierOff
     $ mkToggle (single MIRROR)
-    $ Grid (16 / 10)
+    $ Grid (16 % 10)
 
 spirals =
   renamed [Replace "fibonacci"]
@@ -425,7 +410,7 @@ spirals =
     $ Mag.magnifierOff
     $ mkToggle (single MIRROR)
     $ mySpacing' myGaps
-    $ spiral (6 / 7)
+    $ spiral (6 % 7)
 
 three =
   renamed [Replace "three"]
@@ -435,11 +420,10 @@ three =
     $ limitWindows 7
     $ Mag.magnifierOff
     $ mkToggle (single MIRROR)
-    $ ThreeCol 1 (3 / 100) (1 / 2)
+    $ ThreeCol 1 (3 % 100) (1 % 2)
 
-floats = renamed [Replace "floats"] $ Mag.magnifierOff $ smartBorders $ limitWindows
-  20
-  simplestFloat
+floats =
+  renamed [Replace "floats"] $ Mag.magnifierOff $ smartBorders $ limitWindows 20 simplestFloat
 
 deck =
   renamed [Replace "deck"]
@@ -447,7 +431,7 @@ deck =
     $ Mag.magnifierOff
     $ mkToggle (single MIRROR)
     $ mySpacing myGaps
-    $ TwoPanePersistent Nothing (3 / 100) (1 / 2)
+    $ TwoPanePersistent Nothing (3 % 100) (1 % 2)
 
 tabs = renamed [Replace "tabs"] $ tabbed shrinkText myTabTheme
 
@@ -503,10 +487,8 @@ myManageHook =
   myW3C = ["Brave-browser"]
   myW4C = ["zoom", "discord"]
   myW5C = ["VirtualBox Manager", "VirtualBox Machine", "Thunderbird"]
-  myFloatC =
-    ["confirm", "file_progress", "dialog", "download", "error", "toolbar", "Gmrun"]
-  myFloatCC =
-    ["notification", "Yad", "Xfce4-power-manager-settings", "Dragon-drag-and-drop"]
+  myFloatC = ["confirm", "file_progress", "dialog", "download", "error", "toolbar", "Gmrun"]
+  myFloatCC = ["notification", "Yad", "Xfce4-power-manager-settings", "Dragon-drag-and-drop"]
   myFloatSN = ["Event Tester"]
   myFocusDC = ["Event Tester", "Notify-osd"]
 
@@ -523,22 +505,16 @@ myHandleEventHook =
 -- {{{ SCRATCHPADS
 myScratchPads :: [NamedScratchpad]
 myScratchPads =
-  [ NS "ncmpcpp"
-       launchNcmpcpp
-       (appName =? "ncmpcpp")
-       (customFloating $ W.RationalRect l t w h)
-  , NS "terminal"
-       launchTerminal
-       (appName =? "scratchpad")
-       (customFloating $ W.RationalRect l t w h)
+  [ NS "ncmpcpp" launchNcmpcpp (appName =? "ncmpcpp") (customFloating $ W.RationalRect l t w h)
+  , NS "terminal" launchTerminal (appName =? "scratchpad") (customFloating $ W.RationalRect l t w h)
   ]
  where
   launchNcmpcpp = myTerminal ++ " --class ncmpcpp -e ncmpcpp"
   launchTerminal = myTerminal ++ " --class scratchpad"
   h = 0.8
   w = 0.6
-  t = (1 - h) / 2
-  l = (1 - w) / 2
+  t = (1 - h) % 2
+  l = (1 - w) % 2
 -- }}}
 
 -- {{{ SUBMAPPINGS
@@ -553,10 +529,10 @@ keyMapDoc name = do
     , show (rect_y r)
     , show (rect_width r)
     , show (rect_height r)
-    , "purple"       -- key color
-    , "white"        -- cmd color
-    , "Mononoki" -- font
-    , "28"           -- line height
+    , "'" ++ base03 ++ "'" -- use yellow color for keys color
+    , "'" ++ basefg ++ "'" -- use xresource foreground color for entries
+    , "monospace" -- font
+    , "28"
     ]
 
 toSubmap :: XConfig l -> String -> [(String, X ())] -> X ()
@@ -615,11 +591,17 @@ appsKeymap = -- Applications
   , ("; v", spawn "pavucontrol") -- Open volume control
   , ("; w", spawn "nsxiv -rqto $XDG_PICTURES_DIR/wallpapers/*") -- Interactively setwallpaper
   ]
-    --END_WHICHKEYS
  where
   obsidian = "env DESKTOPINTEGRATION=false /usr/bin/obsidian --no-sandbox"
   todoist = "env DESKTOPINTEGRATION=false /usr/bin/todoist --no-sandbox"
   discord = "/usr/bin/discord --no-sandbox"
+
+screenshotKeymap = -- Flameshot
+  [ ("g", spawn "flameshot gui") -- Start a manual capture in GUI mode
+  , ("s", spawn "flameshot screen") -- Capture a single screen
+  , ("f", spawn "flameshot full") -- Capture the entire desktop
+  ]
+    --END_WHICHKEYS
 -- }}}
 
 -- {{{ KEYBINDINGS
@@ -657,18 +639,16 @@ mainKeymap c = mkKeymap
   , ("C-M1-m", toggleWindowSpacingEnabled >> toggleScreenSpacingEnabled) -- Toggle gaps
 
     -- Windows navigation
-  , ("M-m", windows W.focusMaster) -- Move focus to the master window
-  , ("M-j", windows W.focusDown) -- Move focus to the next window
-  , ("M-k", windows W.focusUp) -- Move focus to the prev window
-  , ("M-S-m", windows W.swapMaster) -- Swap the focused window and the master window
-  , ("M-S-j", windows W.swapDown) -- Swap focused window with next window
-  , ("M-S-k", windows W.swapUp) -- Swap focused window with prev window
-  , ("M-<Backspace>", whenX (swapHybrid True) dwmpromote) -- Swap master window and last swapped window or first window in stack
+  , ("M-m", windows W.focusMaster >> myWarp) -- Move focus to the master window
+  , ("M-j", windows W.focusDown >> myWarp) -- Move focus to the next window
+  , ("M-k", windows W.focusUp >> myWarp) -- Move focus to the prev window
+  , ("M-S-m", windows W.swapMaster >> myWarp) -- Swap the focused window and the master window
+  , ("M-S-j", windows W.swapDown >> myWarp) -- Swap focused window with next window
+  , ("M-S-k", windows W.swapUp >> myWarp) -- Swap focused window with prev window
+  , ("M-<Backspace>", whenX (swapHybrid True) dwmpromote >> myWarp) -- Swap master window and last swapped window or first window in stack
   , ("M-S-<Tab>", rotSlavesDown) -- Rotate all windows except master and keep focus in place
   , ("M-C-<Tab>", rotAllDown) -- Rotate all the windows in the current stack
-  , ( "M1-<Space>"
-    , selectWindow myEasyMotionTheme >>= (`whenJust` windows . W.focusWindow)
-    )
+  , ("M1-<Space>", selectWindow ezmTheme >>= (`whenJust` windows . W.focusWindow) >> myWarp)
 
     -- Layouts
   , ("M-b", sendMessage NextLayout) -- Switch to next layout
@@ -707,8 +687,8 @@ mainKeymap c = mkKeymap
   , ("M-[", spawn "mpc prev") -- Previous song
   , ("M-]", spawn "mpc next") -- Next song
   , ("M-S-[", spawn "mpc seek 0%") -- Restart song
-  , ("M--", spawn "mpc volume -2") -- Volume down -2
-  , ("M-=", spawn "mpc volume +2") -- Volume up +2
+  , ("M--", spawn "mpc volume -2 && mpc-volume") -- Volume down -2
+  , ("M-=", spawn "mpc volume +2 && mpc-volume") -- Volume up +2
   , ("M-p", spawn "mpc toggle") -- Pause/play
   , ("M-s", spawn "mpc pause ; pauseallmpv") -- Stop
 
@@ -742,12 +722,15 @@ mainKeymap c = mkKeymap
   , ("<XF86AudioRaiseVolume>", spawn "volume up")
   , ("<XF86AudioRewind>", spawn "mpc seek -10")
   , ("<XF86AudioStop>", spawn "mpc stop")
+
+  -- Whichkeys keychords
   , ("M-<Space>", toSubmap c "appsKeymap" appsKeymap)
+  , ("<Print>", toSubmap c "screenshotKeymap" screenshotKeymap)
     --END_KEYS
   ]
  where
-  touchpadToggle
-    = "(synclient | grep 'TouchpadOff.*1' && synclient TouchpadOff=0) || synclient TouchpadOff=1"
+  touchpadToggle =
+    "(synclient | grep 'TouchpadOff.*1' && synclient TouchpadOff=0) || synclient TouchpadOff=1"
 
 myKeys conf =
   let modm = modMask conf
@@ -761,7 +744,9 @@ myKeys conf =
            | (i, k) <- zip (XMonad.workspaces conf) ([xK_6 .. xK_9] ++ [xK_0])
            , (f, m) <- [(viewOnScreen 1, 0), (W.greedyView, shiftMask)]
            ]
-        ++ [ ((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
+        ++ [ ( (m .|. modm, key)
+             , screenWorkspace sc >>= flip whenJust (windows . f) >> warpToScreen sc (1 % 2) (1 % 2)
+             )
            | (key, sc) <- zip [xK_e, xK_w] [0 ..]
            , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
            ]
@@ -781,7 +766,6 @@ myMouseBindings XConfig { XMonad.modMask = modMask } = M.fromList
 ------------------------------------------
 ---               Main                 ---
 ------------------------------------------
-
 main :: IO ()
 main =
   do
@@ -793,7 +777,7 @@ main =
     . rescreenHook rescreenCfg
     . dynamicSBs myStatusBarSpawner
     $ def
-        { manageHook = insertPosition End Newer
+        { manageHook = insertPosition Below Newer
                        <+> myManageHook
                        <+> namedScratchpadManageHook myScratchPads
                        <+> manageDocks
@@ -811,7 +795,6 @@ main =
         , normalBorderColor = myNormalColor
         , focusedBorderColor = myFocusColor
         , logHook = logHook def
-                    <+> updatePointer (0.5, 0.5) (0, 0)
                     <+> masterHistoryHook
                     <+> refocusLastLogHook
                     >> nsHideOnFocusLoss myScratchPads

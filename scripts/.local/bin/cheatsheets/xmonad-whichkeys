@@ -1,8 +1,9 @@
 #!/bin/sh
 
 sed -n '/START_WHICHKEYS/,/END_WHICHKEYS/p' ~/.config/xmonad/xmonad.hs |
-	grep '^\s*(\|^\s*\-\- [A-Za-z]\|^\s*,\s*(\|^$' |
+	grep '^\s*\[\s*(\|^\s*\-\- [A-Za-z]\|^\s*,\s*(\|^$' |
 	sed -e 's/^\s*,\s*//' \
+		-e 's/^\s*\[\s*//' \
 		-e 's/leader ++ "/"M+SPC /' \
 		-e 's/^\s*//' |
 	awk -F", " '! /^\s*\-\-/ {$1 = sprintf("%-20s", $1)} 1' |

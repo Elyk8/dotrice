@@ -1,6 +1,6 @@
 -- vim: ft=haskell
 
-Config { font = "xft:Iosevka Nerd Font:weight=bold:pixelsize=18:antialias=true:hinting=true"
+Config { font = "xft:Iosevka Nerd Font:weight=heavy:pixelsize=18:antialias=true:hinting=true"
        , additionalFonts = [ "xft:Mononoki Nerd Font:weight=bold:pixelsize=18:antialias=true:hinting=true"
                            , "xft:Font Awesome 6 Free Solid:pixelsize=18"
                            , "xft:Font Awesome 6 Brands:pixelsize=18"
@@ -36,7 +36,6 @@ Config { font = "xft:Iosevka Nerd Font:weight=bold:pixelsize=18:antialias=true:h
                     , Run MPD ["-t",
                                "<title> (<artist>) <statei>",
                                "--", "-P", "<fn=2>\xF144 </fn>", "-Z", "<fn=2>\xF28B </fn>", "-S", "<fn=2>\xF28D </fn>"] 10
-                    , Run Com ".local/bin/gpustatus" [] "gpustatus" 0
                     , Run Com ".config/xmobar/trayer-padding-icon.sh" [] "trayerpad" 20
                     , Run UnsafeXPropertyLog "_XMONAD_LOG_0"
                     ]
@@ -50,7 +49,6 @@ Config { font = "xft:Iosevka Nerd Font:weight=bold:pixelsize=18:antialias=true:h
 
                     \<box type=Bottom width=2 mb=2 color=#bbc2cf><fc=#bbc2cf> <action=`alacritty -e ncmpcpp`><action=`mpc toggle` button=3>%mpd%</action></action></fc></box> \
 
-                    \<box type=Bottom width=2 mb=2 color=#51afef><fc=#5294e2> %gpustatus%</fc></box> \
 
                     \<box type=Bottom width=2 mb=2 color=#da8548><fc=#da8548> <action=`alacritty -e gotop`>%battery%</action></fc></box>\
 

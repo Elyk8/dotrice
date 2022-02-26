@@ -22,8 +22,7 @@ INFO=$(awk -v cmdcolor="$CMDCOLOR" -v keycolor="$KEYCOLOR" -v cols=$COLS \
            'BEGIN {nr=0}
             /^'"$KEYMAP"'/,/^\s*\].*$/ {
                 # any comments will be replaced by an empty line
-                if ($0 ~ /^\s*--+/)
-                    key_hint[i++] = sprintf ("%-40.40s", "---------------------------------------------------------")
+                if ($0 ~ /^\s*--+/) next
 
                 if (nr == 0) {
                     split($0, firstline, " --", seps)

@@ -1,5 +1,10 @@
 #!/bin/sh
-op="$(fd . -HL -tf -d 1 | fzf)"
+
+if [ -z "$1" ]; then
+	op="$(fd . -HL -tf -d 1 | fzf)"
+else
+	op="$1"
+fi
 
 case "$op" in
 	*.bmp | *.jpg | *.jpeg | *.png | *.xpm | *.webp | *.gif | *.tif | *.ico)
@@ -18,7 +23,7 @@ case "$op" in
 		sc-im "$op"
 		;;
 	*.pdf | *.epub)
-		okular "$op" >/dev/null 2>&1
+		$READER "$op" >/dev/null 2>&1
 		;;
 	*.tgz | *.tar.gz | *.tar.bz2 | *.tbz2 | *.tar.txz | *.txz | *.tar | *.zip | *.jar | *.war | *.ear | *.oxt | *.rar | *.7z)
 		atool -l "$op" | less

@@ -12,6 +12,19 @@
     ;; scroll-preserve-screen-position 'always     ; Don't have `point' jump around
     scroll-margin 2)                            ; It's nice to maintain a little margin
 
+(setq doom-font (font-spec :family "Mononoki Nerd Font" :size 22)
+      doom-variable-pitch-font (font-spec :family "Ubuntu" :size 22)
+      doom-big-font (font-spec :family "Mononoki Nerd Font" :size 34))
+(after! doom-themes
+    (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t))
+(custom-set-faces!
+    '(font-lock-comment-face :slant italic)
+    '(font-lock-keyword-face :slant italic))
+
+(after! 'which-key)
+(setq which-key-idle-delay 0.1)
+
 (use-package! dashboard
     :init      ;; tweak dashboard config before loading it
     (setq dashboard-set-heading-icons t)
@@ -74,17 +87,12 @@
     (kbd "k") 'peep-dired-prev-file)
 (add-hook 'peep-dired-hook 'evil-normalize-keymaps)
 
-(setq doom-font (font-spec :family "Mononoki Nerd Font" :size 22)
-      doom-variable-pitch-font (font-spec :family "Ubuntu" :size 22)
-      doom-big-font (font-spec :family "Mononoki Nerd Font" :size 34))
-(after! doom-themes
-    (setq doom-themes-enable-bold t
-        doom-themes-enable-italic t))
-(custom-set-faces!
-    '(font-lock-comment-face :slant italic)
-    '(font-lock-keyword-face :slant italic))
-
 (setq doom-theme 'doom-vibrant)
+
+(add-hook 'emacs-startup-hook #'frames-only-mode)
+
+(remove-hook 'text-mode-hook #'auto-fill-mode)
+(add-hook 'message-mode-hook #'word-wrap-mode)
 
 (setq display-line-numbers-type t)
 (map! :leader
@@ -140,9 +148,6 @@
   '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
 )
 
-(use-package ox-man)
-(use-package ox-gemini)
-
 (setq org-journal-dir "~/nc/Org/journal/"
       org-journal-date-prefix "* "
       org-journal-time-prefix "** "
@@ -151,6 +156,3 @@
 
 (after! org-roam
   (setq org-roam-directory "~/org/roam"))
-
-(after! 'which-key)
-(setq which-key-idle-delay 0.1)

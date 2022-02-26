@@ -13,11 +13,11 @@
   - [[#keybindings-within-dired][Keybindings Within Dired]]
   - [[#keybindings-within-dired-with-peep-dired-mode-enabled][Keybindings Within Dired With Peep-Dired-Mode Enabled]]
 - [[#fonts-and-appearance][Fonts and Appearance]]
+- [[#hooks][Hooks]]
 - [[#line-settings][Line Settings]]
 - [[#open-specific-files][Open Specific Files]]
 - [[#org][Org]]
   - [[#set-font-sizes-for-each-header-level-in-org][Set font sizes for each header level in Org]]
-  - [[#org-export][Org-export]]
   - [[#org-journal][Org-journal]]
   - [[#org-roam][Org-roam]]
 - [[#which-key][Which-key]]
@@ -208,6 +208,21 @@ Set the theme of doom emacs to be similar to the default VSCode theme. To try ou
 (setq doom-theme 'doom-vibrant)
 #+END_SRC
 
+* Hooks
+
+These are the functions/modes which are run/enabled when certain conditions are met.
+
+Here, we specify stuff that we want to run on startup
+
+#+begin_src emacs-lisp
+(add-hook 'emacs-startup-hook #'frames-only-mode)
+#+end_src
+
+#+begin_src emacs-lisp
+(remove-hook 'text-mode-hook #'auto-fill-mode)
+(add-hook 'message-mode-hook #'word-wrap-mode)
+#+end_src
+
 * Line Settings
 I set comment-line to 'SPC TAB TAB' which is a rather comfortable keybinding for me on my ZSA Moonlander keyboard.  The standard Emacs keybinding for comment-line is 'C-x C-;'.  The other keybindings are for commands that toggle on/off various line-related settings.  Doom Emacs uses 'SPC t' for "toggle" commands, so I choose 'SPC t' plus 'key' for those bindings.
 
@@ -299,16 +314,6 @@ You can set the Org heading levels to be different font sizes.  So I choose to h
   '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
 )
 #+end_src
-
-** Org-export
-We need ox-man for "Org eXporting" to manpage format and ox-gemini for exporting to gemtext (for the gemini protocol).
-
-=NOTE:= I also enable ox-publish for converting an Org site into an HTML site, but that is done in init.el (org +publish).
-
-#+BEGIN_SRC emacs-lisp
-(use-package ox-man)
-(use-package ox-gemini)
-#+END_SRC
 
 ** Org-journal
 #+begin_src emacs-lisp
