@@ -1,26 +1,26 @@
 # zsh 
-/zsh/.config/zsh/plugins/
+zsh/.config/zsh/plugins/
 
 # inkscape
-/inkscape/.config/inkscape/*
-!/inkscape/.config/inkscape/extensions
-!/inkscape/.config/inkscape/templates
+inkscape/.config/inkscape/*
+!inkscape/.config/inkscape/extensions
+!inkscape/.config/inkscape/templates
 
 # safeeyes
-/safeeyes/.config/safeeyes/plugins
+safeeyes/.config/safeeyes/plugins
 
 # VSCodium
-/codium/.config/VSCodium/*
-!/codium/.config/VSCodium/product.json
-!/codium/.config/VSCodium/User/
-/codium/.config/VSCodium/User/*
-!/codium/.config/VSCodium/User/keybindings.json
-!/codium/.config/VSCodium/User/settings.json
+codium/.config/VSCodium/*
+!codium/.config/VSCodium/product.json
+!codium/.config/VSCodium/User/
+codium/.config/VSCodium/User/*
+!codium/.config/VSCodium/User/keybindings.json
+!codium/.config/VSCodium/User/settings.json
 
 # XMonad
-/xmonad/.config/xmonad/.stack-work
-/xmonad/.config/xmonad/build-x86_64-linux
-/xmonad/.config/xmonad/xmonad-x86_64-linux
-/xmonad/.config/xmonad/xmonad.errors
-/xmonad/.config/xmonad/xmonad.hi
-/xmonad/.config/xmonad/xmonad.o
+xmonad/.config/xmonad/.stack-work/
+xmonad/.config/xmonad/build-x86_64-linux/
+xmonad/.config/xmonad/xmonad-x86_64-linux
+xmonad/.config/xmonad/xmonad.errors
+xmonad/.config/xmonad/xmonad.hi
+xmonad/.config/xmonad/xmonad.o

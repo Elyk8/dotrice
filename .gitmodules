@@ -13,3 +13,6 @@
 [submodule "/home/elyk/dotrice/xmonad/.config/xmonad/xmobar-git"]
 	path = /home/elyk/dotrice/xmonad/.config/xmonad/xmobar-git
 	url = https://github.com/jaor/xmobar
+[submodule "cheovim/.config/nvim"]
+	path = cheovim/.config/nvim
+	url = https://github.com/Elyk8/cheovim
