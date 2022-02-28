@@ -1,0 +1,36 @@
+#!/bin/sh
+case "$1" in
+	*.bmp | *.jpg | *.jpeg | *.png | *.xpm | *.webp | *.gif | *.tif | *.ico)
+		rotdir "$1" | grep -i "\.\(png\|jpg\|jpeg\|gif\|webp\|tif\|ico\)\(_large\)*$" | nsxiv -aio 2>/dev/null
+		;;
+	*.wav | *.mp3 | *.flac | *.m4a | *.wma | *.ape | *.ac3 | *.og[agx] | *.spx | *.opus | *.as[fx] | *.mka)
+		mpv --audio-display=no "$1"
+		;;
+	*.avi | *.mp4 | *.wmv | *.dat | *.3gp | *.ogv | *.mkv | *.mpg | *.mpeg | *.vob | *.fl[icv] | *.m2v | *.mov | *.webm | *.ts | *.mts | *.m4v | *.r[am] | *.qt | *.divx)
+		mpv "$1" -quiet >/dev/null 2>&1
+		;;
+	*.odt | *.ods | *.odp | *.sxw | *.doc | *.docx | *.ppt | *.pptx | *.rtf)
+		setsid -f libreoffice "$1" >/dev/null 2>&1
+		;;
+	*.xls | *.xlsx | *.csv)
+		sc-im "$1"
+		;;
+	*.pdf | *.epub)
+		$READER "$1" >/dev/null 2>&1
+		;;
+	*.tgz | *.tar.gz | *.tar.bz2 | *.tbz2 | *.tar.txz | *.txz | *.tar | *.zip | *.jar | *.war | *.ear | *.oxt | *.rar | *.7z)
+		atool -l "$1" | less
+		;;
+	*.iso)
+		iso-info --no-header -l "$1" | less
+		;;
+	*.svg)
+		inkscape "$1" >/dev/null 2>&1
+		;;
+	"")
+		exit 1
+		;;
+	*)
+		$EDITOR "$1"
+		;;
+esac

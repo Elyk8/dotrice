@@ -1,25 +1,120 @@
-colors:
-  primary:
-    background:	"#282C34"
-    foreground:	"#BBC2CF"
-  normal:
-    black:	"#282C34"
-    red:	"#FF6C6B"
-    green:	"#98BE65"
-    yellow:	"#ECBE7B"
-    blue:	"#51AFEF"
-    magenta:	"#A9A1E1"
-    cyan:	"#46D9FF"
-    white:	"#BBC2CF"
-  bright:
-    black:	"#3F444A"
-    red:	"#FF6C6B"
-    green:	"#98BE65"
-    yellow:	"#DA8548"
-    blue:	"#51AFEF"
-    magenta:	"#A9A1E1"
-    cyan:	"#46D9FF"
-    white:	"#EFEFEF"
+# {{{ Colorschemes Available
+
+# {{{ Doom-one ###
+schemes:
+  doom-one: &doom-one
+    primary:
+      background:	"#282C34"
+      foreground:	"#BBC2CF"
+    normal:
+      black:	"#282C34"
+      red:	"#FF6C6B"
+      green:	"#98BE65"
+      yellow:	"#ECBE7B"
+      blue:	"#51AFEF"
+      magenta:	"#A9A1E1"
+      cyan:	"#46D9FF"
+      white:	"#BBC2CF"
+    bright:
+      black:	"#3F444A"
+      red:	"#FF6C6B"
+      green:	"#98BE65"
+      yellow:	"#DA8548"
+      blue:	"#51AFEF"
+      magenta:	"#A9A1E1"
+      cyan:	"#46D9FF"
+      white:	"#EFEFEF"
+      # }}}
+ 
+# {{{ Dracula ###
+  dracula: &dracula
+    primary:
+      background: '#282a36'
+      foreground: '#f8f8f2'
+    cursor:
+      text: CellBackground
+      cursor: CellForeground
+    vi_mode_cursor:
+      text: CellBackground
+      cursor: CellForeground
+    search:
+      matches:
+        foreground: '#44475a'
+        background: '#50fa7b'
+      focused_match:
+        foreground: '#44475a'
+        background: '#ffb86c'
+      bar:
+        background: '#282a36'
+        foreground: '#f8f8f2'
+    line_indicator:
+      foreground: None
+      background: None
+    selection:
+      text: CellForeground
+      background: '#44475a'
+    normal:
+      black:   '#000000'
+      red:     '#ff5555'
+      green:   '#50fa7b'
+      yellow:  '#f1fa8c'
+      blue:    '#bd93f9'
+      magenta: '#ff79c6'
+      cyan:    '#8be9fd'
+      white:   '#bfbfbf'
+    bright:
+      black:   '#4d4d4d'
+      red:     '#ff6e67'
+      green:   '#5af78e'
+      yellow:  '#f4f99d'
+      blue:    '#caa9fa'
+      magenta: '#ff92d0'
+      cyan:    '#9aedfe'
+      white:   '#e6e6e6'
+    dim:
+      black:   '#14151b'
+      red:     '#ff2222'
+      green:   '#1ef956'
+      yellow:  '#ebf85b'
+      blue:    '#4d5b86'
+      magenta: '#ff46b0'
+      cyan:    '#59dffc'
+      white:   '#e6e6d1'
+      # }}}
+      
+# {{{ Tokyo Night ###
+  tokyo-night: &tokyo-night
+    # Default colors
+    primary:
+      background: '#1a1b26'
+      foreground: '#a9b1d6'
+
+    # Normal colors
+    normal:
+      black:   '#32344a'
+      red:     '#f7768e'
+      green:   '#9ece6a'
+      yellow:  '#e0af68'
+      blue:    '#7aa2f7'
+      magenta: '#ad8ee6'
+      cyan:    '#449dab'
+      white:   '#787c99'
+
+    # Bright colors
+    bright:
+      black:   '#444b6a'
+      red:     '#ff7a93'
+      green:   '#b9f27c'
+      yellow:  '#ff9e64'
+      blue:    '#7da6ff'
+      magenta: '#bb9af7'
+      cyan:    '#0db9d7'
+      white:   '#acb0d0'
+      # }}}
+# }}}
+
+# doom-one, dracula, tokyo-night
+colors: *doom-one
 
 cursor:
   style:

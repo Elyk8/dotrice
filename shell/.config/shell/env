@@ -36,7 +36,6 @@ export SCREENRC="${XDG_CONFIG_HOME:-$HOME/.config}/screen/screenrc"
 export MATLAB_LOG_DIR="/tmp"
 export MATLAB_SHELL="/bin/bash"
 export KDEHOME="${XDG_CONFIG_HOME:-$HOME/.config}/kde"
-export PLASMA_USE_QT_SCALING=1
 export HISTORY_IGNORE="(ls|cd|pwd|exit|sudo reboot|history|cd -|cd ..)"
 
 # XDG Directories
@@ -85,7 +84,7 @@ export VISUAL="lvim"
 # export EDITOR="emacsedit"
 # export VISUAL="emacsedit"
 export READER="zathura"
-export TERMINAL="alacritty"
+export TERMINAL="st"
 export BROWSER="brave"
 export VIDEO="mpv"
 export IMAGE="nsxiv"

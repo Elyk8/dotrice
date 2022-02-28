@@ -1,6 +1,4 @@
 #!/bin/sh
-colorscript -r
-
 HISTFILE=~/.cache/zsh-history
 setopt appendhistory
 
@@ -48,7 +46,8 @@ source "$ZDOTDIR/zsh-functions"
 # Normal files to source
 zsh_add_file "zsh-vim-mode"
 zsh_add_file "zsh-chpwd"
-zsh_add_file "zsh-prompt"
+zsh_add_file "lfcd"
+# zsh_add_file "zsh-prompt"
 
 # Plugins
 zsh_add_plugin "zsh-users/zsh-autosuggestions"
@@ -93,10 +92,14 @@ fmz() {
         echo cd "$res"
         cd "$res" || return 1
     fi
-    rm "$tmp"
+    \rm "$tmp"
 }
 
 # Edit line in vim with ctrl-e:
 autoload edit-command-line; zle -N edit-command-line >/dev/null
 # bindkey '^e' edit-command-line
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#4c4c4c,bold,underline"
+
+eval "$(starship init zsh)"
+
+colorscript -r

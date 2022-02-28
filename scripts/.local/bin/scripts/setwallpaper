@@ -25,7 +25,7 @@
 pixdir=${XDG_PICTURES_DIR:="$HOME/pix"}
 
 if [ -z "$1" ]; then
-	feh --recursive --no-fehbg --bg-scale --randomize "$pixdir/wallpapers" &
+	feh --recursive --bg-scale --randomize "$pixdir/wallpapers" &
 else
-	feh --recursive --no-fehbg --bg-scale --randomize "$pixdir/wallpapers/$1" &
+	feh --recursive --bg-scale --randomize "$pixdir/wallpapers/$1" &
 fi

@@ -6,6 +6,10 @@
 * TABLE OF CONTENTS :toc:
 - [[#lexical-keybinds][Lexical Keybinds]]
 - [[#simple-settings][Simple Settings]]
+- [[#bookmarks-and-buffers][Bookmarks and Buffers]]
+  - [[#bookmarks][Bookmarks]]
+  - [[#buffers][Buffers]]
+  - [[#keybindings-within-ibuffer-mode][Keybindings within ibuffer mode]]
 - [[#dashboard][Dashboard]]
   - [[#configuring-dashboard][Configuring Dashboard]]
 - [[#dired][Dired]]
@@ -15,9 +19,14 @@
 - [[#fonts-and-appearance][Fonts and Appearance]]
 - [[#hooks][Hooks]]
 - [[#line-settings][Line Settings]]
+- [[#language-server-protocols][Language Server Protocols]]
+  - [[#haskell][Haskell]]
+- [[#mouse-settings][Mouse Settings]]
 - [[#open-specific-files][Open Specific Files]]
 - [[#org][Org]]
   - [[#set-font-sizes-for-each-header-level-in-org][Set font sizes for each header level in Org]]
+  - [[#org-appear][Org-appear]]
+  - [[#org-attach][Org-attach]]
   - [[#org-journal][Org-journal]]
   - [[#org-roam][Org-roam]]
 - [[#which-key][Which-key]]
@@ -49,8 +58,59 @@ These are better defaults (or preferences for me) which I would want to be on al
     evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
     truncate-string-ellipsis "…"                ; Unicode ellispis are nicer than "...", and also save /precious/ space
     password-cache-expiry nil                   ; I can trust my computers ... can't I?
-    ;; scroll-preserve-screen-position 'always     ; Don't have `point' jump around
+    scroll-preserve-screen-position 'always     ; Don't have `point' jump around
     scroll-margin 2)                            ; It's nice to maintain a little margin
+#+end_src
+
+* Bookmarks and Buffers
+Doom Emacs uses 'SPC b' for keybindings related to bookmarks and buffers.
+
+** Bookmarks
+Bookmarks are somewhat like registers in that they record positions you can jump to.  Unlike registers, they have long names, and they persist automatically from one Emacs session to the next. The prototypical use of bookmarks is to record where you were reading in various files.
+
+#+BEGIN_SRC emacs-lisp
+(map! :leader
+      (:prefix ("b". "buffer")
+       :desc "List bookmarks" "L" #'list-bookmarks
+       :desc "Save current bookmarks to bookmark file" "w" #'bookmark-save))
+#+END_SRC
+
+** Buffers
+Regarding /buffers/, the text you are editing in Emacs resides in an object called a /buffer/. Each time you visit a file, a buffer is used to hold the file’s text. Each time you invoke Dired, a buffer is used to hold the directory listing.  /Ibuffer/ is a program that lists all of your Emacs /buffers/, allowing you to navigate between them and filter them.
+
+| COMMAND         | DESCRIPTION          | KEYBINDING |
+|-----------------+----------------------+------------|
+| ibuffer         | Launch ibuffer       | SPC b i    |
+| kill-buffer     | Kill current buffer  | SPC b k    |
+| next-buffer     | Goto next buffer     | SPC b n    |
+| previous-buffer | Goto previous buffer | SPC b p    |
+| save-buffer     | Save current buffer  | SPC b s    |
+
+** Keybindings within ibuffer mode
+| COMMAND                           | DESCRIPTION                            | KEYBINDING |
+|-----------------------------------+----------------------------------------+------------|
+| ibuffer-mark-forward              | Mark the buffer                        | m          |
+| ibuffer-unmark-forward            | Unmark the buffer                      | u          |
+| ibuffer-do-kill-on-deletion-marks | Kill the marked buffers                | x          |
+| ibuffer-filter-by-content         | Ibuffer filter by content              | f c        |
+| ibuffer-filter-by-directory       | Ibuffer filter by directory            | f d        |
+| ibuffer-filter-by-filename        | Ibuffer filter by filename (full path) | f f        |
+| ibuffer-filter-by-mode            | Ibuffer filter by mode                 | f m        |
+| ibuffer-filter-by-name            | Ibuffer filter by name                 | f n        |
+| ibuffer-filter-disable            | Disable ibuffer filter                 | f x        |
+| ibuffer-do-kill-lines             | Hide marked buffers                    | g h        |
+| ibuffer-update                    | Restore hidden buffers                 | g H        |
+
+#+begin_src emacs-lisp
+(evil-define-key 'normal ibuffer-mode-map
+  (kbd "f c") 'ibuffer-filter-by-content
+  (kbd "f d") 'ibuffer-filter-by-directory
+  (kbd "f f") 'ibuffer-filter-by-filename
+  (kbd "f m") 'ibuffer-filter-by-mode
+  (kbd "f n") 'ibuffer-filter-by-name
+  (kbd "f x") 'ibuffer-filter-disable
+  (kbd "g h") 'ibuffer-do-kill-lines
+  (kbd "g H") 'ibuffer-update)
 #+end_src
 
 * Dashboard
@@ -59,20 +119,20 @@ Emacs Dashboard is an extensible startup screen showing you recent files, bookma
 ** Configuring Dashboard
 #+begin_src emacs-lisp
 (use-package! dashboard
-    :init      ;; tweak dashboard config before loading it
-    (setq dashboard-set-heading-icons t)
-    (setq dashboard-set-file-icons t)
-    ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
-    (setq dashboard-startup-banner "~/.config/doom/doom-emacs-dash.png")  ;; use custom image as banner
-    (setq dashboard-center-content nil) ;; set to 't' for centered content
-    (setq dashboard-items '((recents . 5)
-                            (agenda . 5 )
-                            (bookmarks . 5)
-                            (projects . 5)
-                            (registers . 5)))
-    :config
-    (dashboard-setup-startup-hook)
-    (dashboard-modify-heading-icons '((recents . "file-text")
+  :init      ;; tweak dashboard config before loading it
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
+  ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
+  (setq dashboard-startup-banner "~/.config/doom/doom-emacs-dash.png")  ;; use custom image as banner
+  (setq dashboard-center-content nil) ;; set to 't' for centered content
+  (setq dashboard-items '((recents . 5)
+                          (agenda . 5 )
+                          (bookmarks . 5)
+                          (projects . 5)
+                          (registers . 5)))
+  :config
+  (dashboard-setup-startup-hook)
+  (dashboard-modify-heading-icons '((recents . "file-text")
                                     (bookmarks . "book"))))
 #+end_src
 
@@ -126,35 +186,35 @@ Dired is the file manager within Emacs.  Below, I setup keybindings for image pr
 
 #+begin_src emacs-lisp
 (map! :leader
-    (:prefix ("d" . "dired")
-     :desc "Open dired" "d" #'dired
-     :desc "Dired jump to current" "j" #'dired-jump)
-    (:after dired
-    (:map dired-mode-map
-     :desc "Peep-dired image previews" "d p" #'peep-dired
-     :desc "Dired view file" "d v" #'dired-view-file)))
+      (:prefix ("d" . "dired")
+       :desc "Open dired" "d" #'dired
+       :desc "Dired jump to current" "j" #'dired-jump)
+      (:after dired
+       (:map dired-mode-map
+        :desc "Peep-dired image previews" "d p" #'peep-dired
+        :desc "Dired view file" "d v" #'dired-view-file)))
 (evil-define-key 'normal dired-mode-map
-    (kbd "M-RET") 'dired-display-file
-    (kbd "h") 'dired-up-directory
-    (kbd "l") 'dired-open-file ; use dired-find-file instead of dired-open.
-    (kbd "m") 'dired-mark
-    (kbd "t") 'dired-toggle-marks
-    (kbd "u") 'dired-unmark
-    (kbd "C") 'dired-do-copy
-    (kbd "D") 'dired-do-delete
-    (kbd "J") 'dired-goto-file
-    (kbd "M") 'dired-do-chmod
-    (kbd "O") 'dired-do-chown
-    (kbd "P") 'dired-do-print
-    (kbd "R") 'dired-do-rename
-    (kbd "T") 'dired-do-touch
-    (kbd "Y") 'dired-copy-filenamecopy-filename-as-kill ; copies filename to kill ring.
-    (kbd "+") 'dired-create-directory
-    (kbd "-") 'dired-up-directory
-    (kbd "% l") 'dired-downcase
-    (kbd "% u") 'dired-upcase
-    (kbd "; d") 'epa-dired-do-decrypt
-    (kbd "; e") 'epa-dired-do-encrypt)
+  (kbd "M-RET") 'dired-display-file
+  (kbd "h") 'dired-up-directory
+  (kbd "l") 'dired-open-file ; use dired-find-file instead of dired-open.
+  (kbd "m") 'dired-mark
+  (kbd "t") 'dired-toggle-marks
+  (kbd "u") 'dired-unmark
+  (kbd "C") 'dired-do-copy
+  (kbd "D") 'dired-do-delete
+  (kbd "J") 'dired-goto-file
+  (kbd "M") 'dired-do-chmod
+  (kbd "O") 'dired-do-chown
+  (kbd "P") 'dired-do-print
+  (kbd "R") 'dired-do-rename
+  (kbd "T") 'dired-do-touch
+  (kbd "Y") 'dired-copy-filenamecopy-filename-as-kill ; copies filename to kill ring.
+  (kbd "+") 'dired-create-directory
+  (kbd "-") 'dired-up-directory
+  (kbd "% l") 'dired-downcase
+  (kbd "% u") 'dired-upcase
+  (kbd "; d") 'epa-dired-do-decrypt
+  (kbd "; e") 'epa-dired-do-encrypt)
 ;; Get file icons in dired
 (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
 ;; With dired-open plugin, you can launch external programs for certain extensions
@@ -177,8 +237,8 @@ If peep-dired is enabled, you will get image previews as you go up/down with 'j'
 
 #+BEGIN_SRC emacs-lisp
 (evil-define-key 'normal peep-dired-mode-map
-    (kbd "j") 'peep-dired-next-file
-    (kbd "k") 'peep-dired-prev-file)
+  (kbd "j") 'peep-dired-next-file
+  (kbd "k") 'peep-dired-prev-file)
 (add-hook 'peep-dired-hook 'evil-normalize-keymaps)
 #+END_SRC
 
@@ -191,21 +251,24 @@ Settings related to fonts within Doom Emacs:
 + 'font-lock-keyword-face' -- for keywords with special significance like 'setq' in elisp.
 
 #+begin_src elisp
-(setq doom-font (font-spec :family "Mononoki Nerd Font" :size 22)
+(setq doom-font (font-spec :family "Blex Mono Nerd Font" :size 22)
       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 22)
-      doom-big-font (font-spec :family "Mononoki Nerd Font" :size 34))
+      doom-big-font (font-spec :family "Blex Mono Nerd Font" :size 34))
 (after! doom-themes
-    (setq doom-themes-enable-bold t
+  (setq doom-themes-enable-bold t
         doom-themes-enable-italic t))
 (custom-set-faces!
-    '(font-lock-comment-face :slant italic)
-    '(font-lock-keyword-face :slant italic))
+  '(font-lock-comment-face :slant italic)
+  '(font-lock-keyword-face :slant italic))
 #+end_src
 
-Set the theme of doom emacs to be similar to the default VSCode theme. To try out new themes, I set a keybinding for counsel-load-theme with 'SPC h t'.
+Set the theme of doom emacs here. To try out new themes, I set a keybinding for counsel-load-theme with 'SPC h t'. It is hear that you can also set the transparency of each emacs frame.
 
 #+BEGIN_SRC emacs-lisp
-(setq doom-theme 'doom-vibrant)
+(setq doom-theme 'doom-one)
+;; set transparency
+(set-frame-parameter (selected-frame) 'alpha '(100 100))
+(add-to-list 'default-frame-alist '(alpha 100 100))
 #+END_SRC
 
 * Hooks
@@ -224,6 +287,7 @@ Here, we specify stuff that we want to run on startup
 #+end_src
 
 * Line Settings
+
 I set comment-line to 'SPC TAB TAB' which is a rather comfortable keybinding for me on my ZSA Moonlander keyboard.  The standard Emacs keybinding for comment-line is 'C-x C-;'.  The other keybindings are for commands that toggle on/off various line-related settings.  Doom Emacs uses 'SPC t' for "toggle" commands, so I choose 'SPC t' plus 'key' for those bindings.
 
 | COMMAND                  | DESCRIPTION                                 | KEYBINDING  |
@@ -244,6 +308,28 @@ I set comment-line to 'SPC TAB TAB' which is a rather comfortable keybinding for
      :desc "Toggle line highlight globally" "H" #'global-hl-line-mode
      :desc "Toggle truncate lines" "t" #'toggle-truncate-lines))
 #+END_SRC
+
+* Language Server Protocols
+
+This section is dedicated to lsp default settings, which I want to change.
+
+** Haskell
+
+This is to change the default formatter for haskell.
+
+#+begin_src elisp
+(after! lsp-mode
+  (setq lsp-haskell-formatting-provider "brittany"))
+#+end_src
+
+* Mouse Settings
+
+This is to enable better mouse support for doom emacs.
+
+#+begin_src elisp
+(map! :n [mouse-8] #'better-jumper-jump-backward
+      :n [mouse-9] #'better-jumper-jump-forward)
+#+end_src
 
 * Open Specific Files
 
@@ -303,8 +389,13 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
              "CANCELLED(c)" )))) ; Task has been cancelled
 #+END_SRC
 
+#+RESULTS:
+| sequence | TODO(t) | BLOG(b) | GYM(g) | PROJ(p) | VIDEO(v) | WAIT(w) |   |   | DONE(d) | CANCELLED(c) |
+
 ** Set font sizes for each header level in Org
+
 You can set the Org heading levels to be different font sizes.  So I choose to have level 1 headings to be 140% in height, level 2 to be 130%, etc.  Other interesting things you could play with include adding :foreground color and/or :background color if you want to override the theme colors.
+
 #+begin_src emacs-lisp
 (custom-set-faces
   '(org-level-1 ((t (:inherit outline-1 :height 1.4))))
@@ -315,7 +406,31 @@ You can set the Org heading levels to be different font sizes.  So I choose to h
 )
 #+end_src
 
+** Org-appear
+
+While =org-hide-emphasis-markers= is very nice, it can sometimes make edits which occur at the border a bit more fiddley. We can improve this situation without sacrificing visual amenities with the =org-appear= package.
+
+#+begin_src elisp
+(use-package! org-appear
+  :hook (org-mode . org-appear-mode)
+  :config
+  (setq org-appear-autoemphasis t
+        org-appear-autosubmarkers t
+        org-appear-autolinks nil)
+  ;; for proper first-time setup, `org-appear--set-elements'
+  ;; needs to be run after other hooks have acted.
+  (run-at-time nil nil #'org-appear--set-elements))
+#+end_src
+
+** Org-attach
+
+#+begin_src elisp
+(after! org
+  (setq org-attach-method #'lns))
+#+end_src
+
 ** Org-journal
+
 #+begin_src emacs-lisp
 (setq org-journal-dir "~/nc/Org/journal/"
       org-journal-date-prefix "* "
@@ -325,6 +440,7 @@ You can set the Org heading levels to be different font sizes.  So I choose to h
 #+end_src
 
 ** Org-roam
+
 | COMMAND                         | DESCRIPTION                     | KEYBINDING  |
 |---------------------------------+---------------------------------+-------------|
 | org-roam-find-file              | org roam find file              | SPC n r f   |
@@ -336,7 +452,14 @@ You can set the Org heading levels to be different font sizes.  So I choose to h
 
 #+begin_src emacs-lisp
 (after! org-roam
-  (setq org-roam-directory "~/org/roam"))
+  (setq org-roam-directory "~/org/roam"
+        org-roam-completion-everywhere t
+        org-roam-capture-templates
+        '(("d" "default" plain
+           "%?"
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+           :unnarrowed t))
+        ))
 #+end_src
 
 * Which-key
@@ -346,4 +469,16 @@ I hate when which-key takes too long to show up. Make it faster!!!
 #+begin_src elisp
 (after! 'which-key)
 (setq which-key-idle-delay 0.1)
+#+end_src
+
+Also, =evil-= is too verbose for which-key. Let's change that.
+
+#+begin_src elisp
+(setq which-key-allow-multiple-replacements t)
+(after! which-key
+  (pushnew!
+   which-key-replacement-alist
+   '(("" . "\\`+?evil[-:]?\\(?:a-\\)?\\(.*\\)") . (nil . "◂\\1"))
+   '(("\\`g s" . "\\`evilem--?motion-\\(.*\\)") . (nil . "◃\\1"))
+   ))
 #+end_src

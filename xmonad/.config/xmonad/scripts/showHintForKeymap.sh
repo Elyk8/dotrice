@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 ##########################################################
 ## Look through ~/.xmonad/xmonad.hs for the given key submap
 ## in EZ-Config format.
@@ -9,16 +9,17 @@
 ##########################################################
 KEYMAP=$1
 # make FW bigger if the columns don't fit on your screen
-FW=450
-LH=$9
+FW=500
+LH=${10}
 X=$2
 W=$4
 KEYCOLOR=$6
-CMDCOLOR=$7
-FONT=$8
+ARROWCOLOR=$7
+CMDCOLOR=$8
+FONT=$9
 COLS=$((W / FW))
 
-INFO=$(awk -v cmdcolor="$CMDCOLOR" -v keycolor="$KEYCOLOR" -v cols=$COLS \
+INFO=$(awk -v cmdcolor="$CMDCOLOR" -v keycolor="$KEYCOLOR" -v arrowcolor="$ARROWCOLOR" -v cols=$COLS \
            'BEGIN {nr=0}
             /^'"$KEYMAP"'/,/^\s*\].*$/ {
                 # any comments will be replaced by an empty line
@@ -41,7 +42,9 @@ INFO=$(awk -v cmdcolor="$CMDCOLOR" -v keycolor="$KEYCOLOR" -v cols=$COLS \
                 match(substr(splitline[1], comma_loc+2), /^ *(.*)\)/, command)
 
                 # remove any leading spaces from the comment
-                gsub(/^[ \t]/, "", splitline[2])
+                gsub(/^\S\+/, "", splitline[2])
+                gsub(/<Space>/, "SPC", keys[1])
+                gsub(/ /, "", keys[1])
 
                 # skip any empty records.
                 if (length(command[1]) > 0){
@@ -51,13 +54,13 @@ INFO=$(awk -v cmdcolor="$CMDCOLOR" -v keycolor="$KEYCOLOR" -v cols=$COLS \
                         } else {
                             desc=command[1]
                     }
-                    key_hint[i++] = sprintf (" ^fg(%s)%8s ^fg(%s)%-30.30s", keycolor, keys[1], cmdcolor, desc)
+                key_hint[i++] = sprintf (" ^fg(%s)%3s ^fg(%s)->^fg(%s)%-30.30s", keycolor, keys[1], arrowcolor, cmdcolor, desc)
                 }
             }
             END {
                 print "^fg("keycolor")"label
                 print " "
-                rows = int( ((i+1) / cols) +1)
+                rows = int( ((i+1) / cols) )
                 for (j=0; j<=i;) {
                     for (k=0; k < rows; k++) {
                          row[k] = row[k] key_hint[j++]

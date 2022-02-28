@@ -10,7 +10,7 @@ import           Data.Maybe                     ( fromJust
                                                 , isJust
                                                 )
 import           Data.Monoid
-import           Data.Ratio   -- Require for rational (%) operator
+import           Data.Ratio       -- Require for rational (%) operator
 import           Data.Semigroup
 import           Foreign.C                      ( CInt )
 import           System.Directory
@@ -130,6 +130,7 @@ import           XMonad.Layout.WindowArranger   ( WindowArrangerMsg(..)
 import           XMonad.Layout.WindowNavigation
 import qualified XMonad.StackSet               as W
 
+import           XMonad.Prompt                  ( XPPosition(Bottom) )
 -- Util Imports
 import           XMonad.Util.Cursor
 import           XMonad.Util.EZConfig
@@ -165,16 +166,19 @@ myModMask :: KeyMask
 myModMask = mod4Mask
 
 myTerminal :: String
-myTerminal = "alacritty"
+myTerminal = "st"
 
 myTerminalClass :: String
-myTerminalClass = "Alacritty"
+myTerminalClass = "St"
+
+myTerminalScratch :: String
+myTerminalScratch = "st -n " -- Set to open the terminal in the working directory
 
 myEmacs :: String
 myEmacs = "emacsclient -cne "  -- Makes emacs keybindings easier to type
 
 myBorderWidth :: Dimension
-myBorderWidth = 2
+myBorderWidth = 3
 
 myNormalColor :: String
 myNormalColor = basebg
@@ -214,7 +218,7 @@ myWarp :: X ()
 myWarp = warpToWindow (1 % 2) (1 % 2)
 -- }}}
 
--- {{{ STARTUP 
+-- {{{ STARTUP
 myStartupHook :: X ()
 myStartupHook = do
   setDefaultCursor xC_left_ptr
@@ -322,16 +326,15 @@ myStatusBarSpawner (S s) = do
 myXmobarPP :: ScreenId -> PP
 myXmobarPP s = filterOutWsPP [scratchpadWorkspaceTag] $ def
   { ppSep = "<fc=" ++ base08 ++ "> <fn=1>|</fn> </fc>"
-  , ppCurrent = xmobarColor base03 ""
-                  . wrap ("<box type=Bottom width=2 mb=2 color=" ++ base03 ++ ">") "</box>"
-  , ppVisible = xmobarColor basefg ""
-                . wrap ("<box type=Top width=2 mt=2 color=" ++ basefg ++ ">") "</box>"
+  , ppCurrent = xmobarColor base06 "" . wrap "[" "]"
+  , ppVisible = xmobarColor base06 ""
+                . wrap ("<box type=Top width=2 mt=2 color=" ++ base06 ++ ">") "</box>"
                 . clickable
-  , ppVisibleNoWindows = Just (xmobarColor base04 "" . clickable)
+  , ppVisibleNoWindows = Just (xmobarColor base05 "" . clickable)
   , ppHidden = xmobarColor base04 ""
-               . wrap ("<box type=Top width=2 mt=2 color=" ++ base04 ++ ">") "</box>"
+               . wrap ("<box type=Bottom width=2 mt=2 color=" ++ base04 ++ ">") "</box>"
                . clickable
-  , ppHiddenNoWindows = xmobarColor basefg "" . clickable
+  , ppHiddenNoWindows = xmobarColor base08 "" . clickable
   , ppUrgent = xmobarColor base05 "" . wrap "!" "!"
   , ppOrder = \(ws : _ : _ : extras) -> ws : extras
   , ppExtras = [ windowCount
@@ -355,7 +358,7 @@ myWorkspaces = ["dev", "sys", "www", "dis", "msg"]
 myWorkspaceIndices :: M.Map [Char] Integer
 myWorkspaceIndices = M.fromList $ zip myWorkspaces [1 ..]
 
-clickable ws = "<action=xdotool key super+" ++ show i ++ ">" ++ ws ++ "</action>"
+clickable ws = "<action=xdotool key super+alt+" ++ show i ++ ">" ++ ws ++ "</action>"
   where i = fromJust $ M.lookup ws myWorkspaceIndices
 
 myFilter = filterOutWs [scratchpadWorkspaceTag]
@@ -371,7 +374,7 @@ tall =
     $ mkToggle (single MIRROR)
     $ limitWindows 5
     $ mySpacing myGaps
-    $ ResizableTall 1 (3 % 100) (1 % 2) []
+    $ ResizableTall 1 (3 / 100) (1 / 2) []
 
 wide =
   renamed [Replace "wide"]
@@ -382,7 +385,7 @@ wide =
     $ Mirror
     $ limitWindows 5
     $ mySpacing myGaps
-    $ ResizableTall 1 (3 % 100) (1 % 2) []
+    $ ResizableTall 1 (3 / 100) (1 / 2) []
 
 -- monocle =
 --   renamed [Replace "monocle"]
@@ -400,7 +403,7 @@ grid =
     $ mySpacing myGaps
     $ Mag.magnifierOff
     $ mkToggle (single MIRROR)
-    $ Grid (16 % 10)
+    $ Grid (16 / 10)
 
 spirals =
   renamed [Replace "fibonacci"]
@@ -410,7 +413,7 @@ spirals =
     $ Mag.magnifierOff
     $ mkToggle (single MIRROR)
     $ mySpacing' myGaps
-    $ spiral (6 % 7)
+    $ spiral (6 / 7)
 
 three =
   renamed [Replace "three"]
@@ -420,7 +423,7 @@ three =
     $ limitWindows 7
     $ Mag.magnifierOff
     $ mkToggle (single MIRROR)
-    $ ThreeCol 1 (3 % 100) (1 % 2)
+    $ ThreeCol 1 (3 / 100) (1 / 2)
 
 floats =
   renamed [Replace "floats"] $ Mag.magnifierOff $ smartBorders $ limitWindows 20 simplestFloat
@@ -431,7 +434,7 @@ deck =
     $ Mag.magnifierOff
     $ mkToggle (single MIRROR)
     $ mySpacing myGaps
-    $ TwoPanePersistent Nothing (3 % 100) (1 % 2)
+    $ TwoPanePersistent Nothing (3 / 100) (1 / 2)
 
 tabs = renamed [Replace "tabs"] $ tabbed shrinkText myTabTheme
 
@@ -509,12 +512,12 @@ myScratchPads =
   , NS "terminal" launchTerminal (appName =? "scratchpad") (customFloating $ W.RationalRect l t w h)
   ]
  where
-  launchNcmpcpp = myTerminal ++ " --class ncmpcpp -e ncmpcpp"
-  launchTerminal = myTerminal ++ " --class scratchpad"
+  launchNcmpcpp = myTerminalScratch ++ " ncmpcpp -e ncmpcpp"
+  launchTerminal = myTerminalScratch ++ " scratchpad"
   h = 0.8
   w = 0.6
-  t = (1 - h) % 2
-  l = (1 - w) % 2
+  t = (1 - h) / 2
+  l = (1 - w) / 2
 -- }}}
 
 -- {{{ SUBMAPPINGS
@@ -529,10 +532,11 @@ keyMapDoc name = do
     , show (rect_y r)
     , show (rect_width r)
     , show (rect_height r)
-    , "'" ++ base03 ++ "'" -- use yellow color for keys color
-    , "'" ++ basefg ++ "'" -- use xresource foreground color for entries
+    , "'" ++ base03 ++ "'" -- keys color
+    , "'" ++ base08 ++ "'" -- arrow color
+    , "'" ++ base06 ++ "'" -- description color
     , "monospace" -- font
-    , "28"
+    , "24"
     ]
 
 toSubmap :: XConfig l -> String -> [(String, X ())] -> X ()
@@ -543,9 +547,9 @@ toSubmap c name m = do
 
   --START_WHICHKEYS
 appsKeymap = -- Applications
-  [ ("t", spawn myTerminal) -- Spawn alacritty terminal
+  [ ("t", spawn myTerminal) -- Spawn terminal
   , ("<Space>", spawn "dm-j4dmenu-desktop") -- Dmenu launcher
-  , ("r", spawn "pcmanfm") -- Pcmanfm file manager
+  , ("r", spawn (myTerminal ++ " -e lf")) -- Lf file manager
 
     -- Cheatsheets
   , ("[", spawn "xmonad-whichkeys") -- Leader Mappings
@@ -556,6 +560,7 @@ appsKeymap = -- Applications
   , ("e b", spawn (myEmacs ++ "--eval '(ibuffer)'")) -- Emacs list buffers
   , ("e d", spawn (myEmacs ++ "--eval '(dired nil)'")) -- Emacs dired
   , ("e n", spawn (myEmacs ++ "--eval '(elfeed)'")) -- Emacs elfeed rss
+  , ("e v", spawn (myEmacs ++ "--eval '(+vterm/here nil)'")) -- Emacs vterm
 
   -- Applications Launcher
   , ("o w", spawn "$BROWSER") -- Launch Browser (Brave)
@@ -565,6 +570,7 @@ appsKeymap = -- Applications
   , ("o o", spawn obsidian) -- Launch Obsidian
   , ("o t", spawn todoist) -- Launch Todoist
   , ("o v", spawn "/usr/bin/vscodium") -- Launch VSCodium
+  , ("o z", spawn "/usr/bin/zoom") -- Launch Zoom
 
   -- Dmenu scripts
   , ("p a", spawn "dm-man") -- Man pages list
@@ -573,12 +579,12 @@ appsKeymap = -- Applications
   , ("p e", spawn "dm-emoji") -- Emoji keyboard
   , ("p k", spawn "dm-kill") -- Terminate applications
   , ("p m", spawn "dm-buku") -- Buku bookmarks manager
-  , ("p o", spawn "dm-mount") -- Mount drives, including USBs and a Android devices
-  , ("p p", spawn "dm-passmenu") -- Password manager and autotyper
+  , ("p o", spawn "dm-mount") -- Mount drives
+  , ("p p", spawn "dm-passmenu") -- Password manager
   , ("p b", spawn "dm-beats") -- Radio FM
   , ("p s", spawn "dm-scripts") -- Find and edit scripts
   , ("p u", spawn "dm-umount") -- Unmount any drive
-  , ("p w", spawn "weatherforecast") -- Display the weather forecast
+  , ("p w", spawn "weatherforecast") -- Display weather forecast
 
   -- Music and volume control
   , ("m n", namedScratchpadAction myScratchPads "ncmpcpp") -- Ncmpcpp Player
@@ -738,11 +744,11 @@ myKeys conf =
         $ ((modm .|. shiftMask, xK_b), setLayout $ XMonad.layoutHook conf)
         : [ ((m .|. modm, k), windows $ f i)
           | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_5]
-          , (f, m) <- [(viewOnScreen 0, 0), (W.shift, shiftMask)]
+          , (f, m) <- [(viewOnScreen 0, 0), (W.shift, shiftMask), (W.greedyView, mod1Mask)]
           ]
         ++ [ ((m .|. modm, k), windows $ f i)
            | (i, k) <- zip (XMonad.workspaces conf) ([xK_6 .. xK_9] ++ [xK_0])
-           , (f, m) <- [(viewOnScreen 1, 0), (W.greedyView, shiftMask)]
+           , (f, m) <- [(viewOnScreen 1, 0)]
            ]
         ++ [ ( (m .|. modm, key)
              , screenWorkspace sc >>= flip whenJust (windows . f) >> warpToScreen sc (1 % 2) (1 % 2)

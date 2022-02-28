@@ -1,9 +1,10 @@
 ! Doom one theme
 ! general
 *foreground:   #BBC2CF
-*background:   #282C34
+*background:   #282C34 
 *cursorColor:  #51afef
 
+! #282C34
 
 trayerColor:   0X282C34
 

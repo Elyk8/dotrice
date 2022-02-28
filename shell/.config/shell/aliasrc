@@ -20,11 +20,15 @@ alias updqte='sudo pacman -Syyu'
 alias upqll="paru -Syu --noconfirm"
 alias upal="paru -Syu --noconfirm"
 
+#better cd
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
 # vim and emacs
 alias vim="nvim"
 alias resmacs="killall emacs; sleep 1 && /usr/bin/emacs --daemon"
 alias em="/usr/bin/emacs"
-alias emacs="emacsclient -c -a 'emacs'"
+alias emacs="emacsclient -cn -a 'emacs'"
 alias doom="/media/emacs-frameworks/doom-emacs/bin/doom"
 alias doomsync="/media/emacs-frameworks/doom-emacs/bin/doom sync"
 alias doomdoctor="/media/emacs-frameworks/doom-emacs/bin/doom doctor"
@@ -216,6 +220,7 @@ alias xp='chmod +x'
 alias ffmpeg="ffmpeg -hide_banner"
 alias e='$EDITOR'
 alias br='bulk-rename'
+alias lf='lfcd'
 
 se() { fd -atf --base-directory ~/.config | fzf | xargs -r "$EDITOR"; }
 sr() { fd -atf --base-directory ~/.local/bin | fzf | xargs -r "$EDITOR"; }

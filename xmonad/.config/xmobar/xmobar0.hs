@@ -1,7 +1,7 @@
 -- vim: ft=haskell
 
 Config { font = "xft:Iosevka Nerd Font:weight=heavy:pixelsize=18:antialias=true:hinting=true"
-       , additionalFonts = [ "xft:Mononoki Nerd Font:weight=bold:pixelsize=18:antialias=true:hinting=true"
+       , additionalFonts = [ "xft:monospace:weight=bold:pixelsize=18:antialias=true:hinting=true"
                            , "xft:Font Awesome 6 Free Solid:pixelsize=18"
                            , "xft:Font Awesome 6 Brands:pixelsize=18"
                            ]

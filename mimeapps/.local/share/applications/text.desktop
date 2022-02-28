@@ -1,4 +1,4 @@
 [Desktop Entry]
 Type=Application
 Name=Text editor
-Exec=/usr/bin/alacritty -e lvim %u
+Exec=/usr/local/bin/st -e lvim %u
