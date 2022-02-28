@@ -16,3 +16,11 @@
 /codium/.config/VSCodium/User/*
 !/codium/.config/VSCodium/User/keybindings.json
 !/codium/.config/VSCodium/User/settings.json
+
+# XMonad
+/xmonad/.config/xmonad/.stack-work
+/xmonad/.config/xmonad/build-x86_64-linux
+/xmonad/.config/xmonad/xmonad-x86_64-linux
+/xmonad/.config/xmonad/xmonad.errors
+/xmonad/.config/xmonad/xmonad.hi
+/xmonad/.config/xmonad/xmonad.o
