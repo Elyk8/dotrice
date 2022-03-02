@@ -10,6 +10,7 @@
   - [[#bookmarks][Bookmarks]]
   - [[#buffers][Buffers]]
   - [[#keybindings-within-ibuffer-mode][Keybindings within ibuffer mode]]
+- [[#completion][Completion]]
 - [[#dashboard][Dashboard]]
   - [[#configuring-dashboard][Configuring Dashboard]]
 - [[#dired][Dired]]
@@ -18,6 +19,7 @@
   - [[#keybindings-within-dired-with-peep-dired-mode-enabled][Keybindings Within Dired With Peep-Dired-Mode Enabled]]
 - [[#fonts-and-appearance][Fonts and Appearance]]
 - [[#hooks][Hooks]]
+- [[#key-mappings-and-evil][Key Mappings And Evil]]
 - [[#line-settings][Line Settings]]
 - [[#language-server-protocols][Language Server Protocols]]
   - [[#haskell][Haskell]]
@@ -26,7 +28,6 @@
 - [[#org][Org]]
   - [[#set-font-sizes-for-each-header-level-in-org][Set font sizes for each header level in Org]]
   - [[#org-appear][Org-appear]]
-  - [[#org-attach][Org-attach]]
   - [[#org-journal][Org-journal]]
   - [[#org-roam][Org-roam]]
 - [[#which-key][Which-key]]
@@ -47,7 +48,6 @@ variables, and virtually no other languages have adopted it.
 * Simple Settings
 
 These are better defaults (or preferences for me) which I would want to be on always.
-
 #+begin_src elisp
 (setq-default
     delete-by-moving-to-trash t                      ; Delete files to trash
@@ -60,6 +60,13 @@ These are better defaults (or preferences for me) which I would want to be on al
     password-cache-expiry nil                   ; I can trust my computers ... can't I?
     scroll-preserve-screen-position 'always     ; Don't have `point' jump around
     scroll-margin 2)                            ; It's nice to maintain a little margin
+
+(add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;; Prevents some cases of Emacs flickering.
+#+end_src
+
+When I bring up Doom's scratch buffer with SPC x, it's often to play with elisp or note something down (that isn't worth an entry in my notes). I can do both in `lisp-interaction-mode'.
+#+begin_src elisp
+(setq doom-scratch-initial-major-mode 'lisp-interaction-mode)
 #+end_src
 
 * Bookmarks and Buffers
@@ -67,7 +74,6 @@ Doom Emacs uses 'SPC b' for keybindings related to bookmarks and buffers.
 
 ** Bookmarks
 Bookmarks are somewhat like registers in that they record positions you can jump to.  Unlike registers, they have long names, and they persist automatically from one Emacs session to the next. The prototypical use of bookmarks is to record where you were reading in various files.
-
 #+BEGIN_SRC emacs-lisp
 (map! :leader
       (:prefix ("b". "buffer")
@@ -113,6 +119,22 @@ Regarding /buffers/, the text you are editing in Emacs resides in an object call
   (kbd "g H") 'ibuffer-update)
 #+end_src
 
+* Completion
+
+IMO, modern editors have trained a bad habit into us all: a burning need for
+completion all the time -- as we type, as we breathe, as we pray to the
+ancient ones -- but how often do you *really* need that information? I say
+rarely. So opt for manual completion:
+#+begin_src elisp
+(after! company
+  (setq company-idle-delay nil))
+#+end_src
+
+An evil mode indicator is redundant with cursor shape
+#+begin_src elisp
+(advice-add #'doom-modeline-segment--modals :override #'ignore)
+#+end_src
+
 * Dashboard
 Emacs Dashboard is an extensible startup screen showing you recent files, bookmarks, agenda items and an Emacs banner.
 
@@ -149,22 +171,22 @@ Dired is the file manager within Emacs.  Below, I setup keybindings for image pr
 ** Keybindings Within Dired
 *** Basic dired commands
 
-| COMMAND                | DESCRIPTION                                   | KEYBINDING |
-|------------------------+-----------------------------------------------+------------|
+| COMMAND                | DESCRIPTION                                 | KEYBINDING |
+|------------------------+---------------------------------------------+------------|
 | dired-view-file        | /View file in dired/                          | SPC d v    |
 | dired-up-directory     | /Go up in directory tree/                     | h          |
 | dired-find-file        | /Go down in directory tree (or open if file)/ | l          |
-| dired-next-line        | Move down to next line                        | j          |
-| dired-previous-line    | Move up to previous line                      | k          |
-| dired-mark             | Mark file at point                            | m          |
-| dired-unmark           | Unmark file at point                          | u          |
-| dired-do-copy          | Copy current file or marked files             | C          |
-| dired-do-rename        | Rename current file or marked files           | R          |
-| dired-hide-details     | Toggle detailed listings on/off               | (          |
-| dired-git-info-mode    | Toggle git information on/off                 | )          |
-| dired-create-directory | Create new empty directory                    | +          |
-| dired-diff             | Compare file at point with another            | =          |
-| dired-subtree-toggle   | Toggle viewing subtree at point               | TAB        |
+| dired-next-line        | Move down to next line                      | j          |
+| dired-previous-line    | Move up to previous line                    | k          |
+| dired-mark             | Mark file at point                          | m          |
+| dired-unmark           | Unmark file at point                        | u          |
+| dired-do-copy          | Copy current file or marked files           | C          |
+| dired-do-rename        | Rename current file or marked files         | R          |
+| dired-hide-details     | Toggle detailed listings on/off             | (          |
+| dired-git-info-mode    | Toggle git information on/off               | )          |
+| dired-create-directory | Create new empty directory                  | +          |
+| dired-diff             | Compare file at point with another          | =          |
+| dired-subtree-toggle   | Toggle viewing subtree at point             | TAB        |
 
 *** Dired commands using regex
 
@@ -224,10 +246,11 @@ Dired is the file manager within Emacs.  Below, I setup keybindings for image pr
                               ("png" . "nsxiv")
                               ("mkv" . "mpv")
                               ("mp4" . "mpv")))
+(setq find-file-visit-truename nil)
 #+end_src
 
 ** Keybindings Within Dired With Peep-Dired-Mode Enabled
-If peep-dired is enabled, you will get image previews as you go up/down with 'j' and 'k'
+If peep-dired is enabled, you will get image previews as you go up/down with 'j' and 'k'.
 
 | COMMAND              | DESCRIPTION                                | KEYBINDING |
 |----------------------+--------------------------------------------+------------|
@@ -251,9 +274,9 @@ Settings related to fonts within Doom Emacs:
 + 'font-lock-keyword-face' -- for keywords with special significance like 'setq' in elisp.
 
 #+begin_src elisp
-(setq doom-font (font-spec :family "Blex Mono Nerd Font" :size 22)
+(setq doom-font (font-spec :family "monospace" :size 22)
       doom-variable-pitch-font (font-spec :family "Ubuntu" :size 22)
-      doom-big-font (font-spec :family "Blex Mono Nerd Font" :size 34))
+      doom-big-font (font-spec :family "monospace" :size 34))
 (after! doom-themes
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t))
@@ -286,6 +309,33 @@ Here, we specify stuff that we want to run on startup
 (add-hook 'message-mode-hook #'word-wrap-mode)
 #+end_src
 
+* Key Mappings And Evil
+
+#+begin_src elisp
+(map! (:after evil-org
+       :map evil-org-mode-map
+       :n "gk" (cmd! (if (org-on-heading-p)
+                         (org-backward-element)
+                       (evil-previous-visual-line)))
+       :n "gj" (cmd! (if (org-on-heading-p)
+                         (org-forward-element)
+                       (evil-next-visual-line))))
+      :o "o" #'evil-inner-symbol
+      :leader
+      "h L" #'global-keycast-mode
+      (:prefix "f"
+       "t" #'find-in-dotfiles
+       "T" #'browse-dotfiles)
+      (:prefix "n"
+       "L" #'org-latex-preview))
+
+;; Focus new window after splitting
+(setq evil-split-window-below t
+      evil-vsplit-window-right t)
+;; Implicit /g flag on evil ex substitution, because I use the default behavior less often.
+(setq evil-ex-substitute-global t)
+#+end_src
+
 * Line Settings
 
 I set comment-line to 'SPC TAB TAB' which is a rather comfortable keybinding for me on my ZSA Moonlander keyboard.  The standard Emacs keybinding for comment-line is 'C-x C-;'.  The other keybindings are for commands that toggle on/off various line-related settings.  Doom Emacs uses 'SPC t' for "toggle" commands, so I choose 'SPC t' plus 'key' for those bindings.
@@ -299,7 +349,7 @@ I set comment-line to 'SPC TAB TAB' which is a rather comfortable keybinding for
 | toggle-truncate-lines    | /Toggle truncate lines/                     | SPC t t     |
 
 #+BEGIN_SRC emacs-lisp
-(setq display-line-numbers-type t)
+(setq display-line-numbers-type nil) ;; By disabling line number, we improve performance significantly
 (map! :leader
      :desc "Comment or uncomment lines" "TAB TAB" #'comment-line
     (:prefix ("t" . "toggle")
@@ -313,10 +363,21 @@ I set comment-line to 'SPC TAB TAB' which is a rather comfortable keybinding for
 
 This section is dedicated to lsp default settings, which I want to change.
 
+#+begin_src elisp
+(after! lsp-mode
+  (setq lsp-enable-symbol-highlighting nil
+        ;; If an LSP server isn't present when I start a prog-mode buffer, you
+        ;; don't need to tell me. I know. On some machines I don't care to have
+        ;; a whole development environment for some ecosystems.
+        lsp-enable-suggest-server-download nil))
+(after! lsp-ui
+  (setq lsp-ui-sideline-enable nil  ; no more useful than flycheck
+        lsp-ui-doc-enable nil))     ; redundant with K
+#+end_src
+
 ** Haskell
 
 This is to change the default formatter for haskell.
-
 #+begin_src elisp
 (after! lsp-mode
   (setq lsp-haskell-formatting-provider "brittany"))
@@ -325,7 +386,6 @@ This is to change the default formatter for haskell.
 * Mouse Settings
 
 This is to enable better mouse support for doom emacs.
-
 #+begin_src elisp
 (map! :n [mouse-8] #'better-jumper-jump-backward
       :n [mouse-9] #'better-jumper-jump-forward)
@@ -372,25 +432,25 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
         ;; ex. of org-link-abbrev-alist in action
         ;; [[arch-wiki:Name_of_Page][Description]]
         org-link-abbrev-alist    ; This overwrites the default Doom org-link-abbrev-list
-          '(("google" . "http://www.google.com/search?q=")
-            ("arch-wiki" . "https://wiki.archlinux.org/index.php/")
-            ("ddg" . "https://duckduckgo.com/?q=")
-            ("wiki" . "https://en.wikipedia.org/wiki/"))
+        '(("google" . "http://www.google.com/search?q=")
+          ("arch-wiki" . "https://wiki.archlinux.org/index.php/")
+          ("ddg" . "https://duckduckgo.com/?q=")
+          ("wiki" . "https://en.wikipedia.org/wiki/"))
         org-todo-keywords        ; This overwrites the default Doom org-todo-keywords
-          '((sequence
-             "TODO(t)"           ; A task that is ready to be tackled
-             "BLOG(b)"           ; Blog writing assignments
-             "GYM(g)"            ; Things to accomplish at the gym
-             "PROJ(p)"           ; A project that contains other tasks
-             "VIDEO(v)"          ; Video assignments
-             "WAIT(w)"           ; Something is holding up this task
-             "|"                 ; The pipe necessary to separate "active" states and "inactive" states
-             "DONE(d)"           ; Task has been completed
-             "CANCELLED(c)" )))) ; Task has been cancelled
-#+END_SRC
+        '((sequence
+           "TODO(t)"           ; A task that is ready to be tackled
+           "BLOG(b)"           ; Blog writing assignments
+           "GYM(g)"            ; Things to accomplish at the gym
+           "PROJ(p)"           ; A project that contains other tasks
+           "VIDEO(v)"          ; Video assignments
+           "WAIT(w)"           ; Something is holding up this task
+           "|"                 ; The pipe necessary to separate "active" states and "inactive" states
+           "DONE(d)"           ; Task has been completed
+           "CANCELLED(c)" )))) ; Task has been cancelled
 
-#+RESULTS:
-| sequence | TODO(t) | BLOG(b) | GYM(g) | PROJ(p) | VIDEO(v) | WAIT(w) |   |   | DONE(d) | CANCELLED(c) |
+;; Make latex fonts larger
+(after! org (plist-put org-format-latex-options :scale 5))
+#+END_SRC
 
 ** Set font sizes for each header level in Org
 
@@ -420,13 +480,6 @@ While =org-hide-emphasis-markers= is very nice, it can sometimes make edits whic
   ;; for proper first-time setup, `org-appear--set-elements'
   ;; needs to be run after other hooks have acted.
   (run-at-time nil nil #'org-appear--set-elements))
-#+end_src
-
-** Org-attach
-
-#+begin_src elisp
-(after! org
-  (setq org-attach-method #'lns))
 #+end_src
 
 ** Org-journal
@@ -460,6 +513,52 @@ While =org-hide-emphasis-markers= is very nice, it can sometimes make edits whic
            :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
            :unnarrowed t))
         ))
+#+end_src
+
+Setup templates for your second brain, that is org-roam.
+
+#+begin_src elisp
+(after! org-roam
+  (setq org-roam-capture-templates
+        `(("n" "note" plain
+           ,(format "#+title: ${title}\n%%[%s/template/note.org]" org-roam-directory)
+           :target (file "note/%<%Y%m%d%H%M%S>-${slug}.org")
+           :unnarrowed t)
+          ("r" "thought" plain
+           ,(format "#+title: ${title}\n%%[%s/template/thought.org]" org-roam-directory)
+           :target (file "thought/%<%Y%m%d%H%M%S>-${slug}.org")
+           :unnarrowed t)
+          ("t" "topic" plain
+           ,(format "#+title: ${title}\n%%[%s/template/topic.org]" org-roam-directory)
+           :target (file "topic/%<%Y%m%d%H%M%S>-${slug}.org")
+           :unnarrowed t)
+          ("c" "contact" plain
+           ,(format "#+title: ${title}\n%%[%s/template/contact.org]" org-roam-directory)
+           :target (file "contact/%<%Y%m%d%H%M%S>-${slug}.org")
+           :unnarrowed t)
+          ("p" "project" plain
+           ,(format "#+title: ${title}\n%%[%s/template/project.org]" org-roam-directory)
+           :target (file "project/%<%Y%m%d>-${slug}.org")
+           :unnarrowed t)
+          ("i" "invoice" plain
+           ,(format "#+title: %%<%%Y%%m%%d>-${title}\n%%[%s/template/invoice.org]" org-roam-directory)
+           :target (file "invoice/%<%Y%m%d>-${slug}.org")
+           :unnarrowed t)
+          ("f" "ref" plain
+           ,(format "#+title: ${title}\n%%[%s/template/ref.org]" org-roam-directory)
+           :target (file "ref/%<%Y%m%d%H%M%S>-${slug}.org")
+           :unnarrowed t)
+          ("w" "works" plain
+           ,(format "#+title: ${title}\n%%[%s/template/works.org]" org-roam-directory)
+           :target (file "works/%<%Y%m%d%H%M%S>-${slug}.org")
+           :unnarrowed t)
+          ("s" "secret" plain "#+title: ${title}\n\n"
+           :target (file "secret/%<%Y%m%d%H%M%S>-${slug}.org.gpg")
+           :unnarrowed t))
+        ;; Use human readable dates for dailies titles
+        org-roam-dailies-capture-templates
+        '(("d" "default" entry "* %?"
+           :target (file+head "%<%Y-%m-%d>.org" "#+title: %<%B %d, %Y>\n\n")))))
 #+end_src
 
 * Which-key

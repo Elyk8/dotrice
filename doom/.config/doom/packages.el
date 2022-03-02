@@ -55,6 +55,10 @@
 (package! elfeed-goodies)
 (package! emojify)
 (package! frames-only-mode)
+(package! org-fragtog)
+(package! org-pretty-table
+  :recipe (:host github :repo "Fuco1/org-pretty-table") :pin "87772a9469d91770f87bfa788580fca69b9e697a")
+
 (package! org-appear :recipe (:host github :repo "awth13/org-appear")
   :pin "148aa124901ae598f69320e3dcada6325cdc2cf0")
 

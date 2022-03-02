@@ -10,7 +10,7 @@ import           Data.Maybe                     ( fromJust
                                                 , isJust
                                                 )
 import           Data.Monoid
-import           Data.Ratio       -- Require for rational (%) operator
+import           Data.Ratio          -- Require for rational (%) operator
 import           Data.Semigroup
 import           Foreign.C                      ( CInt )
 import           System.Directory
@@ -39,7 +39,7 @@ import           XMonad.Actions.RotSlaves       ( rotAllDown
 import           XMonad.Actions.Submap
 import           XMonad.Actions.SwapPromote
 import           XMonad.Actions.SwapWorkspaces
-import           XMonad.Actions.Warp
+import           XMonad.Actions.UpdatePointer
 import           XMonad.Actions.WindowGo        ( runOrRaise )
 import           XMonad.Actions.WithAll         ( killAll
                                                 , sinkAll
@@ -130,6 +130,7 @@ import           XMonad.Layout.WindowArranger   ( WindowArrangerMsg(..)
 import           XMonad.Layout.WindowNavigation
 import qualified XMonad.StackSet               as W
 
+import           XMonad.Actions.PhysicalScreens ( onNextNeighbour )
 import           XMonad.Prompt                  ( XPPosition(Bottom) )
 -- Util Imports
 import           XMonad.Util.Cursor
@@ -213,9 +214,6 @@ mySpacing' i = spacingRaw True (Border i i i i) True (Border i i i i) True
 
 myGaps :: Integer
 myGaps = 8
-
-myWarp :: X ()
-myWarp = warpToWindow (1 % 2) (1 % 2)
 -- }}}
 
 -- {{{ STARTUP
@@ -255,10 +253,10 @@ multiScreenFocusHook MotionEvent { ev_x = x, ev_y = y } = do
   focusWS ids = windows (W.view ids)
 multiScreenFocusHook _ = return (All True)
 
-rescreenCfg = def { afterRescreenHook = myAfterRescreenHook, randrChangeHook = myRandrChangeHook }
+rescreenCfg = def { randrChangeHook = myRandrChangeHook } -- afterRescreenHook = myAfterRescreenHook, 
 
-myAfterRescreenHook :: X ()
-myAfterRescreenHook = spawn "setwallpaper"
+-- myAfterRescreenHook :: X ()
+-- myAfterRescreenHook = spawn "setwallpaper a2n"
 
 myRandrChangeHook :: X ()
 myRandrChangeHook = spawn "autorandr --change"
@@ -487,7 +485,7 @@ myManageHook =
   iconName = stringProperty "WM_ICON_NAME"
   myIgnores = ["SafeEyes-0", "SafeEyes-1"]
   myW1C = ["obsidian", "VSCodium"]
-  myW3C = ["Brave-browser"]
+  myW3C = ["Brave-browser", "qutebrowser"]
   myW4C = ["zoom", "discord"]
   myW5C = ["VirtualBox Manager", "VirtualBox Machine", "Thunderbird"]
   myFloatC = ["confirm", "file_progress", "dialog", "download", "error", "toolbar", "Gmrun"]
@@ -553,12 +551,12 @@ appsKeymap = -- Applications
 
     -- Cheatsheets
   , ("[", spawn "xmonad-whichkeys") -- Leader Mappings
-  , ("]", spawn "xmonad-keys") -- Xmonad Control Bindings
 
   -- Emacs
-  , ("e e", spawn (myEmacs ++ "--eval '(dashboard-refresh-buffer)'")) -- Emacs dashboard
   , ("e b", spawn (myEmacs ++ "--eval '(ibuffer)'")) -- Emacs list buffers
   , ("e d", spawn (myEmacs ++ "--eval '(dired nil)'")) -- Emacs dired
+  , ("e e", spawn (myEmacs ++ "--eval '(dashboard-refresh-buffer)'")) -- Emacs dashboard
+  , ("e f", spawn (myEmacs ++ "--eval '(org-roam-node-find)'")) -- Emacs org roam node
   , ("e n", spawn (myEmacs ++ "--eval '(elfeed)'")) -- Emacs elfeed rss
   , ("e v", spawn (myEmacs ++ "--eval '(+vterm/here nil)'")) -- Emacs vterm
 
@@ -645,16 +643,17 @@ mainKeymap c = mkKeymap
   , ("C-M1-m", toggleWindowSpacingEnabled >> toggleScreenSpacingEnabled) -- Toggle gaps
 
     -- Windows navigation
-  , ("M-m", windows W.focusMaster >> myWarp) -- Move focus to the master window
-  , ("M-j", windows W.focusDown >> myWarp) -- Move focus to the next window
-  , ("M-k", windows W.focusUp >> myWarp) -- Move focus to the prev window
-  , ("M-S-m", windows W.swapMaster >> myWarp) -- Swap the focused window and the master window
-  , ("M-S-j", windows W.swapDown >> myWarp) -- Swap focused window with next window
-  , ("M-S-k", windows W.swapUp >> myWarp) -- Swap focused window with prev window
-  , ("M-<Backspace>", whenX (swapHybrid True) dwmpromote >> myWarp) -- Swap master window and last swapped window or first window in stack
+  , ("M-m", windows W.focusMaster) -- Move focus to the master window
+  , ("M-j", windows W.focusDown) -- Move focus to the next window
+  , ("M-k", windows W.focusUp) -- Move focus to the prev window
+  , ("M-S-m", windows W.swapMaster) -- Swap the focused window and the master window
+  , ("M-S-j", windows W.swapDown) -- Swap focused window with next window
+  , ("M-S-k", windows W.swapUp) -- Swap focused window with prev window
+  , ("M-<Backspace>", whenX (swapHybrid True) dwmpromote) -- Swap master window and last swapped window or first window in stack
   , ("M-S-<Tab>", rotSlavesDown) -- Rotate all windows except master and keep focus in place
   , ("M-C-<Tab>", rotAllDown) -- Rotate all the windows in the current stack
-  , ("M1-<Space>", selectWindow ezmTheme >>= (`whenJust` windows . W.focusWindow) >> myWarp)
+  , ("M1-<Space>", selectWindow ezmTheme >>= (`whenJust` windows . W.focusWindow))
+  , ("M-`", onNextNeighbour def W.greedyView)
 
     -- Layouts
   , ("M-b", sendMessage NextLayout) -- Switch to next layout
@@ -697,6 +696,9 @@ mainKeymap c = mkKeymap
   , ("M-=", spawn "mpc volume +2 && mpc-volume") -- Volume up +2
   , ("M-p", spawn "mpc toggle") -- Pause/play
   , ("M-s", spawn "mpc pause ; pauseallmpv") -- Stop
+
+  -- Function keys
+  , ("M-<F1>", spawn "buckle-spring") -- Toggle the clicky sound from a buckle spring keyboard
 
     -- System
   , ("<XF86Calculator>", spawn (myTerminal ++ " -e bc -l"))
@@ -748,11 +750,9 @@ myKeys conf =
           ]
         ++ [ ((m .|. modm, k), windows $ f i)
            | (i, k) <- zip (XMonad.workspaces conf) ([xK_6 .. xK_9] ++ [xK_0])
-           , (f, m) <- [(viewOnScreen 1, 0)]
+           , (f, m) <- [(viewOnScreen 1, 0), (swapWithCurrent, shiftMask)]
            ]
-        ++ [ ( (m .|. modm, key)
-             , screenWorkspace sc >>= flip whenJust (windows . f) >> warpToScreen sc (1 % 2) (1 % 2)
-             )
+        ++ [ ((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
            | (key, sc) <- zip [xK_e, xK_w] [0 ..]
            , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
            ]
@@ -772,6 +772,7 @@ myMouseBindings XConfig { XMonad.modMask = modMask } = M.fromList
 ------------------------------------------
 ---               Main                 ---
 ------------------------------------------
+
 main :: IO ()
 main =
   do
@@ -803,6 +804,7 @@ main =
         , logHook = logHook def
                     <+> masterHistoryHook
                     <+> refocusLastLogHook
+                    <+> updatePointer (0.5, 0.5) (0.9, 0.9)
                     >> nsHideOnFocusLoss myScratchPads
         }
     -- `additionalKeysP` myAdditionalKeys

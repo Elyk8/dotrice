@@ -14,10 +14,9 @@ run greenclip daemon &
 run flameshot &
 run remaps &
 run clipmenud &
-run xbanish &
 run redshift &
-run /usr/bin/emacs --daemon &
 sleep 5 && run volctl &
+run /usr/bin/emacs --daemon &
 
 autostart="dunst lxsession nm-applet picom mictray"
 for program in $autostart; do

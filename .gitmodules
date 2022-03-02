@@ -16,3 +16,9 @@
 [submodule "cheovim/.config/nvim"]
 	path = cheovim/.config/nvim
 	url = https://github.com/Elyk8/cheovim
+[submodule "xmonad/.config/xmonad/xmonad-contrib"]
+	path = xmonad/.config/xmonad/xmonad-contrib
+	url = https://github.com/xmonad/xmonad-contrib
+[submodule "xmonad/.config/xmonad/xmonad"]
+	path = xmonad/.config/xmonad/xmonad
+	url = https://github.com/xmonad/xmonad

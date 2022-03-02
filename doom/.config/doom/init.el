@@ -20,11 +20,11 @@
        ;;layout            ; auie,ctsrnm is the superior home row
 
        :completion
-       company           ; the ultimate code completion backend
+       (company +childframe)          ; the ultimate code completion backend
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
-       ;;ivy               ; a search engine for love and life
-       (vertico +icons)    ; the search engine of the future
+       (ivy +fuzzy +prescient +icons)               ; a search engine for love and life
+       ;;vertico    ; the search engine of the future
 
        :ui
        ;;deft              ; notational velocity for Emacs
@@ -124,7 +124,7 @@
        ;;dhall
        ;;elixir            ; erlang done right
        ;;elm               ; care for a cup of TEA?
-       emacs-lisp        ; drown in parentheses
+       emacs-lisp       ; drown in parentheses
        ;;erlang            ; an elegant language for a more civilized age
        ;;ess               ; emacs speaks statistics
        ;;factor
@@ -194,3 +194,9 @@
        :config
        literate
        (default +bindings +smartparens))
+
+;; ;; This needs to be in init.el as it must be loaded before evil-mode.
+;; (use-package-hook! evil
+;;   :pre-init
+;;   (setq evil-respect-visual-line-mode t) ;; sane j and k behavior
+;;   t)

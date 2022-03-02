@@ -8,7 +8,7 @@ Xft.lcdfilter: lcdfilter
 Xcursor.theme: Bibata-Modern-Ice
 
 ! Font Settings
-*font: monospace:size=13:antialias=true:autohint=true
+*font: monospace:weight=medium:size=13:antialias=true:autohint=true
 *font2: JoyPixels:pixelsize=19:antialias=true:autohint=true
 
 ! general
