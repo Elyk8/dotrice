@@ -26,9 +26,7 @@ alias ....='cd ../../..'
 
 # vim and emacs
 alias vim="nvim"
-alias resmacs="killall emacs; sleep 1 && /usr/bin/emacs --daemon"
-alias em="/usr/bin/emacs"
-alias emacs="emacsclient -cn -a 'emacs'"
+alias em="e -nw"
 alias doom="/media/emacs-frameworks/doom-emacs/bin/doom"
 alias doomsync="/media/emacs-frameworks/doom-emacs/bin/doom sync"
 alias doomdoctor="/media/emacs-frameworks/doom-emacs/bin/doom doctor"
@@ -218,7 +216,7 @@ alias wion='nmcli radio wifi on'
 alias wiof='nmcli radio wifi off'
 alias xp='chmod +x'
 alias ffmpeg="ffmpeg -hide_banner"
-alias e='$EDITOR'
+alias e='$EDITOR -t'
 alias br='bulk-rename'
 alias lf='lfcd'
 

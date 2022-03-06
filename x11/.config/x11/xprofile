@@ -16,7 +16,7 @@ run remaps &
 run clipmenud &
 run redshift &
 sleep 5 && run volctl &
-run /usr/bin/emacs --daemon &
+run /usr/bin/emacs --daemon && touch /tmp/emacs.terminal &
 
 autostart="dunst lxsession nm-applet picom mictray"
 for program in $autostart; do

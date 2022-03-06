@@ -6,6 +6,9 @@
 * TABLE OF CONTENTS :toc:
 - [[#lexical-keybinds][Lexical Keybinds]]
 - [[#simple-settings][Simple Settings]]
+- [[#doom-emacs-configuration][DOOM Emacs Configuration]]
+  - [[#async-config-tangling][Async config tangling]]
+- [[#babel][Babel]]
 - [[#bookmarks-and-buffers][Bookmarks and Buffers]]
   - [[#bookmarks][Bookmarks]]
   - [[#buffers][Buffers]]
@@ -21,9 +24,11 @@
 - [[#hooks][Hooks]]
 - [[#key-mappings-and-evil][Key Mappings And Evil]]
 - [[#line-settings][Line Settings]]
-- [[#language-server-protocols][Language Server Protocols]]
+- [[#languages][Languages]]
   - [[#haskell][Haskell]]
+  - [[#latex][Latex]]
 - [[#mouse-settings][Mouse Settings]]
+- [[#neotree][Neotree]]
 - [[#open-specific-files][Open Specific Files]]
 - [[#org][Org]]
   - [[#set-font-sizes-for-each-header-level-in-org][Set font sizes for each header level in Org]]
@@ -69,7 +74,122 @@ When I bring up Doom's scratch buffer with SPC x, it's often to play with elisp 
 (setq doom-scratch-initial-major-mode 'lisp-interaction-mode)
 #+end_src
 
+* DOOM Emacs Configuration
+
+** Async config tangling
+
+Doom adds an org-mode hook +literate-enable-recompile-h. This is a nice idea, but it’s too blocking for my taste. Since I trust my tangling to be fairly straightforward, I’ll just redefine it to a simpler, async, function.
+
+#+begin_src elisp
+(defvar +literate-tangle--proc nil)
+(defvar +literate-tangle--proc-start-time nil)
+
+(defadvice! +literate-tangle-async-h ()
+  "A very simplified version of `+literate-tangle-h', but async."
+  :override #'+literate-tangle-h
+  (unless (getenv "__NOTANGLE")
+    (let ((default-directory doom-private-dir))
+      (when +literate-tangle--proc
+        (message "Killing outdated tangle process...")
+        (set-process-sentinel +literate-tangle--proc #'ignore)
+        (kill-process +literate-tangle--proc)
+        (sit-for 0.3)) ; ensure the message is seen for a bit
+      (setq +literate-tangle--proc-start-time (float-time)
+            +literate-tangle--proc
+            (start-process "tangle-config"
+                           (get-buffer-create " *tangle config*")
+                           "emacs" "--batch" "--eval"
+                           (format "(progn \
+(require 'ox) \
+(require 'ob-tangle) \
+(setq org-confirm-babel-evaluate nil \
+      org-inhibit-startup t \
+      org-mode-hook nil \
+      write-file-functions nil \
+      before-save-hook nil \
+      after-save-hook nil \
+      vc-handled-backends nil \
+      org-startup-folded nil \
+      org-startup-indented nil) \
+(org-babel-tangle-file \"%s\" \"%s\"))"
+                                   +literate-config-file
+                                   (expand-file-name (concat doom-module-config-file ".el")))))
+      (set-process-sentinel +literate-tangle--proc #'+literate-tangle--sentinel)
+      (run-at-time nil nil (lambda () (message "Tangling config.org"))) ; ensure shown after a save message
+      "Tangling config.org...")))
+
+(defun +literate-tangle--sentinel (process signal)
+  (cond
+   ((and (eq 'exit (process-status process))
+         (= 0 (process-exit-status process)))
+    (message "Tangled config.org sucessfully (took %.1fs)"
+             (- (float-time) +literate-tangle--proc-start-time))
+    (setq +literate-tangle--proc nil))
+   ((memq (process-status process) (list 'exit 'signal))
+    (+popup-buffer (get-buffer " *tangle config*"))
+    (message "Failed to tangle config.org (after %.1fs)"
+             (- (float-time) +literate-tangle--proc-start-time))
+    (setq +literate-tangle--proc nil))))
+
+(defun +literate-tangle-check-finished ()
+  (when (and (process-live-p +literate-tangle--proc)
+             (yes-or-no-p "Config is currently retangling, would you please wait a few seconds?"))
+    (switch-to-buffer " *tangle config*")
+    (signal 'quit nil)))
+(add-hook! 'kill-emacs-hook #'+literate-tangle-check-finished)
+#+end_src
+
+* Babel
+
+Doom lazy-loads babel languages, with is lovely.
+It also pulls in [[https://github.com/astahlman/ob-async][ob-async]], which is nice, but it would be even better if it was
+used by default.
+
+There are two caveats to =ob-async=:
+1. It does not support =:session=
+   + So, we don't want =:async= used when =:session= is set
+2. It adds a fixed delay to execution
+   + This is undesirable in a number of cases, for example it's generally
+     unwanted with =emacs-lisp= code
+   + As such, I also introduce a async language blacklist to control when it's
+     automatically enabled
+
+Due to the nuance in the desired behaviour, instead of just adding =:async= to
+~org-babel-default-header-args~, I advice ~org-babel-get-src-block-info~ to add
+=:async= intelligently. As an escape hatch, it also recognises =:sync= as an
+indication that =:async= should not be added.
+
+I did originally have this enabled for everything except for =emacs-lisp= and
+=LaTeX= (there were weird issues), but this added  a ~3s "startup" cost to every
+src block evaluation, which was a bit of a pain. Since =:async= can be added
+easily with =#+properties=, I've turned this behaviour from a blacklist to a
+whitelist.
+
+#+begin_src emacs-lisp
+(add-transient-hook! #'org-babel-execute-src-block
+  (require 'ob-async))
+
+(defvar org-babel-auto-async-languages '()
+  "Babel languages which should be executed asyncronously by default.")
+
+(defadvice! org-babel-get-src-block-info-eager-async-a (orig-fn &optional light datum)
+  "Eagarly add an :async parameter to the src information, unless it seems problematic.
+This only acts o languages in `org-babel-auto-async-languages'.
+Not added when either:
++ session is not \"none\"
++ :sync is set"
+  :around #'org-babel-get-src-block-info
+  (let ((result (funcall orig-fn light datum)))
+    (when (and (string= "none" (cdr (assoc :session (caddr result))))
+               (member (car result) org-babel-auto-async-languages)
+               (not (assoc :async (caddr result))) ; don't duplicate
+               (not (assoc :sync (caddr result))))
+      (push '(:async) (caddr result)))
+    result))
+#+end_src
+
 * Bookmarks and Buffers
+
 Doom Emacs uses 'SPC b' for keybindings related to bookmarks and buffers.
 
 ** Bookmarks
@@ -82,6 +202,7 @@ Bookmarks are somewhat like registers in that they record positions you can jump
 #+END_SRC
 
 ** Buffers
+
 Regarding /buffers/, the text you are editing in Emacs resides in an object called a /buffer/. Each time you visit a file, a buffer is used to hold the file’s text. Each time you invoke Dired, a buffer is used to hold the directory listing.  /Ibuffer/ is a program that lists all of your Emacs /buffers/, allowing you to navigate between them and filter them.
 
 | COMMAND         | DESCRIPTION          | KEYBINDING |
@@ -139,23 +260,26 @@ An evil mode indicator is redundant with cursor shape
 Emacs Dashboard is an extensible startup screen showing you recent files, bookmarks, agenda items and an Emacs banner.
 
 ** Configuring Dashboard
-#+begin_src emacs-lisp
+
+#+begin_src elisp
 (use-package! dashboard
   :init      ;; tweak dashboard config before loading it
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
   ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
-  (setq dashboard-startup-banner "~/.config/doom/doom-emacs-dash.png")  ;; use custom image as banner
-  (setq dashboard-center-content nil) ;; set to 't' for centered content
+  (setq dashboard-set-navigator t)
+  (setq dashboard-startup-banner "~/.config/doom/doom-eternal.png")  ;; use custom image as banner
+  (setq dashboard-center-content t) ;; set to 't' for centered content
   (setq dashboard-items '((recents . 5)
                           (agenda . 5 )
                           (bookmarks . 5)
-                          (projects . 5)
-                          (registers . 5)))
+                          (projects . 5)))
   :config
   (dashboard-setup-startup-hook)
   (dashboard-modify-heading-icons '((recents . "file-text")
                                     (bookmarks . "book"))))
+
+(setq doom-fallback-buffer "*dashboard*")
 #+end_src
 
 * Dired
@@ -288,7 +412,7 @@ Settings related to fonts within Doom Emacs:
 Set the theme of doom emacs here. To try out new themes, I set a keybinding for counsel-load-theme with 'SPC h t'. It is hear that you can also set the transparency of each emacs frame.
 
 #+BEGIN_SRC emacs-lisp
-(setq doom-theme 'doom-one)
+(setq doom-theme 'doom-dark+)
 ;; set transparency
 (set-frame-parameter (selected-frame) 'alpha '(100 100))
 (add-to-list 'default-frame-alist '(alpha 100 100))
@@ -305,7 +429,7 @@ Here, we specify stuff that we want to run on startup
 #+end_src
 
 #+begin_src emacs-lisp
-(remove-hook 'text-mode-hook #'auto-fill-mode)
+(remove-hook 'text-mode-hook #'auto-fill-mode) ;; Prevent lines from auto breaking
 (add-hook 'message-mode-hook #'word-wrap-mode)
 #+end_src
 
@@ -359,7 +483,7 @@ I set comment-line to 'SPC TAB TAB' which is a rather comfortable keybinding for
      :desc "Toggle truncate lines" "t" #'toggle-truncate-lines))
 #+END_SRC
 
-* Language Server Protocols
+* Languages
 
 This section is dedicated to lsp default settings, which I want to change.
 
@@ -383,6 +507,24 @@ This is to change the default formatter for haskell.
   (setq lsp-haskell-formatting-provider "brittany"))
 #+end_src
 
+** Latex
+
+*** Compilation
+
+#+begin_src elisp
+(setq TeX-save-query nil
+      TeX-show-compilation t
+      TeX-command-extra-options "-shell-escape")
+(after! latex
+  (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t)))
+#+end_src
+
+For viewing the PDF, I rather like the pdf-tools viewer. While auctex is trying to be nice in recognising that I have some PDF viewing apps installed, I’d rather not have it default to using them, so let’s re-order the preferences.
+
+#+begin_src elisp
+(setq +latex-viewers '(pdf-tools evince zathura okular skim sumatrapdf))
+#+end_src
+
 * Mouse Settings
 
 This is to enable better mouse support for doom emacs.
@@ -390,6 +532,26 @@ This is to enable better mouse support for doom emacs.
 (map! :n [mouse-8] #'better-jumper-jump-backward
       :n [mouse-9] #'better-jumper-jump-forward)
 #+end_src
+
+* Neotree
+
+Neotree is a file tree viewer.  When you open neotree, it jumps to the current file thanks to neo-smart-open.  The neo-window-fixed-size setting makes the neotree width be adjustable.  Doom Emacs had no keybindings set for neotree.  Since Doom Emacs uses 'SPC t' for 'toggle' keybindings, I used 'SPC t n' for toggle-neotree.
+
+| COMMAND        | DESCRIPTION               | KEYBINDING |
+|----------------+---------------------------+------------|
+| neotree-toggle | /Toggle neotree/            | SPC t n    |
+| neotree- dir   | /Open directory in neotree/ | SPC d n    |
+
+#+BEGIN_SRC emacs-lisp
+(after! neotree
+  (setq neo-smart-open t
+        neo-window-fixed-size nil))
+(after! doom-themes
+  (setq doom-neotree-enable-variable-pitch t))
+(map! :leader
+      :desc "Toggle neotree file viewer" "t n" #'neotree-toggle
+      :desc "Open directory in neotree" "d n" #'neotree-dir)
+#+END_SRC
 
 * Open Specific Files
 
@@ -404,11 +566,12 @@ Keybindings to open files that I work with all the time using the find-file comm
 
 #+BEGIN_SRC emacs-lisp
 (map! :leader
-      (:prefix ("=" . "open file")
+      (:prefix ("=" . "Open File")
        :desc "Edit agenda file" "a" #'(lambda () (interactive) (find-file "~/org/agenda.org"))
        :desc "Edit doom config.org" "c" #'(lambda () (interactive) (find-file "~/.config/doom/config.org"))
        :desc "Edit doom init.el" "i" #'(lambda () (interactive) (find-file "~/.config/doom/init.el"))
-       :desc "Edit doom packages.el" "p" #'(lambda () (interactive) (find-file "~/.config/doom/packages.el"))))
+       :desc "Edit doom packages.el" "p" #'(lambda () (interactive) (find-file "~/.config/doom/packages.el"))
+       :desc "Edit xmonad xmonad.hs" "x" #'(lambda () (interactive) (find-file "~/.config/xmonad/xmonad.hs"))))
 #+END_SRC
 
 * Org
@@ -421,6 +584,7 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
 (map! :leader
       :desc "Org babel tangle" "m B" #'org-babel-tangle)
 (after! org
+  (plist-put org-format-latex-options :scale 5) ;; Make latex equations preview larger
   (setq org-directory "~/org/"
         org-agenda-files '("~/org/agenda.org")
         org-default-notes-file (expand-file-name "notes.org" org-directory)
@@ -447,9 +611,6 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
            "|"                 ; The pipe necessary to separate "active" states and "inactive" states
            "DONE(d)"           ; Task has been completed
            "CANCELLED(c)" )))) ; Task has been cancelled
-
-;; Make latex fonts larger
-(after! org (plist-put org-format-latex-options :scale 5))
 #+END_SRC
 
 ** Set font sizes for each header level in Org
@@ -485,7 +646,7 @@ While =org-hide-emphasis-markers= is very nice, it can sometimes make edits whic
 ** Org-journal
 
 #+begin_src emacs-lisp
-(setq org-journal-dir "~/nc/Org/journal/"
+(setq org-journal-dir "~/org/journal/"
       org-journal-date-prefix "* "
       org-journal-time-prefix "** "
       org-journal-date-format "%B %d, %Y (%A) "
@@ -505,60 +666,53 @@ While =org-hide-emphasis-markers= is very nice, it can sometimes make edits whic
 
 #+begin_src emacs-lisp
 (after! org-roam
-  (setq org-roam-directory "~/org/roam"
+  (setq org-roam-directory org-directory
         org-roam-completion-everywhere t
         org-roam-capture-templates
-        '(("d" "default" plain
-           "%?"
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-           :unnarrowed t))
-        ))
-#+end_src
+        '(("d" "default" plain "%?"
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: <${title}\n#+date: %U\n#+filetags: Inbox\n\n")
+           :unnarrowed t)
+          ("a" "articles" plain (file "~/org/templates/articles.org")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: +${title}\n#+date: %U\n#+filetags: %^{Tag}\n\n")
+           :unnarrowed t)
+          ("b" "book notes" plain (file "~/org/templates/book.org")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: {${title}\n#+date: %U\n#+filetags: %^{Tag}\n\n")
+           :unnarrowed t)
+          ("c" "podcasts" plain (file "~/org/templates/podcasts.org")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: @${title}\n#+date: %U\n#+filetags: %^{Tag}\n\n")
+           :unnarrowed t)
+          ("i" "ideas" plain (file "~/org/templates/ideas.org")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: >${title}\n#+date: %U\n#+filetags: %^{Tag}\n\n")
+           :unnarrowed t)
+          ("l" "programming language" plain
+           "* Characteristics\n\n- Family: %?\n- Inspired by: \n\n* Reference:\n\n"
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: -${title}\n#+date: %U\n#+filetags: %^{Tag}\n\n")
+           :unnarrowed t)
+          ("p" "project" plain (file "~/org/templates/project.org")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: =${title}\n#+date: %U\n#+filetags: %^{Tag}\n\n")
+           :unnarrowed t)
+          ("r" "research paper" plain (file "~/org/templates/research.org")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ;${title}\n#+date: %U\n#+filetags: %^{Tag}\n\n")
+           :unnarrowed t)
+          ("t" "tag" plain "%?"
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Tag\n\n")
+           :unnarrowed t)
+          )))
 
-Setup templates for your second brain, that is org-roam.
+(use-package! websocket
+  :after org-roam)
 
-#+begin_src elisp
-(after! org-roam
-  (setq org-roam-capture-templates
-        `(("n" "note" plain
-           ,(format "#+title: ${title}\n%%[%s/template/note.org]" org-roam-directory)
-           :target (file "note/%<%Y%m%d%H%M%S>-${slug}.org")
-           :unnarrowed t)
-          ("r" "thought" plain
-           ,(format "#+title: ${title}\n%%[%s/template/thought.org]" org-roam-directory)
-           :target (file "thought/%<%Y%m%d%H%M%S>-${slug}.org")
-           :unnarrowed t)
-          ("t" "topic" plain
-           ,(format "#+title: ${title}\n%%[%s/template/topic.org]" org-roam-directory)
-           :target (file "topic/%<%Y%m%d%H%M%S>-${slug}.org")
-           :unnarrowed t)
-          ("c" "contact" plain
-           ,(format "#+title: ${title}\n%%[%s/template/contact.org]" org-roam-directory)
-           :target (file "contact/%<%Y%m%d%H%M%S>-${slug}.org")
-           :unnarrowed t)
-          ("p" "project" plain
-           ,(format "#+title: ${title}\n%%[%s/template/project.org]" org-roam-directory)
-           :target (file "project/%<%Y%m%d>-${slug}.org")
-           :unnarrowed t)
-          ("i" "invoice" plain
-           ,(format "#+title: %%<%%Y%%m%%d>-${title}\n%%[%s/template/invoice.org]" org-roam-directory)
-           :target (file "invoice/%<%Y%m%d>-${slug}.org")
-           :unnarrowed t)
-          ("f" "ref" plain
-           ,(format "#+title: ${title}\n%%[%s/template/ref.org]" org-roam-directory)
-           :target (file "ref/%<%Y%m%d%H%M%S>-${slug}.org")
-           :unnarrowed t)
-          ("w" "works" plain
-           ,(format "#+title: ${title}\n%%[%s/template/works.org]" org-roam-directory)
-           :target (file "works/%<%Y%m%d%H%M%S>-${slug}.org")
-           :unnarrowed t)
-          ("s" "secret" plain "#+title: ${title}\n\n"
-           :target (file "secret/%<%Y%m%d%H%M%S>-${slug}.org.gpg")
-           :unnarrowed t))
-        ;; Use human readable dates for dailies titles
-        org-roam-dailies-capture-templates
-        '(("d" "default" entry "* %?"
-           :target (file+head "%<%Y-%m-%d>.org" "#+title: %<%B %d, %Y>\n\n")))))
+(use-package! org-roam-ui
+  :after org-roam
+  :config
+  (setq org-roam-ui-sync-theme t
+        org-roam-ui-follow t
+        org-roam-ui-update-on-save t)
+
+  ;; Add a new keybinding to open webview
+  (map! :leader (:prefix ("n" . notes)
+                 (:prefix ("r" . roam)
+                  :desc "Open Web Graph" "w" #'org-roam-ui-mode))))
 #+end_src
 
 * Which-key
@@ -566,8 +720,8 @@ Setup templates for your second brain, that is org-roam.
 I hate when which-key takes too long to show up. Make it faster!!!
 
 #+begin_src elisp
-(after! 'which-key)
-(setq which-key-idle-delay 0.1)
+(after! which-key
+  (setq which-key-idle-delay 0.1))
 #+end_src
 
 Also, =evil-= is too verbose for which-key. Let's change that.

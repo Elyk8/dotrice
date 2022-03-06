@@ -6,7 +6,7 @@ setopt appendhistory
 setopt autocd extendedglob nomatch menucomplete
 setopt interactive_comments
 setopt aliases
-stty stop undef		# Disable ctrl-s to freeze terminal.
+stty stop undef # Disable ctrl-s to freeze terminal.
 zle_highlight=('paste:none')
 
 # beeping is annoying

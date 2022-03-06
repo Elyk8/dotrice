@@ -9,7 +9,7 @@
 ##########################################################
 KEYMAP=$1
 # make FW bigger if the columns don't fit on your screen
-FW=500
+FW=450
 LH=${10}
 X=$2
 W=$4
@@ -55,6 +55,8 @@ INFO=$(awk -v cmdcolor="$CMDCOLOR" -v keycolor="$KEYCOLOR" -v arrowcolor="$ARROW
                             desc=command[1]
                     }
                 key_hint[i++] = sprintf (" ^fg(%s)%3s ^fg(%s)->^fg(%s)%-30.30s", keycolor, keys[1], arrowcolor, cmdcolor, desc)
+                } else if (nr > 1) { # skip the first line
+                    key_hint[i++] = sprintf (" ^fg(%s)%3s ^fg(%s)  ^fg(%s)%-30.30s", "", "", "", "", "")
                 }
             }
             END {

@@ -1,6 +1,5 @@
 #+TITLE: My Personal dotfiles
 
-
 * INSTALLATION
 
 You will need =git= and =stow= to be installed on your system.

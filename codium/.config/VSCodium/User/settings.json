@@ -1058,5 +1058,4 @@
   "workbench.iconTheme": "vscode-icons",
   "vsicons.dontShowNewVersionMessage": true,
   "haskell.formattingProvider": "brittany",
-  "workbench.colorTheme": "doom-one",
 }

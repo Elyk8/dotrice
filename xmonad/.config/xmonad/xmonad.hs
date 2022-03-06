@@ -253,13 +253,13 @@ multiScreenFocusHook MotionEvent { ev_x = x, ev_y = y } = do
   focusWS ids = windows (W.view ids)
 multiScreenFocusHook _ = return (All True)
 
-rescreenCfg = def { randrChangeHook = myRandrChangeHook } -- afterRescreenHook = myAfterRescreenHook, 
+rescreenCfg = def { afterRescreenHook = myAfterRescreenHook, randrChangeHook = myRandrChangeHook }
 
--- myAfterRescreenHook :: X ()
--- myAfterRescreenHook = spawn "setwallpaper a2n"
+myAfterRescreenHook :: X ()
+myAfterRescreenHook = spawn "~/.fehbg"
 
 myRandrChangeHook :: X ()
-myRandrChangeHook = spawn "autorandr --change"
+myRandrChangeHook = spawn "autorandr --change --force"
 
 -- isOnScreen :: ScreenId -> WindowSpace -> Bool
 -- isOnScreen s ws = s == unmarshallS (W.tag ws)
@@ -495,7 +495,7 @@ myManageHook =
 
 myHandleEventHook :: Event -> X All
 myHandleEventHook =
-  swallowEventHook (className =? myTerminalClass) (return True)
+  swallowEventHookSub (className =? myTerminalClass) (return True)
     <+> multiScreenFocusHook
     <+> refocusLastWhen myPred
     <+> Hacks.trayerAboveXmobarEventHook
@@ -548,20 +548,20 @@ appsKeymap = -- Applications
   [ ("t", spawn myTerminal) -- Spawn terminal
   , ("<Space>", spawn "dm-j4dmenu-desktop") -- Dmenu launcher
   , ("r", spawn (myTerminal ++ " -e lf")) -- Lf file manager
-
-    -- Cheatsheets
   , ("[", spawn "xmonad-whichkeys") -- Leader Mappings
+  , ("]", spawn "xmonad-keys") -- Leader Mappings
+  , ("u", spawn "qutebrowser") -- Launch Qutebrowser
+  , ("b", spawn "brave") -- Launch Brave
 
   -- Emacs
+  , ("e e", spawn (myEmacs ++ "--eval '(dashboard-refresh-buffer)'")) -- Emacs dashboard
   , ("e b", spawn (myEmacs ++ "--eval '(ibuffer)'")) -- Emacs list buffers
   , ("e d", spawn (myEmacs ++ "--eval '(dired nil)'")) -- Emacs dired
-  , ("e e", spawn (myEmacs ++ "--eval '(dashboard-refresh-buffer)'")) -- Emacs dashboard
-  , ("e f", spawn (myEmacs ++ "--eval '(org-roam-node-find)'")) -- Emacs org roam node
-  , ("e n", spawn (myEmacs ++ "--eval '(elfeed)'")) -- Emacs elfeed rss
+  , ("e f", spawn (myEmacs ++ "--eval '(elfeed)'")) -- Emacs elfeed rss
+  , ("e n", spawn (myEmacs ++ "--eval '(org-roam-node-find)'")) -- Emacs find roam node
   , ("e v", spawn (myEmacs ++ "--eval '(+vterm/here nil)'")) -- Emacs vterm
 
   -- Applications Launcher
-  , ("o w", spawn "$BROWSER") -- Launch Browser (Brave)
   , ("o d", spawn discord) -- Launch Discord
   , ("o e", spawn "/usr/bin/thunderbird") -- Launch Thunderbird
   , ("o f", spawn "/media/ftb/FTBApp") -- Launch FTB Launcher
@@ -641,7 +641,7 @@ mainKeymap c = mkKeymap
   , ("C-M1-h", decScreenSpacing 4) -- Decrease screen spacing
   , ("C-M1-l", incScreenSpacing 4) -- Increase screen spacing
   , ("C-M1-m", toggleWindowSpacingEnabled >> toggleScreenSpacingEnabled) -- Toggle gaps
-
+ 
     -- Windows navigation
   , ("M-m", windows W.focusMaster) -- Move focus to the master window
   , ("M-j", windows W.focusDown) -- Move focus to the next window
@@ -652,7 +652,7 @@ mainKeymap c = mkKeymap
   , ("M-<Backspace>", whenX (swapHybrid True) dwmpromote) -- Swap master window and last swapped window or first window in stack
   , ("M-S-<Tab>", rotSlavesDown) -- Rotate all windows except master and keep focus in place
   , ("M-C-<Tab>", rotAllDown) -- Rotate all the windows in the current stack
-  , ("M1-<Space>", selectWindow ezmTheme >>= (`whenJust` windows . W.focusWindow))
+  , ("M-\\", selectWindow ezmTheme >>= (`whenJust` windows . W.focusWindow))
   , ("M-`", onNextNeighbour def W.greedyView)
 
     -- Layouts
@@ -699,6 +699,7 @@ mainKeymap c = mkKeymap
 
   -- Function keys
   , ("M-<F1>", spawn "buckle-spring") -- Toggle the clicky sound from a buckle spring keyboard
+  , ("M-<F2>", spawn "restart-emacs") -- Restart the emacs daemon
 
     -- System
   , ("<XF86Calculator>", spawn (myTerminal ++ " -e bc -l"))

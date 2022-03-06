@@ -2,6 +2,8 @@ $recorder = 1;
 $bibtex_use = 2;
 
 $clean_ext .= '%R.ist %R.xdy';
+$emulate_aux = 1;
+$aux_dir = '/tmp/';
 
 push @generated_exts, "cb";
 push @generated_exts, "cb2";

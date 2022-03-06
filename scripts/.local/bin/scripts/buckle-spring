@@ -2,7 +2,7 @@
 if pidof buckle; then
 	killall buckle && notif=DISABLED
 else
-	setsid -f buckle -g 50 && notif=ENABLED
+	setsid -f buckle -g 40 && notif=ENABLED
 fi
 dunstify --replace=555 -i  "$HOME/.local/share/icons/bucklespring.png" "Buckle Spring" \
 	"$notif"

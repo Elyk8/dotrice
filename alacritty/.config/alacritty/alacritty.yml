@@ -116,6 +116,9 @@ schemes:
 # doom-one, dracula, tokyo-night
 colors: *doom-one
 
+env:
+  TERM: xterm-256color
+
 cursor:
   style:
     blinking: Never

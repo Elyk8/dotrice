@@ -10,6 +10,7 @@ dmenu_bin() {
 colorscheme_menu() {
 	printf "%s\n" \
 		"doom-one" \
+		"darkplus" \
 		"dracula" |
 		dmenu_bin
 }
