@@ -73,108 +73,6 @@
     (signal 'quit nil)))
 (add-hook! 'kill-emacs-hook #'+literate-tangle-check-finished)
 
-(after! company
-  (setq company-idle-delay nil))
-
-(advice-add #'doom-modeline-segment--modals :override #'ignore)
-
-(use-package! dashboard
-  :init      ;; tweak dashboard config before loading it
-  (setq dashboard-set-heading-icons t)
-  (setq dashboard-set-file-icons t)
-  ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
-  (setq dashboard-set-navigator t)
-  (setq dashboard-startup-banner "~/.config/doom/doom-eternal.png")  ;; use custom image as banner
-  (setq dashboard-center-content t) ;; set to 't' for centered content
-  (setq dashboard-items '((recents . 5)
-                          (agenda . 5 )
-                          (bookmarks . 5)
-                          (projects . 5)))
-  :config
-  (dashboard-setup-startup-hook)
-  (dashboard-modify-heading-icons '((recents . "file-text")
-                                    (bookmarks . "book"))))
-
-(setq doom-fallback-buffer "*dashboard*")
-
-(setq doom-font (font-spec :family "monospace" :size 22)
-      doom-variable-pitch-font (font-spec :family "Ubuntu" :size 22)
-      doom-big-font (font-spec :family "monospace" :size 34))
-(after! doom-themes
-  (setq doom-themes-enable-bold t
-        doom-themes-enable-italic t))
-(custom-set-faces!
-  '(font-lock-comment-face :slant italic)
-  '(font-lock-keyword-face :slant italic))
-
-(map! (:after evil-org
-       :map evil-org-mode-map
-       :n "gk" (cmd! (if (org-on-heading-p)
-                         (org-backward-element)
-                       (evil-previous-visual-line)))
-       :n "gj" (cmd! (if (org-on-heading-p)
-                         (org-forward-element)
-                       (evil-next-visual-line))))
-      :o "o" #'evil-inner-symbol
-      :leader
-      "h L" #'global-keycast-mode
-      (:prefix "f"
-       "t" #'find-in-dotfiles
-       "T" #'browse-dotfiles)
-      (:prefix "n"
-       "L" #'org-latex-preview))
-
-;; Focus new window after splitting
-(setq evil-split-window-below t
-      evil-vsplit-window-right t)
-;; Implicit /g flag on evil ex substitution, because I use the default behavior less often.
-(setq evil-ex-substitute-global t)
-
-(after! lsp-mode
-  (setq lsp-enable-symbol-highlighting nil
-        ;; If an LSP server isn't present when I start a prog-mode buffer, you
-        ;; don't need to tell me. I know. On some machines I don't care to have
-        ;; a whole development environment for some ecosystems.
-        lsp-enable-suggest-server-download nil))
-(after! lsp-ui
-  (setq lsp-ui-sideline-enable nil  ; no more useful than flycheck
-        lsp-ui-doc-enable nil))     ; redundant with K
-
-(after! lsp-mode
-  (setq lsp-haskell-formatting-provider "brittany"))
-
-(setq TeX-save-query nil
-      TeX-show-compilation t
-      TeX-command-extra-options "-shell-escape")
-(after! latex
-  (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t)))
-
-(setq +latex-viewers '(pdf-tools evince zathura okular skim sumatrapdf))
-
-(map! :n [mouse-8] #'better-jumper-jump-backward
-      :n [mouse-9] #'better-jumper-jump-forward)
-
-(use-package! org-appear
-  :hook (org-mode . org-appear-mode)
-  :config
-  (setq org-appear-autoemphasis t
-        org-appear-autosubmarkers t
-        org-appear-autolinks nil)
-  ;; for proper first-time setup, `org-appear--set-elements'
-  ;; needs to be run after other hooks have acted.
-  (run-at-time nil nil #'org-appear--set-elements))
-
-(after! which-key
-  (setq which-key-idle-delay 0.1))
-
-(setq which-key-allow-multiple-replacements t)
-(after! which-key
-  (pushnew!
-   which-key-replacement-alist
-   '(("" . "\\`+?evil[-:]?\\(?:a-\\)?\\(.*\\)") . (nil . "◂\\1"))
-   '(("\\`g s" . "\\`evilem--?motion-\\(.*\\)") . (nil . "◃\\1"))
-   ))
-
 (add-transient-hook! #'org-babel-execute-src-block
   (require 'ob-async))
 
@@ -210,6 +108,31 @@ Not added when either:
   (kbd "f x") 'ibuffer-filter-disable
   (kbd "g h") 'ibuffer-do-kill-lines
   (kbd "g H") 'ibuffer-update)
+
+(after! company
+  (setq company-idle-delay nil))
+
+(advice-add #'doom-modeline-segment--modals :override #'ignore)
+(setq doom-modeline-buffer-file-name-style 'file-name)
+
+(use-package! dashboard
+  :init      ;; tweak dashboard config before loading it
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
+  ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
+  (setq dashboard-set-navigator t)
+  (setq dashboard-startup-banner "~/.config/doom/doom-eternal.png")  ;; use custom image as banner
+  (setq dashboard-center-content t) ;; set to 't' for centered content
+  (setq dashboard-items '((recents . 5)
+                          (agenda . 5 )
+                          (bookmarks . 5)
+                          (projects . 5)))
+  :config
+  (dashboard-setup-startup-hook)
+  (dashboard-modify-heading-icons '((recents . "file-text")
+                                    (bookmarks . "book"))))
+
+(setq doom-fallback-buffer "*dashboard*")
 
 (map! :leader
       (:prefix ("d" . "dired")
@@ -257,6 +180,16 @@ Not added when either:
   (kbd "k") 'peep-dired-prev-file)
 (add-hook 'peep-dired-hook 'evil-normalize-keymaps)
 
+(setq doom-font (font-spec :family "monospace" :size 22)
+      doom-variable-pitch-font (font-spec :family "Ubuntu" :size 22)
+      doom-big-font (font-spec :family "monospace" :size 34))
+(after! doom-themes
+  (setq doom-themes-enable-bold t
+        doom-themes-enable-italic t))
+(custom-set-faces!
+  '(font-lock-comment-face :slant italic)
+  '(font-lock-keyword-face :slant italic))
+
 (setq doom-theme 'doom-dark+)
 ;; set transparency
 (set-frame-parameter (selected-frame) 'alpha '(100 100))
@@ -267,6 +200,29 @@ Not added when either:
 (remove-hook 'text-mode-hook #'auto-fill-mode) ;; Prevent lines from auto breaking
 (add-hook 'message-mode-hook #'word-wrap-mode)
 
+(map! (:after evil-org
+       :map evil-org-mode-map
+       :n "gk" (cmd! (if (org-on-heading-p)
+                         (org-backward-element)
+                       (evil-previous-visual-line)))
+       :n "gj" (cmd! (if (org-on-heading-p)
+                         (org-forward-element)
+                       (evil-next-visual-line))))
+      :o "o" #'evil-inner-symbol
+      :leader
+      "h L" #'global-keycast-mode
+      (:prefix "f"
+       "t" #'find-in-dotfiles
+       "T" #'browse-dotfiles)
+      (:prefix "n"
+       "L" #'org-latex-preview))
+
+;; Focus new window after splitting
+(setq evil-split-window-below t
+      evil-vsplit-window-right t)
+;; Implicit /g flag on evil ex substitution, because I use the default behavior less often.
+(setq evil-ex-substitute-global t)
+
 (setq display-line-numbers-type nil) ;; By disabling line number, we improve performance significantly
 (map! :leader
      :desc "Comment or uncomment lines" "TAB TAB" #'comment-line
@@ -275,6 +231,30 @@ Not added when either:
      :desc "Toggle line highlight in frame" "h" #'hl-line-mode
      :desc "Toggle line highlight globally" "H" #'global-hl-line-mode
      :desc "Toggle truncate lines" "t" #'toggle-truncate-lines))
+
+(after! lsp-mode
+  (setq lsp-enable-symbol-highlighting nil
+        ;; If an LSP server isn't present when I start a prog-mode buffer, you
+        ;; don't need to tell me. I know. On some machines I don't care to have
+        ;; a whole development environment for some ecosystems.
+        lsp-enable-suggest-server-download nil))
+(after! lsp-ui
+  (setq lsp-ui-sideline-enable nil  ; no more useful than flycheck
+        lsp-ui-doc-enable nil))     ; redundant with K
+
+(after! lsp-mode
+  (setq lsp-haskell-formatting-provider "brittany"))
+
+(setq TeX-save-query nil
+      TeX-show-compilation t
+      TeX-command-extra-options "-shell-escape")
+(after! latex
+  (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t)))
+
+(setq +latex-viewers '(pdf-tools evince zathura okular skim sumatrapdf))
+
+(map! :n [mouse-8] #'better-jumper-jump-backward
+      :n [mouse-9] #'better-jumper-jump-forward)
 
 (after! neotree
   (setq neo-smart-open t
@@ -332,6 +312,16 @@ Not added when either:
   '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
 )
 
+(use-package! org-appear
+  :hook (org-mode . org-appear-mode)
+  :config
+  (setq org-appear-autoemphasis t
+        org-appear-autosubmarkers t
+        org-appear-autolinks nil)
+  ;; for proper first-time setup, `org-appear--set-elements'
+  ;; needs to be run after other hooks have acted.
+  (run-at-time nil nil #'org-appear--set-elements))
+
 (setq org-journal-dir "~/org/journal/"
       org-journal-date-prefix "* "
       org-journal-time-prefix "** "
@@ -386,3 +376,141 @@ Not added when either:
   (map! :leader (:prefix ("n" . notes)
                  (:prefix ("r" . roam)
                   :desc "Open Web Graph" "w" #'org-roam-ui-mode))))
+
+(defvar ink-flags-png (list "--export-area-drawing"
+                            "--export-dpi 100"
+                            "--export-type=png"
+                            "--export-background-opacity 1.0"
+                            "--export-overwrite")
+  "List of flags to produce a png file with inkspace.")
+
+(defvar ink-default-file
+  "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>
+<svg
+   width=\"297mm\"
+   height=\"210mm\"
+   viewBox=\"0 0 297 210\"
+   version=\"1.1\"
+   id=\"svg8\"
+   inkscape:version=\"1.1.2 (0a00cf5339, 2022-02-04, custom)\"
+   sodipodi:docname=\"default.svg\"
+   xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\"
+   xmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\"
+   xmlns=\"http://www.w3.org/2000/svg\"
+   xmlns:svg=\"http://www.w3.org/2000/svg\"
+   xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"
+   xmlns:cc=\"http://creativecommons.org/ns#\"
+   xmlns:dc=\"http://purl.org/dc/elements/1.1/\">
+  <defs
+     id=\"defs2\">
+    <rect
+       x=\"160\"
+       y=\"60\"
+       width=\"40\"
+       height=\"10\"
+       id=\"rect121\" />
+    <rect
+       x=\"150\"
+       y=\"70\"
+       width=\"50\"
+       height=\"10\"
+       id=\"rect115\" />
+    <rect
+       x=\"140\"
+       y=\"50\"
+       width=\"90\"
+       height=\"30\"
+       id=\"rect109\" />
+    <rect
+       x=\"170\"
+       y=\"70\"
+       width=\"70\"
+       height=\"50\"
+       id=\"rect97\" />
+    <rect
+       x=\"129.26784\"
+       y=\"79.883835\"
+       width=\"85.494354\"
+       height=\"60.623272\"
+       id=\"rect47\" />
+  </defs>
+  <sodipodi:namedview
+     id=\"base\"
+     pagecolor=\"#ffffff\"
+     bordercolor=\"#666666\"
+     borderopacity=\"1.0\"
+     inkscape:pageopacity=\"1\"
+     inkscape:pageshadow=\"2\"
+     inkscape:zoom=\"0.93616069\"
+     inkscape:cx=\"515.93707\"
+     inkscape:cy=\"205.093\"
+     inkscape:document-units=\"mm\"
+     inkscape:current-layer=\"g75\"
+     showgrid=\"true\"
+     showborder=\"true\"
+     width=\"1e-05mm\"
+     showguides=\"true\"
+     inkscape:guide-bbox=\"true\"
+     inkscape:window-width=\"1882\"
+     inkscape:window-height=\"1012\"
+     inkscape:window-x=\"1382\"
+     inkscape:window-y=\"46\"
+     inkscape:window-maximized=\"0\"
+     inkscape:document-rotation=\"0\"
+     inkscape:pagecheckerboard=\"0\"
+     units=\"mm\">
+    <inkscape:grid
+       type=\"xygrid\"
+       id=\"grid815\"
+       units=\"mm\"
+       spacingx=\"10\"
+       spacingy=\"10\"
+       empspacing=\"4\"
+       dotted=\"false\" />
+  </sodipodi:namedview>
+  <metadata
+     id=\"metadata5\">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about=\"\">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource=\"http://purl.org/dc/dcmitype/StillImage\" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label=\"Layer 1\"
+     inkscape:groupmode=\"layer\"
+     id=\"layer1\"
+     transform=\"translate(0,-177)\" />
+  <g
+     inkscape:label=\"Capacitor\"
+     transform=\"rotate(-90,90,60)\"
+     id=\"g27\">
+    <text
+       xml:space=\"preserve\"
+       id=\"text45\"
+       style=\"font-size:20;line-height:1.25;font-family:Sans;-inkscape-font-specification:'Sans, Normal';letter-spacing:0px;white-space:pre;shape-inside:url(#rect47)\" />
+  </g>
+  <g
+     inkscape:label=\"Capacitor\"
+     id=\"g75\">
+    <text
+       xml:space=\"preserve\"
+       id=\"text95\"
+       style=\"font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;white-space:pre;shape-inside:url(#rect97);fill:none;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4, 8;paint-order:fill markers stroke\" />
+  </g>
+</svg>"
+  "Default file template.")
+
+(after! which-key
+  (setq which-key-idle-delay 0.1))
+
+(setq which-key-allow-multiple-replacements t)
+(after! which-key
+  (pushnew!
+   which-key-replacement-alist
+   '(("" . "\\`+?evil[-:]?\\(?:a-\\)?\\(.*\\)") . (nil . "◂\\1"))
+   '(("\\`g s" . "\\`evilem--?motion-\\(.*\\)") . (nil . "◃\\1"))
+   ))

@@ -1,5 +1,0 @@
-(("memacs"   . ((user-emacs-directory   . "/media/emacs-frameworks/memacs")))
- ("doom"      . ((user-emacs-directory   . "/media/emacs-frameworks/doom-emacs")
-                 (env . (("DOOMDIR"      . "~/.config/doom")))))
- ("spacemacs" . ((user-emacs-directory   . "/media/emacs-frameworks/spacemacs")
-                 (env . (("SPACEMACSDIR" . "~/.config/spacemacs"))))))

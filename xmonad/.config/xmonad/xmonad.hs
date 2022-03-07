@@ -555,6 +555,7 @@ appsKeymap = -- Applications
 
   -- Emacs
   , ("e e", spawn (myEmacs ++ "--eval '(dashboard-refresh-buffer)'")) -- Emacs dashboard
+  , ("e w", spawn (myEmacs ++ "--eval '(woman)'")) -- Emacs woman pager
   , ("e b", spawn (myEmacs ++ "--eval '(ibuffer)'")) -- Emacs list buffers
   , ("e d", spawn (myEmacs ++ "--eval '(dired nil)'")) -- Emacs dired
   , ("e f", spawn (myEmacs ++ "--eval '(elfeed)'")) -- Emacs elfeed rss
