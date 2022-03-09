@@ -1,0 +1,9 @@
+#!/bin/sh
+
+if [ -z "$1" ]; then
+	op="$(fd . -HL -tf -d 1 | fzf)"
+else
+	op="$1"
+fi
+
+open "$op"

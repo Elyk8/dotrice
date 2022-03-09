@@ -1,0 +1,41 @@
+#!/bin/sh
+force_tty=true
+force_wait=false
+
+case "$1" in
+	-ui)
+		force_tty=false
+		shift
+		;;
+	-w | --wait)
+		force_wait=true
+		shift
+		;;
+	-h | --help)
+		echo -e "\033[1mUsage: e [-t] [-m MODE] [OPTIONS] FILE [-]\033[0m
+
+Emacs client convenience wrapper.
+
+\033[1mOptions:\033[0m
+\033[0;34m-h, --help\033[0m            Show this message
+\033[0;34m-t, -nw, --tty\033[0m        Force terminal mode
+\033[0;34m-w, --wait\033[0m            Don't supply \033[0;34m--no-wait\033[0m to graphical emacsclient
+\033[0;34m-\033[0m                     Take \033[0;33mstdin\033[0m (when last argument)
+\033[0;34m-m MODE, --mode MODE\033[0m  Mode to open \033[0;33mstdin\033[0m with
+
+Run \033[0;32memacsclient --help\033[0m to see help for the emacsclient."
+		exit 0
+		;;
+esac
+
+if [ -z "$DISPLAY" ] || $force_tty; then
+	# if [ -f /tmp/emacs.terminal ] && [ "$(echo "$TERM" | cut -d- -f2)" = "256color" ]; then
+	# 	TERM=xterm-256color && rm /tmp/emacs.terminal
+	# fi
+	emacsclient --tty -create-frame --alternate-editor="emacs" "$@"
+else
+	if ! $force_wait; then
+		args="--no-wait"
+	fi
+	emacsclient -n -create-frame "$args" --alternate-editor="emacs" "$@"
+fi

@@ -1,0 +1,64 @@
+#!/bin/sh
+SETSTATUS="duskc --ignore-reply run_command setstatus 2"
+
+update_sink() {
+    sink=$(pamixer --get-default-sink | grep Built-in | awk '{print $1}')
+}
+
+volume_up() {
+    update_sink
+    pactl set-sink-volume "$sink" +1%
+}
+
+volume_down() {
+    update_sink
+    pactl set-sink-volume "$sink" -1%
+}
+
+volume_mute() {
+    update_sink
+    pactl set-sink-mute "$sink" toggle
+}
+
+volume_print() {
+    update_sink
+
+    volume_level=$(pamixer --sink "$sink" --get-volume)
+
+    if [ "$(pamixer --sink "$sink" --get-mute)" = true ]; then
+		icon="🔇"
+	elif [ "$volume_level" -gt "70" ]; then
+		icon="🔊"
+	elif [ "$volume_level" -lt "20" ]; then
+		icon="🔈"
+	else
+		icon="🔉"
+	fi
+
+    echo "$icon$volume_level%"
+}
+
+listen() {
+	$SETSTATUS "$(volume_print)"
+
+    pactl subscribe | while read -r event; do
+        if echo "$event" | grep -qv "Client"; then
+            $SETSTATUS "$(volume_print)"
+        fi
+    done
+}
+
+case "$1" in
+    --up)
+        volume_up
+        ;;
+    --down)
+        volume_down
+        ;;
+    --mute)
+        volume_mute
+        ;;
+    *)
+        listen
+        ;;
+esac

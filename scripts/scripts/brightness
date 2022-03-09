@@ -1,0 +1,33 @@
+#!/bin/sh
+#
+# Set brightness with xbacklight, but never go below 1 (as that's "off").
+#
+
+# Increment to use.
+incr=3
+icon_name="/usr/share/icons/BeautyLine/apps/scalable/mate-brightness-applet.svg"
+
+cur=$(xbacklight -get)
+case "$1" in
+	"up")
+		if [ "$cur" = 0 ]; then
+			xbacklight -set 1
+		else
+			xbacklight -inc $incr
+		fi
+		;;
+	"down")
+		if [ "$cur" -le 5 ]; then
+			xbacklight -set 1
+		else
+			xbacklight -dec $incr
+		fi
+		;;
+	*)
+		echo "Unsupported: \"$1\""
+		exit 1
+		;;
+esac
+
+cur=$(xbacklight -get)
+dunstify "$cur %" -i "$icon_name" -t 2000 -h int:value:"$cur" --replace=555

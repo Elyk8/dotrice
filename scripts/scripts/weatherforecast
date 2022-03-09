@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# If we have internet, get a weather report from wttr.in and store it locally.
+# You could set up a shell alias to view the full file in a pager in the
+# terminal if desired. This function will only be run once a day when needed.
+[ -f /tmp/weatherreport ] || curl -sf wttr.in > /tmp/weatherreport
+
+setsid -f "$TERMINAL" -e "less" "-S" "/tmp/weatherreport"

@@ -1,0 +1,53 @@
+#!/bin/sh
+alaconf="$HOME/.config/alacritty/alacritty.yml"
+emacsconf="$HOME/.config/doom/config.org"
+xresconf="$HOME/.config/x11/Xresources"
+
+dmenu_bin() {
+	dmenu -l 8 -p "Choose your new colorscheme:"
+}
+
+colorscheme_menu() {
+	printf "%s\n" \
+		"doom-one" \
+		"darkplus" \
+		"dracula" |
+		dmenu_bin
+}
+
+alacritty_change() {
+	sed -i "s/^colors: .\+/colors: \*$colorscheme/" "$alaconf"
+}
+
+emacs_change() {
+	case "$colorscheme" in
+		"doom-one") theme="doom-one" ;;
+		"dracula") theme="doom-dracula" ;;
+		"darkplus") theme="doom-dark+" ;;
+	esac
+	sed -i "s/^(setq doom-theme '.*)/(setq doom-theme '$theme)/" "$emacsconf"
+	/media/emacs-frameworks/doom-emacs/bin/doom sync
+}
+
+xresources_change() {
+	sed -i "s/^#include /! #include /g;/$colorscheme/s/^!\s//" "$xresconf"
+	xrdb -merge "$xresconf"
+}
+
+notify_about_neovim() {
+	notify-send "Change colorscheme variable in" \
+		"Lunarvim and other neovims'" \
+		"private configurations"
+}
+
+colorscheme=$(colorscheme_menu)
+
+# Don't do anything if variable is empty
+if [ -z "$colorscheme" ]; then
+	return 1
+fi
+
+alacritty_change
+xresources_change
+emacs_change
+notify_about_neovim

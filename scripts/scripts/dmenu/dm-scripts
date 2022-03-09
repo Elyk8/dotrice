@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+script=$(find -L ~/scripts -type f | dmenu -p "Scripts:" -l 8)
+[ "$script" = "" ] || emacs-edit -ui "$script"

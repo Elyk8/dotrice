@@ -1,0 +1,18 @@
+#!/bin/sh
+# Syncs repositories and downloads updates, meant to be run as a cronjob.
+ping -q -c 1 archlinux.org > /dev/null || exit
+
+/usr/bin/notify-send "📦 Repository Sync" "Checking for package updates..."
+
+sudo pacman -Syuw --noconfirm || /usr/bin/notify-send "Error downloading updates.
+
+Check your internet connection, if pacman is already running, or run update manually to see errors."
+
+# env DISPLAY=:0 /usr/local/bin/duskc --ignore-reply run_command setstatus 8 "$(sh -c \$HOME/.local/bin/dusksc/display/sb-pacpackages)"
+
+if pacman -Qu | grep -v "\[ignored\]"
+then
+	/usr/bin/notify-send "📦 Repository Sync" "Updates available. Run \`paru -Syu\` for update."
+else
+	/usr/bin/notify-send "📦 Repository Sync"  "Sync complete. No new packages for update."
+fi

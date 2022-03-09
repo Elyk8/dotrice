@@ -1,0 +1,53 @@
+#!/bin/sh
+
+# send_notification()
+# {
+# 	volume=$(pamixer --get-volume)
+# 	# Make the bar with the special character ─ (it's not dash -)
+# 	# https://en.wikipedia.org/wiki/Box-drawing_character
+# 	if [ "$volume" = "0" ]; then
+# 		icon_name="/usr/share/icons/Faba/48x48/notifications/notification-audio-volume-muted.svg"
+# 		dunstify "$volume %" -i "$icon_name" -t 2000 -h int:value:"$volume" --replace=555
+# 	else
+# 		if [ "$volume" -lt "10" ]; then
+# 			icon_name="/usr/share/icons/Faba/48x48/notifications/notification-audio-volume-low.svg"
+# 			dunstify "$volume %" -i "$icon_name" --replace=555 -t 2000
+# 		else
+# 			if [ "$volume" -lt "30" ]; then
+# 				icon_name="/usr/share/icons/Faba/48x48/notifications/notification-audio-volume-low.svg"
+# 			else
+# 				if [ "$volume" -lt "70" ]; then
+# 					icon_name="/usr/share/icons/Faba/48x48/notifications/notification-audio-volume-medium.svg"
+# 				else
+# 					icon_name="/usr/share/icons/Faba/48x48/notifications/notification-audio-volume-high.svg"
+# 				fi
+# 			fi
+# 		fi
+# 	fi
+# 	# Send the notification
+# 	dunstify "$volume %" -i "$icon_name" -t 2000 -h int:value:"$volume" --replace=555
+
+# }
+
+case $1 in
+	up)
+		# Set the volume on (if it was muted)
+		pamixer -u
+		# Up the volume (+ 3%)
+		pamixer --allow-boost -i 3
+		# send_notification &
+		;;
+	down)
+		pamixer --allow-boost -d 3
+		# send_notification &
+		;;
+	mute)
+		# Toggle mute
+		pamixer -t
+		# if [ "$(pamixer --get-mute)" = true ]; then
+		# 	dunstify -i "/usr/share/icons/Faba/48x48/notifications/notification-audio-volume-muted.svg" --replace=555 -u normal "Mute" -t 2000 &
+		# else
+		# 	send_notification &
+		# fi
+		;;
+esac

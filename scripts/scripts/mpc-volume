@@ -1,0 +1,26 @@
+#!/bin/sh
+
+volume=$( mpc volume | grep -o "[0-9]\+")
+# Make the bar with the special character ─ (it's not dash -)
+# https://en.wikipedia.org/wiki/Box-drawing_character
+if  [ "$volume" = "0" ]; then
+	icon_name="/usr/share/icons/BeautyLine/actions/scalable/volume-level-muted.svg"
+	dunstify "$volume %" -i "$icon_name" -t 2000 -h int:value:"$volume" --replace=555
+else
+	if [ "$volume" -lt "10" ]; then
+		icon_name="/usr/share/icons/BeautyLine/actions/scalable/volume-level-low.svg"
+		dunstify "$volume %" -i "$icon_name" --replace=555 -t 2000
+	else
+		if [ "$volume" -lt "30" ]; then
+			icon_name="/usr/share/icons/BeautyLine/actions/scalable/volume-level-low.svg"
+		else
+			if [ "$volume" -lt "70" ]; then
+				icon_name="/usr/share/icons/BeautyLine/actions/scalable/volume-level-medium.svg"
+			else
+				icon_name="/usr/share/icons/BeautyLine/actions/scalable/volume-level-high.svg"
+			fi
+		fi
+	fi
+fi
+# Send the notification
+dunstify  "MPC Volume: $volume %" -i "$icon_name" -t 2000 -h int:value:"$volume" --replace=555

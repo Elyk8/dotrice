@@ -1,0 +1,8 @@
+#!/bin/sh
+notify-send "Rebuilding doom configuration ..."
+~/.emacs.d/bin/doom sync
+notify-send "Done! Restarting emacs server ..."
+emacsclient --eval '(let (kill-emacs-hook) (kill-emacs))'
+sleep 1
+/usr/bin/emacs --daemon
+notify-send "Emacs Server started successfully"

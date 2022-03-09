@@ -1,0 +1,31 @@
+#!/usr/bin/env sh
+# # //// CONFIGURABLE VARIABLES ////////////
+
+# # location of wallpapers folder
+# location="$HOME/pix/wallpapers"
+
+# # ////////////////////////////////////////
+
+# array=($(ls $location*)) # populate array with directory contents
+# ( IFS=$'\n'; echo "${array[*]}" ) # list array content for debug
+
+# size=${#array[@]}
+# index=$(($RANDOM % $size)) 
+# wallpaper=${array[$index]} # randomly select
+
+# dbus-send --session --dest=org.kde.plasmashell --type=method_call /PlasmaShell org.kde.PlasmaShell.evaluateScript 'string:
+# var Desktops = desktops();                                                                                                                       
+# for (i=0;i<Desktops.length;i++) {
+#   d = Desktops[i];
+#   d.wallpaperPlugin = "org.kde.image";
+#   d.currentConfigGroup = Array("Wallpaper", "org.kde.image", "General");
+#   d.writeConfig("Image", "file://'''$location'''/'${wallpaper}'");
+# }'
+
+pixdir=${XDG_PICTURES_DIR:="$HOME/pix"}
+
+if [ -z "$1" ]; then
+	feh --recursive --bg-scale --randomize "$pixdir/wallpapers" &
+else
+	feh --recursive --bg-scale --randomize "$pixdir/wallpapers/$1" &
+fi

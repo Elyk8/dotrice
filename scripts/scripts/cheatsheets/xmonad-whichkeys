@@ -1,0 +1,10 @@
+#!/bin/sh
+
+sed -n '/START_WHICHKEYS/,/END_WHICHKEYS/p' ~/.config/xmonad/xmonad.hs |
+	grep '^\s*\[\s*(\|^\s*\-\- [A-Za-z]\|^\s*,\s*(\|^$' |
+	sed -e 's/^\s*,\s*//' \
+		-e 's/^\s*\[\s*//' \
+		-e 's/leader ++ "/"M+SPC /' \
+		-e 's/^\s*//' |
+	awk -F", " '! /^\s*\-\-/ {$1 = sprintf("%-20s", $1)} 1' |
+	yad --text-info --back=#1E1E1E --fore=#D8DEE9 --geometry=1200x800 --lang haskell --theme "Oblivion"
