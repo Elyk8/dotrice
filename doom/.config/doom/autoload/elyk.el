@@ -11,3 +11,9 @@
   "Browse the files in ~/dotrice."
   (interactive)
   (doom-project-browse (expand-file-name "~/dotrice")))
+
+;;;###autoload
+(defun find-in-scripts ()
+  "Open a file somewhere in scripts directory, ~/script via a fuzzy filename search."
+  (interactive)
+  (doom-project-find-file (expand-file-name "~/scripts")))

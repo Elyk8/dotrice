@@ -24,15 +24,12 @@
 - [[#hooks][Hooks]]
 - [[#key-mappings-and-evil][Key Mappings And Evil]]
 - [[#line-settings][Line Settings]]
-- [[#languages][Languages]]
-  - [[#haskell][Haskell]]
-  - [[#latex][Latex]]
+- [[#language-servers][Language Servers]]
 - [[#mouse-settings][Mouse Settings]]
 - [[#neotree][Neotree]]
 - [[#open-specific-files][Open Specific Files]]
 - [[#org][Org]]
   - [[#set-font-sizes-for-each-header-level-in-org][Set font sizes for each header level in Org]]
-  - [[#org-appear][Org-appear]]
   - [[#org-journal][Org-journal]]
   - [[#org-roam][Org-roam]]
   - [[#inkscape][Inkscape]]
@@ -56,11 +53,11 @@ variables, and virtually no other languages have adopted it.
 These are better defaults (or preferences for me) which I would want to be on always.
 #+begin_src elisp
 (setq-default
-    delete-by-moving-to-trash t                      ; Delete files to trash
-    window-combination-resize t                      ; take new window space from all other windows (not just current)
-    x-stretch-cursor t)                              ; Stretch cursor to the glyph width
+    delete-by-moving-to-trash t                 ; Delete files to trash
+    window-combination-resize t                 ; take new window space from all other windows (not just current)
+    x-stretch-cursor t)                         ; Stretch cursor to the glyph width
 
-(setq undo-limit 80000000                         ; Raise undo-limit to 80Mb
+(setq undo-limit 80000000                       ; Raise undo-limit to 80Mb
     evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
     truncate-string-ellipsis "…"                ; Unicode ellispis are nicer than "...", and also save /precious/ space
     password-cache-expiry nil                   ; I can trust my computers ... can't I?
@@ -260,29 +257,39 @@ An evil mode indicator is redundant with cursor shape
 #+end_src
 
 * Dashboard
-Emacs Dashboard is an extensible startup screen showing you recent files, bookmarks, agenda items and an Emacs banner.
+The dashboard contains too many things to my taste. It must be something which you can use to display and use shortcuts.
 
 ** Configuring Dashboard
 
 #+begin_src elisp
-(use-package! dashboard
-  :init      ;; tweak dashboard config before loading it
-  (setq dashboard-set-heading-icons t)
-  (setq dashboard-set-file-icons t)
-  ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
-  (setq dashboard-set-navigator t)
-  (setq dashboard-startup-banner "~/.config/doom/doom-eternal.png")  ;; use custom image as banner
-  (setq dashboard-center-content t) ;; set to 't' for centered content
-  (setq dashboard-items '((recents . 5)
-                          (agenda . 5 )
-                          (bookmarks . 5)
-                          (projects . 5)))
-  :config
-  (dashboard-setup-startup-hook)
-  (dashboard-modify-heading-icons '((recents . "file-text")
-                                    (bookmarks . "book"))))
+(setq doom-fallback-buffer-name "► Doom"
+      +doom-dashboard-name "► Doom")
 
-(setq doom-fallback-buffer "*dashboard*")
+(map! :mode +doom-dashboard-mode
+      :map +doom-dashboard-mode-map
+      :desc "Find file" :ne "f" #'find-file
+      :desc "Recent files" :ne "r" #'consult-recent-file
+      :desc "Config dir" :ne "C" #'doom/open-private-config
+      :desc "Open config.org" :ne "c" (cmd! (find-file (expand-file-name "config.org" doom-private-dir)))
+      :desc "Open dotfile" :ne "." #'find-in-dotfiles
+      :desc "Open scripts" :ne "s" #'find-in-scripts
+      :desc "Notes (roam)" :ne "n" #'org-roam-node-find
+      :desc "Dired" :ne "d" #'dired
+      :desc "Switch buffer" :ne "b" #'+vertico/switch-workspace-buffer
+      :desc "Switch buffers (all)" :ne "B" #'consult-buffer
+      :desc "IBuffer" :ne "i" #'ibuffer
+      :desc "Browse in project" :ne "p" #'doom/browse-in-other-project
+      :desc "Set theme" :ne "t" #'consult-theme
+      :desc "Quit" :ne "Q" #'save-buffers-kill-terminal)
+
+(remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
+(add-hook! '+doom-dashboard-mode-hook (hide-mode-line-mode 1) (hl-line-mode -1))
+(setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
+
+(map! :leader :desc "Dashboard" "e" #'+doom-dashboard/open)
+;; (add-transient-hook! #'+doom-dashboard-mode (+doom-dashboard-setup-modified-keymap))
+;; (add-transient-hook! #'+doom-dashboard-mode :append (+doom-dashboard-setup-modified-keymap))
+;; (add-hook! 'doom-init-ui-hook :append (+doom-dashboard-setup-modified-keymap))
 #+end_src
 
 * Dired
@@ -368,11 +375,11 @@ Dired is the file manager within Emacs.  Below, I setup keybindings for image pr
 (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
 ;; With dired-open plugin, you can launch external programs for certain extensions
 ;; For example, I set all .png files to open in 'sxiv' and all .mp4 files to open in 'mpv'
-(setq dired-open-extensions '(("gif" . "nsxiv")
-                              ("jpg" . "nsxiv")
-                              ("png" . "nsxiv")
-                              ("mkv" . "mpv")
-                              ("mp4" . "mpv")))
+(setq dired-open-extensions '(("gif" . "open")
+                              ("jpg" . "open")
+                              ("png" . "open")
+                              ("mkv" . "open")
+                              ("mp4" . "open")))
 (setq find-file-visit-truename nil)
 #+end_src
 
@@ -416,9 +423,10 @@ Set the theme of doom emacs here. To try out new themes, I set a keybinding for 
 
 #+BEGIN_SRC emacs-lisp
 (setq doom-theme 'doom-dark+)
-;; set transparency
-(set-frame-parameter (selected-frame) 'alpha '(100 100))
-(add-to-list 'default-frame-alist '(alpha 100 100))
+ ;;(set-frame-parameter (selected-frame) 'alpha '(<active> . <inactive>))
+ ;;(set-frame-parameter (selected-frame) 'alpha <both>)
+(set-frame-parameter (selected-frame) 'alpha 100)
+(add-to-list 'default-frame-alist '(alpha 100))
 #+END_SRC
 
 * Hooks
@@ -467,8 +475,8 @@ Here, we specify stuff that we want to run on startup
 
 I set comment-line to 'SPC TAB TAB' which is a rather comfortable keybinding for me on my ZSA Moonlander keyboard.  The standard Emacs keybinding for comment-line is 'C-x C-;'.  The other keybindings are for commands that toggle on/off various line-related settings.  Doom Emacs uses 'SPC t' for "toggle" commands, so I choose 'SPC t' plus 'key' for those bindings.
 
-| COMMAND                  | DESCRIPTION                                 | KEYBINDING  |
-|--------------------------+---------------------------------------------+-------------|
+| COMMAND                  | DESCRIPTION                               | KEYBINDING  |
+|--------------------------+-------------------------------------------+-------------|
 | comment-line             | /Comment or uncomment lines/                | SPC TAB TAB |
 | hl-line-mode             | /Toggle line highlighting in current frame/ | SPC t h     |
 | global-hl-line-mode      | /Toggle line highlighting globally/         | SPC t H     |
@@ -486,46 +494,11 @@ I set comment-line to 'SPC TAB TAB' which is a rather comfortable keybinding for
      :desc "Toggle truncate lines" "t" #'toggle-truncate-lines))
 #+END_SRC
 
-* Languages
-
-This section is dedicated to lsp default settings, which I want to change.
+* Language Servers
 
 #+begin_src elisp
-(after! lsp-mode
-  (setq lsp-enable-symbol-highlighting nil
-        ;; If an LSP server isn't present when I start a prog-mode buffer, you
-        ;; don't need to tell me. I know. On some machines I don't care to have
-        ;; a whole development environment for some ecosystems.
-        lsp-enable-suggest-server-download nil))
-(after! lsp-ui
-  (setq lsp-ui-sideline-enable nil  ; no more useful than flycheck
-        lsp-ui-doc-enable nil))     ; redundant with K
-#+end_src
-
-** Haskell
-
-This is to change the default formatter for haskell.
-#+begin_src elisp
-(after! lsp-mode
-  (setq lsp-haskell-formatting-provider "brittany"))
-#+end_src
-
-** Latex
-
-*** Compilation
-
-#+begin_src elisp
-(setq TeX-save-query nil
-      TeX-show-compilation t
-      TeX-command-extra-options "-shell-escape")
-(after! latex
-  (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t)))
-#+end_src
-
-For viewing the PDF, I rather like the pdf-tools viewer. While auctex is trying to be nice in recognising that I have some PDF viewing apps installed, I’d rather not have it default to using them, so let’s re-order the preferences.
-
-#+begin_src elisp
-(setq +latex-viewers '(pdf-tools evince zathura okular skim sumatrapdf))
+(set-formatter! 'brittany "brittany" :modes '(haskell-mode))
+(setq-hook! 'haskell-mode-hook +format-with-lsp nil)
 #+end_src
 
 * Mouse Settings
@@ -535,6 +508,7 @@ This is to enable better mouse support for doom emacs.
 (map! :n [mouse-8] #'better-jumper-jump-backward
       :n [mouse-9] #'better-jumper-jump-forward)
 #+end_src
+
 
 * Neotree
 
@@ -548,12 +522,12 @@ Neotree is a file tree viewer.  When you open neotree, it jumps to the current f
 #+BEGIN_SRC emacs-lisp
 (after! neotree
   (setq neo-smart-open t
-        neo-window-fixed-size nil))
+        neo-window-fixed-size nil)
+  (map! :leader
+        :desc "Toggle neotree file viewer" "t n" #'neotree-toggle
+        :desc "Open directory in neotree" "d n" #'necccotree-dir))
 (after! doom-themes
   (setq doom-neotree-enable-variable-pitch t))
-(map! :leader
-      :desc "Toggle neotree file viewer" "t n" #'neotree-toggle
-      :desc "Open directory in neotree" "d n" #'neotree-dir)
 #+END_SRC
 
 * Open Specific Files
@@ -630,22 +604,6 @@ You can set the Org heading levels to be different font sizes.  So I choose to h
 )
 #+end_src
 
-** Org-appear
-
-While =org-hide-emphasis-markers= is very nice, it can sometimes make edits which occur at the border a bit more fiddley. We can improve this situation without sacrificing visual amenities with the =org-appear= package.
-
-#+begin_src elisp
-(use-package! org-appear
-  :hook (org-mode . org-appear-mode)
-  :config
-  (setq org-appear-autoemphasis t
-        org-appear-autosubmarkers t
-        org-appear-autolinks nil)
-  ;; for proper first-time setup, `org-appear--set-elements'
-  ;; needs to be run after other hooks have acted.
-  (run-at-time nil nil #'org-appear--set-elements))
-#+end_src
-
 ** Org-journal
 
 #+begin_src emacs-lisp
@@ -673,29 +631,29 @@ While =org-hide-emphasis-markers= is very nice, it can sometimes make edits whic
         org-roam-completion-everywhere t
         org-roam-capture-templates
         '(("d" "default" plain "%?"
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: <${title}\n#+date: %U\n#+filetags: Inbox\n\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: < Inbox\n\n")
            :unnarrowed t)
           ("a" "articles" plain (file "~/org/templates/articles.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: +${title}\n#+date: %U\n#+filetags: %^{Tag}\n\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: + %^{Tag}\n\n")
            :unnarrowed t)
           ("b" "book notes" plain (file "~/org/templates/book.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: {${title}\n#+date: %U\n#+filetags: %^{Tag}\n\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: { %^{Tag}\n\n")
            :unnarrowed t)
           ("c" "podcasts" plain (file "~/org/templates/podcasts.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: @${title}\n#+date: %U\n#+filetags: %^{Tag}\n\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: @ %^{Tag}\n\n")
            :unnarrowed t)
           ("i" "ideas" plain (file "~/org/templates/ideas.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: >${title}\n#+date: %U\n#+filetags: %^{Tag}\n\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: > %^{Tag}\n\n")
            :unnarrowed t)
           ("l" "programming language" plain
            "* Characteristics\n\n- Family: %?\n- Inspired by: \n\n* Reference:\n\n"
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: -${title}\n#+date: %U\n#+filetags: %^{Tag}\n\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: - %^{Tag}\n\n")
            :unnarrowed t)
           ("p" "project" plain (file "~/org/templates/project.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: =${title}\n#+date: %U\n#+filetags: %^{Tag}\n\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: = %^{Tag}\n\n")
            :unnarrowed t)
           ("r" "research paper" plain (file "~/org/templates/research.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ;${title}\n#+date: %U\n#+filetags: %^{Tag}\n\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: ; %^{Tag}\n\n")
            :unnarrowed t)
           ("t" "tag" plain "%?"
            :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Tag\n\n")

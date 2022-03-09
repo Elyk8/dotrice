@@ -1,11 +1,11 @@
 ;;; config.el --- -*- lexical-binding: t -*-
 
 (setq-default
-    delete-by-moving-to-trash t                      ; Delete files to trash
-    window-combination-resize t                      ; take new window space from all other windows (not just current)
-    x-stretch-cursor t)                              ; Stretch cursor to the glyph width
+    delete-by-moving-to-trash t                 ; Delete files to trash
+    window-combination-resize t                 ; take new window space from all other windows (not just current)
+    x-stretch-cursor t)                         ; Stretch cursor to the glyph width
 
-(setq undo-limit 80000000                         ; Raise undo-limit to 80Mb
+(setq undo-limit 80000000                       ; Raise undo-limit to 80Mb
     evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
     truncate-string-ellipsis "…"                ; Unicode ellispis are nicer than "...", and also save /precious/ space
     password-cache-expiry nil                   ; I can trust my computers ... can't I?
@@ -115,24 +115,34 @@ Not added when either:
 (advice-add #'doom-modeline-segment--modals :override #'ignore)
 (setq doom-modeline-buffer-file-name-style 'file-name)
 
-(use-package! dashboard
-  :init      ;; tweak dashboard config before loading it
-  (setq dashboard-set-heading-icons t)
-  (setq dashboard-set-file-icons t)
-  ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
-  (setq dashboard-set-navigator t)
-  (setq dashboard-startup-banner "~/.config/doom/doom-eternal.png")  ;; use custom image as banner
-  (setq dashboard-center-content t) ;; set to 't' for centered content
-  (setq dashboard-items '((recents . 5)
-                          (agenda . 5 )
-                          (bookmarks . 5)
-                          (projects . 5)))
-  :config
-  (dashboard-setup-startup-hook)
-  (dashboard-modify-heading-icons '((recents . "file-text")
-                                    (bookmarks . "book"))))
+(setq doom-fallback-buffer-name "► Doom"
+      +doom-dashboard-name "► Doom")
 
-(setq doom-fallback-buffer "*dashboard*")
+(map! :mode +doom-dashboard-mode
+      :map +doom-dashboard-mode-map
+      :desc "Find file" :ne "f" #'find-file
+      :desc "Recent files" :ne "r" #'consult-recent-file
+      :desc "Config dir" :ne "C" #'doom/open-private-config
+      :desc "Open config.org" :ne "c" (cmd! (find-file (expand-file-name "config.org" doom-private-dir)))
+      :desc "Open dotfile" :ne "." #'find-in-dotfiles
+      :desc "Open scripts" :ne "s" #'find-in-scripts
+      :desc "Notes (roam)" :ne "n" #'org-roam-node-find
+      :desc "Dired" :ne "d" #'dired
+      :desc "Switch buffer" :ne "b" #'+vertico/switch-workspace-buffer
+      :desc "Switch buffers (all)" :ne "B" #'consult-buffer
+      :desc "IBuffer" :ne "i" #'ibuffer
+      :desc "Browse in project" :ne "p" #'doom/browse-in-other-project
+      :desc "Set theme" :ne "t" #'consult-theme
+      :desc "Quit" :ne "Q" #'save-buffers-kill-terminal)
+
+(remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
+(add-hook! '+doom-dashboard-mode-hook (hide-mode-line-mode 1) (hl-line-mode -1))
+(setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
+
+(map! :leader :desc "Dashboard" "e" #'+doom-dashboard/open)
+;; (add-transient-hook! #'+doom-dashboard-mode (+doom-dashboard-setup-modified-keymap))
+;; (add-transient-hook! #'+doom-dashboard-mode :append (+doom-dashboard-setup-modified-keymap))
+;; (add-hook! 'doom-init-ui-hook :append (+doom-dashboard-setup-modified-keymap))
 
 (map! :leader
       (:prefix ("d" . "dired")
@@ -168,11 +178,11 @@ Not added when either:
 (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
 ;; With dired-open plugin, you can launch external programs for certain extensions
 ;; For example, I set all .png files to open in 'sxiv' and all .mp4 files to open in 'mpv'
-(setq dired-open-extensions '(("gif" . "nsxiv")
-                              ("jpg" . "nsxiv")
-                              ("png" . "nsxiv")
-                              ("mkv" . "mpv")
-                              ("mp4" . "mpv")))
+(setq dired-open-extensions '(("gif" . "open")
+                              ("jpg" . "open")
+                              ("png" . "open")
+                              ("mkv" . "open")
+                              ("mp4" . "open")))
 (setq find-file-visit-truename nil)
 
 (evil-define-key 'normal peep-dired-mode-map
@@ -191,9 +201,10 @@ Not added when either:
   '(font-lock-keyword-face :slant italic))
 
 (setq doom-theme 'doom-dark+)
-;; set transparency
-(set-frame-parameter (selected-frame) 'alpha '(100 100))
-(add-to-list 'default-frame-alist '(alpha 100 100))
+ ;;(set-frame-parameter (selected-frame) 'alpha '(<active> . <inactive>))
+ ;;(set-frame-parameter (selected-frame) 'alpha <both>)
+(set-frame-parameter (selected-frame) 'alpha 100)
+(add-to-list 'default-frame-alist '(alpha 100))
 
 (add-hook 'emacs-startup-hook #'frames-only-mode)
 
@@ -232,38 +243,20 @@ Not added when either:
      :desc "Toggle line highlight globally" "H" #'global-hl-line-mode
      :desc "Toggle truncate lines" "t" #'toggle-truncate-lines))
 
-(after! lsp-mode
-  (setq lsp-enable-symbol-highlighting nil
-        ;; If an LSP server isn't present when I start a prog-mode buffer, you
-        ;; don't need to tell me. I know. On some machines I don't care to have
-        ;; a whole development environment for some ecosystems.
-        lsp-enable-suggest-server-download nil))
-(after! lsp-ui
-  (setq lsp-ui-sideline-enable nil  ; no more useful than flycheck
-        lsp-ui-doc-enable nil))     ; redundant with K
-
-(after! lsp-mode
-  (setq lsp-haskell-formatting-provider "brittany"))
-
-(setq TeX-save-query nil
-      TeX-show-compilation t
-      TeX-command-extra-options "-shell-escape")
-(after! latex
-  (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t)))
-
-(setq +latex-viewers '(pdf-tools evince zathura okular skim sumatrapdf))
+(set-formatter! 'brittany "brittany" :modes '(haskell-mode))
+(setq-hook! 'haskell-mode-hook +format-with-lsp nil)
 
 (map! :n [mouse-8] #'better-jumper-jump-backward
       :n [mouse-9] #'better-jumper-jump-forward)
 
 (after! neotree
   (setq neo-smart-open t
-        neo-window-fixed-size nil))
+        neo-window-fixed-size nil)
+  (map! :leader
+        :desc "Toggle neotree file viewer" "t n" #'neotree-toggle
+        :desc "Open directory in neotree" "d n" #'necccotree-dir))
 (after! doom-themes
   (setq doom-neotree-enable-variable-pitch t))
-(map! :leader
-      :desc "Toggle neotree file viewer" "t n" #'neotree-toggle
-      :desc "Open directory in neotree" "d n" #'neotree-dir)
 
 (map! :leader
       (:prefix ("=" . "Open File")
@@ -312,16 +305,6 @@ Not added when either:
   '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
 )
 
-(use-package! org-appear
-  :hook (org-mode . org-appear-mode)
-  :config
-  (setq org-appear-autoemphasis t
-        org-appear-autosubmarkers t
-        org-appear-autolinks nil)
-  ;; for proper first-time setup, `org-appear--set-elements'
-  ;; needs to be run after other hooks have acted.
-  (run-at-time nil nil #'org-appear--set-elements))
-
 (setq org-journal-dir "~/org/journal/"
       org-journal-date-prefix "* "
       org-journal-time-prefix "** "
@@ -333,29 +316,29 @@ Not added when either:
         org-roam-completion-everywhere t
         org-roam-capture-templates
         '(("d" "default" plain "%?"
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: <${title}\n#+date: %U\n#+filetags: Inbox\n\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: < Inbox\n\n")
            :unnarrowed t)
           ("a" "articles" plain (file "~/org/templates/articles.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: +${title}\n#+date: %U\n#+filetags: %^{Tag}\n\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: + %^{Tag}\n\n")
            :unnarrowed t)
           ("b" "book notes" plain (file "~/org/templates/book.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: {${title}\n#+date: %U\n#+filetags: %^{Tag}\n\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: { %^{Tag}\n\n")
            :unnarrowed t)
           ("c" "podcasts" plain (file "~/org/templates/podcasts.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: @${title}\n#+date: %U\n#+filetags: %^{Tag}\n\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: @ %^{Tag}\n\n")
            :unnarrowed t)
           ("i" "ideas" plain (file "~/org/templates/ideas.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: >${title}\n#+date: %U\n#+filetags: %^{Tag}\n\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: > %^{Tag}\n\n")
            :unnarrowed t)
           ("l" "programming language" plain
            "* Characteristics\n\n- Family: %?\n- Inspired by: \n\n* Reference:\n\n"
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: -${title}\n#+date: %U\n#+filetags: %^{Tag}\n\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: - %^{Tag}\n\n")
            :unnarrowed t)
           ("p" "project" plain (file "~/org/templates/project.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: =${title}\n#+date: %U\n#+filetags: %^{Tag}\n\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: = %^{Tag}\n\n")
            :unnarrowed t)
           ("r" "research paper" plain (file "~/org/templates/research.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ;${title}\n#+date: %U\n#+filetags: %^{Tag}\n\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: ; %^{Tag}\n\n")
            :unnarrowed t)
           ("t" "tag" plain "%?"
            :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Tag\n\n")

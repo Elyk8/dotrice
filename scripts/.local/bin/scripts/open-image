@@ -1,2 +1,0 @@
-#!/bin/sh
-rotdir "$1" | grep -i "\.\(png\|jpg\|jpeg\|gif\|webp\|tif\|ico\)\(_large\)*$" | nsxiv -aio 2>/dev/null

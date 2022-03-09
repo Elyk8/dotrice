@@ -1,6 +1,0 @@
-#!/bin/sh
-notify-send "Restarting emacs server ..."
-emacsclient --eval '(let (kill-emacs-hook) (kill-emacs))'
-sleep 0.2
-/usr/bin/emacs --daemon && notify-send "Emacs Server started successfully"
-touch /tmp/emacs.terminal

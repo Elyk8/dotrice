@@ -44,6 +44,10 @@ INFO=$(awk -v cmdcolor="$CMDCOLOR" -v keycolor="$KEYCOLOR" -v arrowcolor="$ARROW
                 # remove any leading spaces from the comment
                 gsub(/^\S\+/, "", splitline[2])
                 gsub(/<Space>/, "SPC", keys[1])
+                if (keys[1] ~ /^.*S-c/) {
+                    gsub(/S-/, "", keys[1])
+                    keys[1] = sprintf ("%s%s", substr(keys[1],1,1), toupper(substr(keys[1],2)))
+                }
                 gsub(/ /, "", keys[1])
 
                 # skip any empty records.

@@ -69,42 +69,83 @@ set recolor-keephue             true      # keep original color
 # }}}
 
 # Doom-one {{{
-set notification-error-bg       "#282C34" # bg
-set notification-error-fg       "#FF6C6B" # bright:red
-set notification-warning-bg     "#282C34" # bg
-set notification-warning-fg     "#ECBE7B" # bright:yellow
-set notification-bg             "#282C34" # bg
-set notification-fg             "#98BE65" # bright:green
+# set notification-error-bg       "#282C34" # bg
+# set notification-error-fg       "#FF6C6B" # bright:red
+# set notification-warning-bg     "#282C34" # bg
+# set notification-warning-fg     "#ECBE7B" # bright:yellow
+# set notification-bg             "#282C34" # bg
+# set notification-fg             "#98BE65" # bright:green
+
+# set completion-bg               "#3F444A" # bg2
+# set completion-fg               "#BBC2CF" # fg
+# set completion-group-bg         "#3F444A" # bg1
+# set completion-group-fg         "#787c99" # gray
+# set completion-highlight-bg     "#46D9FF" # bright:blue
+# set completion-highlight-fg     "#BBC2CF" # bg2
+
+# # Define the color in index mode
+# set index-bg                    "#3F444A" # bg2
+# set index-fg                    "#BBC2CF" # fg
+# set index-active-bg             "#46D9FF" # bright:blue
+# set index-active-fg             "#3F444A" # bg2
+
+# set inputbar-bg                 "#282C34" # bg
+# set inputbar-fg                 "#BBC2CF" # fg
+
+# set statusbar-bg                "#282C34" # bg2
+# set statusbar-fg                "#BBC2CF" # fg
+
+# set highlight-color             "#ECBE7B" # bright:yellow
+# set highlight-active-color      "#FF6C6B" # bright:orange
+
+# set default-bg                  "#282C34" # bg
+# set default-fg                  "#BBC2CF" # fg
+# set render-loading              true
+# set render-loading-bg           "#282C34" # bg
+# set render-loading-fg           "#BBC2CF" # fg
+
+# # Recolor book content's color
+# set recolor-lightcolor          "#282C34" # bg
+# set recolor-darkcolor           "#BBC2CF" # fg
+# }}}
+
+# Darkplus {{{
+set notification-error-bg       "#1E1E1E" # bg
+set notification-error-fg       "#D54646" # bright:red
+set notification-warning-bg     "#1E1E1E" # bg
+set notification-warning-fg     "#23D18B" # bright:yellow
+set notification-bg             "#1E1E1E" # bg
+set notification-fg             "#D7BA7D" # bright:green
 
 set completion-bg               "#3F444A" # bg2
-set completion-fg               "#BBC2CF" # fg
+set completion-fg               "#D8DEE9" # fg
 set completion-group-bg         "#3F444A" # bg1
 set completion-group-fg         "#787c99" # gray
-set completion-highlight-bg     "#46D9FF" # bright:blue
-set completion-highlight-fg     "#BBC2CF" # bg2
+set completion-highlight-bg     "#569CD6" # bright:blue
+set completion-highlight-fg     "#D8DEE9" # bg2
 
 # Define the color in index mode
 set index-bg                    "#3F444A" # bg2
-set index-fg                    "#BBC2CF" # fg
-set index-active-bg             "#46D9FF" # bright:blue
+set index-fg                    "#D8DEE9" # fg
+set index-active-bg             "#569CD6" # bright:blue
 set index-active-fg             "#3F444A" # bg2
 
-set inputbar-bg                 "#282C34" # bg
-set inputbar-fg                 "#BBC2CF" # fg
+set inputbar-bg                 "#1E1E1E" # bg
+set inputbar-fg                 "#D8DEE9" # fg
 
-set statusbar-bg                "#282C34" # bg2
-set statusbar-fg                "#BBC2CF" # fg
+set statusbar-bg                "#1E1E1E" # bg2
+set statusbar-fg                "#D8DEE9" # fg
 
-set highlight-color             "#ECBE7B" # bright:yellow
-set highlight-active-color      "#FF6C6B" # bright:orange
+set highlight-color             "#23D18B" # bright:yellow
+set highlight-active-color      "#D54646" # bright:orange
 
-set default-bg                  "#282C34" # bg
-set default-fg                  "#BBC2CF" # fg
+set default-bg                  "#1E1E1E" # bg
+set default-fg                  "#D8DEE9" # fg
 set render-loading              true
-set render-loading-bg           "#282C34" # bg
-set render-loading-fg           "#BBC2CF" # fg
+set render-loading-bg           "#1E1E1E" # bg
+set render-loading-fg           "#D8DEE9" # fg
 
 # Recolor book content's color
-set recolor-lightcolor          "#282C34" # bg
-set recolor-darkcolor           "#BBC2CF" # fg
+set recolor-lightcolor          "#1E1E1E" # bg
+set recolor-darkcolor           "#D8DEE9" # fg
 # }}}

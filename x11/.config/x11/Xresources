@@ -18,7 +18,7 @@ nsxiv.font: monospace:weight=medium:size=11:antialias=true:autohint=true
 dmenu.font: monospace:weight=medium:size=11:antialias=true:autohint=true
 
 ! general
-st.alpha: 1
+st.alpha: 0.95
 
 #include "./Xresources.d/darkplus.xresources"
 ! #include "./Xresources.d/tokyonight.xresources"

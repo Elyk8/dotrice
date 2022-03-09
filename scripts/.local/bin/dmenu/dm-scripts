@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-script=$(find -L ~/.local/bin/{scripts,dusksc,dmenu} -type f | dmenu -p "Scripts:" -l 8)
-[ "$script" = "" ] || setsid -f "$TERMINAL" -e "$EDITOR" "$script"

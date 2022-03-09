@@ -26,7 +26,7 @@ alias ....='cd ../../..'
 
 # vim and emacs
 alias vim="nvim"
-alias em="e -nw"
+alias em="emacs-edit"
 alias doom="~/.emacs.d/bin/doom"
 alias doomsync="~/.emacs.d/bin/doom sync"
 alias doomdoctor="~/.emacs.d/bin/doom doctor"
@@ -216,12 +216,12 @@ alias wion='nmcli radio wifi on'
 alias wiof='nmcli radio wifi off'
 alias xp='chmod +x'
 alias ffmpeg="ffmpeg -hide_banner"
-alias e='$EDITOR -t'
+alias e="\$EDITOR"
 alias br='bulk-rename'
 alias lf='lfcd'
 
 se() { fd -atf --base-directory ~/.config | fzf | xargs -r "$EDITOR"; }
-sr() { fd -atf --base-directory ~/.local/bin | fzf | xargs -r "$EDITOR"; }
+sr() { fd -atf --base-directory ~/scripts | fzf | xargs -r "$EDITOR"; }
 # xevv() { xev | awk -F'[ )]+' '/^KeyPress/ { a[NR+2] } NR in a { printf "%-3s %s\n", $5, $8 }'; }
 
 riceros() {
@@ -231,16 +231,5 @@ riceros() {
 }
 
 riceconda() {
-	# Miniconda
-	__conda_setup="$("$HOME/.miniconda/bin/conda" 'shell.zsh' 'hook' 2>/dev/null)"
-	if [ $? -eq 0 ]; then
-		eval "$__conda_setup"
-	else
-		if [ -f "$HOME/.miniconda/etc/profile.d/conda.sh" ]; then
-			. "$HOME/.miniconda/etc/profile.d/conda.sh"
-		else
-			export PATH="$HOME/.miniconda/bin:$PATH"
-		fi
-	fi
-	unset __conda_setup
+	[ -f /opt/miniconda3/etc/profile.d/conda.sh ] && . "/opt/miniconda3/etc/profile.d/conda.sh"
 }

@@ -1,4 +1,4 @@
-#files: 797	version: 5.8.1
+#files: 796	version: 5.8.1
 
 _comps=(
 '-' '_precommand'
@@ -107,6 +107,7 @@ _comps=(
 'brctl' '_brctl'
 'bsdgrep' '_grep'
 'bsdtar' '_tar'
+'bspc' '_bspc'
 'btdownloadcurses' '_bittorrent'
 'btdownloadgui' '_bittorrent'
 'btdownloadheadless' '_bittorrent'
@@ -643,7 +644,6 @@ _comps=(
 'killall' '_killall'
 'killall5' '_killall'
 'kioclient' '_kfmclient'
-'kitty' '_kitty'
 'knock' '_knock'
 'konqueror' '_webbrowser'
 'kpartx' '_kpartx'
@@ -952,6 +952,8 @@ _comps=(
 'podtoc' '_perl_modules'
 'poff' '_pon'
 'policytool' '_java'
+'polybar' '_polybar'
+'polybar-msg' '_polybar_msg'
 'pon' '_pon'
 'popd' '_directory_stack'
 'postconf' '_postfix'

@@ -11,7 +11,7 @@ Config { font = "xft:Iosevka Nerd Font:weight=bold:pixelsize=16:antialias=true:h
        , textOffset       = -1
        , iconOffset       = -8
        , alpha            = 255
-       , position         = TopSize L 100 30
+       , position         = BottomSize L 100 30
        , lowerOnStart     = True
        , hideOnStart      = False
        , overrideRedirect = True
