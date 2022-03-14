@@ -2,12 +2,18 @@
 #+AUTHOR: Kyle Se
 #+DESCRIPTION: This is my personal doom emacs config
 #+STARTUP: showeverything
+#+property: header-args:emacs-lisp :tangle yes :comments link
+#+property: header-args:elisp :exports code
+#+property: header-args :tangle no :results silent :eval no-export
 
 * TABLE OF CONTENTS :toc:
 - [[#lexical-keybinds][Lexical Keybinds]]
-- [[#simple-settings][Simple Settings]]
-- [[#doom-emacs-configuration][DOOM Emacs Configuration]]
+- [[#doom-configuration][DOOM Configuration]]
   - [[#async-config-tangling][Async config tangling]]
+  - [[#modules][Modules]]
+  - [[#packages][Packages]]
+- [[#native-compilation][Native Compilation]]
+- [[#simple-settings][Simple Settings]]
 - [[#babel][Babel]]
 - [[#bookmarks-and-buffers][Bookmarks and Buffers]]
   - [[#bookmarks][Bookmarks]]
@@ -24,14 +30,20 @@
 - [[#hooks][Hooks]]
 - [[#key-mappings-and-evil][Key Mappings And Evil]]
 - [[#line-settings][Line Settings]]
-- [[#language-servers][Language Servers]]
+- [[#language][Language]]
+  - [[#latex][Latex]]
+  - [[#haskell][Haskell]]
 - [[#mouse-settings][Mouse Settings]]
-- [[#neotree][Neotree]]
+- [[#mu4e][MU4E]]
+  - [[#g-mails][G-Mails]]
+  - [[#others][Others]]
+- [[#treemacs][Treemacs]]
 - [[#open-specific-files][Open Specific Files]]
 - [[#org][Org]]
   - [[#set-font-sizes-for-each-header-level-in-org][Set font sizes for each header level in Org]]
   - [[#org-journal][Org-journal]]
   - [[#org-roam][Org-roam]]
+  - [[#org-appear][Org Appear]]
   - [[#inkscape][Inkscape]]
 - [[#which-key][Which-key]]
 
@@ -44,41 +56,15 @@ scope has some selective uses, it’s widely regarded as a mistake for local
 variables, and virtually no other languages have adopted it.
 #+END_QUOTE
 
-#+BEGIN_SRC elisp
-;;; config.el --- -*- lexical-binding: t -*-
+#+BEGIN_src emacs-lisp
+;;; config.el -*- lexical-binding: t; -*-
 #+END_SRC
 
-* Simple Settings
-
-These are better defaults (or preferences for me) which I would want to be on always.
-#+begin_src elisp
-(setq-default
-    delete-by-moving-to-trash t                 ; Delete files to trash
-    window-combination-resize t                 ; take new window space from all other windows (not just current)
-    x-stretch-cursor t)                         ; Stretch cursor to the glyph width
-
-(setq undo-limit 80000000                       ; Raise undo-limit to 80Mb
-    evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
-    truncate-string-ellipsis "…"                ; Unicode ellispis are nicer than "...", and also save /precious/ space
-    password-cache-expiry nil                   ; I can trust my computers ... can't I?
-    scroll-preserve-screen-position 'always     ; Don't have `point' jump around
-    scroll-margin 2)                            ; It's nice to maintain a little margin
-
-(add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;; Prevents some cases of Emacs flickering.
-#+end_src
-
-When I bring up Doom's scratch buffer with SPC x, it's often to play with elisp or note something down (that isn't worth an entry in my notes). I can do both in `lisp-interaction-mode'.
-#+begin_src elisp
-(setq doom-scratch-initial-major-mode 'lisp-interaction-mode)
-#+end_src
-
-* DOOM Emacs Configuration
+* DOOM Configuration
 
 ** Async config tangling
-
 Doom adds an org-mode hook +literate-enable-recompile-h. This is a nice idea, but it’s too blocking for my taste. Since I trust my tangling to be fairly straightforward, I’ll just redefine it to a simpler, async, function.
-
-#+begin_src elisp
+#+begin_src emacs-lisp
 (defvar +literate-tangle--proc nil)
 (defvar +literate-tangle--proc-start-time nil)
 
@@ -137,6 +123,345 @@ Doom adds an org-mode hook +literate-enable-recompile-h. This is a nice idea, bu
 (add-hook! 'kill-emacs-hook #'+literate-tangle-check-finished)
 #+end_src
 
+** Modules
+This file controls what Doom modules are enabled and what order they load
+in. Remember to run 'doom sync' after modifying it!
+
+NOTE Press 'SPC h d h' (or 'C-h d h' for non-vim users) to access Doom's
+     documentation. There you'll find a link to Doom's Module Index where all
+     of our modules are listed, including what flags they support.
+
+NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
+     'C-c c k' for non-vim users) to view its documentation. This works on
+     flags as well (those symbols that start with a plus).
+
+     Alternatively, press 'gd' (or 'C-c c d') on a module to browse its
+     directory (for easy access to its source code).
+
+#+begin_src emacs-lisp :tangle "init.el"
+;;; init.el -*- lexical-binding: t; -*-
+(doom! :input
+       ;;chinese
+       ;;japanese
+       ;;layout            ; auie,ctsrnm is the superior home row
+
+       :completion
+       (company            ; the ultimate code completion backend
+        +childframe)       ; ... when your children are better than you
+       ;;helm              ; the *other* search engine for love and life
+       ;;ido               ; the other *other* search engine...
+       ;;(ivy +fuzzy +prescient +icons)               ; a search engine for love and life
+       (vertico +icons)    ; the search engine of the future
+
+       :ui
+       deft              ; notational velocity for Emacs
+       doom              ; what makes DOOM look the way it does
+       doom-dashboard    ; a nifty splash screen for Emacs
+       doom-quit         ; DOOM quit-message prompts when you quit Emacs
+       (emoji +unicode)  ; 🙂
+       hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
+       ;;hydra
+       ;;indent-guides     ; highlighted indent columns
+       (ligatures +extras)        ; ligatures and symbols to make your code pretty again
+       ;;minimap           ; show a map of the code on the side
+       modeline          ; snazzy, Atom-inspired modeline, plus API
+       nav-flash         ; blink cursor line after big motions
+       ;;neotree           ; a project drawer, like NERDTree for vim
+       ophints           ; highlight the region an operation acts on
+       (popup +all)   ; tame sudden yet inevitable temporary windows
+       ;;tabs              ; a tab bar for Emacs
+       treemacs          ; a project drawer, like neotree but cooler
+       ;;unicode           ; extended unicode support for various languages
+       vc-gutter         ; vcs diff in the fringe
+       ;;vi-tilde-fringe   ; fringe tildes to mark beyond EOB
+       ;;window-select     ; visually switch windows
+       workspaces        ; tab emulation, persistence & separate workspaces
+       zen               ; distraction-free coding or writing
+
+       :editor
+       (evil +everywhere); come to the dark side, we have cookies
+       file-templates    ; auto-snippets for empty files
+       fold              ; (nigh) universal code folding
+       format  ; automated prettiness
+       ;;god               ; run Emacs commands without modifier keys
+       ;;lispy             ; vim for lisp, for people who don't like vim
+       ;;multiple-cursors  ; editing in many places at once
+       ;;objed             ; text object editing for the innocent
+       ;;parinfer          ; turn lisp into python, sort of
+       ;;rotate-text       ; cycle region at point between text candidates
+       snippets          ; my elves. They type so I don't have to
+       ;;word-wrap         ; soft wrapping with language-aware indent
+
+       :emacs
+       (dired +icons +ranger)    ; making dired pretty [functional]
+       electric          ; smarter, keyword-based electric-indent
+       (ibuffer +icons)           ; interactive buffer management
+       (undo +tree)              ; persistent, smarter undo for your inevitable mistakes
+       vc                ; version-control and Emacs, sitting in a tree
+
+       :term
+       ;;eshell            ; the elisp shell that works everywhere
+       ;;shell             ; simple shell REPL for Emacs
+       ;;term              ; basic terminal emulator for Emacs
+       vterm             ; the best terminal emulation in Ema
+
+       :checkers
+       syntax              ; tasing you for every semicolon you forget
+       (spell +aspell) ; tasing you for misspelling mispelling
+       ;;grammar           ; tasing grammar mistake every you make
+
+       :tools
+       ;;ansible
+       biblio            ; Writes a PhD for you (citation needed)
+       ;;debugger          ; FIXME stepping through code, to help you add bugs
+       ;;direnv
+       ;;docker
+       editorconfig      ; let someone else argue about tabs vs spaces
+       ;;ein               ; tame Jupyter notebooks with emacs
+       (eval +overlay)     ; run code, run (also, repls)
+       ;;gist              ; interacting with github gists
+       lookup              ; navigate your code and its documentation
+       (lsp +eglot)               ; M-x vscode
+       magit             ; a git porcelain for Emacs
+       ;;make              ; run make tasks from Emacs
+       ;;pass              ; password manager for nerds
+       pdf               ; pdf enhancements
+       ;;prodigy           ; FIXME managing external services & code builders
+       rgb               ; creating color strings
+       ;;taskrunner        ; taskrunner for all your projects
+       ;;terraform         ; infrastructure as code
+       ;;tmux              ; an API for interacting with tmux
+       ;;upload            ; map local to remote projects via ssh/ftp
+
+       :os
+       ;;(:if IS-MAC macos)  ; improve compatibility with macOS
+       (tty +osc)               ; improve the terminal Emacs experience
+
+       :lang
+       ;;agda              ; types of types of types of types...
+       ;;beancount         ; mind the GAAP
+       (cc +lsp)         ; C > C++ == 1
+       ;;clojure           ; java with a lisp
+       ;;common-lisp       ; if you've seen one lisp, you've seen them all
+       ;;coq               ; proofs-as-programs
+       ;;crystal           ; ruby at the speed of c
+       ;;csharp            ; unity, .NET, and mono shenanigans
+       ;;data              ; config/data formats
+       ;;(dart +flutter)   ; paint ui and not much else
+       ;;dhall
+       ;;elixir            ; erlang done right
+       ;;elm               ; care for a cup of TEA?
+       emacs-lisp       ; drown in parentheses
+       ;;erlang            ; an elegant language for a more civilized age
+       ;;ess               ; emacs speaks statistics
+       ;;factor
+       ;;faust             ; dsp, but you get to keep your soul
+       ;;fortran           ; in FORTRAN, GOD is REAL (unless declared INTEGER)
+       ;;fsharp            ; ML stands for Microsoft's Language
+       ;;fstar             ; (dependent) types and (monadic) effects and Z3
+       ;;gdscript          ; the language you waited for
+       ;;(go +lsp)         ; the hipster dialect
+       (haskell +lsp)    ; a language that's lazier than I am
+       ;;hy                ; readability of scheme w/ speed of python
+       ;;idris             ; a language you can depend on
+       ;;json              ; At least it ain't XML
+       ;;(java +lsp)       ; the poster child for carpal tunnel syndrome
+       ;;javascript        ; all(hope(abandon(ye(who(enter(here))))))
+       ;;julia             ; a better, faster MATLAB
+       ;;kotlin            ; a better, slicker Java(Script)
+       (latex                       ; writing papers in Emacs has never been so fun
+        +latexmk                    ; what else would you use?
+        +cdlatex                    ; quick maths symbols
+        +lsp                        ; we need dez completions
+        +fold)                      ; fold the clutter away nicities
+       ;;lean              ; for folks with too much to prove
+       ;;ledger            ; be audit you can be
+       (lua +lsp)               ; one-based indices? one-based indices
+       markdown          ; writing docs for people to ignore
+       ;;nim               ; python + lisp at the speed of c
+       ;;nix               ; I hereby declare "nix geht mehr!"
+       ;;ocaml             ; an objective camel
+       (org
+        +gnuplot
+        +pomodoro
+        +journal             ; enable org journal
+        +pretty              ; replace asterisks with pretty org bullets
+        +publish             ; create static websites with org
+        +dragndrop           ; drag & drop files/images into org buffers
+        +roam2)              ; org roam v2
+       ;;php               ; perl's insecure younger brother
+       ;;plantuml          ; diagrams for confusing people more
+       ;;purescript        ; javascript, but functional
+       (python +lsp +conda)           ; beautiful is better than ugly
+       ;;qt                ; the 'cutest' gui framework ever
+       ;;racket            ; a DSL for DSLs
+       ;;raku              ; the artist formerly known as perl6
+       ;;rest              ; Emacs as a REST client
+       ;;rst               ; ReST in peace
+       ;;(ruby +rails)     ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
+       ;;rust              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+       ;;scala             ; java, but good
+       ;;(scheme +guile)   ; a fully conniving family of lisps
+       (sh +lsp)                ; she sells {ba,z,fi}sh shells on the C xor
+       ;;sml
+       ;;solidity          ; do you need a blockchain? No.
+       ;;swift             ; who asked for emoji variables?
+       ;;terra             ; Earth and Moon in alignment for performance.
+       ;;web               ; the tubes
+       yaml              ; JSON, but readable
+       ;;zig               ; C, but simpler
+
+       :email
+       (:if (executable-find "mu") (mu4e +org +gmail))
+       ;;notmuch
+       ;;(wanderlust +gmail)
+
+       :app
+       calendar
+       ;;emms
+       everywhere        ; *leave* Emacs!? You must be joking
+       ;;irc               ; how neckbeards socialize
+       (rss +org)        ; emacs as an RSS reader
+       ;;twitter           ; twitter client https://twitter.com/vnought
+
+       :config
+       literate
+       (default +bindings +smartparens))
+#+end_src
+
+** Packages
+$DOOMDIR/packages.el
+
+To install a package with Doom you must declare them here and run ~doom sync~
+on the command line, then restart Emacs for the changes to take effect -- or
+use ~M-x doom/reload~.
+
+To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
+
+#+begin_src elisp
+(package! some-package)
+#+end_src
+
+To install a package directly from a remote git repo, you must specify a
+~:recipe~ You'll find documentation on what `:recipe' accepts here:
+https://github.com/raxod502/straight.el#the-recipe-format
+
+#+begin_src elisp
+(package! another-package
+    :recipe (:host github :repo "username/repo"))
+#+end_src
+
+If the package you are trying to install does not contain a PACKAGENAME.el
+file, or is located in a subdirectory of the repo, you'll need to specify
+~:files~ in the ~:recipe~:
+
+#+begin_src elisp
+(package! this-package
+  :recipe (:host github :repo "username/repo"
+           :files ("some-file.el" "src/lisp/*.el")))
+#+end_src
+
+If you'd like to disable a package included with Doom, you can do so here
+with the ~:disable~ property:
+
+#+begin_src elisp
+(package! builtin-package :disable t)
+#+end_src
+
+You can override the recipe of a built in package without having to specify
+all the properties for `:recipe'. These will inherit the rest of its recipe
+from Doom or MELPA/ELPA/Emacsmirror:
+
+#+begin_src elisp
+(package! builtin-package :recipe (:nonrecursive t))
+(package! builtin-package-2 :recipe (:repo "myfork/package"))
+#+end_src
+
+Specify a ~:branch~ to install a package from a particular branch or tag.
+This is required for some packages whose default branch isn't 'master' (which
+our package manager can't deal with; see =raxod502/straight.el#279=)
+
+#+begin_src elisp
+(package! builtin-package :recipe (:branch "develop"))
+#+end_src
+
+Use ~:pin~ to specify a particular commit to install.
+#+begin_src elisp
+(package! builtin-package :pin "1a2b3c4d5e")
+#+end_src
+
+Doom's packages are pinned to a specific commit and updated from release to
+release. The `unpin!' macro allows you to unpin single packages...
+
+#+begin_src elisp
+(unpin! pinned-package)
+#+end_src
+
+ ...or multiple packages
+
+#+begin_src elisp
+(unpin! pinned-package another-pinned-package)
+#+end_src
+
+...Or *all* packages (NOT RECOMMENDED; will likely break things)
+
+#+begin_src elisp
+(unpin! t)
+#+end_src
+
+#+begin_src emacs-lisp :tangle "packages.el"
+;; -*- no-byte-compile: t; -*-
+
+;; (package! dashboard)
+(package! dired-open)
+(package! dired-subtree)
+(package! elfeed-goodies)
+(package! emojify)
+(package! org-fragtog)
+
+(package! org-appear)
+
+;; org-roam-ui tries to pull latest changes from org-roam, so we unpin it
+(package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")) :pin "c93f6b61a8d3d2edcf07eda6220278c418d1054b")
+(package! websocket :pin "fda4455333309545c0787a79d73c19ddbeb57980") ; dependency of `org-roam-ui'
+
+;; Graphs packages
+(package! ink :recipe (:host github :repo "foxfriday/ink"))
+
+(disable-packages!
+ mpc-mode
+ solaire-mode)
+#+end_src
+
+* Native Compilation
+
+I have been using native compilation for improved performance. We just want less verbose in our verbose.
+#+begin_src emacs-lisp
+;; Silence compiler warnings as they can be pretty disruptive
+(setq native-comp-async-report-warnings-errors nil)
+#+end_src
+
+* Simple Settings
+
+These are better defaults (or preferences for me) which I would want to be on always.
+#+begin_src emacs-lisp
+(setq-default
+    delete-by-moving-to-trash t                 ; Delete files to trash
+    window-combination-resize t                 ; take new window space from all other windows (not just current)
+    x-stretch-cursor t)                         ; Stretch cursor to the glyph width
+(setq undo-limit 80000000                       ; Raise undo-limit to 80Mb
+    evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
+    truncate-string-ellipsis "…"                ; Unicode ellispis are nicer than "...", and also save /precious/ space
+    password-cache-expiry nil                   ; I can trust my computers ... can't I?
+    scroll-preserve-screen-position 'always     ; Don't have `point' jump around
+    scroll-margin 2)                            ; It's nice to maintain a little margin
+(add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;; Prevents some cases of Emacs flickering.
+#+end_src
+
+When I bring up Doom's scratch buffer with SPC x, it's often to play with elisp or note something down (that isn't worth an entry in my notes). I can do both in `lisp-interaction-mode'.
+#+begin_src emacs-lisp
+(setq doom-scratch-initial-major-mode 'lisp-interaction-mode)
+#+end_src
 
 * Babel
 
@@ -192,6 +517,7 @@ Not added when either:
 Doom Emacs uses 'SPC b' for keybindings related to bookmarks and buffers.
 
 ** Bookmarks
+
 Bookmarks are somewhat like registers in that they record positions you can jump to.  Unlike registers, they have long names, and they persist automatically from one Emacs session to the next. The prototypical use of bookmarks is to record where you were reading in various files.
 #+BEGIN_SRC emacs-lisp
 (map! :leader
@@ -201,7 +527,6 @@ Bookmarks are somewhat like registers in that they record positions you can jump
 #+END_SRC
 
 ** Buffers
-
 Regarding /buffers/, the text you are editing in Emacs resides in an object called a /buffer/. Each time you visit a file, a buffer is used to hold the file’s text. Each time you invoke Dired, a buffer is used to hold the directory listing.  /Ibuffer/ is a program that lists all of your Emacs /buffers/, allowing you to navigate between them and filter them.
 
 | COMMAND         | DESCRIPTION          | KEYBINDING |
@@ -228,15 +553,18 @@ Regarding /buffers/, the text you are editing in Emacs resides in an object call
 | ibuffer-update                    | Restore hidden buffers                 | g H        |
 
 #+begin_src emacs-lisp
-(evil-define-key 'normal ibuffer-mode-map
-  (kbd "f c") 'ibuffer-filter-by-content
-  (kbd "f d") 'ibuffer-filter-by-directory
-  (kbd "f f") 'ibuffer-filter-by-filename
-  (kbd "f m") 'ibuffer-filter-by-mode
-  (kbd "f n") 'ibuffer-filter-by-name
-  (kbd "f x") 'ibuffer-filter-disable
-  (kbd "g h") 'ibuffer-do-kill-lines
-  (kbd "g H") 'ibuffer-update)
+(map! :map ibuffer-mode-map
+      (:prefix "f"
+      :n "c" 'ibuffer-filter-by-content
+      :n "d" 'ibuffer-filter-by-directory
+      :n "f" 'ibuffer-filter-by-filename
+      :n "m" 'ibuffer-filter-by-mode
+      :n "n" 'ibuffer-filter-by-name
+      :n "x" 'ibuffer-filter-disable)
+
+      (:prefix "g"
+      :n "h" 'ibuffer-do-kill-lines
+      :n "H" 'ibuffer-update))
 #+end_src
 
 * Completion
@@ -245,23 +573,24 @@ IMO, modern editors have trained a bad habit into us all: a burning need for
 completion all the time -- as we type, as we breathe, as we pray to the
 ancient ones -- but how often do you *really* need that information? I say
 rarely. So opt for manual completion:
-#+begin_src elisp
+#+begin_src emacs-lisp
 (after! company
   (setq company-idle-delay nil))
 #+end_src
 
 An evil mode indicator is redundant with cursor shape
-#+begin_src elisp
+#+begin_src emacs-lisp
 (advice-add #'doom-modeline-segment--modals :override #'ignore)
 (setq doom-modeline-buffer-file-name-style 'file-name)
 #+end_src
 
 * Dashboard
+
 The dashboard contains too many things to my taste. It must be something which you can use to display and use shortcuts.
 
 ** Configuring Dashboard
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (setq doom-fallback-buffer-name "► Doom"
       +doom-dashboard-name "► Doom")
 
@@ -272,7 +601,8 @@ The dashboard contains too many things to my taste. It must be something which y
       :desc "Config dir" :ne "C" #'doom/open-private-config
       :desc "Open config.org" :ne "c" (cmd! (find-file (expand-file-name "config.org" doom-private-dir)))
       :desc "Open dotfile" :ne "." #'find-in-dotfiles
-      :desc "Open scripts" :ne "s" #'find-in-scripts
+      :desc "Open suckless stuff" :ne "x" #'find-in-suckless
+      :desc "Open scripts" :ne "e" #'find-in-scripts
       :desc "Notes (roam)" :ne "n" #'org-roam-node-find
       :desc "Dired" :ne "d" #'dired
       :desc "Switch buffer" :ne "b" #'+vertico/switch-workspace-buffer
@@ -280,6 +610,7 @@ The dashboard contains too many things to my taste. It must be something which y
       :desc "IBuffer" :ne "i" #'ibuffer
       :desc "Browse in project" :ne "p" #'doom/browse-in-other-project
       :desc "Set theme" :ne "t" #'consult-theme
+      :desc "Mu4e" :ne "m" #'=mu4e
       :desc "Quit" :ne "Q" #'save-buffers-kill-terminal)
 
 (remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
@@ -293,6 +624,7 @@ The dashboard contains too many things to my taste. It must be something which y
 #+end_src
 
 * Dired
+
 Dired is the file manager within Emacs.  Below, I setup keybindings for image previews (peep-dired).  Doom Emacs does not use 'SPC d' for any of its keybindings, so I've chosen the format of 'SPC d' plus 'key'.
 
 ** Keybindings To Open Dired
@@ -380,10 +712,12 @@ Dired is the file manager within Emacs.  Below, I setup keybindings for image pr
                               ("png" . "open")
                               ("mkv" . "open")
                               ("mp4" . "open")))
-(setq find-file-visit-truename nil)
+(setq find-file-visit-truename nil ;; Don't expand symlinks if you don't want to go insane.
+      dired-kill-when-opening-new-dired-buffer t) ;; Kill the current buffer when selecting a new directory.
 #+end_src
 
 ** Keybindings Within Dired With Peep-Dired-Mode Enabled
+
 If peep-dired is enabled, you will get image previews as you go up/down with 'j' and 'k'.
 
 | COMMAND              | DESCRIPTION                                | KEYBINDING |
@@ -400,6 +734,7 @@ If peep-dired is enabled, you will get image previews as you go up/down with 'j'
 #+END_SRC
 
 * Fonts and Appearance
+
 Settings related to fonts within Doom Emacs:
 + 'doom-font' -- standard monospace font that is used for most things in Emacs.
 + 'doom-variable-pitch-font' -- variable font which is useful in some Emacs plugins.
@@ -407,9 +742,9 @@ Settings related to fonts within Doom Emacs:
 + 'font-lock-comment-face' -- for comments.
 + 'font-lock-keyword-face' -- for keywords with special significance like 'setq' in elisp.
 
-#+begin_src elisp
-(setq doom-font (font-spec :family "monospace" :size 22)
-      doom-variable-pitch-font (font-spec :family "Ubuntu" :size 22)
+#+begin_src emacs-lisp
+(setq doom-font (font-spec :family "monospace" :size 20)
+      doom-variable-pitch-font (font-spec :family "Iosevka Nerd Font" :size 20)
       doom-big-font (font-spec :family "monospace" :size 34))
 (after! doom-themes
   (setq doom-themes-enable-bold t
@@ -429,24 +764,43 @@ Set the theme of doom emacs here. To try out new themes, I set a keybinding for 
 (add-to-list 'default-frame-alist '(alpha 100))
 #+END_SRC
 
+The modeline is too large. Make it a bit smaller
+
+#+begin_src emacs-lisp
+(custom-set-faces!
+  '(mode-line :height 1.0)
+  '(mode-line-inactive :height 0.9))
+#+end_src
+
 * Hooks
 
 These are the functions/modes which are run/enabled when certain conditions are met.
-
 Here, we specify stuff that we want to run on startup
 
 #+begin_src emacs-lisp
-(add-hook 'emacs-startup-hook #'frames-only-mode)
+(remove-hook 'text-mode-hook #'auto-fill-mode) ;; Prevent lines from auto breaking
 #+end_src
 
+While we're at it, let's initialise mu4e when the emacs daemon is loaded.
 #+begin_src emacs-lisp
-(remove-hook 'text-mode-hook #'auto-fill-mode) ;; Prevent lines from auto breaking
-(add-hook 'message-mode-hook #'word-wrap-mode)
+(defun greedily-do-daemon-setup ()
+  (require 'org)
+  (when (require 'mu4e nil t)
+    (setq mu4e-confirm-quit t)
+    (setq +mu4e-lock-greedy t)
+    (setq +mu4e-lock-relaxed t)
+      (mu4e~start))
+  (when (require 'elfeed nil t)
+    (run-at-time nil (* 8 60 60) #'elfeed-update)))
+(when (daemonp) ;; When the daemon is running
+  (add-hook 'emacs-startup-hook #'greedily-do-daemon-setup))
 #+end_src
 
 * Key Mappings And Evil
 
-#+begin_src elisp
+This is to allow navigating visual lines by using =gj= and =gk=.
+
+#+begin_src emacs-lisp
 (map! (:after evil-org
        :map evil-org-mode-map
        :n "gk" (cmd! (if (org-on-heading-p)
@@ -494,44 +848,151 @@ I set comment-line to 'SPC TAB TAB' which is a rather comfortable keybinding for
      :desc "Toggle truncate lines" "t" #'toggle-truncate-lines))
 #+END_SRC
 
-* Language Servers
+* Language
 
-#+begin_src elisp
-(set-formatter! 'brittany "brittany" :modes '(haskell-mode))
-(setq-hook! 'haskell-mode-hook +format-with-lsp nil)
+** Latex
+
+Change the default Latex to lualatex as it provides access to nicer fonts!.
+
+#+begin_src emacs-lisp
+(after! latex-mode
+  (TeX-engine-set 'luatex))
+#+end_src
+
+** Haskell
+
+Change the default formatter for Haskell.
+#+begin_src emacs-lisp
+(after! haskell-mode
+  (set-formatter! 'brittany "brittany" :modes '(haskell-mode))
+  (setq-hook! 'haskell-mode-hook +format-with-lsp nil))
 #+end_src
 
 * Mouse Settings
 
 This is to enable better mouse support for doom emacs.
-#+begin_src elisp
+#+begin_src emacs-lisp
 (map! :n [mouse-8] #'better-jumper-jump-backward
       :n [mouse-9] #'better-jumper-jump-forward)
+(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
 #+end_src
 
+* MU4E
 
-* Neotree
+** G-Mails
 
-Neotree is a file tree viewer.  When you open neotree, it jumps to the current file thanks to neo-smart-open.  The neo-window-fixed-size setting makes the neotree width be adjustable.  Doom Emacs had no keybindings set for neotree.  Since Doom Emacs uses 'SPC t' for 'toggle' keybindings, I used 'SPC t n' for toggle-neotree.
+#+begin_src emacs-lisp
+(set-email-account!
+ "kylese58"
+ '((user-full-name . "Kyle")
+   (user-mail-address . "kylese58@gmail.com")
+   (mu4e-sent-folder       . "/kylese58/[Gmail]/Sent Mail")
+   (mu4e-trash-folder      . "/kylese58/[Gmail]/Bin")
+   (mu4e-drafts-folder      . "/kylese58/[Gmail]/Drafts")
+   (mu4e-refile-folder      . "/kylese58/[Gmail]/All Mail")
+   (smtpmail-smtp-user     . "kylese58@gmail.com"))
+ t)
+(set-email-account!
+ "entaroaldaris666"
+ '((user-full-name . "Kyle Se")
+   (user-mail-address . "entaroaldaris666@gmail.com")
+   (mu4e-sent-folder       . "/entaroaldaris666/[Gmail]/Sent Mail")
+   (mu4e-trash-folder      . "/entaroaldaris666/[Gmail]/Bin")
+   (mu4e-drafts-folder      . "/entaroaldaris666/[Gmail]/Drafts")
+   (mu4e-refile-folder      . "/entaroaldaris666/[Gmail]/All Mail")
+   (smtpmail-smtp-user     . "entaroaldaris666@gmail.com"))
+ nil)
+(set-email-account!
+ "vu"
+ '((user-full-name . "Kyle Se Hin Son")
+   (user-mail-address . "kyle.sehinson@live.vu.edu.au")
+   (mu4e-sent-folder       . "/vu/Sent Items")
+   (mu4e-trash-folder      . "/vu/Deleted Items")
+   (mu4e-drafts-folder      . "/vu/Drafts")
+   (mu4e-refile-folder      . "/vu/Archive")
+   (smtpmail-smtp-user     . "kyle.sehinson@live.vu.edu.au"))
+ nil)
+(after! mu4e
+  (setq mu4e-get-mail-command "mbsync -ac ~/.config/mbsync/config"
+        mu4e-index-update-in-background t
+        mu4e-update-interval 300 ;; get emails and index every 5 minutes
+        mu4e-compose-format-flowed t ;; send emails with format=flowed
+        ;; mu4e-index-cleanup nil ;; no need to run cleanup after indexing for gmail
+        ;; mu4e-index-lazy-check t
+        mu4e-use-fancy-chars t
+        mu4e-view-show-addresses t
+        mu4e-view-show-images t
+        mu4e-change-filenames-when-moving t
+        mu4e-headers-date-format "%d.%m.%y" ;; more sensible date format
+        ;; Org mu4e
+        org-mu4e-convert-to-html t
+        ))
+#+end_src
 
-| COMMAND        | DESCRIPTION               | KEYBINDING |
-|----------------+---------------------------+------------|
-| neotree-toggle | /Toggle neotree/            | SPC t n    |
-| neotree- dir   | /Open directory in neotree/ | SPC d n    |
+** Others
 
-#+BEGIN_SRC emacs-lisp
-(after! neotree
-  (setq neo-smart-open t
-        neo-window-fixed-size nil)
-  (map! :leader
-        :desc "Toggle neotree file viewer" "t n" #'neotree-toggle
-        :desc "Open directory in neotree" "d n" #'necccotree-dir))
-(after! doom-themes
-  (setq doom-neotree-enable-variable-pitch t))
-#+END_SRC
+* Treemacs
+#+begin_quote
+From the =:ui treemacs= module.
+#+end_quote
+
+Quite often there are superfluous files I'm not that interested in. There's no
+good reason for them to take up space. Let's add a mechanism to ignore them.
+#+begin_src emacs-lisp
+(after! treemacs
+  (defvar treemacs-file-ignore-extensions '()
+    "File extension which `treemacs-ignore-filter' will ensure are ignored")
+  (defvar treemacs-file-ignore-globs '()
+    "Globs which will are transformed to `treemacs-file-ignore-regexps' which `treemacs-ignore-filter' will ensure are ignored")
+  (defvar treemacs-file-ignore-regexps '()
+    "RegExps to be tested to ignore files, generated from `treeemacs-file-ignore-globs'")
+  (defun treemacs-file-ignore-generate-regexps ()
+    "Generate `treemacs-file-ignore-regexps' from `treemacs-file-ignore-globs'"
+    (setq treemacs-file-ignore-regexps (mapcar 'dired-glob-regexp treemacs-file-ignore-globs)))
+  (if (equal treemacs-file-ignore-globs '()) nil (treemacs-file-ignore-generate-regexps))
+  (defun treemacs-ignore-filter (file full-path)
+    "Ignore files specified by `treemacs-file-ignore-extensions', and `treemacs-file-ignore-regexps'"
+    (or (member (file-name-extension file) treemacs-file-ignore-extensions)
+        (let ((ignore-file nil))
+          (dolist (regexp treemacs-file-ignore-regexps ignore-file)
+            (setq ignore-file (or ignore-file (if (string-match-p regexp full-path) t nil)))))))
+  (add-to-list 'treemacs-ignored-file-predicates #'treemacs-ignore-filter))
+#+end_src
+
+Now, we just identify the files in question.
+#+begin_src emacs-lisp
+(setq treemacs-file-ignore-extensions
+      '(;; LaTeX
+        "aux"
+        "ptc"
+        "fdb_latexmk"
+        "fls"
+        "synctex.gz"
+        "toc"
+        ;; LaTeX - glossary
+        "glg"
+        "glo"
+        "gls"
+        "glsdefs"
+        "ist"
+        "acn"
+        "acr"
+        "alg"
+        ;; LaTeX - pgfplots
+        "mw"
+        ;; LaTeX - pdfx
+        "pdfa.xmpi"
+        ))
+(setq treemacs-file-ignore-globs
+      '(;; LaTeX
+        "*/_minted-*"
+        ;; AucTeX
+        "*/.auctex-auto"
+        "*/_region_.log"
+        "*/_region_.tex"))
+#+end_src
 
 * Open Specific Files
-
 Keybindings to open files that I work with all the time using the find-file command, which is the interactive file search that opens with 'C-x C-f' in GNU Emacs or 'SPC f f' in Doom Emacs.  These keybindings use find-file non-interactively since we specify exactly what file to open.  The format I use for these bindings is 'SPC =' plus 'key' since Doom Emacs does not use 'SPC ='.
 
 | PATH TO FILE                   | DESCRIPTION           | KEYBINDING |
@@ -552,8 +1013,7 @@ Keybindings to open files that I work with all the time using the find-file comm
 #+END_SRC
 
 * Org
-
-I wrapped most of this block in (after! org).  Without this, my settings might be evaluated too early, which will result in my settings being overwritten by Doom's defaults.  I have also enabled org-journal, org-superstar and org-roam by adding (+journal +pretty +roam2) to the org section of my Doom Emacs init.el.
+I wrapped most of this block in (after! org).  Without this, my settings might be evaluated too early, which will result in my settings being overwritten by Doom's defaults.  I have also enabled org-journal and org-roam by adding (+journal +roam2) to the org section of my Doom Emacs init.el.
 
 =NOTE:= I have the location of my Org directory and Roam directory in $HOME/nc/ which is a Nextcloud folder that allows me to instantly sync all of my Org work between my home computer and my office computer.
 
@@ -561,7 +1021,7 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
 (map! :leader
       :desc "Org babel tangle" "m B" #'org-babel-tangle)
 (after! org
-  (plist-put org-format-latex-options :scale 5) ;; Make latex equations preview larger
+  (plist-put org-format-latex-options :scale 4) ;; Make latex equations preview larger
   (setq org-directory "~/org/"
         org-agenda-files '("~/org/agenda.org")
         org-default-notes-file (expand-file-name "notes.org" org-directory)
@@ -591,7 +1051,6 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
 #+END_SRC
 
 ** Set font sizes for each header level in Org
-
 You can set the Org heading levels to be different font sizes.  So I choose to have level 1 headings to be 140% in height, level 2 to be 130%, etc.  Other interesting things you could play with include adding :foreground color and/or :background color if you want to override the theme colors.
 
 #+begin_src emacs-lisp
@@ -604,10 +1063,20 @@ You can set the Org heading levels to be different font sizes.  So I choose to h
 )
 #+end_src
 
-** Org-journal
+Org files can be rather nice to look at, particularly with some of the customisations here. This comes at a cost however, expensive font-lock. Feeling like you’re typing through molasses in large files is no fun, but there is a way I can defer font-locking when typing to make the experience more responsive.
 
 #+begin_src emacs-lisp
-(setq org-journal-dir "~/org/journal/"
+(defun locally-defer-font-lock ()
+  "Set jit-lock defer and stealth, when buffer is over a certain size."
+  (when (> (buffer-size) 50000)
+    (setq-local jit-lock-defer-time 0.05
+                jit-lock-stealth-time 1)))
+(add-hook 'org-mode-hook #'locally-defer-font-lock)
+#+end_src
+
+** Org-journal
+#+begin_src emacs-lisp
+(setq org-journal-dir (concat org-directory "/journal")
       org-journal-date-prefix "* "
       org-journal-time-prefix "** "
       org-journal-date-format "%B %d, %Y (%A) "
@@ -615,7 +1084,6 @@ You can set the Org heading levels to be different font sizes.  So I choose to h
 #+end_src
 
 ** Org-roam
-
 | COMMAND                         | DESCRIPTION                     | KEYBINDING  |
 |---------------------------------+---------------------------------+-------------|
 | org-roam-find-file              | org roam find file              | SPC n r f   |
@@ -627,7 +1095,7 @@ You can set the Org heading levels to be different font sizes.  So I choose to h
 
 #+begin_src emacs-lisp
 (after! org-roam
-  (setq org-roam-directory org-directory
+  (setq org-roam-directory (concat org-directory "/roam")
         org-roam-completion-everywhere t
         org-roam-capture-templates
         '(("d" "default" plain "%?"
@@ -669,19 +1137,39 @@ You can set the Org heading levels to be different font sizes.  So I choose to h
   (setq org-roam-ui-sync-theme t
         org-roam-ui-follow t
         org-roam-ui-update-on-save t)
-
   ;; Add a new keybinding to open webview
   (map! :leader (:prefix ("n" . notes)
                  (:prefix ("r" . roam)
                   :desc "Open Web Graph" "w" #'org-roam-ui-mode))))
 #+end_src
 
+We want to change the file name when the title of the note changes.
+#+begin_src emacs-lisp
+(after! org-roam
+  (add-hook! 'after-save-hook #'org-rename-to-new-title))
+#+end_src
+
+** Org Appear
+
+#+begin_src emacs-lisp
+(use-package! org-appear
+  :hook (org-mode . org-appear-mode)
+  :config
+  (setq org-appear-autoemphasis t
+        org-appear-autosubmarkers t
+        org-appear-autolinks nil
+        org-appear-trigger 'manual)
+  (add-hook 'evil-insert-state-entry-hook #'org-appear-manual-start nil t)
+  (add-hook 'evil-insert-state-exit-hook #'org-appear-manual-stop nil t)
+  ;; for proper first-time setup, `org-appear--set-elements'
+  ;; needs to be run after other hooks have acted.
+  (run-at-time nil nil #'org-appear--set-elements))
+#+end_src
 
 ** Inkscape
-
 Changing the default template used by =ink-make-figure= and =ink-edit-figure=.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (defvar ink-flags-png (list "--export-area-drawing"
                             "--export-dpi 100"
                             "--export-type=png"
@@ -811,17 +1299,16 @@ Changing the default template used by =ink-make-figure= and =ink-edit-figure=.
 #+end_src
 
 * Which-key
-
 I hate when which-key takes too long to show up. Make it faster!!!
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (after! which-key
-  (setq which-key-idle-delay 0.1))
+  (setq which-key-idle-delay 0.2))
 #+end_src
 
 Also, =evil-= is too verbose for which-key. Let's change that.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (setq which-key-allow-multiple-replacements t)
 (after! which-key
   (pushnew!

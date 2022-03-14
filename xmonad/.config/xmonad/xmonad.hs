@@ -12,7 +12,7 @@ import           Data.Maybe                     ( fromJust
                                                 , isJust
                                                 )
 import           Data.Monoid
-import           Data.Ratio       -- Require for rational (%) operator
+import           Data.Ratio                     -- Require for rational (%) operator
 import           Data.Semigroup
 import           Foreign.C                      ( CInt )
 import           System.Directory
@@ -483,7 +483,7 @@ myManageHook =
   iconName = stringProperty "WM_ICON_NAME"
   myIgnores = ["SafeEyes-0", "SafeEyes-1"]
   myW1C = ["VSCodium"]
-  myW3C = ["Brave-browser", "qutebrowser"]
+  myW3C = ["Brave-browser", "qutebrowser", "librewolf"]
   myW4C = ["zoom", "discord"]
   myW5C = ["VirtualBox Manager", "VirtualBox Machine", "Thunderbird"]
   myFloatC = ["confirm", "file_progress", "dialog", "download", "error", "toolbar", "Gmrun"]
@@ -532,15 +532,11 @@ keyMapDoc name = do
     , show (rect_y r)
     , show (rect_width r)
     , show (rect_height r)
-    , "'" ++ base03 ++ "'"
-    , -- keys color
-      "'" ++ base08 ++ "'"
-    , -- arrow color
-      "'" ++ base06 ++ "'"
-    , -- description color
-      "monospace"
-    , -- font
-      "24"
+    , "'" ++ base03 ++ "'" -- keys color
+    , "'" ++ base08 ++ "'" -- arrow color
+    , "'" ++ base06 ++ "'" -- description color
+    , "monospace" -- font
+    , "24"
     ]
 
 toSubmap :: XConfig l -> String -> [(String, X ())] -> X ()
@@ -556,7 +552,7 @@ appsKeymap = -- Applications
   , ("r", spawn (myTerminal ++ " -e lf")) -- Lf file manager
   , ("[", spawn "xmonad-whichkeys") -- Leader Mappings
   , ("]", spawn "xmonad-keys") -- Leader Mappings
-  , ("u", spawn "qutebrowser") -- Launch Qutebrowser
+  , ("w", spawn "librewolf") -- Launch Librewold
   , ("b", spawn "brave") -- Launch Brave
   , ("e", spawn myEmacs) -- Emacs dashboard
 
@@ -598,13 +594,15 @@ appsKeymap = -- Applications
   todoist = "env DESKTOPINTEGRATION=false /usr/bin/todoist --no-sandbox"
   discord = "/usr/bin/discord --no-sandbox"
 
-screenshotKeymap =
-  -- Flameshot
-  [ ("g", spawn "flameshot gui") -- Start a manual capture in GUI mode
-  , ("s", spawn "flameshot screen") -- Capture a single screen
-  , ("f", spawn "flameshot full") -- Capture the entire desktop
+screenshotKeymap = -- Maim Screenshot
+  [ ("s", spawn "maimpick 'Selected' ") -- Capsture selected area
+  , ("c", spawn "maimpick 'Current'") -- Capture current window
+  , ("f", spawn "maimpick 'Fullscreen'") -- Capture whole screen
+  , ("S-s", spawn "maimpick 'Selected (copy)' ") -- Capsture selected area
+  , ("S-c", spawn "maimpick 'Current (copy)'") -- Capture current window
+  , ("S-f", spawn "maimpick 'Fullscreen (copy)'") -- Capture whole screen
   ]
-
+ -- Maim Screenshot
 --END_WHICHKEYS
 -- }}}
 
@@ -749,11 +747,16 @@ myKeys conf =
         $ ((modm .|. shiftMask, xK_b), setLayout $ XMonad.layoutHook conf)
         : [ ((m .|. modm, k), windows $ f i)
           | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_5]
-          , (f, m) <- [(viewOnScreen 0, 0), (W.shift, shiftMask), (W.greedyView, mod1Mask)]
+          , (f, m) <-
+            [ (toggleOnScreen 0, 0)
+            , (W.shift, shiftMask)
+            , (W.greedyView, mod1Mask)
+            , (swapWithCurrent, controlMask)
+            ]
           ]
         ++ [ ((m .|. modm, k), windows $ f i)
            | (i, k) <- zip (XMonad.workspaces conf) ([xK_6 .. xK_9] ++ [xK_0])
-           , (f, m) <- [(viewOnScreen 1, 0), (swapWithCurrent, shiftMask)]
+           , (f, m) <- [(toggleOnScreen 1, 0), (swapWithCurrent, shiftMask)]
            ]
         ++ [ ((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
            | (key, sc) <- zip [xK_e, xK_w] [0 ..]
@@ -762,21 +765,14 @@ myKeys conf =
 
 myMouseBindings :: XConfig Layout -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings XConfig { XMonad.modMask = modMask } = M.fromList
-  [ ((modMask, button1), \w -> focus w >> mouseMoveWindow w >> windows W.shiftMaster)
-  , --Set the window to floating mode and move by dragging
-    ((modMask, button2), \w -> focus w >> windows W.shiftMaster)
-  , --Raise the window to the top of the stack
-    ((modMask, button3), \w -> focus w >> Flex.mouseResizeWindow w)
-  , --Set the window to floating mode and resize by dragging
-    ((modMask, button4), const $ moveTo Prev workspaceOnCurrentScreen)
-  , --Switch to previous workspace
-    ((modMask, button5), const $ moveTo Next workspaceOnCurrentScreen)
-  , --Switch to next workspace
-    ((modMask .|. shiftMask, button4), const $ shiftTo Prev workspaceOnCurrentScreen)
-  , --Send client to previous workspace
-    ((modMask .|. shiftMask, button5), const $ shiftTo Next workspaceOnCurrentScreen) --Send client to next workspace
+  [ ((modMask, button1), \w -> focus w >> mouseMoveWindow w >> windows W.shiftMaster) --Set the window to floating mode and move by dragging
+  , ((modMask, button2), \w -> focus w >> windows W.shiftMaster) --Raise the window to the top of the stack
+  , ((modMask, button3), \w -> focus w >> Flex.mouseResizeWindow w) --Set the window to floating mode and resize by dragging
+  , ((modMask, button4), const $ moveTo Prev workspaceOnCurrentScreen) --Switch to previous workspace
+  , ((modMask, button5), const $ moveTo Next workspaceOnCurrentScreen) --Switch to next workspace
+  , ((modMask .|. shiftMask, button4), const $ shiftTo Prev workspaceOnCurrentScreen) --Send client to previous workspace
+  , ((modMask .|. shiftMask, button5), const $ shiftTo Next workspaceOnCurrentScreen) --Send client to next workspace
   ]
-
 -- }}}
 
 ------------------------------------------

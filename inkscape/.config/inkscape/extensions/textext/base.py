@@ -2,7 +2,7 @@
 This file is part of TexText, an extension for the vector
 illustration program Inkscape.
 
-Copyright (c) 2006-2021 TexText developers.
+Copyright (c) 2006-2022 TexText developers.
 
 TexText is released under the 3-Clause BSD license. See
 file LICENSE.txt or go to https://github.com/textext/textext
@@ -22,7 +22,7 @@ from io import open # ToDo: For open utf8, remove when Python 2 support is skipp
 
 from .requirements_check import defaults, set_logging_levels, TexTextRequirementsChecker
 from .utility import ChangeToTemporaryDirectory, CycleBufferHandler, MyLogger, NestedLoggingGuard, Settings, Cache, \
-    exec_command
+    exec_command, version_greater_or_equal_than
 from .errors import *
 
 with open(os.path.join(os.path.dirname(__file__), "VERSION")) as version_file:
@@ -33,11 +33,6 @@ EXIT_CODE_OK = 0
 EXIT_CODE_EXPECTED_ERROR = 1
 EXIT_CODE_UNEXPECTED_ERROR = 60
 
-LOG_LOCATION = os.path.join(defaults.inkscape_extensions_path, "textext")
-if not os.path.isdir(LOG_LOCATION):
-    os.makedirs(LOG_LOCATION)
-LOG_FILENAME = os.path.join(LOG_LOCATION, "textext.log")  # todo: check destination is writeable
-
 # There are two channels `file_log_channel` and `user_log_channel`
 # `file_log_channel` dumps detailed log to a file
 # `user_log_channel` accumulates log messages to show them to user via .show_messages() function
@@ -47,9 +42,22 @@ logging.setLoggerClass(MyLogger)
 __logger = logging.getLogger('TexText')
 logger = NestedLoggingGuard(__logger)
 __logger.setLevel(logging.DEBUG)
-
 log_formatter = logging.Formatter('[%(asctime)s][%(levelname)8s]: %(message)s          //  %(filename)s:%(lineno)-5d')
 
+# First install the user logger so in case anything fails with the file logger
+# we have at least some information in the abort dialog
+# Contributed by Thermi@github.com
+user_formatter = logging.Formatter('[%(name)s][%(levelname)6s]: %(message)s')
+user_log_channel = CycleBufferHandler(capacity=1024)  # store up to 1024 messages
+user_log_channel.setLevel(logging.DEBUG)
+user_log_channel.setFormatter(user_formatter)
+__logger.addHandler(user_log_channel)
+
+# Now we try to install the file logger.
+LOG_LOCATION = os.path.join(defaults.textext_logfile_path)
+if not os.path.isdir(LOG_LOCATION):
+    os.makedirs(LOG_LOCATION)
+LOG_FILENAME = os.path.join(LOG_LOCATION, "textext.log") # ToDo: When not writable continue but give a message somewhere
 file_log_channel = logging.handlers.RotatingFileHandler(LOG_FILENAME,
                                                         maxBytes=500 * 1024,  # up to 500 kB
                                                         backupCount=2,  # up to two log files
@@ -57,14 +65,7 @@ file_log_channel = logging.handlers.RotatingFileHandler(LOG_FILENAME,
                                                         )
 file_log_channel.setLevel(logging.NOTSET)
 file_log_channel.setFormatter(log_formatter)
-
-user_formatter = logging.Formatter('[%(name)s][%(levelname)6s]: %(message)s')
-user_log_channel = CycleBufferHandler(capacity=1024)  # store up to 1024 messages
-user_log_channel.setLevel(logging.DEBUG)
-user_log_channel.setFormatter(user_formatter)
-
 __logger.addHandler(file_log_channel)
-__logger.addHandler(user_log_channel)
 
 import inkex
 from lxml import etree
@@ -93,8 +94,8 @@ class TexText(inkex.EffectExtension):
 
     def __init__(self):
 
-        self.config = Settings("config.json")
-        self.cache = Cache()
+        self.config = Settings(directory=defaults.textext_config_path)
+        self.cache = Cache(directory=defaults.textext_config_path)
         previous_exit_code = self.cache.get("previous_exit_code", None)
 
         if previous_exit_code is None:
@@ -183,7 +184,7 @@ class TexText(inkex.EffectExtension):
         with logger.debug("TexText.effect"):
 
             # Find root element
-            old_svg_ele, text, preamble_file, current_scale = self.get_old()
+            old_svg_ele, text, preamble_file, current_scale, current_convert_strokes_to_path = self.get_old()
 
             alignment = TexText.DEFAULT_ALIGNMENT
 
@@ -248,15 +249,17 @@ class TexText(inkex.EffectExtension):
 
                 asker = AskTextDefault(__version__, text, preamble_file, global_scale_factor, current_scale,
                                        current_alignment=alignment, current_texcmd=current_tex_command,
+                                       current_convert_strokes_to_path=current_convert_strokes_to_path,
                                        tex_commands=sorted(list(
                                          self.requirements_checker.available_tex_to_pdf_converters.keys())),
                                        gui_config=gui_config)
 
                 def save_callback(_text, _preamble, _scale, alignment=TexText.DEFAULT_ALIGNMENT,
-                                  tex_cmd=TexText.DEFAULT_TEXCMD):
+                                  tex_cmd=TexText.DEFAULT_TEXCMD, conv_stroke_to_path=False):
                     return self.do_convert(_text, _preamble, _scale, old_svg_ele,
                                            alignment,
                                            tex_command=tex_cmd,
+                                           convert_stroke_to_path=conv_stroke_to_path,
                                            original_scale=current_scale)
 
                 def preview_callback(_text, _preamble, _preview_callback, _tex_command, _white_bg):
@@ -287,6 +290,7 @@ class TexText(inkex.EffectExtension):
                                 old_svg_ele,
                                 self.options.alignment,
                                 self.options.tex_command,
+                                convert_stroke_to_path=False,
                                 original_scale=current_scale
                                 )
 
@@ -323,7 +327,7 @@ class TexText(inkex.EffectExtension):
                     image_setter(converter.tmp('png'))
 
     def do_convert(self, text, preamble_file, user_scale_factor, old_svg_ele, alignment, tex_command,
-                   original_scale=None):
+                   convert_stroke_to_path, original_scale=None):
         """
         Does the conversion using the selected converter.
 
@@ -332,7 +336,9 @@ class TexText(inkex.EffectExtension):
         :param user_scale_factor:
         :param old_svg_ele:
         :param alignment:
-        :param tex_cmd: The tex command to be used for tex -> pdf ("pdflatex", "xelatex", "lualatex")
+        :param tex_command: The tex command to be used for tex -> pdf ("pdflatex", "xelatex", "lualatex")
+        :param convert_stroke_to_path: Determines if converter.stroke_to_path() is called
+        :param original_scale Scale factor of old node
         """
         from inkex import Transform
 
@@ -356,8 +362,11 @@ class TexText(inkex.EffectExtension):
                     converter = TexToPdfConverter(self.requirements_checker)
                     converter.tex_to_pdf(tex_executable, text, preamble_file)
                     converter.pdf_to_svg()
-                    converter.stroke_to_path()
-                    tt_node = TexTextElement(converter.tmp("svg"), self.svg.unittouu("1mm"))
+
+                    if convert_stroke_to_path:
+                        converter.stroke_to_path()
+
+                    tt_node = TexTextElement(converter.tmp("svg"), self.svg.unit)
 
             # -- Store textext attributes
             tt_node.set_meta("version", __version__)
@@ -367,6 +376,7 @@ class TexText(inkex.EffectExtension):
             tt_node.set_meta("preamble", preamble_file)
             tt_node.set_meta("scale", str(user_scale_factor))
             tt_node.set_meta("alignment", str(alignment))
+            tt_node.set_meta("stroke-to-path", str(int(convert_stroke_to_path)))
             try:
                 inkscape_version = self.document.getroot().get('inkscape:version')
                 tt_node.set_meta("inkscapeversion", inkscape_version.split(' ')[0])
@@ -379,16 +389,35 @@ class TexText(inkex.EffectExtension):
             if old_svg_ele is None:
                 with logger.debug("Adding new node to document"):
                     # Place new nodes in the view center and scale them according to user request
+                    node_center = tt_node.bounding_box().center
+                    view_center = self.svg.namedview.center
 
-                    # ToDo: Remove except block as far as new center props are available in official beta releases
-                    try:
-                        node_center = tt_node.bounding_box().center
-                        view_center = self.svg.namedview.center
-                    except AttributeError:
-                        node_center = tt_node.bounding_box().center()
-                        view_center = self.svg.get_center_position()
+                    # Since Inkscape 1.2 (= extension API version 1.2.0) view_center is in px,
+                    # not in doc units! Hence, we need to convert the value to the document unit.
+                    # so the transform is correct later.
+                    if hasattr(inkex, "__version__"):
+                        if version_greater_or_equal_than(inkex.__version__, "1.2.0"):
+                            view_center.x = self.svg.uutounit(view_center.x, self.svg.unit)
+                            view_center.y = self.svg.uutounit(view_center.y, self.svg.unit)
 
-                    tt_node.transform = (Transform(translate=view_center) *    # place at view center
+                    # Collect all layers incl. the current layers such that the top layer
+                    # is the first one in the list
+                    layers = []
+                    parent_layer = self.svg.get_current_layer()
+                    while parent_layer is not None:
+                        layers.insert(0, parent_layer)
+                        parent_layer = parent_layer.getparent()
+
+                    # Compute the transform mapping the view coordinate system onto the
+                    # current layer
+                    full_layer_transform = Transform()
+                    for layer in layers:
+                        full_layer_transform *= layer.transform
+
+                    # Place the node in the center of the view. Here we need to be aware of
+                    # transforms in the layers, hence the inverse layer transformation
+                    tt_node.transform = (-full_layer_transform *               # map to view coordinate system
+                                         Transform(translate=view_center) *    # place at view center
                                          Transform(scale=user_scale_factor) *  # scale
                                          Transform(translate=-node_center) *   # place node at origin
                                          tt_node.transform                     # use original node transform
@@ -430,8 +459,8 @@ class TexText(inkex.EffectExtension):
         Dig out LaTeX code and name of preamble file from old
         TexText-generated objects.
 
-        :return: (old_svg_ele, latex_text, preamble_file_name, scale)
-        :rtype: (TexTextElement, str, str, float)
+        :return: (old_svg_ele, latex_text, preamble_file_name, scale, conv_stroke_to_path)
+        :rtype: (TexTextElement, str, str, float, bool)
         """
 
         for node in self.svg.selected.values():
@@ -446,13 +475,14 @@ class TexText(inkex.EffectExtension):
                 text = node.get_meta_text()
                 preamble = node.get_meta('preamble')
                 scale = float(node.get_meta('scale', 1.0))
+                conv_stroke_to_path = bool(int(node.get_meta('stroke-to-path', 0)))
 
-                return node, text, preamble, scale
+                return node, text, preamble, scale, conv_stroke_to_path
 
             except (TypeError, AttributeError) as ignored:
                 pass
 
-        return None, "", "", None
+        return None, "", "", None, False
 
     def replace_node(self, old_node, new_node):
         """
@@ -475,8 +505,8 @@ class TexToPdfConverter:
     """
     Base class for Latex -> SVG converters
     """
+    DEFAULT_DOCUMENT_CLASS=r"\documentclass{article}"
     DOCUMENT_TEMPLATE = r"""
-    \documentclass{article}
     %s
     \pagestyle{empty}
     \begin{document}
@@ -512,6 +542,10 @@ class TexToPdfConverter:
             if os.path.isfile(preamble_file):
                 with open(preamble_file, 'r') as f:
                     preamble += f.read()
+
+            # Add default document class to preamble if necessary
+            if not _contains_document_class(preamble):
+                preamble = self.DEFAULT_DOCUMENT_CLASS + preamble
 
             # Options pass to LaTeX-related commands
 
@@ -606,19 +640,35 @@ class TexToPdfConverter:
                 return "TeX compilation failed. See stdout output for more details"
 
 
+def _contains_document_class(preamble):
+    """Return True if `preamble` contains a documentclass-like command.
+    
+    Also, checks and considers if the command is commented out or not.
+    """
+    lines = preamble.split("\n")
+    document_commands = ["\documentclass{", "\documentclass[",
+                        "\documentstyle{", "\documentstyle["]
+    for line in lines:
+        for document_command in document_commands:
+            if (document_command in line
+                and "%" not in line.split(document_command)[0]):
+                return True
+    return False
+
+
 class TexTextElement(inkex.Group):
     tag_name = "g"
 
-    def __init__(self, svg_filename, uu_in_mm):
+    def __init__(self, svg_filename, document_unit):
         """
         :param svg_filename: The name of the file containing the svg-snippet
-        :param uu_in_mm: The units of the document into which the node is going to be placed into
-                         expressed in mm
+        :param document_unit: String specifyling the unit of the document into which the node is going
+                              to be placed ("mm", "pt", ...)
         """
         super(TexTextElement, self).__init__()
-        self._svg_to_textext_node(svg_filename, uu_in_mm)
+        self._svg_to_textext_node(svg_filename, document_unit)
 
-    def _svg_to_textext_node(self, svg_filename, doc_unit_to_mm):
+    def _svg_to_textext_node(self, svg_filename, document_unit):
         from inkex import ShapeElement, Defs, SvgDocumentElement
         doc = etree.parse(svg_filename, parser=inkex.SVG_PARSER)
 
@@ -635,7 +685,9 @@ class TexTextElement(inkex.Group):
         self.make_ids_unique()
 
         # Ensure that snippet is correctly scaled according to the units of the document
-        self.transform.add_scale(doc_unit_to_mm/root.unittouu("1mm"))
+        # We scale it here such that its size is correct in the document units
+        # (Usually pt returned from poppler to mm in the main document)
+        self.transform.add_scale(root.uutounit("1{}".format(root.unit), document_unit))
 
     @staticmethod
     def _expand_defs(root):

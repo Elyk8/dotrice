@@ -44,11 +44,15 @@ INFO=$(awk -v cmdcolor="$CMDCOLOR" -v keycolor="$KEYCOLOR" -v arrowcolor="$ARROW
                 # remove any leading spaces from the comment
                 gsub(/^\S\+/, "", splitline[2])
                 gsub(/<Space>/, "SPC", keys[1])
-                if (keys[1] ~ /^.*S-c/) {
-                    gsub(/S-/, "", keys[1])
-                    keys[1] = sprintf ("%s%s", substr(keys[1],1,1), toupper(substr(keys[1],2)))
-                }
                 gsub(/ /, "", keys[1])
+                if (keys[1] ~ /^.*S-/) {
+                    gsub(/S-/, "", keys[1])
+                    if (length(keys[1]) > 1)
+                        keys[1] = sprintf ("%s%s", substr(keys[1],1,1), toupper(substr(keys[1],2)))
+                    else
+                        keys[1] = sprintf ("%s", toupper(keys[1]))
+
+                }
 
                 # skip any empty records.
                 if (length(command[1]) > 0){
@@ -81,6 +85,6 @@ echo "$INFO"
 
 N_LINES=$(wc -l <<< "$INFO")
 Y=$(($3 + $5 - (LH * (N_LINES+1))))
-# sleep 0.1
+# sleep 0.5
 # $KEYMAP ($2 , $3 , $4 , $5, $LH, $X, $Y, $W, $N_LINES, $COLS
 (echo "$INFO"; cat) | dzen2 -l $((N_LINES)) -fn "${FONT}" -h "$LH" -x "$X" -y "$Y" -w "$W" -e onstart=uncollapse

@@ -1,4 +1,5 @@
 #!/bin/sh
+
 run() {
     if ! pgrep "$1" > /dev/null ;
     then
@@ -10,14 +11,13 @@ run() {
 multi-monitor
 xrdb -merge ~/.config/x11/Xresources
 run safeeyes -e &
-run greenclip daemon &
-run flameshot &
 run remaps &
 run clipmenud &
 run redshift &
 sleep 5 && run volctl &
 run /usr/bin/emacs --daemon &
-# run sxhkd &
+run syncthing-gtk --minimized &
+run flashfocus &
 
 autostart="dunst lxsession nm-applet picom mictray"
 for program in $autostart; do

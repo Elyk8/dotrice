@@ -1,5 +1,5 @@
 [Desktop Entry]
 Type=Application
 Name=Image viewer
-Icon=sxiv
-Exec=/usr/bin/sxiv -a %f
+Icon=nsxiv
+Exec=/usr/bin/nsxiv %U

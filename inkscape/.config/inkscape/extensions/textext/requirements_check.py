@@ -2,7 +2,7 @@
 This file is part of TexText, an extension for the vector
 illustration program Inkscape.
 
-Copyright (c) 2006-2021 TexText developers.
+Copyright (c) 2006-2022 TexText developers.
 
 TexText is released under the 3-Clause BSD license. See
 file LICENSE.txt or go to https://github.com/textext/textext
@@ -33,7 +33,27 @@ class Defaults(object):
     def executable_names(self): pass
 
     @abc.abstractproperty
-    def inkscape_extensions_path(self): pass
+    def inkscape_user_extensions_path(self): pass
+
+    def inkscape_system_extensions_path(self, inkscape_exe_path):
+        try:
+            stdout, stderr = self.call_command([inkscape_exe_path, "--system-data-directory"])
+            path = os.path.join(stdout.decode("utf-8", 'ignore').rstrip(), "extensions")
+            err = None
+        except subprocess.CalledProcessError as excpt:
+            path = None
+            err = "Command `%s` failed, stdout: `%s`, stderr: `%s`" % (excpt.cmd, excpt.stdout, excpt.stderr)
+        except UnicodeDecodeError as excpt:
+            path = None
+            err = excpt.reason
+
+        return [path, err]
+
+    @abc.abstractproperty
+    def textext_config_path(self): pass
+
+    @abc.abstractproperty
+    def textext_logfile_path(self): pass
 
     @abc.abstractmethod
     def get_system_path(self): pass
@@ -46,15 +66,23 @@ class Defaults(object):
 class LinuxDefaults(Defaults):
     os_name = "linux"
     console_colors = "always"
-    executable_names = {"inkscape": ["inkscape.beta", "inkscape"],   # BETA-TEST only #
+    executable_names = {"inkscape": ["inkscape"],
                         "pdflatex": ["pdflatex"],
                         "lualatex": ["lualatex"],
                         "xelatex": ["xelatex"]
                         }
 
     @property
-    def inkscape_extensions_path(self):
+    def inkscape_user_extensions_path(self):
         return os.path.expanduser("~/.config/inkscape/extensions")
+
+    @property
+    def textext_config_path(self):
+        return os.path.expanduser("~/.config/textext")
+
+    @property
+    def textext_logfile_path(self):
+        return os.path.expanduser("~/.cache/textext")
 
     def get_system_path(self):
         return os.environ["PATH"].split(os.path.pathsep)
@@ -82,8 +110,16 @@ class MacDefaults(LinuxDefaults):
         return path
 
     @property
-    def inkscape_extensions_path(self):
+    def inkscape_user_extensions_path(self):
         return os.path.expanduser("~/Library/Application Support/org.inkscape.Inkscape/config/inkscape/extensions")
+
+    @property
+    def textext_config_path(self):
+        return os.path.expanduser("~/Library/Preferences/textext")
+
+    @property
+    def textext_logfile_path(self):
+        return os.path.expanduser("~/Library/Preferences/textext")
 
 
 class WindowsDefaults(Defaults):
@@ -123,8 +159,16 @@ class WindowsDefaults(Defaults):
             pass
 
     @property
-    def inkscape_extensions_path(self):
+    def inkscape_user_extensions_path(self):
         return os.path.join(os.getenv("APPDATA"), "inkscape", "extensions")
+
+    @property
+    def textext_config_path(self):
+        return os.path.join(os.getenv("APPDATA"), "textext")
+
+    @property
+    def textext_logfile_path(self):
+        return os.path.join(os.getenv("APPDATA"), "textext")
 
     def get_system_path(self):
         return self._tweaked_syspath
@@ -576,18 +620,17 @@ class TexTextRequirementsChecker(object):
         return RequirementCheckResult(True, ["TkInter is found"])
 
     def find_inkscape_1_0(self):
-        from distutils.version import LooseVersion
         try:
             executable = self.find_executable('inkscape')['path']
             stdout, stderr = defaults.call_command([executable, "--version"])
         except (KeyError, OSError):
             return RequirementCheckResult(False, ["inkscape is not found"])
         for stdout_line in stdout.decode("utf-8", 'ignore').split("\n"):
-            m = re.search(r"Inkscape (\d+.\d+[-\w]*)", stdout_line)
+            m = re.search(r"Inkscape ((\d+)\.(\d+)[-\w]*)", stdout_line)
 
             if m:
-                found_version = m.group(1)
-                if LooseVersion(found_version) >= LooseVersion("1.0"):
+                found_version, major, minor = m.groups()
+                if int(major) >= 1:
                     return RequirementCheckResult(True, ["inkscape=%s is found" % found_version], path=executable)
                 else:
                     return RequirementCheckResult(False, [

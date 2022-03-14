@@ -1,4 +1,4 @@
 [Desktop Entry]
 Type=Application
 Name=Neomutt
-Exec=/usr/bin/alacritty -e neomutt %U
+Exec=/usr/local/bin/st -e neomutt %U

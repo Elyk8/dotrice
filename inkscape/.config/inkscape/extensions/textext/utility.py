@@ -2,7 +2,7 @@
 This file is part of TexText, an extension for the vector
 illustration program Inkscape.
 
-Copyright (c) 2006-2021 TexText developers.
+Copyright (c) 2006-2022 TexText developers.
 
 TexText is released under the 3-Clause BSD license. See
 file LICENSE.txt or go to https://github.com/textext/textext
@@ -20,6 +20,7 @@ import shutil
 import stat
 import subprocess
 import tempfile
+import re
 
 from .errors import *
 import sys
@@ -160,12 +161,15 @@ class CycleBufferHandler(logging.handlers.BufferingHandler):
 
 
 class Settings(object):
-    def __init__(self, basename="config.json", inkscape_extensions_path=None):
-        if inkscape_extensions_path is None:
-            from .requirements_check import defaults
-            inkscape_extensions_path = defaults.inkscape_extensions_path
+    def __init__(self, basename="config.json", directory=None):
+        if directory is None:
+            directory = os.getcwd()
+        else:
+            if not os.path.exists(directory):
+                os.makedirs(directory, exist_ok=True)
         self.values = {}
-        self.config_path = os.path.join(inkscape_extensions_path, "textext", basename)
+        self.directory = directory
+        self.config_path = os.path.join(directory, basename)
         try:
             self.load()
         except ValueError as e:
@@ -186,17 +190,28 @@ class Settings(object):
             return default
         return result
 
+    def delete_file(self):
+        if os.path.exists(self.config_path):
+            try:
+                os.remove(self.config_path)
+            except OSError as err:
+                TexTextFatalError("Config `%s` could not be deleted. Error message: %s" % (
+                                  self.config_path, str(err)))
+
     def __getitem__(self, key):
         return self.values.get(key)
 
     def __setitem__(self, key, value):
-        self.values[key] = value
+        if value is not None:
+            self.values[key] = value
+        else:
+            self.values.pop(key, None)
 
 
 class Cache(Settings):
-    def __init__(self, basename=".cache.json"):
+    def __init__(self, basename=".cache.json", directory=None):
         try:
-            super(Cache, self).__init__(basename)
+            super(Cache, self).__init__(basename, directory)
         except TexTextFatalError:
             pass
 
@@ -255,6 +270,36 @@ def exec_command(cmd, ok_return_value=0):
                                    stdout=out,
                                    stderr=err)
     return out + err
+
+
+def version_greater_or_equal_than(version_str, other_version_str):
+    """ Checks if a version number is >= than another version number
+
+    Version numbers are passed as strings and must be of type "N.M.Rarb" where N, M, R
+    are non negative decimal numbers < 1000 and arb is an arbitrary string.
+    For example, "1.2.3" or "1.2.3dev" or "1.2.3-dev" or "1.2.3 dev" are valid version strings.
+
+    Returns:
+        True if the version number is equal or greater then the other version number,
+        otherwise false
+
+    """
+    def ver_str_to_float(ver_str):
+        """ Parse version string and returns it as a floating point value
+
+        Returns The version string as floating point number for easy comparison
+        (minor version and relase number padded with zeros). E.g. "1.23.4dev" -> 1.023004.
+        If conversion fails returns NaN.
+
+        """
+        m = re.search(r"(\d+).(\d+).(\d+)[-\w]*", ver_str)
+        if m is not None:
+            ver_maj, ver_min, ver_rel = m.groups()
+            return float("{}.{:0>3}{:0>3}".format(ver_maj, ver_min, ver_rel))
+        else:
+            return float("nan")
+
+    return ver_str_to_float(version_str) >= ver_str_to_float(other_version_str)
 
 
 MAC = "Darwin"
