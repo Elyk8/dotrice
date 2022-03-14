@@ -3,7 +3,6 @@ zsh/.config/zsh/plugins/
 
 # inkscape
 inkscape/.config/inkscape/*
-!inkscape/.config/inkscape/extensions
 !inkscape/.config/inkscape/templates
 
 # safeeyes
