@@ -87,10 +87,10 @@ export DOOMDIR=${XDG_CONFIG_HOME:="$HOME/.config"}/doom
 [ -f /opt/miniconda3/etc/profile.d/conda.sh ] && source "/opt/miniconda3/etc/profile.d/conda.sh"
 
 # Default programs:
-export EDITOR="lvim"
-export VISUAL="lvim"
-# export EDITOR="emacs-edit"
-# export VISUAL="emacs-edit"
+# export EDITOR="lvim"
+# export VISUAL="lvim"
+export EDITOR="emacs-edit"
+export VISUAL="emacs-edit"
 export READER="zathura"
 export TERMINAL="st"
 export BROWSER="qutebrowser"

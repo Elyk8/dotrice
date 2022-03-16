@@ -25,8 +25,7 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 
 # vim and emacs
-alias vim="nvim"
-alias em="emacs-edit"
+alias em="emacs-edit -ui"
 alias doom="~/.emacs.d/bin/doom"
 alias doomsync="~/.emacs.d/bin/doom sync"
 alias doomdoctor="~/.emacs.d/bin/doom doctor"
@@ -222,10 +221,4 @@ alias lf='lfcd'
 
 se() { fd -atf --base-directory ~/.config | fzf | xargs -r "$EDITOR"; }
 sr() { fd -atf --base-directory ~/scripts | fzf | xargs -r "$EDITOR"; }
-# xevv() { xev | awk -F'[ )]+' '/^KeyPress/ { a[NR+2] } NR in a { printf "%-3s %s\n", $5, $8 }'; }
-
-riceros() {
-	# Robot Operating System
-	riceconda
-	conda activate robostackenv
-}
+xevv() { xev | awk -F'[ )]+' '/^KeyPress/ { a[NR+2] } NR in a { printf "%-3s %s\n", $5, $8 }'; }

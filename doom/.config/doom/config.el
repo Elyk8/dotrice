@@ -75,9 +75,9 @@
     evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
     truncate-string-ellipsis "…"                ; Unicode ellispis are nicer than "...", and also save /precious/ space
     password-cache-expiry nil                   ; I can trust my computers ... can't I?
-    scroll-preserve-screen-position 'always     ; Don't have `point' jump around
+    ;; scroll-preserve-screen-position 'always     ; Don't have `point' jump around
     scroll-margin 2)                            ; It's nice to maintain a little margin
-(add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;; Prevents some cases of Emacs flickering.
+;; (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;; Prevents some cases of Emacs flickering.
 ;; Simple Settings:1 ends here
 
 ;; [[file:config.org::*Simple Settings][Simple Settings:2]]
@@ -129,9 +129,99 @@ Not added when either:
       :n "H" 'ibuffer-update))
 ;; Keybindings within ibuffer mode:1 ends here
 
+;; [[file:config.org::*iCalendar][iCalendar:1]]
+(defun calendar-helper () ;; doesn't have to be interactive
+  (cfw:open-calendar-buffer
+   :contents-sources
+   (list
+    (cfw:org-create-source "Purple")
+    (cfw:ical-create-source "Victoria University" "https://outlook.office365.com/owa/calendar/14853855dd6541eebbce1f2d68f50dcf@live.vu.edu.au/f754347027b54d97a148bdb20e6a947814803601956198516593/calendar.ics" "Blue"))))
+(defun calendar-init ()
+  ;; switch to existing calendar buffer if applicable
+  (if-let (win (cl-find-if (lambda (b) (string-match-p "^\\*cfw:" (buffer-name b)))
+                           (doom-visible-windows)
+                           :key #'window-buffer))
+      (select-window win)
+    (calendar-helper)))
+(defun =my-calendar ()
+  "Activate (or switch to) *my* `calendar' in its workspace."
+  (interactive)
+  (if (featurep! :ui workspaces) ;; create workspace (if enabled)
+      (progn
+        (+workspace-switch "Calendar" t)
+        (doom/switch-to-scratch-buffer)
+        (calendar-init)
+        (+workspace/display))
+    (setq +calendar--wconf (current-window-configuration))
+    (delete-other-windows)
+    (switch-to-buffer (doom-fallback-buffer))
+    (calendar-init)))
+;; iCalendar:1 ends here
+
+;; [[file:config.org::*MU4E][MU4E:1]]
+(after! mu4e
+  (set-email-account!
+   "main"
+   '((user-full-name         . "Kyle")
+     (mu4e-sent-folder       . "/kylese58/[Gmail]/Sent Mail")
+     (mu4e-trash-folder      . "/kylese58/[Gmail]/Bin")
+     (mu4e-drafts-folder     . "/kylese58/[Gmail]/Drafts")
+     (mu4e-refile-folder     . "/kylese58/[Gmail]/All Mail")
+     (smtpmail-smtp-user     . "kylese58@gmail.com"))
+   t)
+  (set-email-account!
+   "personal"
+   '((user-full-name         . "Kyle")
+     (mu4e-sent-folder       . "/entaroaldaris666/[Gmail]/Sent Mail")
+     (mu4e-trash-folder      . "/entaroaldaris666/[Gmail]/Bin")
+     (mu4e-drafts-folder     . "/entaroaldaris666/[Gmail]/Drafts")
+     (mu4e-refile-folder     . "/entaroaldaris666/[Gmail]/All Mail")
+     (smtpmail-smtp-user     . "entaroaldaris666@gmail.com"))
+   nil)
+  (set-email-account!
+   "vu"
+   '((user-full-name         . "Kyle Se")
+     (mu4e-sent-folder       . "/vu/Sent")
+     (mu4e-trash-folder      . "/vu/Deleted Items")
+     (mu4e-drafts-folder     . "/vu/Drafts")
+     (mu4e-refile-folder     . "/vu/Archive")
+     (smtpmail-smtp-user     . "kyle.sehinson@live.vu.edu.au"))
+   nil)
+  (set-email-account!
+   "outlook"
+   '((user-full-name         . "Kyle")
+     (mu4e-sent-folder       . "/kylelive/Sent")
+     (mu4e-trash-folder      . "/kylelive/Deleted Items")
+     (mu4e-drafts-folder     . "/kylelive/Drafts")
+     (mu4e-refile-folder     . "/kylelive/Archive")
+     (smtpmail-smtp-user     . "k_05dragon@live.com"))
+   nil)
+  )
+;; MU4E:1 ends here
+
+;; [[file:config.org::*MU4E][MU4E:2]]
+(when (daemonp)
+  (add-hook! 'emacs-startup-hook #'greedily-do-daemon-setup))
+;; MU4E:2 ends here
+
+;; [[file:config.org::*MU4E][MU4E:3]]
+(after! mu4e
+  (setq mu4e-get-mail-command "mbsync -ac ~/.config/mbsync/config"
+        mu4e-update-interval 300 ;; get emails and index every 5 minutes
+        mu4e-compose-format-flowed t ;; send emails with format=flowed
+        ;; mu4e-index-cleanup nil ;; no need to run cleanup after indexing for gmail
+        ;; mu4e-index-lazy-check t
+        mu4e-headers-date-format "%d.%m.%y" ;; more sensible date format
+        ))
+;; MU4E:3 ends here
+
 ;; [[file:config.org::*Completion][Completion:1]]
-(after! company
-  (setq company-idle-delay nil))
+(use-package! company
+  :after-call (company-mode global-company-mode company-complete
+                            company-complete-common company-manual-begin company-grab-line)
+  :config
+  (setq company-idle-delay nil
+        company-tooltip-limit 10))
 ;; Completion:1 ends here
 
 ;; [[file:config.org::*Completion][Completion:2]]
@@ -147,11 +237,12 @@ Not added when either:
       :map +doom-dashboard-mode-map
       :desc "Find file" :ne "f" #'find-file
       :desc "Recent files" :ne "r" #'consult-recent-file
-      :desc "Config dir" :ne "C" #'doom/open-private-config
       :desc "Open config.org" :ne "c" (cmd! (find-file (expand-file-name "config.org" doom-private-dir)))
+      :desc "Config dir" :ne "C" #'doom/open-private-config
       :desc "Open dotfile" :ne "." #'find-in-dotfiles
       :desc "Open suckless stuff" :ne "x" #'find-in-suckless
       :desc "Open scripts" :ne "e" #'find-in-scripts
+      :desc "Open MU4E" :ne "m" #'=mu4e
       :desc "Notes (roam)" :ne "n" #'org-roam-node-find
       :desc "Dired" :ne "d" #'dired
       :desc "Switch buffer" :ne "b" #'+vertico/switch-workspace-buffer
@@ -159,7 +250,6 @@ Not added when either:
       :desc "IBuffer" :ne "i" #'ibuffer
       :desc "Browse in project" :ne "p" #'doom/browse-in-other-project
       :desc "Set theme" :ne "t" #'consult-theme
-      :desc "Mu4e" :ne "m" #'=mu4e
       :desc "Quit" :ne "Q" #'save-buffers-kill-terminal)
 
 (remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
@@ -196,7 +286,7 @@ Not added when either:
   (kbd "P") 'dired-do-print
   (kbd "R") 'dired-do-rename
   (kbd "T") 'dired-do-touch
-  (kbd "Y") 'dired-copy-filenamecopy-filename-as-kill ; copies filename to kill ring.
+  (kbd "Y") 'dired-copy-filename-as-kill ; copies filename to kill ring.
   (kbd "+") 'dired-create-directory
   (kbd "-") 'dired-up-directory
   (kbd "% l") 'dired-downcase
@@ -225,7 +315,7 @@ Not added when either:
 
 ;; [[file:config.org::*Fonts and Appearance][Fonts and Appearance:1]]
 (setq doom-font (font-spec :family "monospace" :size 20)
-      doom-variable-pitch-font (font-spec :family "Iosevka Nerd Font" :size 20)
+      doom-variable-pitch-font (font-spec :family "sans" :size 20)
       doom-big-font (font-spec :family "monospace" :size 34))
 (after! doom-themes
   (setq doom-themes-enable-bold t
@@ -237,35 +327,11 @@ Not added when either:
 
 ;; [[file:config.org::*Fonts and Appearance][Fonts and Appearance:2]]
 (setq doom-theme 'doom-dark+)
- ;;(set-frame-parameter (selected-frame) 'alpha '(<active> . <inactive>))
- ;;(set-frame-parameter (selected-frame) 'alpha <both>)
-(set-frame-parameter (selected-frame) 'alpha 100)
-(add-to-list 'default-frame-alist '(alpha 100))
 ;; Fonts and Appearance:2 ends here
-
-;; [[file:config.org::*Fonts and Appearance][Fonts and Appearance:3]]
-(custom-set-faces!
-  '(mode-line :height 1.0)
-  '(mode-line-inactive :height 0.9))
-;; Fonts and Appearance:3 ends here
 
 ;; [[file:config.org::*Hooks][Hooks:1]]
 (remove-hook 'text-mode-hook #'auto-fill-mode) ;; Prevent lines from auto breaking
 ;; Hooks:1 ends here
-
-;; [[file:config.org::*Hooks][Hooks:2]]
-(defun greedily-do-daemon-setup ()
-  (require 'org)
-  (when (require 'mu4e nil t)
-    (setq mu4e-confirm-quit t)
-    (setq +mu4e-lock-greedy t)
-    (setq +mu4e-lock-relaxed t)
-      (mu4e~start))
-  (when (require 'elfeed nil t)
-    (run-at-time nil (* 8 60 60) #'elfeed-update)))
-(when (daemonp) ;; When the daemon is running
-  (add-hook 'emacs-startup-hook #'greedily-do-daemon-setup))
-;; Hooks:2 ends here
 
 ;; [[file:config.org::*Key Mappings And Evil][Key Mappings And Evil:1]]
 (map! (:after evil-org
@@ -293,19 +359,17 @@ Not added when either:
 ;; Key Mappings And Evil:1 ends here
 
 ;; [[file:config.org::*Line Settings][Line Settings:1]]
-(setq display-line-numbers-type nil) ;; By disabling line number, we improve performance significantly
+(setq display-line-numbers-type t) ;; By disabling line number, we improve performance significantly
 (map! :leader
      :desc "Comment or uncomment lines" "TAB TAB" #'comment-line
     (:prefix ("t" . "toggle")
      :desc "Toggle line numbers" "l" #'doom/toggle-line-numbers
      :desc "Toggle line highlight in frame" "h" #'hl-line-mode
-     :desc "Toggle line highlight globally" "H" #'global-hl-line-mode
-     :desc "Toggle truncate lines" "t" #'toggle-truncate-lines))
+     :desc "Toggle line highlight globally" "H" #'global-hl-line-mode))
 ;; Line Settings:1 ends here
 
 ;; [[file:config.org::*Latex][Latex:1]]
-(after! latex-mode
-  (TeX-engine-set 'luatex))
+(setq-default TeX-engine 'luatex)
 ;; Latex:1 ends here
 
 ;; [[file:config.org::*Haskell][Haskell:1]]
@@ -317,131 +381,40 @@ Not added when either:
 ;; [[file:config.org::*Mouse Settings][Mouse Settings:1]]
 (map! :n [mouse-8] #'better-jumper-jump-backward
       :n [mouse-9] #'better-jumper-jump-forward)
-(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
 ;; Mouse Settings:1 ends here
-
-;; [[file:config.org::*G-Mails][G-Mails:1]]
-(set-email-account!
- "kylese58"
- '((user-full-name . "Kyle")
-   (user-mail-address . "kylese58@gmail.com")
-   (mu4e-sent-folder       . "/kylese58/[Gmail]/Sent Mail")
-   (mu4e-trash-folder      . "/kylese58/[Gmail]/Bin")
-   (mu4e-drafts-folder      . "/kylese58/[Gmail]/Drafts")
-   (mu4e-refile-folder      . "/kylese58/[Gmail]/All Mail")
-   (smtpmail-smtp-user     . "kylese58@gmail.com"))
- t)
-(set-email-account!
- "entaroaldaris666"
- '((user-full-name . "Kyle Se")
-   (user-mail-address . "entaroaldaris666@gmail.com")
-   (mu4e-sent-folder       . "/entaroaldaris666/[Gmail]/Sent Mail")
-   (mu4e-trash-folder      . "/entaroaldaris666/[Gmail]/Bin")
-   (mu4e-drafts-folder      . "/entaroaldaris666/[Gmail]/Drafts")
-   (mu4e-refile-folder      . "/entaroaldaris666/[Gmail]/All Mail")
-   (smtpmail-smtp-user     . "entaroaldaris666@gmail.com"))
- nil)
-(set-email-account!
- "vu"
- '((user-full-name . "Kyle Se Hin Son")
-   (user-mail-address . "kyle.sehinson@live.vu.edu.au")
-   (mu4e-sent-folder       . "/vu/Sent Items")
-   (mu4e-trash-folder      . "/vu/Deleted Items")
-   (mu4e-drafts-folder      . "/vu/Drafts")
-   (mu4e-refile-folder      . "/vu/Archive")
-   (smtpmail-smtp-user     . "kyle.sehinson@live.vu.edu.au"))
- nil)
-(after! mu4e
-  (setq mu4e-get-mail-command "mbsync -ac ~/.config/mbsync/config"
-        mu4e-index-update-in-background t
-        mu4e-update-interval 300 ;; get emails and index every 5 minutes
-        mu4e-compose-format-flowed t ;; send emails with format=flowed
-        ;; mu4e-index-cleanup nil ;; no need to run cleanup after indexing for gmail
-        ;; mu4e-index-lazy-check t
-        mu4e-use-fancy-chars t
-        mu4e-view-show-addresses t
-        mu4e-view-show-images t
-        mu4e-change-filenames-when-moving t
-        mu4e-headers-date-format "%d.%m.%y" ;; more sensible date format
-        ;; Org mu4e
-        org-mu4e-convert-to-html t
-        ))
-;; G-Mails:1 ends here
-
-;; [[file:config.org::*Treemacs][Treemacs:1]]
-(after! treemacs
-  (defvar treemacs-file-ignore-extensions '()
-    "File extension which `treemacs-ignore-filter' will ensure are ignored")
-  (defvar treemacs-file-ignore-globs '()
-    "Globs which will are transformed to `treemacs-file-ignore-regexps' which `treemacs-ignore-filter' will ensure are ignored")
-  (defvar treemacs-file-ignore-regexps '()
-    "RegExps to be tested to ignore files, generated from `treeemacs-file-ignore-globs'")
-  (defun treemacs-file-ignore-generate-regexps ()
-    "Generate `treemacs-file-ignore-regexps' from `treemacs-file-ignore-globs'"
-    (setq treemacs-file-ignore-regexps (mapcar 'dired-glob-regexp treemacs-file-ignore-globs)))
-  (if (equal treemacs-file-ignore-globs '()) nil (treemacs-file-ignore-generate-regexps))
-  (defun treemacs-ignore-filter (file full-path)
-    "Ignore files specified by `treemacs-file-ignore-extensions', and `treemacs-file-ignore-regexps'"
-    (or (member (file-name-extension file) treemacs-file-ignore-extensions)
-        (let ((ignore-file nil))
-          (dolist (regexp treemacs-file-ignore-regexps ignore-file)
-            (setq ignore-file (or ignore-file (if (string-match-p regexp full-path) t nil)))))))
-  (add-to-list 'treemacs-ignored-file-predicates #'treemacs-ignore-filter))
-;; Treemacs:1 ends here
-
-;; [[file:config.org::*Treemacs][Treemacs:2]]
-(setq treemacs-file-ignore-extensions
-      '(;; LaTeX
-        "aux"
-        "ptc"
-        "fdb_latexmk"
-        "fls"
-        "synctex.gz"
-        "toc"
-        ;; LaTeX - glossary
-        "glg"
-        "glo"
-        "gls"
-        "glsdefs"
-        "ist"
-        "acn"
-        "acr"
-        "alg"
-        ;; LaTeX - pgfplots
-        "mw"
-        ;; LaTeX - pdfx
-        "pdfa.xmpi"
-        ))
-(setq treemacs-file-ignore-globs
-      '(;; LaTeX
-        "*/_minted-*"
-        ;; AucTeX
-        "*/.auctex-auto"
-        "*/_region_.log"
-        "*/_region_.tex"))
-;; Treemacs:2 ends here
 
 ;; [[file:config.org::*Open Specific Files][Open Specific Files:1]]
 (map! :leader
       (:prefix ("=" . "Open File")
-       :desc "Edit agenda file" "a" #'(lambda () (interactive) (find-file "~/org/agenda.org"))
-       :desc "Edit doom config.org" "c" #'(lambda () (interactive) (find-file "~/.config/doom/config.org"))
-       :desc "Edit doom init.el" "i" #'(lambda () (interactive) (find-file "~/.config/doom/init.el"))
-       :desc "Edit doom packages.el" "p" #'(lambda () (interactive) (find-file "~/.config/doom/packages.el"))
-       :desc "Edit xmonad xmonad.hs" "x" #'(lambda () (interactive) (find-file "~/.config/xmonad/xmonad.hs"))))
+       :desc "Edit agenda file" "a" #'(lambda () (interactive) (find-file (concat org-directory "/agenda.org")))
+       :desc "Edit doom config.org" "c" #'(lambda () (interactive) (find-file (expand-file-name "config.org" doom-private-dir)))
+       :desc "Edit autoload/elyk.el" "u" #'(lambda () (interactive) (find-file (expand-file-name "autoload/elyk.el" doom-private-dir)))
+       :desc "Edit xmonad xmonad.hs" "x" #'(lambda () (interactive) (find-file "~/.config/xmonad/xmonad.hs"))
+       ))
 ;; Open Specific Files:1 ends here
+
+;; [[file:config.org::*Open Specific Applications][Open Specific Applications:1]]
+(map! :leader
+      (:prefix ("-" . "Open Apps")
+       :desc "Open my calendar" "c" #'(lambda () (interactive) (=my-calendar))
+       :desc "Open MU4E" "m" #'(lambda () (interactive) (=mu4e))))
+;; Open Specific Applications:1 ends here
 
 ;; [[file:config.org::*Org][Org:1]]
 (map! :leader
       :desc "Org babel tangle" "m B" #'org-babel-tangle)
+
+(after! org-superstar
+  (setq org-superstar-headline-bullets-list '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
+        org-superstar-item-bullet-alist '((?+ . ?➤) (?- . ?✦)) ; changes +/- symbols in item lists
+        org-superstar-prettify-item-bullets t ))
+
 (after! org
   (plist-put org-format-latex-options :scale 4) ;; Make latex equations preview larger
   (setq org-directory "~/org/"
         org-agenda-files '("~/org/agenda.org")
         org-default-notes-file (expand-file-name "notes.org" org-directory)
         org-ellipsis " ▼ "
-        org-superstar-headline-bullets-list '("◉" "●" "○" "◆" "●" "○" "◆")
-        org-superstar-item-bullet-alist '((?+ . ?➤) (?- . ?✦)) ; changes +/- symbols in item lists
         org-log-done 'time
         org-hide-emphasis-markers t
         ;; ex. of org-link-abbrev-alist in action
@@ -475,20 +448,17 @@ Not added when either:
 ;; Set font sizes for each header level in Org:1 ends here
 
 ;; [[file:config.org::*Set font sizes for each header level in Org][Set font sizes for each header level in Org:2]]
-(defun locally-defer-font-lock ()
-  "Set jit-lock defer and stealth, when buffer is over a certain size."
-  (when (> (buffer-size) 50000)
-    (setq-local jit-lock-defer-time 0.05
-                jit-lock-stealth-time 1)))
-(add-hook 'org-mode-hook #'locally-defer-font-lock)
+(after! org
+  (add-hook 'org-mode-hook #'locally-defer-font-lock))
 ;; Set font sizes for each header level in Org:2 ends here
 
 ;; [[file:config.org::*Org-journal][Org-journal:1]]
-(setq org-journal-dir (concat org-directory "/journal")
-      org-journal-date-prefix "* "
-      org-journal-time-prefix "** "
-      org-journal-date-format "%B %d, %Y (%A) "
-      org-journal-file-format "%Y-%m-%d.org")
+(after! org-journal
+  (setq org-journal-dir (concat org-directory "/journal")
+        org-journal-date-prefix "* "
+        org-journal-time-prefix "** "
+        org-journal-date-format "%B %d, %Y (%A) "
+        org-journal-file-format "%Y-%m-%d.org"))
 ;; Org-journal:1 ends here
 
 ;; [[file:config.org::*Org-roam][Org-roam:1]]
@@ -527,10 +497,10 @@ Not added when either:
           )))
 
 (use-package! websocket
-  :after org-roam)
+  :after org-roam-mode)
 
 (use-package! org-roam-ui
-  :after org-roam
+  :after org-roam-mode
   :config
   (setq org-roam-ui-sync-theme t
         org-roam-ui-follow t
@@ -548,14 +518,12 @@ Not added when either:
 
 ;; [[file:config.org::*Org Appear][Org Appear:1]]
 (use-package! org-appear
+  :after org
   :hook (org-mode . org-appear-mode)
   :config
   (setq org-appear-autoemphasis t
         org-appear-autosubmarkers t
-        org-appear-autolinks nil
-        org-appear-trigger 'manual)
-  (add-hook 'evil-insert-state-entry-hook #'org-appear-manual-start nil t)
-  (add-hook 'evil-insert-state-exit-hook #'org-appear-manual-stop nil t)
+        org-appear-autolinks nil)
   ;; for proper first-time setup, `org-appear--set-elements'
   ;; needs to be run after other hooks have acted.
   (run-at-time nil nil #'org-appear--set-elements))

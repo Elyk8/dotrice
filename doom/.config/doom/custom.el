@@ -5,7 +5,12 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages '(exwm))
  '(warning-suppress-log-types '((org-element-cache)))
- '(warning-suppress-types '((org-element-cache))))
+ '(warning-suppress-types
+   '((evil-insert-state-exit-hook)
+     (evil-insert-state-exit-hook)
+     (evil-insert-state-entry-hook)
+     (evil-insert-state-entry-hook)
+     (org-element-cache))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -7,8 +7,9 @@ run() {
     fi
 }
 
-/usr/bin/prime-offload
-multi-monitor
+# /usr/bin/prime-offload
+# multi-monitor
+multi-hybrid-graphics
 xrdb -merge ~/.config/x11/Xresources
 run safeeyes -e &
 run remaps &

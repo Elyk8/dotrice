@@ -12,7 +12,7 @@ import           Data.Maybe                     ( fromJust
                                                 , isJust
                                                 )
 import           Data.Monoid
-import           Data.Ratio                     -- Require for rational (%) operator
+import           Data.Ratio                          -- Require for rational (%) operator
 import           Data.Semigroup
 import           Foreign.C                      ( CInt )
 import           System.Directory
@@ -546,53 +546,52 @@ toSubmap c name m = do
   io $ hClose pipe
 
 --START_WHICHKEYS
-appsKeymap = -- Applications
-  [ ("t", spawn myTerminal) -- Spawn terminal
-  , ("<Space>", spawn "dm-j4dmenu-desktop") -- Dmenu launcher
+appsKeymap = -- Frequently used
+  [ ("<Space>", spawn "dm-j4dmenu-desktop") -- Dmenu launcher
+  , ("t", spawn myTerminal) -- Spawn terminal
   , ("r", spawn (myTerminal ++ " -e lf")) -- Lf file manager
-  , ("[", spawn "xmonad-whichkeys") -- Leader Mappings
-  , ("]", spawn "xmonad-keys") -- Leader Mappings
-  , ("w", spawn "librewolf") -- Launch Librewold
+  , ("[", spawn "xmonad-keys") -- Window Manager Mappings
+  , ("w", spawn "librewolf") -- Launch Librewolf
   , ("b", spawn "brave") -- Launch Brave
+  -- , ("e", spawn (myEmacs ++ "--eval '(switch-to-buffer nil)'")) -- Emacs dashboard
   , ("e", spawn myEmacs) -- Emacs dashboard
 
-    -- Applications Launcher
-  , ("o d", spawn discord) -- Launch Discord
-  , ("o e", spawn "/usr/bin/thunderbird") -- Launch Thunderbird
-  , ("o f", spawn "/media/ftb/FTBApp") -- Launch FTB Launcher
-  , ("o t", spawn todoist) -- Launch Todoist
-  , ("o v", spawn "/usr/bin/vscodium") -- Launch VSCodium
-  , ("o z", spawn "/usr/bin/zoom") -- Launch Zoom
-
-    -- Dmenu scripts
-  , ("p a", spawn "dm-man") -- Man pages list
-  , ("p c", spawn "clipmenu") -- Clipmenu clipboard
-  , ("p d", spawn "dm-directory") -- Dmenu directories manager
-  , ("p S-c", spawn "dm-colorscheme") -- Choose a colorscheme
-  , ("p e", spawn "dm-emoji") -- Emoji keyboard
-  , ("p k", spawn "dm-kill") -- Terminate applications
-  , ("p m", spawn "dm-buku") -- Buku bookmarks manager
-  , ("p o", spawn "dm-mount") -- Mount drives
-  , ("p p", spawn "dm-passmenu") -- Password manager
-  , ("p b", spawn "dm-beats") -- Radio FM
-  , ("p s", spawn "dm-scripts") -- Find and edit scripts
-  , ("p u", spawn "dm-umount") -- Unmount any drive
-  , ("p w", spawn "weatherforecast") -- Display weather forecast
-
     -- Music and volume control
-  , ("m n", namedScratchpadAction myScratchPads "ncmpcpp") -- Ncmpcpp Player
-  , ("m m", spawn "mic-toggle") -- Toggle mute of microphone
-
-    -- System and wallpapers
-  , ("; a", spawn "setwallpaper a2n") -- Change to "a2n" walls
-  , ("; d", spawn "setwallpaper dt") -- Change to "dt" walls
-  , ("; e", spawn "setwallpaper elyk") -- Change to "my" walls
-  , ("; v", spawn "pavucontrol") -- Open volume control
-  , ("; w", spawn "nsxiv -rqto $XDG_PICTURES_DIR/wallpapers/*") -- Interactively setwallpaper
+  , ("n", namedScratchpadAction myScratchPads "ncmpcpp") -- Ncmpcpp Player
+  , ("m", spawn "mic-toggle") -- Toggle mute of microphone
   ]
- where
-  todoist = "env DESKTOPINTEGRATION=false /usr/bin/todoist --no-sandbox"
-  discord = "/usr/bin/discord --no-sandbox"
+
+systemsKeymap = -- Systems
+  [ ("a", spawn "setwallpaper a2n") -- Change to "a2n" walls
+  , ("d", spawn "setwallpaper dt") -- Change to "dt" walls
+  , ("e", spawn "setwallpaper elyk") -- Change to "my" walls
+  , ("v", spawn "setsid -f pipewire-mixer") -- Open volume control
+  , ("w", spawn "nsxiv -rqto $XDG_PICTURES_DIR/wallpapers/*") -- Interactively setwallpaper
+  ]
+
+mainappsKeymap = -- Applications Launcher
+  [ ("d", spawn discord) -- Launch Discord
+  , ("f", spawn "/media/FTBA/FTBApp") -- Launch FTB Launcher
+  , ("v", spawn "/usr/bin/vscodium") -- Launch VSCodium
+  , ("z", spawn "/usr/bin/zoom") -- Launch Zoom
+  ]
+  where discord = "/usr/bin/discord"
+
+otherappsKeymap = -- Dmenu scripts
+  [ ("a", spawn "dm-man") -- Man pages list
+  , ("c", spawn "clipmenu") -- Clipmenu clipboard
+  , ("d", spawn "dm-directory") -- Dmenu directories manager
+  , ("S-c", spawn "dm-colorscheme") -- Choose a colorscheme
+  , ("e", spawn "dm-emoji") -- Emoji keyboard
+  , ("k", spawn "dm-kill") -- Terminate applications
+  , ("m", spawn "dm-buku") -- Buku bookmarks manager
+  , ("o", spawn "dm-mount") -- Mount drives
+  , ("p", spawn "dm-passmenu") -- Password manager
+  , ("b", spawn "dm-beats") -- Radio FM
+  , ("s", spawn "dm-scripts") -- Find and edit scripts
+  , ("u", spawn "dm-umount") -- Unmount any drive
+  , ("w", spawn "weatherforecast") -- Display weather forecast
+  ]
 
 screenshotKeymap = -- Maim Screenshot
   [ ("s", spawn "maimpick 'Selected' ") -- Capsture selected area
@@ -602,7 +601,6 @@ screenshotKeymap = -- Maim Screenshot
   , ("S-c", spawn "maimpick 'Current (copy)'") -- Capture current window
   , ("S-f", spawn "maimpick 'Fullscreen (copy)'") -- Capture whole screen
   ]
- -- Maim Screenshot
 --END_WHICHKEYS
 -- }}}
 
@@ -700,7 +698,6 @@ mainKeymap c = mkKeymap
   , ("<XF86Calculator>", spawn (myTerminal ++ " -e bc -l"))
   , ("<XF86DOS>", spawn myTerminal)
   , ("<XF86Launch1>", spawn "xset dpms force off")
-  , ("<XF86Mail>", spawn "/usr/bin/thunderbird")
   , ("<XF86MonBrightnessDown>", spawn "brightness down")
   , ("<XF86MonBrightnessUp>", spawn "brightness up")
   , ("<XF86MyComputer>", spawn (myTerminal ++ " -e lf-run"))
@@ -729,6 +726,9 @@ mainKeymap c = mkKeymap
 
       -- Whichkeys keychords
   , ("M-<Space>", toSubmap c "appsKeymap" appsKeymap)
+  , ("M-o", toSubmap c "mainappsKeymap" mainappsKeymap)
+  , ("M-;", toSubmap c "systemsKeymap" systemsKeymap)
+  , ("M-S-<Space>", toSubmap c "otherappsKeymap" otherappsKeymap)
   , ("<Print>", toSubmap c "screenshotKeymap" screenshotKeymap)
       --END_KEYS
   ]

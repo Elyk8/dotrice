@@ -12,6 +12,7 @@
   - [[#async-config-tangling][Async config tangling]]
   - [[#modules][Modules]]
   - [[#packages][Packages]]
+  - [[#my-packages][My Packages]]
 - [[#native-compilation][Native Compilation]]
 - [[#simple-settings][Simple Settings]]
 - [[#babel][Babel]]
@@ -19,6 +20,9 @@
   - [[#bookmarks][Bookmarks]]
   - [[#buffers][Buffers]]
   - [[#keybindings-within-ibuffer-mode][Keybindings within ibuffer mode]]
+- [[#calendar-and-e-mail][Calendar and E-mail]]
+  - [[#icalendar][iCalendar]]
+  - [[#mu4e][MU4E]]
 - [[#completion][Completion]]
 - [[#dashboard][Dashboard]]
   - [[#configuring-dashboard][Configuring Dashboard]]
@@ -34,11 +38,8 @@
   - [[#latex][Latex]]
   - [[#haskell][Haskell]]
 - [[#mouse-settings][Mouse Settings]]
-- [[#mu4e][MU4E]]
-  - [[#g-mails][G-Mails]]
-  - [[#others][Others]]
-- [[#treemacs][Treemacs]]
 - [[#open-specific-files][Open Specific Files]]
+- [[#open-specific-applications][Open Specific Applications]]
 - [[#org][Org]]
   - [[#set-font-sizes-for-each-header-level-in-org][Set font sizes for each header level in Org]]
   - [[#org-journal][Org-journal]]
@@ -154,7 +155,7 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
        (vertico +icons)    ; the search engine of the future
 
        :ui
-       deft              ; notational velocity for Emacs
+       ;;deft              ; notational velocity for Emacs
        doom              ; what makes DOOM look the way it does
        doom-dashboard    ; a nifty splash screen for Emacs
        doom-quit         ; DOOM quit-message prompts when you quit Emacs
@@ -162,7 +163,7 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
        hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        ;;hydra
        ;;indent-guides     ; highlighted indent columns
-       (ligatures +extras)        ; ligatures and symbols to make your code pretty again
+       ;;(ligatures +extras)        ; ligatures and symbols to make your code pretty again
        ;;minimap           ; show a map of the code on the side
        modeline          ; snazzy, Atom-inspired modeline, plus API
        nav-flash         ; blink cursor line after big motions
@@ -170,7 +171,7 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
        ophints           ; highlight the region an operation acts on
        (popup +all)   ; tame sudden yet inevitable temporary windows
        ;;tabs              ; a tab bar for Emacs
-       treemacs          ; a project drawer, like neotree but cooler
+       ;;treemacs          ; a project drawer, like neotree but cooler
        ;;unicode           ; extended unicode support for various languages
        vc-gutter         ; vcs diff in the fringe
        ;;vi-tilde-fringe   ; fringe tildes to mark beyond EOB
@@ -193,7 +194,7 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
        ;;word-wrap         ; soft wrapping with language-aware indent
 
        :emacs
-       (dired +icons +ranger)    ; making dired pretty [functional]
+       (dired +icons)    ; making dired pretty [functional]
        electric          ; smarter, keyword-based electric-indent
        (ibuffer +icons)           ; interactive buffer management
        (undo +tree)              ; persistent, smarter undo for your inevitable mistakes
@@ -235,7 +236,7 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
 
        :os
        ;;(:if IS-MAC macos)  ; improve compatibility with macOS
-       (tty +osc)               ; improve the terminal Emacs experience
+       tty               ; improve the terminal Emacs experience
 
        :lang
        ;;agda              ; types of types of types of types...
@@ -409,17 +410,18 @@ release. The `unpin!' macro allows you to unpin single packages...
 (unpin! t)
 #+end_src
 
+** My Packages
+
 #+begin_src emacs-lisp :tangle "packages.el"
 ;; -*- no-byte-compile: t; -*-
 
 ;; (package! dashboard)
+;; (package! frames-only-mode :recipe (:host github :repo "davidshepherd7/frames-only-mode"))
 (package! dired-open)
 (package! dired-subtree)
 (package! elfeed-goodies)
-(package! emojify)
-(package! org-fragtog)
-
-(package! org-appear)
+(package! org-appear :recipe (:host github :repo "awth13/org-appear")
+  :pin "148aa124901ae598f69320e3dcada6325cdc2cf0")
 
 ;; org-roam-ui tries to pull latest changes from org-roam, so we unpin it
 (package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")) :pin "c93f6b61a8d3d2edcf07eda6220278c418d1054b")
@@ -429,6 +431,9 @@ release. The `unpin!' macro allows you to unpin single packages...
 (package! ink :recipe (:host github :repo "foxfriday/ink"))
 
 (disable-packages!
+ irony
+ rtags
+ evil-snipe
  mpc-mode
  solaire-mode)
 #+end_src
@@ -453,9 +458,9 @@ These are better defaults (or preferences for me) which I would want to be on al
     evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
     truncate-string-ellipsis "…"                ; Unicode ellispis are nicer than "...", and also save /precious/ space
     password-cache-expiry nil                   ; I can trust my computers ... can't I?
-    scroll-preserve-screen-position 'always     ; Don't have `point' jump around
+    ;; scroll-preserve-screen-position 'always     ; Don't have `point' jump around
     scroll-margin 2)                            ; It's nice to maintain a little margin
-(add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;; Prevents some cases of Emacs flickering.
+;; (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;; Prevents some cases of Emacs flickering.
 #+end_src
 
 When I bring up Doom's scratch buffer with SPC x, it's often to play with elisp or note something down (that isn't worth an entry in my notes). I can do both in `lisp-interaction-mode'.
@@ -567,6 +572,102 @@ Regarding /buffers/, the text you are editing in Emacs resides in an object call
       :n "H" 'ibuffer-update))
 #+end_src
 
+* Calendar and E-mail
+I finally found a way to ditch Thunderbird and use emails purely for my emails and calendar demands.
+
+** iCalendar
+Here I set up my calendar
+
+#+begin_src emacs-lisp
+(defun calendar-helper () ;; doesn't have to be interactive
+  (cfw:open-calendar-buffer
+   :contents-sources
+   (list
+    (cfw:org-create-source "Purple")
+    (cfw:ical-create-source "Victoria University" "https://outlook.office365.com/owa/calendar/14853855dd6541eebbce1f2d68f50dcf@live.vu.edu.au/f754347027b54d97a148bdb20e6a947814803601956198516593/calendar.ics" "Blue"))))
+(defun calendar-init ()
+  ;; switch to existing calendar buffer if applicable
+  (if-let (win (cl-find-if (lambda (b) (string-match-p "^\\*cfw:" (buffer-name b)))
+                           (doom-visible-windows)
+                           :key #'window-buffer))
+      (select-window win)
+    (calendar-helper)))
+(defun =my-calendar ()
+  "Activate (or switch to) *my* `calendar' in its workspace."
+  (interactive)
+  (if (featurep! :ui workspaces) ;; create workspace (if enabled)
+      (progn
+        (+workspace-switch "Calendar" t)
+        (doom/switch-to-scratch-buffer)
+        (calendar-init)
+        (+workspace/display))
+    (setq +calendar--wconf (current-window-configuration))
+    (delete-other-windows)
+    (switch-to-buffer (doom-fallback-buffer))
+    (calendar-init)))
+#+end_src
+
+** MU4E
+Here, I setup all my email addresses and their directories.
+#+begin_src emacs-lisp
+(after! mu4e
+  (set-email-account!
+   "main"
+   '((user-full-name         . "Kyle")
+     (mu4e-sent-folder       . "/kylese58/[Gmail]/Sent Mail")
+     (mu4e-trash-folder      . "/kylese58/[Gmail]/Bin")
+     (mu4e-drafts-folder     . "/kylese58/[Gmail]/Drafts")
+     (mu4e-refile-folder     . "/kylese58/[Gmail]/All Mail")
+     (smtpmail-smtp-user     . "kylese58@gmail.com"))
+   t)
+  (set-email-account!
+   "personal"
+   '((user-full-name         . "Kyle")
+     (mu4e-sent-folder       . "/entaroaldaris666/[Gmail]/Sent Mail")
+     (mu4e-trash-folder      . "/entaroaldaris666/[Gmail]/Bin")
+     (mu4e-drafts-folder     . "/entaroaldaris666/[Gmail]/Drafts")
+     (mu4e-refile-folder     . "/entaroaldaris666/[Gmail]/All Mail")
+     (smtpmail-smtp-user     . "entaroaldaris666@gmail.com"))
+   nil)
+  (set-email-account!
+   "vu"
+   '((user-full-name         . "Kyle Se")
+     (mu4e-sent-folder       . "/vu/Sent")
+     (mu4e-trash-folder      . "/vu/Deleted Items")
+     (mu4e-drafts-folder     . "/vu/Drafts")
+     (mu4e-refile-folder     . "/vu/Archive")
+     (smtpmail-smtp-user     . "kyle.sehinson@live.vu.edu.au"))
+   nil)
+  (set-email-account!
+   "outlook"
+   '((user-full-name         . "Kyle")
+     (mu4e-sent-folder       . "/kylelive/Sent")
+     (mu4e-trash-folder      . "/kylelive/Deleted Items")
+     (mu4e-drafts-folder     . "/kylelive/Drafts")
+     (mu4e-refile-folder     . "/kylelive/Archive")
+     (smtpmail-smtp-user     . "k_05dragon@live.com"))
+   nil)
+  )
+#+end_src
+
+I also want to initialise mu4e when I launch the emacs daemon for the first time.
+
+#+begin_src emacs-lisp
+(when (daemonp)
+  (add-hook! 'emacs-startup-hook #'greedily-do-daemon-setup))
+#+end_src
+
+#+begin_src emacs-lisp
+(after! mu4e
+  (setq mu4e-get-mail-command "mbsync -ac ~/.config/mbsync/config"
+        mu4e-update-interval 300 ;; get emails and index every 5 minutes
+        mu4e-compose-format-flowed t ;; send emails with format=flowed
+        ;; mu4e-index-cleanup nil ;; no need to run cleanup after indexing for gmail
+        ;; mu4e-index-lazy-check t
+        mu4e-headers-date-format "%d.%m.%y" ;; more sensible date format
+        ))
+#+end_src
+
 * Completion
 
 IMO, modern editors have trained a bad habit into us all: a burning need for
@@ -574,8 +675,12 @@ completion all the time -- as we type, as we breathe, as we pray to the
 ancient ones -- but how often do you *really* need that information? I say
 rarely. So opt for manual completion:
 #+begin_src emacs-lisp
-(after! company
-  (setq company-idle-delay nil))
+(use-package! company
+  :after-call (company-mode global-company-mode company-complete
+                            company-complete-common company-manual-begin company-grab-line)
+  :config
+  (setq company-idle-delay nil
+        company-tooltip-limit 10))
 #+end_src
 
 An evil mode indicator is redundant with cursor shape
@@ -598,11 +703,12 @@ The dashboard contains too many things to my taste. It must be something which y
       :map +doom-dashboard-mode-map
       :desc "Find file" :ne "f" #'find-file
       :desc "Recent files" :ne "r" #'consult-recent-file
-      :desc "Config dir" :ne "C" #'doom/open-private-config
       :desc "Open config.org" :ne "c" (cmd! (find-file (expand-file-name "config.org" doom-private-dir)))
+      :desc "Config dir" :ne "C" #'doom/open-private-config
       :desc "Open dotfile" :ne "." #'find-in-dotfiles
       :desc "Open suckless stuff" :ne "x" #'find-in-suckless
       :desc "Open scripts" :ne "e" #'find-in-scripts
+      :desc "Open MU4E" :ne "m" #'=mu4e
       :desc "Notes (roam)" :ne "n" #'org-roam-node-find
       :desc "Dired" :ne "d" #'dired
       :desc "Switch buffer" :ne "b" #'+vertico/switch-workspace-buffer
@@ -610,7 +716,6 @@ The dashboard contains too many things to my taste. It must be something which y
       :desc "IBuffer" :ne "i" #'ibuffer
       :desc "Browse in project" :ne "p" #'doom/browse-in-other-project
       :desc "Set theme" :ne "t" #'consult-theme
-      :desc "Mu4e" :ne "m" #'=mu4e
       :desc "Quit" :ne "Q" #'save-buffers-kill-terminal)
 
 (remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
@@ -696,7 +801,7 @@ Dired is the file manager within Emacs.  Below, I setup keybindings for image pr
   (kbd "P") 'dired-do-print
   (kbd "R") 'dired-do-rename
   (kbd "T") 'dired-do-touch
-  (kbd "Y") 'dired-copy-filenamecopy-filename-as-kill ; copies filename to kill ring.
+  (kbd "Y") 'dired-copy-filename-as-kill ; copies filename to kill ring.
   (kbd "+") 'dired-create-directory
   (kbd "-") 'dired-up-directory
   (kbd "% l") 'dired-downcase
@@ -744,7 +849,7 @@ Settings related to fonts within Doom Emacs:
 
 #+begin_src emacs-lisp
 (setq doom-font (font-spec :family "monospace" :size 20)
-      doom-variable-pitch-font (font-spec :family "Iosevka Nerd Font" :size 20)
+      doom-variable-pitch-font (font-spec :family "sans" :size 20)
       doom-big-font (font-spec :family "monospace" :size 34))
 (after! doom-themes
   (setq doom-themes-enable-bold t
@@ -758,19 +863,15 @@ Set the theme of doom emacs here. To try out new themes, I set a keybinding for 
 
 #+BEGIN_SRC emacs-lisp
 (setq doom-theme 'doom-dark+)
- ;;(set-frame-parameter (selected-frame) 'alpha '(<active> . <inactive>))
- ;;(set-frame-parameter (selected-frame) 'alpha <both>)
-(set-frame-parameter (selected-frame) 'alpha 100)
-(add-to-list 'default-frame-alist '(alpha 100))
 #+END_SRC
 
-The modeline is too large. Make it a bit smaller
+# * Frames Only Mode
+# Make emacs behave better with tiling window managers.
 
-#+begin_src emacs-lisp
-(custom-set-faces!
-  '(mode-line :height 1.0)
-  '(mode-line-inactive :height 0.9))
-#+end_src
+# #+begin_src emacs-lisp
+# (use-package! frames-only-mode
+#   :config (add-hook! 'emacs-startup-hook 'frames-only-mode))
+# #+end_src
 
 * Hooks
 
@@ -779,21 +880,6 @@ Here, we specify stuff that we want to run on startup
 
 #+begin_src emacs-lisp
 (remove-hook 'text-mode-hook #'auto-fill-mode) ;; Prevent lines from auto breaking
-#+end_src
-
-While we're at it, let's initialise mu4e when the emacs daemon is loaded.
-#+begin_src emacs-lisp
-(defun greedily-do-daemon-setup ()
-  (require 'org)
-  (when (require 'mu4e nil t)
-    (setq mu4e-confirm-quit t)
-    (setq +mu4e-lock-greedy t)
-    (setq +mu4e-lock-relaxed t)
-      (mu4e~start))
-  (when (require 'elfeed nil t)
-    (run-at-time nil (* 8 60 60) #'elfeed-update)))
-(when (daemonp) ;; When the daemon is running
-  (add-hook 'emacs-startup-hook #'greedily-do-daemon-setup))
 #+end_src
 
 * Key Mappings And Evil
@@ -826,7 +912,6 @@ This is to allow navigating visual lines by using =gj= and =gk=.
 #+end_src
 
 * Line Settings
-
 I set comment-line to 'SPC TAB TAB' which is a rather comfortable keybinding for me on my ZSA Moonlander keyboard.  The standard Emacs keybinding for comment-line is 'C-x C-;'.  The other keybindings are for commands that toggle on/off various line-related settings.  Doom Emacs uses 'SPC t' for "toggle" commands, so I choose 'SPC t' plus 'key' for those bindings.
 
 | COMMAND                  | DESCRIPTION                               | KEYBINDING  |
@@ -834,33 +919,27 @@ I set comment-line to 'SPC TAB TAB' which is a rather comfortable keybinding for
 | comment-line             | /Comment or uncomment lines/                | SPC TAB TAB |
 | hl-line-mode             | /Toggle line highlighting in current frame/ | SPC t h     |
 | global-hl-line-mode      | /Toggle line highlighting globally/         | SPC t H     |
-| doom/toggle-line-numbers | /Toggle line numbers/                       | SPC t l     |
-| toggle-truncate-lines    | /Toggle truncate lines/                     | SPC t t     |
+| doom/toggle-line-numbers | /Toggle line numbers/                     | SPC t l     |
 
 #+BEGIN_SRC emacs-lisp
-(setq display-line-numbers-type nil) ;; By disabling line number, we improve performance significantly
+(setq display-line-numbers-type t) ;; By disabling line number, we improve performance significantly
 (map! :leader
      :desc "Comment or uncomment lines" "TAB TAB" #'comment-line
     (:prefix ("t" . "toggle")
      :desc "Toggle line numbers" "l" #'doom/toggle-line-numbers
      :desc "Toggle line highlight in frame" "h" #'hl-line-mode
-     :desc "Toggle line highlight globally" "H" #'global-hl-line-mode
-     :desc "Toggle truncate lines" "t" #'toggle-truncate-lines))
+     :desc "Toggle line highlight globally" "H" #'global-hl-line-mode))
 #+END_SRC
 
 * Language
 
 ** Latex
-
-Change the default Latex to lualatex as it provides access to nicer fonts!.
-
+Change the default Latex to lualatex as it provides access to nicer fonts!
 #+begin_src emacs-lisp
-(after! latex-mode
-  (TeX-engine-set 'luatex))
+(setq-default TeX-engine 'luatex)
 #+end_src
 
 ** Haskell
-
 Change the default formatter for Haskell.
 #+begin_src emacs-lisp
 (after! haskell-mode
@@ -874,143 +953,35 @@ This is to enable better mouse support for doom emacs.
 #+begin_src emacs-lisp
 (map! :n [mouse-8] #'better-jumper-jump-backward
       :n [mouse-9] #'better-jumper-jump-forward)
-(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
-#+end_src
-
-* MU4E
-
-** G-Mails
-
-#+begin_src emacs-lisp
-(set-email-account!
- "kylese58"
- '((user-full-name . "Kyle")
-   (user-mail-address . "kylese58@gmail.com")
-   (mu4e-sent-folder       . "/kylese58/[Gmail]/Sent Mail")
-   (mu4e-trash-folder      . "/kylese58/[Gmail]/Bin")
-   (mu4e-drafts-folder      . "/kylese58/[Gmail]/Drafts")
-   (mu4e-refile-folder      . "/kylese58/[Gmail]/All Mail")
-   (smtpmail-smtp-user     . "kylese58@gmail.com"))
- t)
-(set-email-account!
- "entaroaldaris666"
- '((user-full-name . "Kyle Se")
-   (user-mail-address . "entaroaldaris666@gmail.com")
-   (mu4e-sent-folder       . "/entaroaldaris666/[Gmail]/Sent Mail")
-   (mu4e-trash-folder      . "/entaroaldaris666/[Gmail]/Bin")
-   (mu4e-drafts-folder      . "/entaroaldaris666/[Gmail]/Drafts")
-   (mu4e-refile-folder      . "/entaroaldaris666/[Gmail]/All Mail")
-   (smtpmail-smtp-user     . "entaroaldaris666@gmail.com"))
- nil)
-(set-email-account!
- "vu"
- '((user-full-name . "Kyle Se Hin Son")
-   (user-mail-address . "kyle.sehinson@live.vu.edu.au")
-   (mu4e-sent-folder       . "/vu/Sent Items")
-   (mu4e-trash-folder      . "/vu/Deleted Items")
-   (mu4e-drafts-folder      . "/vu/Drafts")
-   (mu4e-refile-folder      . "/vu/Archive")
-   (smtpmail-smtp-user     . "kyle.sehinson@live.vu.edu.au"))
- nil)
-(after! mu4e
-  (setq mu4e-get-mail-command "mbsync -ac ~/.config/mbsync/config"
-        mu4e-index-update-in-background t
-        mu4e-update-interval 300 ;; get emails and index every 5 minutes
-        mu4e-compose-format-flowed t ;; send emails with format=flowed
-        ;; mu4e-index-cleanup nil ;; no need to run cleanup after indexing for gmail
-        ;; mu4e-index-lazy-check t
-        mu4e-use-fancy-chars t
-        mu4e-view-show-addresses t
-        mu4e-view-show-images t
-        mu4e-change-filenames-when-moving t
-        mu4e-headers-date-format "%d.%m.%y" ;; more sensible date format
-        ;; Org mu4e
-        org-mu4e-convert-to-html t
-        ))
-#+end_src
-
-** Others
-
-* Treemacs
-#+begin_quote
-From the =:ui treemacs= module.
-#+end_quote
-
-Quite often there are superfluous files I'm not that interested in. There's no
-good reason for them to take up space. Let's add a mechanism to ignore them.
-#+begin_src emacs-lisp
-(after! treemacs
-  (defvar treemacs-file-ignore-extensions '()
-    "File extension which `treemacs-ignore-filter' will ensure are ignored")
-  (defvar treemacs-file-ignore-globs '()
-    "Globs which will are transformed to `treemacs-file-ignore-regexps' which `treemacs-ignore-filter' will ensure are ignored")
-  (defvar treemacs-file-ignore-regexps '()
-    "RegExps to be tested to ignore files, generated from `treeemacs-file-ignore-globs'")
-  (defun treemacs-file-ignore-generate-regexps ()
-    "Generate `treemacs-file-ignore-regexps' from `treemacs-file-ignore-globs'"
-    (setq treemacs-file-ignore-regexps (mapcar 'dired-glob-regexp treemacs-file-ignore-globs)))
-  (if (equal treemacs-file-ignore-globs '()) nil (treemacs-file-ignore-generate-regexps))
-  (defun treemacs-ignore-filter (file full-path)
-    "Ignore files specified by `treemacs-file-ignore-extensions', and `treemacs-file-ignore-regexps'"
-    (or (member (file-name-extension file) treemacs-file-ignore-extensions)
-        (let ((ignore-file nil))
-          (dolist (regexp treemacs-file-ignore-regexps ignore-file)
-            (setq ignore-file (or ignore-file (if (string-match-p regexp full-path) t nil)))))))
-  (add-to-list 'treemacs-ignored-file-predicates #'treemacs-ignore-filter))
-#+end_src
-
-Now, we just identify the files in question.
-#+begin_src emacs-lisp
-(setq treemacs-file-ignore-extensions
-      '(;; LaTeX
-        "aux"
-        "ptc"
-        "fdb_latexmk"
-        "fls"
-        "synctex.gz"
-        "toc"
-        ;; LaTeX - glossary
-        "glg"
-        "glo"
-        "gls"
-        "glsdefs"
-        "ist"
-        "acn"
-        "acr"
-        "alg"
-        ;; LaTeX - pgfplots
-        "mw"
-        ;; LaTeX - pdfx
-        "pdfa.xmpi"
-        ))
-(setq treemacs-file-ignore-globs
-      '(;; LaTeX
-        "*/_minted-*"
-        ;; AucTeX
-        "*/.auctex-auto"
-        "*/_region_.log"
-        "*/_region_.tex"))
 #+end_src
 
 * Open Specific Files
 Keybindings to open files that I work with all the time using the find-file command, which is the interactive file search that opens with 'C-x C-f' in GNU Emacs or 'SPC f f' in Doom Emacs.  These keybindings use find-file non-interactively since we specify exactly what file to open.  The format I use for these bindings is 'SPC =' plus 'key' since Doom Emacs does not use 'SPC ='.
 
-| PATH TO FILE                   | DESCRIPTION           | KEYBINDING |
-|--------------------------------+-----------------------+------------|
-| ~/org/agenda.org               | /Edit agenda file/      | SPC = a    |
-| ~/.config/doom/config.org"     | /Edit doom config.org/  | SPC = c    |
-| ~/.config/doom/init.el"        | /Edit doom init.el/     | SPC = i    |
-| ~/.config/doom/packages.el"    | /Edit doom packages.el/ | SPC = p    |
+| PATH TO FILE                | DESCRIPTION          | KEYBINDING |
+|-----------------------------+----------------------+------------|
+| ~/org/agenda.org            | /Edit agenda file/     | SPC = a    |
+| ~/.config/doom/config.org"  | /Edit doom config.org/ | SPC = c    |
+| ~/.config/xmonad/xmonad.hs" | /Edit xmonad.hs/       | SPC = x    |
 
 #+BEGIN_SRC emacs-lisp
 (map! :leader
       (:prefix ("=" . "Open File")
-       :desc "Edit agenda file" "a" #'(lambda () (interactive) (find-file "~/org/agenda.org"))
-       :desc "Edit doom config.org" "c" #'(lambda () (interactive) (find-file "~/.config/doom/config.org"))
-       :desc "Edit doom init.el" "i" #'(lambda () (interactive) (find-file "~/.config/doom/init.el"))
-       :desc "Edit doom packages.el" "p" #'(lambda () (interactive) (find-file "~/.config/doom/packages.el"))
-       :desc "Edit xmonad xmonad.hs" "x" #'(lambda () (interactive) (find-file "~/.config/xmonad/xmonad.hs"))))
+       :desc "Edit agenda file" "a" #'(lambda () (interactive) (find-file (concat org-directory "/agenda.org")))
+       :desc "Edit doom config.org" "c" #'(lambda () (interactive) (find-file (expand-file-name "config.org" doom-private-dir)))
+       :desc "Edit autoload/elyk.el" "u" #'(lambda () (interactive) (find-file (expand-file-name "autoload/elyk.el" doom-private-dir)))
+       :desc "Edit xmonad xmonad.hs" "x" #'(lambda () (interactive) (find-file "~/.config/xmonad/xmonad.hs"))
+       ))
 #+END_SRC
+
+* Open Specific Applications
+
+#+begin_src emacs-lisp
+(map! :leader
+      (:prefix ("-" . "Open Apps")
+       :desc "Open my calendar" "c" #'(lambda () (interactive) (=my-calendar))
+       :desc "Open MU4E" "m" #'(lambda () (interactive) (=mu4e))))
+#+end_src
 
 * Org
 I wrapped most of this block in (after! org).  Without this, my settings might be evaluated too early, which will result in my settings being overwritten by Doom's defaults.  I have also enabled org-journal and org-roam by adding (+journal +roam2) to the org section of my Doom Emacs init.el.
@@ -1020,14 +991,18 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
 #+BEGIN_SRC emacs-lisp
 (map! :leader
       :desc "Org babel tangle" "m B" #'org-babel-tangle)
+
+(after! org-superstar
+  (setq org-superstar-headline-bullets-list '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
+        org-superstar-item-bullet-alist '((?+ . ?➤) (?- . ?✦)) ; changes +/- symbols in item lists
+        org-superstar-prettify-item-bullets t ))
+
 (after! org
   (plist-put org-format-latex-options :scale 4) ;; Make latex equations preview larger
   (setq org-directory "~/org/"
         org-agenda-files '("~/org/agenda.org")
         org-default-notes-file (expand-file-name "notes.org" org-directory)
         org-ellipsis " ▼ "
-        org-superstar-headline-bullets-list '("◉" "●" "○" "◆" "●" "○" "◆")
-        org-superstar-item-bullet-alist '((?+ . ?➤) (?- . ?✦)) ; changes +/- symbols in item lists
         org-log-done 'time
         org-hide-emphasis-markers t
         ;; ex. of org-link-abbrev-alist in action
@@ -1066,21 +1041,18 @@ You can set the Org heading levels to be different font sizes.  So I choose to h
 Org files can be rather nice to look at, particularly with some of the customisations here. This comes at a cost however, expensive font-lock. Feeling like you’re typing through molasses in large files is no fun, but there is a way I can defer font-locking when typing to make the experience more responsive.
 
 #+begin_src emacs-lisp
-(defun locally-defer-font-lock ()
-  "Set jit-lock defer and stealth, when buffer is over a certain size."
-  (when (> (buffer-size) 50000)
-    (setq-local jit-lock-defer-time 0.05
-                jit-lock-stealth-time 1)))
-(add-hook 'org-mode-hook #'locally-defer-font-lock)
+(after! org
+  (add-hook 'org-mode-hook #'locally-defer-font-lock))
 #+end_src
 
 ** Org-journal
 #+begin_src emacs-lisp
-(setq org-journal-dir (concat org-directory "/journal")
-      org-journal-date-prefix "* "
-      org-journal-time-prefix "** "
-      org-journal-date-format "%B %d, %Y (%A) "
-      org-journal-file-format "%Y-%m-%d.org")
+(after! org-journal
+  (setq org-journal-dir (concat org-directory "/journal")
+        org-journal-date-prefix "* "
+        org-journal-time-prefix "** "
+        org-journal-date-format "%B %d, %Y (%A) "
+        org-journal-file-format "%Y-%m-%d.org"))
 #+end_src
 
 ** Org-roam
@@ -1129,10 +1101,10 @@ Org files can be rather nice to look at, particularly with some of the customisa
           )))
 
 (use-package! websocket
-  :after org-roam)
+  :after org-roam-mode)
 
 (use-package! org-roam-ui
-  :after org-roam
+  :after org-roam-mode
   :config
   (setq org-roam-ui-sync-theme t
         org-roam-ui-follow t
@@ -1153,14 +1125,12 @@ We want to change the file name when the title of the note changes.
 
 #+begin_src emacs-lisp
 (use-package! org-appear
+  :after org
   :hook (org-mode . org-appear-mode)
   :config
   (setq org-appear-autoemphasis t
         org-appear-autosubmarkers t
-        org-appear-autolinks nil
-        org-appear-trigger 'manual)
-  (add-hook 'evil-insert-state-entry-hook #'org-appear-manual-start nil t)
-  (add-hook 'evil-insert-state-exit-hook #'org-appear-manual-stop nil t)
+        org-appear-autolinks nil)
   ;; for proper first-time setup, `org-appear--set-elements'
   ;; needs to be run after other hooks have acted.
   (run-at-time nil nil #'org-appear--set-elements))

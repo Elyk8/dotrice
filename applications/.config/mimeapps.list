@@ -1,7 +1,7 @@
 [Added Associations]
 inode/directory=file.desktop;
-x-scheme-handler/http=org.qutebrowser.qutebrowser.desktop;
-x-scheme-handler/https=org.qutebrowser.qutebrowser.desktop;
+x-scheme-handler/http=librewolf.desktop;
+x-scheme-handler/https=librewolf.desktop;
 x-scheme-handler/mailto=neomutt-2.desktop;mail.desktop;userapp-Thunderbird-YG45D1.desktop;
 x-scheme-handler/mid=userapp-Thunderbird-YG45D1.desktop;
 x-scheme-handler/webcal=userapp-Thunderbird-WDQ6D1.desktop;
@@ -30,8 +30,8 @@ text/xml=brave.desktop;
 video/mp4=video.desktop;
 video/x-matroska=video.desktop
 x-scheme-handler/ftp=brave.desktop;
-x-scheme-handler/http=org.qutebrowser.qutebrowser.desktop;
-x-scheme-handler/https=org.qutebrowser.qutebrowser.desktop;
+x-scheme-handler/http=librewolf.desktop;
+x-scheme-handler/https=librewolf.desktop;
 x-scheme-handler/lbry=lbry.desktop
 x-scheme-handler/magnet=torrent.desktop;
 x-scheme-handler/mailto=userapp-Thunderbird-YG45D1.desktop

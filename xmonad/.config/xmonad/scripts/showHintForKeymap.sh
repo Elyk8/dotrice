@@ -62,9 +62,7 @@ INFO=$(awk -v cmdcolor="$CMDCOLOR" -v keycolor="$KEYCOLOR" -v arrowcolor="$ARROW
                         } else {
                             desc=command[1]
                     }
-                key_hint[i++] = sprintf (" ^fg(%s)%3s ^fg(%s)->^fg(%s)%-30.30s", keycolor, keys[1], arrowcolor, cmdcolor, desc)
-                } else if (nr > 1) { # skip the first line
-                    key_hint[i++] = sprintf (" ^fg(%s)%3s ^fg(%s)  ^fg(%s)%-30.30s", "", "", "", "", "")
+                key_hint[i++] = sprintf (" ^fg(%s)%3s ^fg(%s)->^fg(%s)%-28.28s", keycolor, keys[1], arrowcolor, cmdcolor, desc)
                 }
             }
             END {

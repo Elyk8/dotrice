@@ -11,7 +11,7 @@ Config { font = "xft:Iosevka Nerd Font:weight=heavy:pixelsize=18:antialias=true:
        , textOffset       = -1
        , iconOffset       = -8
        , alpha            = 255
-       , position         = BottomSize L 100 30
+       , position         = BottomSize L 100 40
        , lowerOnStart     = True
        , hideOnStart      = False
        , overrideRedirect = True
@@ -22,7 +22,7 @@ Config { font = "xft:Iosevka Nerd Font:weight=heavy:pixelsize=18:antialias=true:
        , alignSep         = "}{"
        , iconRoot         = ".config/xmobar/icons"
        , commands         =
-                    [	                  
+                    [
                       Run Date "%a %d %b<fc=#aac0f0> <fn=2>\xF073</fn></fc>%l:%M:%S%p " "date" 1
                     , Run Battery [
                       "-t", "<acstatus> <left>% <fn=1>\xF64F </fn><timeleft>",

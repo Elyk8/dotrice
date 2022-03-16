@@ -1,3 +1,4 @@
+# -*- editorconfig-conf -*-
 # Basic vars
 set shell bash
 set shellopts '-eu'
@@ -122,8 +123,8 @@ cmd unarchive ${{
   esac
 }}
 
-cmd zip %apack "$f.zip" "$f"
-cmd tar %apack "$f.tar" "$f"
+cmd zip %apack "$f.zip" $(printf "$f" | grep -o '[^/]*$')
+cmd tar %apack "$f.tar" $(printf "$f" | grep -o '[^/]*$')
 
 cmd dragon %setsid -f dragon-drag-and-drop -a -x $fx
 cmd dragon-stay %setsid -f dragon-drag-and-drop -a $fx
