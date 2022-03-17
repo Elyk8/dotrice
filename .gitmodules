@@ -1,24 +1,3 @@
 [submodule "safeeyes/.config/safeeyes/plugins"]
 	path = safeeyes/.config/safeeyes/plugins
 	url = https://github.com/safeeyes/safeeyes-plugins.git
-[submodule "chemacs/.emacs.d"]
-	path = chemacs/.emacs.d
-	url = https://github.com/plexus/chemacs2
-[submodule "/home/elyk/dotrice/xmonad/.config/xmonad/xmonad-git"]
-	path = /home/elyk/dotrice/xmonad/.config/xmonad/xmonad-git
-	url = https://github.com/xmonad/xmonad
-[submodule "/home/elyk/dotrice/xmonad/.config/xmonad/xmonad-contrib-git"]
-	path = /home/elyk/dotrice/xmonad/.config/xmonad/xmonad-contrib-git
-	url = https://github.com/xmonad/xmonad-contrib
-[submodule "/home/elyk/dotrice/xmonad/.config/xmonad/xmobar-git"]
-	path = /home/elyk/dotrice/xmonad/.config/xmonad/xmobar-git
-	url = https://github.com/jaor/xmobar
-[submodule "cheovim/.config/nvim"]
-	path = cheovim/.config/nvim
-	url = https://github.com/Elyk8/cheovim
-[submodule "xmonad/.config/xmonad/xmonad-contrib"]
-	path = xmonad/.config/xmonad/xmonad-contrib
-	url = https://github.com/xmonad/xmonad-contrib
-[submodule "xmonad/.config/xmonad/xmonad"]
-	path = xmonad/.config/xmonad/xmonad
-	url = https://github.com/xmonad/xmonad

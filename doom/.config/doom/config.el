@@ -401,7 +401,7 @@ Not added when either:
 ;; [[file:config.org::*Open Specific Files][Open Specific Files:1]]
 (map! :leader
       (:prefix ("=" . "Open File")
-       :desc "Edit agenda file" "a" #'(lambda () (interactive) (find-file (concat org-directory "/agenda.org")))
+       :desc "Edit agenda file" "a" #'(lambda () (interactive) (find-file (concat org-directory "agenda.org")))
        :desc "Edit doom config.org" "c" #'(lambda () (interactive) (find-file (expand-file-name "config.org" doom-private-dir)))
        :desc "Edit autoload/elyk.el" "u" #'(lambda () (interactive) (find-file (expand-file-name "autoload/elyk.el" doom-private-dir)))
        :desc "Edit xmonad xmonad.hs" "x" #'(lambda () (interactive) (find-file "~/.config/xmonad/xmonad.hs"))
@@ -415,7 +415,7 @@ Not added when either:
        :desc "Open MU4E" "m" #'(lambda () (interactive) (=mu4e))))
 ;; Open Specific Applications:1 ends here
 
-;; [[file:config.org::*Org][Org:1]]
+;; [[file:config.org::*Org-base][Org-base:1]]
 (map! :leader
       :desc "Org babel tangle" "m B" #'org-babel-tangle)
 
@@ -426,8 +426,8 @@ Not added when either:
 
 (after! org
   (plist-put org-format-latex-options :scale 4) ;; Make latex equations preview larger
-  (setq org-directory "~/org"
-        org-agenda-files '((concat "/agenda.org"))
+  (setq org-directory "/media/org/"
+        org-agenda-files '((concat org-directory "agenda.org"))
         org-default-notes-file (expand-file-name "notes.org" org-directory)
         org-ellipsis " ▼ "
         org-log-done 'time
@@ -450,7 +450,7 @@ Not added when either:
            "|"                 ; The pipe necessary to separate "active" states and "inactive" states
            "DONE(d)"           ; Task has been completed
            "CANCELLED(c)" )))) ; Task has been cancelled
-;; Org:1 ends here
+;; Org-base:1 ends here
 
 ;; [[file:config.org::*Set font sizes for each header level in Org][Set font sizes for each header level in Org:1]]
 (custom-set-faces
@@ -469,7 +469,7 @@ Not added when either:
 
 ;; [[file:config.org::*Org-journal][Org-journal:1]]
 (after! org-journal
-  (setq org-journal-dir (concat org-directory "/journal")
+  (setq org-journal-dir (concat org-directory "journal")
         org-journal-date-prefix "* "
         org-journal-time-prefix "** "
         org-journal-date-format "%B %d, %Y (%A) "
@@ -478,7 +478,7 @@ Not added when either:
 
 ;; [[file:config.org::*Org-roam][Org-roam:1]]
 (after! org-roam
-  (setq org-roam-directory (concat org-directory "/roam")
+  (setq org-roam-directory (concat org-directory "roam")
         org-roam-completion-everywhere t
         org-roam-capture-templates
         '(("d" "default" plain "%?"
