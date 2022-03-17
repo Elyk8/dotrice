@@ -66,7 +66,7 @@
 (setq native-comp-async-report-warnings-errors nil)
 ;; Native Compilation:1 ends here
 
-;; [[file:config.org::*Simple Settings][Simple Settings:1]]
+;; [[file:config.org::*Changing Defaults][Changing Defaults:1]]
 (setq-default
     delete-by-moving-to-trash t                 ; Delete files to trash
     window-combination-resize t                 ; take new window space from all other windows (not just current)
@@ -78,11 +78,26 @@
     ;; scroll-preserve-screen-position 'always     ; Don't have `point' jump around
     scroll-margin 2)                            ; It's nice to maintain a little margin
 ;; (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;; Prevents some cases of Emacs flickering.
-;; Simple Settings:1 ends here
+;; Changing Defaults:1 ends here
 
-;; [[file:config.org::*Simple Settings][Simple Settings:2]]
+;; [[file:config.org::*Changing Defaults][Changing Defaults:2]]
 (setq doom-scratch-initial-major-mode 'lisp-interaction-mode)
-;; Simple Settings:2 ends here
+;; Changing Defaults:2 ends here
+
+;; [[file:config.org::*Window title][Window title:1]]
+(setq frame-title-format
+      '(""
+        (:eval
+         (if (s-contains-p org-roam-directory (or buffer-file-name ""))
+             (replace-regexp-in-string
+              ".*/[0-9]*-?" "☰ "
+              (subst-char-in-string ?_ ?  buffer-file-name))
+           "%b"))
+        (:eval
+         (let ((project-name (projectile-project-name)))
+           (unless (string= "-" project-name)
+             (format (if (buffer-modified-p)  " ◉ %s" " ● %s") project-name))))))
+;; Window title:1 ends here
 
 ;; [[file:config.org::*Babel][Babel:1]]
 (add-transient-hook! #'org-babel-execute-src-block
@@ -411,8 +426,8 @@ Not added when either:
 
 (after! org
   (plist-put org-format-latex-options :scale 4) ;; Make latex equations preview larger
-  (setq org-directory "~/org/"
-        org-agenda-files '("~/org/agenda.org")
+  (setq org-directory "~/org"
+        org-agenda-files '((concat "/agenda.org"))
         org-default-notes-file (expand-file-name "notes.org" org-directory)
         org-ellipsis " ▼ "
         org-log-done 'time
@@ -513,7 +528,7 @@ Not added when either:
 
 ;; [[file:config.org::*Org-roam][Org-roam:2]]
 (after! org-roam
-  (add-hook! 'after-save-hook #'org-rename-to-new-title))
+  (add-hook! 'after-save-hook #'elk/org-roam-rename-to-new-title))
 ;; Org-roam:2 ends here
 
 ;; [[file:config.org::*Org Appear][Org Appear:1]]

@@ -33,7 +33,7 @@ alias doomupgrade="~/.emacs.d/bin/doom upgrade"
 alias doompurge="~/.emacs.d/bin/doom purge"
 
 # z.lua useful aliases
-alias j='z -I' # use fzf to select in multiple matches
+alias j='z -I'  # use fzf to select in multiple matches
 alias zz='z -c' # restrict matches to subdirs of $PWD
 alias zi='z -i' # cd with interactive selection
 alias zb='z -b' # quickly cd to the parent directory
@@ -222,3 +222,15 @@ alias lf='lfcd'
 se() { fd -atf --base-directory ~/.config | fzf | xargs -r "$EDITOR"; }
 sr() { fd -atf --base-directory ~/scripts | fzf | xargs -r "$EDITOR"; }
 xevv() { xev | awk -F'[ )]+' '/^KeyPress/ { a[NR+2] } NR in a { printf "%-3s %s\n", $5, $8 }'; }
+
+rosstart() {
+    sudo docker run --net=host --env="DISPLAY" --volume="$HOME/.Xauthority:/root/.Xauthority:rw" --name roslocal -it osrf/ros:noetic-desktop-full bash
+}
+
+rosconnect() {
+    sudo docker exec -ti "$(sudo docker ps -aq --filter ancestor=osrf/ros:noetic-desktop-full --filter status=running)" bash
+}
+
+rosclear() {
+    sudo docker rm "$(sudo docker ps -aq --filter ancestor=osrf/ros:neotic-desktop-full --filter status=exited)"
+}

@@ -551,8 +551,8 @@ appsKeymap = -- Frequently used
   , ("t", spawn myTerminal) -- Spawn terminal
   , ("r", spawn (myTerminal ++ " -e lf")) -- Lf file manager
   , ("[", spawn "xmonad-keys") -- Window Manager Mappings
-  , ("w", spawn "librewolf") -- Launch Librewolf
-  , ("b", spawn "brave") -- Launch Brave
+  , ("w", spawn "prime-run librewolf") -- Launch Librewolf
+  , ("b", spawn "prime-run brave") -- Launch Brave
   -- , ("e", spawn (myEmacs ++ "--eval '(switch-to-buffer nil)'")) -- Emacs dashboard
   , ("e", spawn myEmacs) -- Emacs dashboard
 

@@ -11,7 +11,7 @@ Config { font = "xft:Iosevka Nerd Font:weight=heavy:pixelsize=18:antialias=true:
        , textOffset       = -1
        , iconOffset       = -8
        , alpha            = 255
-       , position         = BottomSize L 100 40
+       , position         = BottomSize L 100 32
        , lowerOnStart     = True
        , hideOnStart      = False
        , overrideRedirect = True
@@ -34,7 +34,7 @@ Config { font = "xft:Iosevka Nerd Font:weight=heavy:pixelsize=18:antialias=true:
                       "-l", "red"
                       ] 10
                     , Run MPD ["-t",
-                               "<title> (<artist>) <statei>",
+                               "<title> <statei>",
                                "--", "-P", "<fn=2>\xF144 </fn>", "-Z", "<fn=2>\xF28B </fn>", "-S", "<fn=2>\xF28D </fn>"] 10
                     , Run Com ".config/xmobar/trayer-padding-icon.sh" [] "trayerpad" 20
                     , Run UnsafeXPropertyLog "_XMONAD_LOG_0"
