@@ -979,7 +979,7 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
 (after! org
   (plist-put org-format-latex-options :scale 4) ;; Make latex equations preview larger
   (setq org-directory "/media/org/"
-        org-agenda-files '((concat org-directory "agenda.org"))
+        org-agenda-files '("/media/org/agenda.org")
         org-default-notes-file (expand-file-name "notes.org" org-directory)
         org-ellipsis " ▼ "
         org-log-done 'time
@@ -1046,7 +1046,7 @@ Org files can be rather nice to look at, particularly with some of the customisa
 
 #+begin_src emacs-lisp
 (after! org-roam
-  (setq org-roam-directory (concat org-directory "roam")
+  (setq org-roam-directory (concat org-directory "roam/")
         org-roam-completion-everywhere t
         org-roam-capture-templates
         '(("d" "default" plain "%?"

@@ -1,0 +1,80 @@
+# ##################
+# kylese58@gmail.com
+# ##################
+IMAPAccount gmail
+Host imap.gmail.com
+User kylese58@gmail.com
+PassCmd "pass kylese58-app-password"
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore kylese58-remote
+Account gmail
+
+# local storage
+MaildirStore kylese58-local
+Path /media/mail/kylese58/
+Inbox /media/mail/kylese58/Inbox
+Subfolders Verbatim
+
+# channel to remote storage
+Channel kylese58
+Far :kylese58-remote:
+Near :kylese58-local:
+Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Bin" "[Gmail]/All Mail" "[Gmail]/Drafts" "[Gmail]/Starred"
+Create Both
+SyncState *
+
+# ##########################
+# entaroaldaris666@gmail.com
+# ##########################
+IMAPAccount gmail
+Host imap.gmail.com
+User entaroaldaris666@gmail.com
+PassCmd "pass entaroaldaris666-app-password"
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore entaroaldaris666-remote
+Account gmail
+
+# local storage
+MaildirStore entaroaldaris666-local
+Path /media/mail/entaroaldaris666/
+Inbox /media/mail/entaroaldaris666/Inbox
+Subfolders Verbatim
+
+# channel to remote storage
+Channel entaroaldaris666
+Far :entaroaldaris666-remote:
+Near :entaroaldaris666-local:
+Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Bin" "[Gmail]/All Mail" "[Gmail]/Drafts" "[Gmail]/Starred"
+Create Both
+SyncState *
+
+# ############################
+# kyle.sehinson@live.vu.edu.au
+# ############################
+IMAPAccount outlook
+Host outlook.office365.com
+User kyle.sehinson@live.vu.edu.au
+PassCmd "pass kyle.sehinson@live.vu.edu.au"
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore vu-remote
+Account outlook
+
+MaildirStore vu-local
+Path /media/mail/vu/
+Inbox /media/mail/vu/Inbox/
+SubFolders Verbatim
+
+Channel vu
+Far :vu-remote:
+Near :vu-local:
+Patterns *
+Create Both
+Sync All
+Expunge Both
+SyncState *

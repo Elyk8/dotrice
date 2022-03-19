@@ -15,14 +15,14 @@ run safeeyes -e &
 run remaps &
 run clipmenud &
 run redshift &
-sleep 5 && run volctl &
 run /usr/bin/emacs --daemon &
 run syncthing-gtk --minimized &
 run flashfocus &
 
-autostart="dunst lxsession nm-applet picom mictray"
+autostart="dunst lxsession nm-applet picom pipewire mpd"
 for program in $autostart; do
-	pidof -s "$program" || setsid -f "$program"
+    pidof -s "$program" || setsid -f "$program"
 done >/dev/null 2>&1
 
 run "$HOME"/.fehbg &
+sleep 5 && run volctl && mictray &

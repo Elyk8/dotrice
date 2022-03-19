@@ -483,7 +483,7 @@ myManageHook =
   iconName = stringProperty "WM_ICON_NAME"
   myIgnores = ["SafeEyes-0", "SafeEyes-1"]
   myW1C = ["VSCodium"]
-  myW3C = ["Brave-browser", "qutebrowser", "librewolf"]
+  myW3C = ["Brave-browser", "qutebrowser", "librewolf", "firefox"]
   myW4C = ["zoom", "discord"]
   myW5C = ["VirtualBox Manager", "VirtualBox Machine", "Thunderbird"]
   myFloatC = ["confirm", "file_progress", "dialog", "download", "error", "toolbar", "Gmrun"]
@@ -551,8 +551,8 @@ appsKeymap = -- Frequently used
   , ("t", spawn myTerminal) -- Spawn terminal
   , ("r", spawn (myTerminal ++ " -e lf")) -- Lf file manager
   , ("[", spawn "xmonad-keys") -- Window Manager Mappings
-  , ("w", spawn "prime-run librewolf") -- Launch Librewolf
-  , ("b", spawn "prime-run brave") -- Launch Brave
+  , ("w", spawn "firefox") -- Launch Firefox
+  , ("b", spawn "brave") -- Launch Brave
   -- , ("e", spawn (myEmacs ++ "--eval '(switch-to-buffer nil)'")) -- Emacs dashboard
   , ("e", spawn myEmacs) -- Emacs dashboard
 
@@ -619,7 +619,7 @@ mainKeymap c = mkKeymap
   , ("M-S-q", killAll) -- Kill all windows on current workspace
 
       -- Useful programs to have a keybinding for launch
-  , ("M-<Esc>", spawn "arcolinux-logout") -- Exit Prompt using Arcolinux Logout
+  , ("M-<Esc>", spawn "sysact") -- Exit Prompt using dmenu
 
       -- Sticky Windows
   , ("M-v", windows copyToAll) -- Make focused window always visible in all workspaces

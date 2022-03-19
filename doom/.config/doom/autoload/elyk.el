@@ -22,7 +22,7 @@
 (defun find-in-suckless ()
   "Open a file somewhere in the suckless directory, ~/.local/src via a fuzzy filename search."
   (interactive)
-  (doom-project-find-file (expand-file-name "~/.local/src")))
+  (doom-project-find-file (expand-file-name "~/.local/src/")))
 
 ;;;###autoload
 (defun greedily-do-daemon-setup ()
@@ -71,3 +71,9 @@
     (rename-file old-file new-file 1)
     (set-visited-file-name new-file)
     (set-buffer-modified-p nil)))
+
+;;;###autoload
+(defun crontab-e ()
+    "Run `crontab -e' in a emacs buffer."
+    (interactive)
+    (with-editor-async-shell-command "crontab -e"))

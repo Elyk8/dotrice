@@ -427,7 +427,7 @@ Not added when either:
 (after! org
   (plist-put org-format-latex-options :scale 4) ;; Make latex equations preview larger
   (setq org-directory "/media/org/"
-        org-agenda-files '((concat org-directory "agenda.org"))
+        org-agenda-files '("/media/org/agenda.org")
         org-default-notes-file (expand-file-name "notes.org" org-directory)
         org-ellipsis " ▼ "
         org-log-done 'time
@@ -478,7 +478,7 @@ Not added when either:
 
 ;; [[file:config.org::*Org-roam][Org-roam:1]]
 (after! org-roam
-  (setq org-roam-directory (concat org-directory "roam")
+  (setq org-roam-directory (concat org-directory "roam/")
         org-roam-completion-everywhere t
         org-roam-capture-templates
         '(("d" "default" plain "%?"
