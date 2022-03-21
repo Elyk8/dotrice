@@ -1,0 +1,93 @@
+(defcfg
+  input   (device-file "/dev/input/by-id/usb-Lenovo_ThinkPad_Compact_USB_Keyboard_with_TrackPoint-event-kbd")
+  output (uinput-sink
+          "My KMonad output"
+          "sleep 0.2s; xset r rate 200 40; sleep 0.2s")
+  fallthrough true
+)
+
+;; Default aliases
+(defalias
+  f4            (tap-hold-next 300 f4 caps)
+  caps          (tap-hold-next 300 esc lctl)
+  tab           (tap-hold-next 300 tab lmet)
+  \             (tap-hold-next 300 \ rmet)
+  spc           (tap-next-release spc (layer-toggle vim))
+)
+
+;; VI-like-mode-aliases
+(defalias
+  b (around rctl lft)
+  w (around rctl rght)
+  v (layer-add sel)
+)
+
+;; VI-selection-like-mode-aliases
+(defalias
+  vb (around rctl S-lft)
+  vw (around rctl S-rght)
+  vlf S-lft
+  vrg S-rght
+  vup S-up
+  vdo S-down
+  vho S-home
+  ven S-end
+  ves (layer-rem sel)
+)
+
+
+(defsrc
+  esc     f1      f2      f3      f4      f5      f6      f7      f8      f9      f10     f11     f12     home    end    ins    del
+  `       1       2       3       4       5       6       7       8       9       0       -       =       bspc
+  tab     q       w       e       r       t       y       u       i       o       p       [       ]       \
+  caps    a       s       d       f       g       h       j       k       l       ;       '       ret
+  lsft    z       x       c       v       b       n       m       ,       .       /       rsft
+  lctl            lmet    lalt    spc                             ralt    prnt    rctrl   pgup    up      pgdn
+                                                                                          lft     down    rght
+)
+
+
+(deflayer default
+  esc     f1      f2      f3      @f4     f5      f6      f7      f8      f9      f10     f11     f12     home    end    ins    del
+  `       1       2       3       4       5       6       7       8       9       0       -       =       bspc
+  @tab    q       w       e       r       t       y       u       i       o       p       [       ]       @\
+  @caps   a       s       d       f       g       h       j       k       l       ;       '       ret
+  lsft    z       x       c       v       b       n       m       ,       .       /       rsft
+  lctl            lmet    lalt    @spc                            ralt    prnt    rctrl   pgup    up      pgdn
+                                                                                          lft     down    rght
+)
+
+(deflayer vim
+  -       -       -       -       -       -       -       -       -       -       -       -       -       -       -      -      -
+  -       1       2       3       4       5       6       7       8       9       0       -       -       -
+  -       -       @w      end     -       -       -       -       -       -       -       -       -       -
+  -       home    -       -       -       -       lft     down    up      rght    -       -       -
+  -       -       -       -       @v      @b      -       -       -       -       -       -
+  -               -       -       -                               -       -       -       -       -       -
+                                                                                          -       -       -
+)
+
+(deflayer sel
+  -       -       -       -       -       -       -       -       -       -       -       -       -       -       -      -      -
+  -       1       2       3       4       5       6       7       8       9       0       -       -       -
+  -       -       @vw     @ven    -       -       -       -       -       -       -       -       -       -
+  @ves    @vho    -       -       -       -       @vlf    @vdo    @vup    @vrg    -       -       -
+  -       -       -       -       -       @vb     -       -       -       -       -       -
+  -               -       -       -                               @ves    -       -       -       -       -
+                                                                                          -       -       -
+)
+
+;; vim: ft=elisp
+
+#|_________________________________________________________________________________
+
+(deflayer template
+  -       -       -       -       -       -       -       -       -       -       -       -       -       -       -      -      -
+  -       -       -       -       -       -       -       -       -       -       -       -       -       -
+  -       -       -       -       -       -       -       -       -       -       -       -       -       -
+  -       -       -       -       -       -       -       -       -       -       -       -       -
+  -       -       -       -       -       -       -       -       -       -       -       -
+  -               -       -       -                               -       -       -       -       -       -
+                                                                                          -       -       -
+)
+|#

@@ -5,9 +5,6 @@ zsh/.config/zsh/plugins/
 inkscape/.config/inkscape/*
 !inkscape/.config/inkscape/templates
 
-# safeeyes
-safeeyes/.config/safeeyes/plugins
-
 # VSCodium
 codium/.config/VSCodium/*
 !codium/.config/VSCodium/product.json

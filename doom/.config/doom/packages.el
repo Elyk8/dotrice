@@ -9,9 +9,13 @@
 (package! org-appear :recipe (:host github :repo "awth13/org-appear")
   :pin "148aa124901ae598f69320e3dcada6325cdc2cf0")
 
-;; org-roam-ui tries to pull latest changes from org-roam, so we unpin it
 (package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")) :pin "c93f6b61a8d3d2edcf07eda6220278c418d1054b")
 (package! websocket :pin "fda4455333309545c0787a79d73c19ddbeb57980") ; dependency of `org-roam-ui'
+
+(package! org-super-agenda)
+(package! kbd-mode
+  :recipe (:host github
+           :repo "kmonad/kbd-mode"))
 
 ;; Graphs packages
 (package! ink :recipe (:host github :repo "foxfriday/ink"))

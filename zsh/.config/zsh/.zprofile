@@ -1,10 +1,10 @@
 # Scaling
-export QT_QPA_PLATFORMTHEME="qt5ct"
+export QT_QPA_PLATFORMTHEME="gtk2"	# Have QT use gtk2 theme
 # export QT_STYLE_OVERRIDE=kvantum
 export PLASMA_USE_QT_SCALING=1
-#export QT_AUTO_SCREEN_SCALE_FACTOR=0
-#export QT_SCALE_FACTOR=1
-#export QT_SCREEN_SCALE_FACTORS="1;1;1"
+export QT_AUTO_SCREEN_SCALE_FACTOR=0
+export QT_SCALE_FACTOR=1
+export QT_SCREEN_SCALE_FACTORS="1;1;1"
 #export GDK_SCALE=1
 #export GDK_DPI_SCALE=1
 
@@ -15,7 +15,7 @@ export PLASMA_USE_QT_SCALING=1
 	if [ -z "${DISPLAY}" ] && [ "$(tty)" = "/dev/tty1" ]; then
 		pidof -s Xorg &> /dev/null && exit 0
 		# sudo /usr/bin/prime-switch &> /dev/null
-		exec sx "${XDG_CONFIG_HOME:-$HOME/.config}/x11/xinitrc"
+		exec startx "${XDG_CONFIG_HOME:-$HOME/.config}/x11/xinitrc" > /dev/null 2>&1
 	fi
 # else
 # 	echo "\033[31mIMPORTANT\033[0m: Note that \033[32m\`libxft-bgra\`\033[0m must be installed for this build of dusk.

@@ -1,7 +1,7 @@
 {
     "allow_postpone": false,
     "long_break_duration": 45,
-    "long_break_interval": 120,
+    "long_break_interval": 75,
     "long_breaks": [
         {
             "name": "Walk for a while"
@@ -98,20 +98,6 @@
             "enabled": true,
             "id": "mediacontrol",
             "version": "0.0.1"
-        },
-        {
-            "enabled": false,
-            "id": "weather",
-            "settings": {
-                "api": "",
-                "location": "London,UK"
-            },
-            "version": "0.0.1"
-        },
-        {
-            "enabled": true,
-            "id": "zoom",
-            "version": "0.0.1"
         }
     ],
     "postpone_duration": 5,
@@ -119,7 +105,7 @@
     "random_order": true,
     "rpc_port": 7200,
     "short_break_duration": 15,
-    "short_break_interval": 40,
+    "short_break_interval": 25,
     "short_breaks": [
         {
             "name": "Tightly close your eyes"

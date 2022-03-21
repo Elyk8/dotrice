@@ -255,6 +255,7 @@ Not added when either:
       :desc "Open config.org" :ne "c" (cmd! (find-file (expand-file-name "config.org" doom-private-dir)))
       :desc "Config dir" :ne "C" #'doom/open-private-config
       :desc "Open dotfile" :ne "." #'find-in-dotfiles
+      :desc "Open configs" :ne ">" #'find-in-configs
       :desc "Open suckless stuff" :ne "x" #'find-in-suckless
       :desc "Open scripts" :ne "e" #'find-in-scripts
       :desc "Open MU4E" :ne "m" #'=mu4e
@@ -267,9 +268,10 @@ Not added when either:
       :desc "Set theme" :ne "t" #'consult-theme
       :desc "Quit" :ne "Q" #'save-buffers-kill-terminal)
 
-(remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
-(add-hook! '+doom-dashboard-mode-hook (hide-mode-line-mode 1) (hl-line-mode -1))
-(setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
+(setq +doom-dashboard-menu-sections (cl-subseq +doom-dashboard-menu-sections 0 2))
+;; (remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
+;; (add-hook! '+doom-dashboard-mode-hook (hide-mode-line-mode 1) (hl-line-mode -1))
+;; (setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
 
 (map! :leader :desc "Dashboard" "e" #'+doom-dashboard/open)
 ;; (add-transient-hook! #'+doom-dashboard-mode (+doom-dashboard-setup-modified-keymap))
@@ -341,7 +343,9 @@ Not added when either:
 ;; Fonts and Appearance:1 ends here
 
 ;; [[file:config.org::*Fonts and Appearance][Fonts and Appearance:2]]
-(setq doom-theme 'doom-dark+)
+(setq doom-theme 'doom-one)
+;; (set-frame-parameter (selected-frame) 'alpha '(95 . 95))
+;; (add-to-list 'default-frame-alist '(alpha . (95 . 95)))
 ;; Fonts and Appearance:2 ends here
 
 ;; [[file:config.org::*Hooks][Hooks:1]]
@@ -372,6 +376,10 @@ Not added when either:
 ;; Implicit /g flag on evil ex substitution, because I use the default behavior less often.
 (setq evil-ex-substitute-global t)
 ;; Key Mappings And Evil:1 ends here
+
+;; [[file:config.org::*KMonad][KMonad:1]]
+(use-package! kbd-mode)
+;; KMonad:1 ends here
 
 ;; [[file:config.org::*Line Settings][Line Settings:1]]
 (setq display-line-numbers-type t) ;; By disabling line number, we improve performance significantly
@@ -426,12 +434,13 @@ Not added when either:
 
 (after! org
   (plist-put org-format-latex-options :scale 4) ;; Make latex equations preview larger
-  (setq org-directory "/media/org/"
-        org-agenda-files '("/media/org/agenda.org")
+  (setq org-directory "~/org/"
+        org-agenda-files '("~/org/agenda.org")
         org-default-notes-file (expand-file-name "notes.org" org-directory)
         org-ellipsis " ▼ "
         org-log-done 'time
         org-hide-emphasis-markers t
+        org-insert-heading-respect-content nil ;; Insert org headings at point
         ;; ex. of org-link-abbrev-alist in action
         ;; [[arch-wiki:Name_of_Page][Description]]
         org-link-abbrev-alist    ; This overwrites the default Doom org-link-abbrev-list
@@ -478,7 +487,7 @@ Not added when either:
 
 ;; [[file:config.org::*Org-roam][Org-roam:1]]
 (after! org-roam
-  (setq org-roam-directory (concat org-directory "roam/")
+  (setq org-roam-directory "~/org/roam"
         org-roam-completion-everywhere t
         org-roam-capture-templates
         '(("d" "default" plain "%?"
@@ -531,7 +540,7 @@ Not added when either:
   (add-hook! 'after-save-hook #'elk/org-roam-rename-to-new-title))
 ;; Org-roam:2 ends here
 
-;; [[file:config.org::*Org Appear][Org Appear:1]]
+;; [[file:config.org::*Org-appear][Org-appear:1]]
 (use-package! org-appear
   :after org
   :hook (org-mode . org-appear-mode)
@@ -542,7 +551,15 @@ Not added when either:
   ;; for proper first-time setup, `org-appear--set-elements'
   ;; needs to be run after other hooks have acted.
   (run-at-time nil nil #'org-appear--set-elements))
-;; Org Appear:1 ends here
+;; Org-appear:1 ends here
+
+;; [[file:config.org::*Org-super-agenda][Org-super-agenda:1]]
+(use-package! org-super-agenda
+  :after org-agenda
+  :config
+  (setq org-super-agenda-groups '((:auto-dir-name t)))
+  (org-super-agenda-mode))
+;; Org-super-agenda:1 ends here
 
 ;; [[file:config.org::*Inkscape][Inkscape:1]]
 (defvar ink-flags-png (list "--export-area-drawing"
@@ -672,6 +689,11 @@ Not added when either:
 </svg>"
   "Default file template.")
 ;; Inkscape:1 ends here
+
+;; [[file:config.org::*Dictionary][Dictionary:1]]
+(setq ispell-dictionary "en-custom"
+      ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
+;; Dictionary:1 ends here
 
 ;; [[file:config.org::*Which-key][Which-key:1]]
 (after! which-key

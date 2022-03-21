@@ -10,19 +10,19 @@ run() {
 # /usr/bin/prime-offload
 # multi-monitor
 multi-hybrid-graphics
-xrdb -merge ~/.config/x11/Xresources
+xrdb -merge ~/.config/x11/Xresources & xrdbpid=$!
 run safeeyes -e &
-run remaps &
-run clipmenud &
-run redshift &
+run kmonad ~/.config/kmonad/kmonad.kbd &
 run /usr/bin/emacs --daemon &
 run syncthing-gtk --minimized &
-run flashfocus &
+run /usr/bin/pipewire &
 
-autostart="dunst lxsession nm-applet picom pipewire mpd"
+autostart="redshift clipmenud flashfocus dunst lxsession nm-applet picom mpd musnify-mpd"
 for program in $autostart; do
     pidof -s "$program" || setsid -f "$program"
 done >/dev/null 2>&1
 
 run "$HOME"/.fehbg &
 sleep 5 && run volctl && mictray &
+
+[ -n "$xrdbpid" ] && wait "$xrdbpid"

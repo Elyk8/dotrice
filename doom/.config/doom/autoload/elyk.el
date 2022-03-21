@@ -6,6 +6,11 @@
   (interactive)
   (doom-project-find-file (expand-file-name "~/dotrice")))
 
+(defun find-in-configs ()
+  "Open a file somewhere in ~/.config via a fuzzy filename search."
+  (interactive)
+  (find-file (expand-file-name "~/.config/")))
+
 ;;;###autoload
 (defun browse-dotfiles ()
   "Browse the files in ~/dotrice."
@@ -22,7 +27,7 @@
 (defun find-in-suckless ()
   "Open a file somewhere in the suckless directory, ~/.local/src via a fuzzy filename search."
   (interactive)
-  (doom-project-find-file (expand-file-name "~/.local/src/")))
+  (find-file (expand-file-name "~/.local/src/")))
 
 ;;;###autoload
 (defun greedily-do-daemon-setup ()

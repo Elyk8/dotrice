@@ -12,7 +12,7 @@ import           Data.Maybe                     ( fromJust
                                                 , isJust
                                                 )
 import           Data.Monoid
-import           Data.Ratio                          -- Require for rational (%) operator
+import           Data.Ratio                            -- Require for rational (%) operator
 import           Data.Semigroup
 import           Foreign.C                      ( CInt )
 import           System.Directory
@@ -59,6 +59,7 @@ import           XMonad.Hooks.ManageDocks       ( ToggleStruts(..)
                                                 )
 import           XMonad.Hooks.ManageHelpers     ( (-?>)
                                                 , Side(CE, NW)
+                                                , (^?)
                                                 , composeOne
                                                 , doCenterFloat
                                                 , doFullFloat
@@ -468,6 +469,7 @@ myManageHook =
       , [ className =? c --> doShift (myWorkspaces !! 4) | c <- myW5C ]
       , [ className =? c --> doFloat | c <- myFloatC ]
       , [ className =? c --> doCenterFloat | c <- myFloatCC ]
+      , [ name ^? "Emacs Everywhere" --> doCenterFloat ]
       , [ name =? n --> doSideFloat NW | n <- myFloatSN ]
       , [ name =? n --> doF W.focusDown | n <- myFocusDC ]
       , [role =? "LINE" --> doFloat]
@@ -476,6 +478,7 @@ myManageHook =
       , [iconName =? "Gvim        " --> doFloat]
       , [iconName =? "Launch Application" --> doFloat]
       , [isFullscreen --> doFullFloat]
+      , [isDialog --> doFloat]
       ]
  where
   name = stringProperty "WM_NAME"
@@ -555,6 +558,7 @@ appsKeymap = -- Frequently used
   , ("b", spawn "brave") -- Launch Brave
   -- , ("e", spawn (myEmacs ++ "--eval '(switch-to-buffer nil)'")) -- Emacs dashboard
   , ("e", spawn myEmacs) -- Emacs dashboard
+  , ("f", spawn "$HOME/.emacs.d/bin/doom everywhere") -- Doom emacs everywhere
 
     -- Music and volume control
   , ("n", namedScratchpadAction myScratchPads "ncmpcpp") -- Ncmpcpp Player
@@ -619,7 +623,7 @@ mainKeymap c = mkKeymap
   , ("M-S-q", killAll) -- Kill all windows on current workspace
 
       -- Useful programs to have a keybinding for launch
-  , ("M-<Esc>", spawn "sysact") -- Exit Prompt using dmenu
+  , ("M-<Esc>", spawn "sysact") -- Exit prompt using dmenu
 
       -- Sticky Windows
   , ("M-v", windows copyToAll) -- Make focused window always visible in all workspaces
@@ -652,7 +656,7 @@ mainKeymap c = mkKeymap
 
       -- Layouts
   , ("M-b", sendMessage NextLayout) -- Switch to next layout
-  , ("M-<Tab>", sendMessage (MT.Toggle NBFULL) >> sendMessage ToggleStruts) -- Toggles noborder/full
+  , ("M-f", sendMessage (MT.Toggle NBFULL) >> sendMessage ToggleStruts) -- Toggles noborder/full
   , ("M-r", sendMessage Mag.Toggle) -- Zoom focused client
 
       -- Increase/decrease windows in the master pane or the stack
@@ -693,6 +697,7 @@ mainKeymap c = mkKeymap
       -- Function keys
   , ("M-<F1>", spawn "buckle-spring") -- Toggle the clicky sound from a buckle spring keyboard
   , ("M-<F2>", spawn "restart-emacs") -- Restart the emacs daemon
+  , ("M-<F3>", spawn "kmonad-refresh") -- Refresh kmonad
 
       -- System
   , ("<XF86Calculator>", spawn (myTerminal ++ " -e bc -l"))

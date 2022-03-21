@@ -1,10 +1,57 @@
 #+title: Elyk's Doom Emacs Config
 #+author: Kyle Se
 #+description: This is my personal doom emacs config
-#+startup: fold
 #+property: header-args:emacs-lisp :tangle yes :comments link
 #+property: header-args:elisp :exports code
 #+property: header-args :tangle no :results silent :eval no-export
+
+* Table of Contents :toc:
+- [[#lexical-keybinds][Lexical Keybinds]]
+- [[#doom-configuration][DOOM Configuration]]
+  - [[#async-config-tangling][Async config tangling]]
+  - [[#modules][Modules]]
+  - [[#packages][Packages]]
+  - [[#my-packages][My Packages]]
+- [[#native-compilation][Native Compilation]]
+- [[#simple-settings][Simple Settings]]
+  - [[#changing-defaults][Changing Defaults]]
+  - [[#window-title][Window title]]
+- [[#babel][Babel]]
+- [[#bookmarks-and-buffers][Bookmarks and Buffers]]
+  - [[#bookmarks][Bookmarks]]
+  - [[#buffers][Buffers]]
+  - [[#keybindings-within-ibuffer-mode][Keybindings within ibuffer mode]]
+- [[#calendar-and-e-mail][Calendar and E-mail]]
+  - [[#icalendar][iCalendar]]
+  - [[#mu4e][MU4E]]
+- [[#completion][Completion]]
+- [[#dashboard][Dashboard]]
+  - [[#configuring-dashboard][Configuring Dashboard]]
+- [[#dired][Dired]]
+  - [[#keybindings-to-open-dired][Keybindings To Open Dired]]
+  - [[#keybindings-within-dired][Keybindings Within Dired]]
+  - [[#keybindings-within-dired-with-peep-dired-mode-enabled][Keybindings Within Dired With Peep-Dired-Mode Enabled]]
+- [[#fonts-and-appearance][Fonts and Appearance]]
+- [[#hooks][Hooks]]
+- [[#key-mappings-and-evil][Key Mappings And Evil]]
+- [[#kmonad][KMonad]]
+- [[#line-settings][Line Settings]]
+- [[#language][Language]]
+  - [[#latex][Latex]]
+  - [[#haskell][Haskell]]
+- [[#mouse-settings][Mouse Settings]]
+- [[#open-specific-files][Open Specific Files]]
+- [[#open-specific-applications][Open Specific Applications]]
+- [[#org][Org]]
+  - [[#org-base][Org-base]]
+  - [[#set-font-sizes-for-each-header-level-in-org][Set font sizes for each header level in Org]]
+  - [[#org-journal][Org-journal]]
+  - [[#org-roam][Org-roam]]
+  - [[#org-appear][Org-appear]]
+  - [[#org-super-agenda][Org-super-agenda]]
+  - [[#inkscape][Inkscape]]
+- [[#dictionary][Dictionary]]
+- [[#which-key][Which-key]]
 
 * Lexical Keybinds
 
@@ -22,6 +69,7 @@ variables, and virtually no other languages have adopted it.
 * DOOM Configuration
 
 ** Async config tangling
+
 Doom adds an org-mode hook +literate-enable-recompile-h. This is a nice idea, but it’s too blocking for my taste. Since I trust my tangling to be fairly straightforward, I’ll just redefine it to a simpler, async, function.
 #+begin_src emacs-lisp
 (defvar +literate-tangle--proc nil)
@@ -83,6 +131,7 @@ Doom adds an org-mode hook +literate-enable-recompile-h. This is a nice idea, bu
 #+end_src
 
 ** Modules
+
 This file controls what Doom modules are enabled and what order they load
 in. Remember to run 'doom sync' after modifying it!
 
@@ -243,6 +292,7 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
        (org
         +gnuplot
         +pomodoro
+        +present
         +journal             ; enable org journal
         +pretty              ; replace asterisks with pretty org bullets
         +publish             ; create static websites with org
@@ -289,6 +339,7 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
 #+end_src
 
 ** Packages
+
 $DOOMDIR/packages.el
 
 To install a package with Doom you must declare them here and run ~doom sync~
@@ -381,9 +432,13 @@ release. The `unpin!' macro allows you to unpin single packages...
 (package! org-appear :recipe (:host github :repo "awth13/org-appear")
   :pin "148aa124901ae598f69320e3dcada6325cdc2cf0")
 
-;; org-roam-ui tries to pull latest changes from org-roam, so we unpin it
 (package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")) :pin "c93f6b61a8d3d2edcf07eda6220278c418d1054b")
 (package! websocket :pin "fda4455333309545c0787a79d73c19ddbeb57980") ; dependency of `org-roam-ui'
+
+(package! org-super-agenda)
+(package! kbd-mode
+  :recipe (:host github
+           :repo "kmonad/kbd-mode"))
 
 ;; Graphs packages
 (package! ink :recipe (:host github :repo "foxfriday/ink"))
@@ -407,6 +462,7 @@ I have been using native compilation for improved performance. We just want less
 * Simple Settings
 
 ** Changing Defaults
+
 These are better defaults (or preferences for me) which I would want to be on always.
 #+begin_src emacs-lisp
 (setq-default
@@ -426,7 +482,6 @@ When I bring up Doom's scratch buffer with SPC x, it's often to play with elisp 
 #+begin_src emacs-lisp
 (setq doom-scratch-initial-major-mode 'lisp-interaction-mode)
 #+end_src
-
 
 ** Window title
 
@@ -509,6 +564,7 @@ Bookmarks are somewhat like registers in that they record positions you can jump
 #+end_src
 
 ** Buffers
+
 Regarding /buffers/, the text you are editing in Emacs resides in an object called a /buffer/. Each time you visit a file, a buffer is used to hold the file’s text. Each time you invoke Dired, a buffer is used to hold the directory listing.  /Ibuffer/ is a program that lists all of your Emacs /buffers/, allowing you to navigate between them and filter them.
 
 | COMMAND         | DESCRIPTION          | KEYBINDING |
@@ -520,6 +576,7 @@ Regarding /buffers/, the text you are editing in Emacs resides in an object call
 | save-buffer     | Save current buffer  | SPC b s    |
 
 ** Keybindings within ibuffer mode
+
 | COMMAND                           | DESCRIPTION                            | KEYBINDING |
 |-----------------------------------+----------------------------------------+------------|
 | ibuffer-mark-forward              | Mark the buffer                        | m          |
@@ -550,9 +607,11 @@ Regarding /buffers/, the text you are editing in Emacs resides in an object call
 #+end_src
 
 * Calendar and E-mail
+
 I finally found a way to ditch Thunderbird and use emails purely for my emails and calendar demands.
 
 ** iCalendar
+
 Here I set up my calendar
 
 #+begin_src emacs-lisp
@@ -585,6 +644,7 @@ Here I set up my calendar
 #+end_src
 
 ** MU4E
+
 Here, I setup all my email addresses and their directories.
 #+begin_src emacs-lisp
 (after! mu4e
@@ -683,6 +743,7 @@ The dashboard contains too many things to my taste. It must be something which y
       :desc "Open config.org" :ne "c" (cmd! (find-file (expand-file-name "config.org" doom-private-dir)))
       :desc "Config dir" :ne "C" #'doom/open-private-config
       :desc "Open dotfile" :ne "." #'find-in-dotfiles
+      :desc "Open configs" :ne ">" #'find-in-configs
       :desc "Open suckless stuff" :ne "x" #'find-in-suckless
       :desc "Open scripts" :ne "e" #'find-in-scripts
       :desc "Open MU4E" :ne "m" #'=mu4e
@@ -695,9 +756,10 @@ The dashboard contains too many things to my taste. It must be something which y
       :desc "Set theme" :ne "t" #'consult-theme
       :desc "Quit" :ne "Q" #'save-buffers-kill-terminal)
 
-(remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
-(add-hook! '+doom-dashboard-mode-hook (hide-mode-line-mode 1) (hl-line-mode -1))
-(setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
+(setq +doom-dashboard-menu-sections (cl-subseq +doom-dashboard-menu-sections 0 2))
+;; (remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
+;; (add-hook! '+doom-dashboard-mode-hook (hide-mode-line-mode 1) (hl-line-mode -1))
+;; (setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
 
 (map! :leader :desc "Dashboard" "e" #'+doom-dashboard/open)
 ;; (add-transient-hook! #'+doom-dashboard-mode (+doom-dashboard-setup-modified-keymap))
@@ -711,12 +773,13 @@ Dired is the file manager within Emacs.  Below, I setup keybindings for image pr
 
 ** Keybindings To Open Dired
 
-| COMMAND    | DESCRIPTION                          | KEYBINDING |
-|------------+--------------------------------------+------------|
-| dired      | /Open dired file manager/            | SPC d d    |
+| COMMAND    | DESCRIPTION                        | KEYBINDING |
+|------------+------------------------------------+------------|
+| dired      | /Open dired file manager/          | SPC d d    |
 | dired-jump | /Jump to current directory in dired/ | SPC d j    |
 
 ** Keybindings Within Dired
+
 *** Basic dired commands
 
 | COMMAND                | DESCRIPTION                                 | KEYBINDING |
@@ -839,16 +902,10 @@ Settings related to fonts within Doom Emacs:
 Set the theme of doom emacs here. To try out new themes, I set a keybinding for counsel-load-theme with 'SPC h t'. It is hear that you can also set the transparency of each emacs frame.
 
 #+begin_src emacs-lisp
-(setq doom-theme 'doom-dark+)
+(setq doom-theme 'doom-one)
+;; (set-frame-parameter (selected-frame) 'alpha '(95 . 95))
+;; (add-to-list 'default-frame-alist '(alpha . (95 . 95)))
 #+end_src
-
-# * Frames Only Mode
-# Make emacs behave better with tiling window managers.
-
-# #+begin_src emacs-lisp
-# (use-package! frames-only-mode
-#   :config (add-hook! 'emacs-startup-hook 'frames-only-mode))
-# #+end_src
 
 * Hooks
 
@@ -888,15 +945,21 @@ This is to allow navigating visual lines by using =gj= and =gk=.
 (setq evil-ex-substitute-global t)
 #+end_src
 
+* KMonad
+
+#+begin_src emacs-lisp
+(use-package! kbd-mode)
+#+end_src
+
 * Line Settings
 I set comment-line to 'SPC TAB TAB' which is a rather comfortable keybinding for me on my ZSA Moonlander keyboard.  The standard Emacs keybinding for comment-line is 'C-x C-;'.  The other keybindings are for commands that toggle on/off various line-related settings.  Doom Emacs uses 'SPC t' for "toggle" commands, so I choose 'SPC t' plus 'key' for those bindings.
 
-| COMMAND                  | DESCRIPTION                               | KEYBINDING  |
-|--------------------------+-------------------------------------------+-------------|
+| COMMAND                  | DESCRIPTION                                 | KEYBINDING  |
+|--------------------------+---------------------------------------------+-------------|
 | comment-line             | /Comment or uncomment lines/                | SPC TAB TAB |
 | hl-line-mode             | /Toggle line highlighting in current frame/ | SPC t h     |
 | global-hl-line-mode      | /Toggle line highlighting globally/         | SPC t H     |
-| doom/toggle-line-numbers | /Toggle line numbers/                     | SPC t l     |
+| doom/toggle-line-numbers | /Toggle line numbers/                       | SPC t l     |
 
 #+begin_src emacs-lisp
 (setq display-line-numbers-type t) ;; By disabling line number, we improve performance significantly
@@ -935,8 +998,8 @@ This is to enable better mouse support for doom emacs.
 * Open Specific Files
 Keybindings to open files that I work with all the time using the find-file command, which is the interactive file search that opens with 'C-x C-f' in GNU Emacs or 'SPC f f' in Doom Emacs.  These keybindings use find-file non-interactively since we specify exactly what file to open.  The format I use for these bindings is 'SPC =' plus 'key' since Doom Emacs does not use 'SPC ='.
 
-| PATH TO FILE                | DESCRIPTION          | KEYBINDING |
-|-----------------------------+----------------------+------------|
+| PATH TO FILE                | DESCRIPTION            | KEYBINDING |
+|-----------------------------+------------------------+------------|
 | ~/org/agenda.org            | /Edit agenda file/     | SPC = a    |
 | ~/.config/doom/config.org"  | /Edit doom config.org/ | SPC = c    |
 | ~/.config/xmonad/xmonad.hs" | /Edit xmonad.hs/       | SPC = x    |
@@ -963,8 +1026,6 @@ Keybindings to open files that I work with all the time using the find-file comm
 * Org
 I wrapped most of this block in (after! org).  Without this, my settings might be evaluated too early, which will result in my settings being overwritten by Doom's defaults.  I have also enabled org-journal and org-roam by adding (+journal +roam2) to the org section of my Doom Emacs init.el.
 
-=NOTE:= I have the location of my Org directory and Roam directory in $HOME/nc/ which is a Nextcloud folder that allows me to instantly sync all of my Org work between my home computer and my office computer.
-
 ** Org-base
 
 #+begin_src emacs-lisp
@@ -978,12 +1039,13 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
 
 (after! org
   (plist-put org-format-latex-options :scale 4) ;; Make latex equations preview larger
-  (setq org-directory "/media/org/"
-        org-agenda-files '("/media/org/agenda.org")
+  (setq org-directory "~/org/"
+        org-agenda-files '("~/org/agenda.org")
         org-default-notes-file (expand-file-name "notes.org" org-directory)
         org-ellipsis " ▼ "
         org-log-done 'time
         org-hide-emphasis-markers t
+        org-insert-heading-respect-content nil ;; Insert org headings at point
         ;; ex. of org-link-abbrev-alist in action
         ;; [[arch-wiki:Name_of_Page][Description]]
         org-link-abbrev-alist    ; This overwrites the default Doom org-link-abbrev-list
@@ -1046,7 +1108,7 @@ Org files can be rather nice to look at, particularly with some of the customisa
 
 #+begin_src emacs-lisp
 (after! org-roam
-  (setq org-roam-directory (concat org-directory "roam/")
+  (setq org-roam-directory "~/org/roam"
         org-roam-completion-everywhere t
         org-roam-capture-templates
         '(("d" "default" plain "%?"
@@ -1100,7 +1162,7 @@ We want to change the file name when the title of the note changes.
   (add-hook! 'after-save-hook #'elk/org-roam-rename-to-new-title))
 #+end_src
 
-** Org Appear
+** Org-appear
 
 #+begin_src emacs-lisp
 (use-package! org-appear
@@ -1115,6 +1177,15 @@ We want to change the file name when the title of the note changes.
   (run-at-time nil nil #'org-appear--set-elements))
 #+end_src
 
+** Org-super-agenda
+~org-super-agenda~ is a much better org-agenda.
+#+begin_src emacs-lisp
+(use-package! org-super-agenda
+  :after org-agenda
+  :config
+  (setq org-super-agenda-groups '((:auto-dir-name t)))
+  (org-super-agenda-mode))
+#+end_src
 ** Inkscape
 Changing the default template used by =ink-make-figure= and =ink-edit-figure=.
 
@@ -1245,6 +1316,14 @@ Changing the default template used by =ink-make-figure= and =ink-edit-figure=.
   </g>
 </svg>"
   "Default file template.")
+#+end_src
+
+* Dictionary
+This is to setup spell checking inside emacs. I want a custom dictionary and a way to keep mine in check.
+
+#+begin_src emacs-lisp
+(setq ispell-dictionary "en-custom"
+      ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
 #+end_src
 
 * Which-key
