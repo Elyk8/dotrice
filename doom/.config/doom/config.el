@@ -68,15 +68,15 @@
 
 ;; [[file:config.org::*Changing Defaults][Changing Defaults:1]]
 (setq-default
-    delete-by-moving-to-trash t                 ; Delete files to trash
-    window-combination-resize t                 ; take new window space from all other windows (not just current)
-    x-stretch-cursor t)                         ; Stretch cursor to the glyph width
+ delete-by-moving-to-trash t                 ; Delete files to trash
+ window-combination-resize t                 ; take new window space from all other windows (not just current)
+ x-stretch-cursor t)                         ; Stretch cursor to the glyph width
 (setq undo-limit 80000000                       ; Raise undo-limit to 80Mb
-    evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
-    truncate-string-ellipsis "…"                ; Unicode ellispis are nicer than "...", and also save /precious/ space
-    password-cache-expiry nil                   ; I can trust my computers ... can't I?
-    ;; scroll-preserve-screen-position 'always     ; Don't have `point' jump around
-    scroll-margin 2)                            ; It's nice to maintain a little margin
+      evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
+      truncate-string-ellipsis "…"                ; Unicode ellispis are nicer than "...", and also save /precious/ space
+      password-cache-expiry nil                   ; I can trust my computers ... can't I?
+      scroll-preserve-screen-position 'always     ; Don't have `point' jump around
+      scroll-margin 2)                            ; It's nice to maintain a little margin
 ;; (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;; Prevents some cases of Emacs flickering.
 ;; Changing Defaults:1 ends here
 
@@ -395,6 +395,12 @@ Not added when either:
 (setq-default TeX-engine 'luatex)
 ;; Latex:1 ends here
 
+;; [[file:config.org::*Lua][Lua:1]]
+(after! lua-mode
+  (set-formatter! 'stylua "stylua -" :modes '(lua-mode))
+  (setq-hook! 'lua-mode-hook +format-with-lsp nil))
+;; Lua:1 ends here
+
 ;; [[file:config.org::*Haskell][Haskell:1]]
 (after! haskell-mode
   (set-formatter! 'brittany "brittany" :modes '(haskell-mode))
@@ -512,6 +518,9 @@ Not added when either:
           ("p" "project" plain (file "~/org/templates/project.org")
            :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: = %^{Tag}\n\n")
            :unnarrowed t)
+          ("P" "presentation" plain (file "~/org/templates/presentation.org")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "\n:reveal_properties:\n#+reveal_root: https://cdn.jsdelivr.net/npm/reveal.js\n:end:\n\n#+title: ${title}\n#+date: %U\n#+author: %^{Author}\n#+filetags: < Presentation\n\n")
+           :unnarrowed t)
           ("r" "research paper" plain (file "~/org/templates/research.org")
            :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: ; %^{Tag}\n\n")
            :unnarrowed t)
@@ -560,6 +569,11 @@ Not added when either:
   (setq org-super-agenda-groups '((:auto-dir-name t)))
   (org-super-agenda-mode))
 ;; Org-super-agenda:1 ends here
+
+;; [[file:config.org::*Org-reveal][Org-reveal:1]]
+(use-package! emacs-reveal
+  :after org-mode org-roam-mode)
+;; Org-reveal:1 ends here
 
 ;; [[file:config.org::*Inkscape][Inkscape:1]]
 (defvar ink-flags-png (list "--export-area-drawing"
@@ -697,15 +711,10 @@ Not added when either:
 
 ;; [[file:config.org::*Which-key][Which-key:1]]
 (after! which-key
-  (setq which-key-idle-delay 0.2))
+  (setq which-key-allow-imprecise-window-fit nil) ; Comment this if experiencing crashes
+  (setq frame-resize-pixelwise nil)
+  ;; Add an extra line to work around bug in which-key imprecise
+  ;; (defun add-which-key-line (f &rest r) (progn (apply f (list (cons (+ 2 (car (car r))) (cdr (car r)))))))
+  ;; (advice-add 'which-key--show-popup :around #'add-which-key-line)
+  (setq which-key-idle-delay 0.1))
 ;; Which-key:1 ends here
-
-;; [[file:config.org::*Which-key][Which-key:2]]
-(setq which-key-allow-multiple-replacements t)
-(after! which-key
-  (pushnew!
-   which-key-replacement-alist
-   '(("" . "\\`+?evil[-:]?\\(?:a-\\)?\\(.*\\)") . (nil . "◂\\1"))
-   '(("\\`g s" . "\\`evilem--?motion-\\(.*\\)") . (nil . "◃\\1"))
-   ))
-;; Which-key:2 ends here

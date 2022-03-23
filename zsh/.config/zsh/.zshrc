@@ -101,5 +101,3 @@ autoload edit-command-line; zle -N edit-command-line >/dev/null
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#4c4c4c,bold,underline"
 
 eval "$(starship init zsh)"
-
-colorscript -r

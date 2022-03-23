@@ -5,7 +5,7 @@ Xft.RGBA: rgb
 Xft.HintStyle: hintslight
 Xft.Antialias: 1
 Xft.lcdfilter: lcdfilter
-! Xcursor.theme: Bibata-Modern-Ice
+Xcursor.theme: Breeze-Blue
 
 XTerm*termName: xterm-256color
 
@@ -24,7 +24,7 @@ dmenu.font: monospace:weight=medium:size=11:antialias=true:autohint=true
 ! general
 st.alpha: 0.95
 
-! #include "./Xresources.d/darkplus.xresources"
+! #include "./Xresources.d/dark-plus.xresources"
 ! #include "./Xresources.d/tokyonight.xresources"
 #include "./Xresources.d/doom-one.xresources"
 ! #include "./Xresources.d/git.xresources"

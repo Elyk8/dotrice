@@ -44,3 +44,12 @@ trayerColor:   0x1A1B26
 ! White colours
 *color7:        #ACB0D0
 *color15:       #ABB2BF
+
+dmenu.normbgcolor:  #1A1B26
+dmenu.normfgcolor:  #61AFEF
+
+dmenu.selbgcolor:  #1A1B26
+dmenu.selfgcolor:  #A9B1D6
+
+dmenu.selhlbgcolor:  #4E5173
+dmenu.selhlfgcolor:  #98C379

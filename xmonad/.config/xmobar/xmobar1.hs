@@ -1,9 +1,10 @@
 -- vim: ft=haskell
 
-Config { font = "xft:Iosevka Nerd Font:weight=bold:pixelsize=15:antialias=true:hinting=true"
-       , additionalFonts = [ "xft:Mononoki Nerd Font:weight=bold::pixelsize=16:antialias=true:hinting=true"
-                           , "xft:Font Awesome 6 Free Solid:pixelsize=18"
-                           , "xft:Font Awesome 6 Brands:pixelsize=18"
+Config { font = "xft:Ubuntu:weight=bold:italic:pixelsize=16:antialias=true:hinting=true"
+       , additionalFonts = [ "xft:Iosevka Nerd Font:weight=bold::pixelsize=16:antialias=true:hinting=true"
+                           , "xft:Font Awesome 6 Free Solid:pixelsize=16"
+                           , "xft:Font Awesome 6 Brands:pixelsize=16"
+                           , "xft:Iosevka Nerd Font:weight=heavy:italic:pixelsize=16:antialias=true:hinting=true"
                            ]
        , borderColor      = "black"
        , borderWidth      = 1
@@ -33,6 +34,7 @@ Config { font = "xft:Iosevka Nerd Font:weight=bold:pixelsize=15:antialias=true:h
                     \%_XMONAD_LOG_1%}{\
 
 
-                    \<box type=Bottom width=2 mb=2 color=#51afef><fc=#aac0f0><fn=3> </fn><action=`alacritty -e gotop`>%uname%</action></fc></box> \
+                    \<box type=Bottom width=2 mb=2 color=#51afef><fc=#aac0f0><fn=3> </fn><action=`alacritty -e gotop`>%uname%</action></fc></box>   \
+
                     \<box type=Bottom width=2 mb=2 color=#51afef><fc=#5294e2><action=`sh -c thunderbird`>%date%</action></fc></box>"
                     }

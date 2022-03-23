@@ -38,6 +38,7 @@
 - [[#line-settings][Line Settings]]
 - [[#language][Language]]
   - [[#latex][Latex]]
+  - [[#lua][Lua]]
   - [[#haskell][Haskell]]
 - [[#mouse-settings][Mouse Settings]]
 - [[#open-specific-files][Open Specific Files]]
@@ -49,6 +50,7 @@
   - [[#org-roam][Org-roam]]
   - [[#org-appear][Org-appear]]
   - [[#org-super-agenda][Org-super-agenda]]
+  - [[#org-reveal][Org-reveal]]
   - [[#inkscape][Inkscape]]
 - [[#dictionary][Dictionary]]
 - [[#which-key][Which-key]]
@@ -432,6 +434,7 @@ release. The `unpin!' macro allows you to unpin single packages...
 (package! org-appear :recipe (:host github :repo "awth13/org-appear")
   :pin "148aa124901ae598f69320e3dcada6325cdc2cf0")
 
+(package! emacs-reveal :recipe (:host gitlab :repo "oer/emacs-reveal"))
 (package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")) :pin "c93f6b61a8d3d2edcf07eda6220278c418d1054b")
 (package! websocket :pin "fda4455333309545c0787a79d73c19ddbeb57980") ; dependency of `org-roam-ui'
 
@@ -466,15 +469,15 @@ I have been using native compilation for improved performance. We just want less
 These are better defaults (or preferences for me) which I would want to be on always.
 #+begin_src emacs-lisp
 (setq-default
-    delete-by-moving-to-trash t                 ; Delete files to trash
-    window-combination-resize t                 ; take new window space from all other windows (not just current)
-    x-stretch-cursor t)                         ; Stretch cursor to the glyph width
+ delete-by-moving-to-trash t                 ; Delete files to trash
+ window-combination-resize t                 ; take new window space from all other windows (not just current)
+ x-stretch-cursor t)                         ; Stretch cursor to the glyph width
 (setq undo-limit 80000000                       ; Raise undo-limit to 80Mb
-    evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
-    truncate-string-ellipsis "…"                ; Unicode ellispis are nicer than "...", and also save /precious/ space
-    password-cache-expiry nil                   ; I can trust my computers ... can't I?
-    ;; scroll-preserve-screen-position 'always     ; Don't have `point' jump around
-    scroll-margin 2)                            ; It's nice to maintain a little margin
+      evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
+      truncate-string-ellipsis "…"                ; Unicode ellispis are nicer than "...", and also save /precious/ space
+      password-cache-expiry nil                   ; I can trust my computers ... can't I?
+      scroll-preserve-screen-position 'always     ; Don't have `point' jump around
+      scroll-margin 2)                            ; It's nice to maintain a little margin
 ;; (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;; Prevents some cases of Emacs flickering.
 #+end_src
 
@@ -979,6 +982,15 @@ Change the default Latex to lualatex as it provides access to nicer fonts!
 (setq-default TeX-engine 'luatex)
 #+end_src
 
+** Lua
+
+Stylua as a formatter is much better overall
+#+begin_src emacs-lisp
+(after! lua-mode
+  (set-formatter! 'stylua "stylua -" :modes '(lua-mode))
+  (setq-hook! 'lua-mode-hook +format-with-lsp nil))
+#+end_src
+
 ** Haskell
 Change the default formatter for Haskell.
 #+begin_src emacs-lisp
@@ -1133,6 +1145,9 @@ Org files can be rather nice to look at, particularly with some of the customisa
           ("p" "project" plain (file "~/org/templates/project.org")
            :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: = %^{Tag}\n\n")
            :unnarrowed t)
+          ("P" "presentation" plain (file "~/org/templates/presentation.org")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "\n:reveal_properties:\n#+reveal_root: https://cdn.jsdelivr.net/npm/reveal.js\n:end:\n\n#+title: ${title}\n#+date: %U\n#+author: %^{Author}\n#+filetags: < Presentation\n\n")
+           :unnarrowed t)
           ("r" "research paper" plain (file "~/org/templates/research.org")
            :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: ; %^{Tag}\n\n")
            :unnarrowed t)
@@ -1186,6 +1201,15 @@ We want to change the file name when the title of the note changes.
   (setq org-super-agenda-groups '((:auto-dir-name t)))
   (org-super-agenda-mode))
 #+end_src
+
+** Org-reveal
+
+Make really beautiful presentation using =reveal.js=.
+#+begin_src emacs-lisp
+(use-package! emacs-reveal
+  :after org-mode org-roam-mode)
+#+end_src
+
 ** Inkscape
 Changing the default template used by =ink-make-figure= and =ink-edit-figure=.
 
@@ -1331,17 +1355,10 @@ I hate when which-key takes too long to show up. Make it faster!!!
 
 #+begin_src emacs-lisp
 (after! which-key
-  (setq which-key-idle-delay 0.2))
-#+end_src
-
-Also, =evil-= is too verbose for which-key. Let's change that.
-
-#+begin_src emacs-lisp
-(setq which-key-allow-multiple-replacements t)
-(after! which-key
-  (pushnew!
-   which-key-replacement-alist
-   '(("" . "\\`+?evil[-:]?\\(?:a-\\)?\\(.*\\)") . (nil . "◂\\1"))
-   '(("\\`g s" . "\\`evilem--?motion-\\(.*\\)") . (nil . "◃\\1"))
-   ))
+  (setq which-key-allow-imprecise-window-fit nil) ; Comment this if experiencing crashes
+  (setq frame-resize-pixelwise nil)
+  ;; Add an extra line to work around bug in which-key imprecise
+  ;; (defun add-which-key-line (f &rest r) (progn (apply f (list (cons (+ 2 (car (car r))) (cdr (car r)))))))
+  ;; (advice-add 'which-key--show-popup :around #'add-which-key-line)
+  (setq which-key-idle-delay 0.1))
 #+end_src

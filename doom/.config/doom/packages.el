@@ -9,6 +9,7 @@
 (package! org-appear :recipe (:host github :repo "awth13/org-appear")
   :pin "148aa124901ae598f69320e3dcada6325cdc2cf0")
 
+(package! emacs-reveal :recipe (:host gitlab :repo "oer/emacs-reveal"))
 (package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")) :pin "c93f6b61a8d3d2edcf07eda6220278c418d1054b")
 (package! websocket :pin "fda4455333309545c0787a79d73c19ddbeb57980") ; dependency of `org-roam-ui'
 

@@ -6,7 +6,8 @@
  '(package-selected-packages '(exwm))
  '(warning-suppress-log-types '((org-element-cache)))
  '(warning-suppress-types
-   '((evil-insert-state-exit-hook)
+   '((post-command-hook)
+     (evil-insert-state-exit-hook)
      (evil-insert-state-exit-hook)
      (evil-insert-state-entry-hook)
      (evil-insert-state-entry-hook)

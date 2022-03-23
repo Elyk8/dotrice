@@ -25,6 +25,9 @@ trayerColor: 0x1E1E1E
 *color14:   #29B8DB
 *color15:   #ECEFF4
 
+dmenu.normbgcolor:  #1E1E1E
+dmenu.normfgcolor:  #D8DEE9
+
 dmenu.selbgcolor:  #3B4252
 dmenu.selfgcolor:  #ECEFF4
 

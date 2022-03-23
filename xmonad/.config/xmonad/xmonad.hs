@@ -12,7 +12,7 @@ import           Data.Maybe                     ( fromJust
                                                 , isJust
                                                 )
 import           Data.Monoid
-import           Data.Ratio                            -- Require for rational (%) operator
+import           Data.Ratio                                -- Require for rational (%) operator
 import           Data.Semigroup
 import           Foreign.C                      ( CInt )
 import           System.Directory
@@ -320,23 +320,27 @@ myStatusBarSpawner (S s) = do
 myXmobarPP :: ScreenId -> PP
 myXmobarPP s = filterOutWsPP [scratchpadWorkspaceTag] $ def
   { ppSep = "<fc=" ++ base08 ++ "> <fn=1>|</fn> </fc>"
-  , ppCurrent = xmobarColor base06 "" . wrap "[" "]"
-  , ppVisible = xmobarColor base06 ""
-                . wrap ("<box type=Top width=2 mt=2 color=" ++ base06 ++ ">") "</box>"
-                . clickable
-  , ppVisibleNoWindows = Just (xmobarColor base05 "" . clickable)
-  , ppHidden = xmobarColor base04 ""
-               . wrap ("<box type=Bottom width=2 mt=2 color=" ++ base04 ++ ">") "</box>"
-               . clickable
-  , ppHiddenNoWindows = xmobarColor base08 "" . clickable
-  , ppUrgent = xmobarColor base05 "" . wrap "!" "!"
+  , ppWsSep = ""
+  , ppCurrent = xmobarColor base05 "" . clickable wsIconFull
+  , ppVisible = xmobarColor base05 "" . clickable wsIconHidden
+  , ppVisibleNoWindows = Just (xmobarColor base05 "" . clickable wsIconEmpty)
+  , ppHidden = xmobarColor basefg "" . clickable wsIconHidden
+  , ppHiddenNoWindows = xmobarColor basefg "" . clickable wsIconEmpty
+  , ppUrgent = xmobarColor base05 "" . (wrap "!" "!" . clickable wsIconFull)
   , ppOrder = \(ws : _ : _ : extras) -> ws : extras
   , ppExtras = [ windowCount
-               , layoutColorIsActive s (logLayoutOnScreen s)
-               , titleColorIsActive s (shortenL 50 $ logTitleOnScreen s)
+               , wrapL (actionPrefix ++ "n" ++ actionButton ++ "1>") actionSuffix
+               $ wrapL (actionPrefix ++ "Left" ++ actionButton ++ "4>") actionSuffix
+               $ wrapL (actionPrefix ++ "Right" ++ actionButton ++ "5>") actionSuffix
+               $ layoutColorIsActive s (logLayoutOnScreen s)
+               , wrapL (actionPrefix ++ "q" ++ actionButton ++ "2>" ++ "<fn=4>") ("</fn>" ++ actionSuffix)
+                 $ titleColorIsActive s (shortenL 50 $ logTitleOnScreen s)
                ]
   }
  where
+  wsIconFull = "<fn=1>\61713 </fn>"
+  wsIconHidden = "<fn=1>\61842 </fn>"
+  wsIconEmpty = "<fn=1>\61708 </fn>"
   titleColorIsActive n l = do
     c <- withWindowSet $ return . W.screen . W.current
     if n == c then xmobarColorL base03 "" l else xmobarColorL base05 "" l
@@ -353,7 +357,25 @@ myWorkspaces = ["dev", "sys", "www", "dis", "msg"]
 myWorkspaceIndices :: M.Map [Char] Integer
 myWorkspaceIndices = M.fromList $ zip myWorkspaces [1 ..]
 
-clickable ws = "<action=xdotool key super+alt+" ++ show i ++ ">" ++ ws ++ "</action>"
+-- clickable ws = "<action=xdotool key super+alt+" ++ show i ++ ">" ++ ws ++ "</action>"
+--   where i = fromJust $ M.lookup ws myWorkspaceIndices
+
+actionPrefix, actionButton, actionSuffix :: [Char]
+actionPrefix = "<action=`xdotool key super+alt+"
+actionButton = "` button="
+actionSuffix = "</action>"
+
+addActions :: [(String, Int)] -> String -> String
+addActions [] ws = ws
+addActions (x : xs) ws = addActions
+  xs
+  (actionPrefix ++ k ++ actionButton ++ show b ++ ">" ++ ws ++ actionSuffix)
+ where
+  k = fst x
+  b = snd x
+
+clickable :: [Char] -> [Char] -> [Char]
+clickable icon ws = addActions [(show i, 1), ("q", 2), ("Left", 4), ("Right", 5)] icon
   where i = fromJust $ M.lookup ws myWorkspaceIndices
 
 myFilter = filterOutWs [scratchpadWorkspaceTag]
@@ -469,7 +491,6 @@ myManageHook =
       , [ className =? c --> doShift (myWorkspaces !! 4) | c <- myW5C ]
       , [ className =? c --> doFloat | c <- myFloatC ]
       , [ className =? c --> doCenterFloat | c <- myFloatCC ]
-      , [ name ^? "Emacs Everywhere" --> doCenterFloat ]
       , [ name =? n --> doSideFloat NW | n <- myFloatSN ]
       , [ name =? n --> doF W.focusDown | n <- myFocusDC ]
       , [role =? "LINE" --> doFloat]
@@ -487,7 +508,7 @@ myManageHook =
   myIgnores = ["SafeEyes-0", "SafeEyes-1"]
   myW1C = ["VSCodium"]
   myW3C = ["Brave-browser", "qutebrowser", "librewolf", "firefox"]
-  myW4C = ["zoom", "discord"]
+  myW4C = ["discord", "zoom"]
   myW5C = ["VirtualBox Manager", "VirtualBox Machine", "Thunderbird"]
   myFloatC = ["confirm", "file_progress", "dialog", "download", "error", "toolbar", "Gmrun"]
   myFloatCC = ["notification", "Yad", "Xfce4-power-manager-settings", "Dragon-drag-and-drop"]
@@ -514,8 +535,8 @@ myScratchPads =
   , NS "terminal" launchTerminal (appName =? "scratchpad") (customFloating $ W.RationalRect l t w h)
   ]
  where
-  launchNcmpcpp = myTerminalScratch ++ " ncmpcpp -e ncmpcpp"
-  launchTerminal = myTerminalScratch ++ " scratchpad"
+  launchNcmpcpp = myTerminalScratch ++ "ncmpcpp -e ncmpcpp"
+  launchTerminal = myTerminalScratch ++ "scratchpad"
   h = 0.8
   w = 0.6
   t = (1 - h) / 2
@@ -549,13 +570,13 @@ toSubmap c name m = do
   io $ hClose pipe
 
 --START_WHICHKEYS
-appsKeymap = -- Frequently used
+appsKeymap = -- Whichever Keys
   [ ("<Space>", spawn "dm-j4dmenu-desktop") -- Dmenu launcher
   , ("t", spawn myTerminal) -- Spawn terminal
   , ("r", spawn (myTerminal ++ " -e lf")) -- Lf file manager
   , ("[", spawn "xmonad-keys") -- Window Manager Mappings
-  , ("w", spawn "firefox") -- Launch Firefox
-  , ("b", spawn "brave") -- Launch Brave
+  , ("w", runOrRaise "firefox" (className =? "firefox")) -- Launch Firefox
+  , ("b", runOrRaise "brave" (className =? "Brave-browser")) -- Launch Brave
   -- , ("e", spawn (myEmacs ++ "--eval '(switch-to-buffer nil)'")) -- Emacs dashboard
   , ("e", spawn myEmacs) -- Emacs dashboard
   , ("f", spawn "$HOME/.emacs.d/bin/doom everywhere") -- Doom emacs everywhere
@@ -563,38 +584,32 @@ appsKeymap = -- Frequently used
     -- Music and volume control
   , ("n", namedScratchpadAction myScratchPads "ncmpcpp") -- Ncmpcpp Player
   , ("m", spawn "mic-toggle") -- Toggle mute of microphone
-  ]
 
-systemsKeymap = -- Systems
-  [ ("a", spawn "setwallpaper a2n") -- Change to "a2n" walls
-  , ("d", spawn "setwallpaper dt") -- Change to "dt" walls
-  , ("e", spawn "setwallpaper elyk") -- Change to "my" walls
-  , ("v", spawn "setsid -f pipewire-mixer") -- Open volume control
-  , ("w", spawn "nsxiv -rqto $XDG_PICTURES_DIR/wallpapers/*") -- Interactively setwallpaper
-  ]
+  -- Applications Launcher
+  , ("o d", runOrRaise "discord" (className =? "discord")) -- Launch Discord
+  , ("o f", spawn "/media/FTBA/FTBApp") -- Launch FTB Launcher
+  , ("o v", spawn "/usr/bin/vscodium") -- Launch VSCodium
+  , ("o z", runOrRaise "zoom" (className =? "zoom")) -- Launch Zoom
 
-mainappsKeymap = -- Applications Launcher
-  [ ("d", spawn discord) -- Launch Discord
-  , ("f", spawn "/media/FTBA/FTBApp") -- Launch FTB Launcher
-  , ("v", spawn "/usr/bin/vscodium") -- Launch VSCodium
-  , ("z", spawn "/usr/bin/zoom") -- Launch Zoom
-  ]
-  where discord = "/usr/bin/discord"
-
-otherappsKeymap = -- Dmenu scripts
-  [ ("a", spawn "dm-man") -- Man pages list
-  , ("c", spawn "clipmenu") -- Clipmenu clipboard
-  , ("d", spawn "dm-directory") -- Dmenu directories manager
-  , ("S-c", spawn "dm-colorscheme") -- Choose a colorscheme
-  , ("e", spawn "dm-emoji") -- Emoji keyboard
-  , ("k", spawn "dm-kill") -- Terminate applications
-  , ("m", spawn "dm-buku") -- Buku bookmarks manager
-  , ("o", spawn "dm-mount") -- Mount drives
-  , ("p", spawn "dm-passmenu") -- Password manager
-  , ("b", spawn "dm-beats") -- Radio FM
-  , ("s", spawn "dm-scripts") -- Find and edit scripts
-  , ("u", spawn "dm-umount") -- Unmount any drive
-  , ("w", spawn "weatherforecast") -- Display weather forecast
+  -- Dmenu scripts
+  , ("p a", spawn "dm-man") -- Man pages list
+  , ("p c", spawn "clipmenu") -- Clipmenu clipboard
+  , ("p d", spawn "dm-directory") -- Dmenu directories manager
+  , ("p S-c", spawn "dm-colorscheme") -- Choose a colorscheme
+  , ("p e", spawn "dm-emoji") -- Emoji keyboard
+  , ("p k", spawn "dm-kill") -- Terminate applications
+  , ("p m", spawn "dm-buku") -- Buku bookmarks manager
+  , ("p o", spawn "dm-mount") -- Mount drives
+  , ("p p", spawn "dm-passmenu") -- Password manager
+  , ("p b", spawn "dm-beats") -- Radio FM
+  , ("p s", spawn "dm-scripts") -- Find and edit scripts
+  , ("p u", spawn "dm-umount") -- Unmount any drive
+  , ("p w", spawn "weatherforecast") -- Display weather forecast
+  , ("; a", spawn "setwallpaper a2n") -- Change to "a2n" walls
+  , ("; d", spawn "setwallpaper dt") -- Change to "dt" walls
+  , ("; e", spawn "setwallpaper elyk") -- Change to "my" walls
+  , ("; v", spawn "setsid -f pipewire-mixer") -- Open volume control
+  , ("; w", spawn "nsxiv -rqto $XDG_PICTURES_DIR/wallpapers/*") -- Interactively setwallpaper
   ]
 
 screenshotKeymap = -- Maim Screenshot
@@ -609,8 +624,6 @@ screenshotKeymap = -- Maim Screenshot
 -- }}}
 
 -- {{{ KEYBINDINGS
--- myAdditionalKeys :: [(String, X ())]
--- myAdditionalKeys =
 mainKeymap c = mkKeymap
   c
   [ --START_KEYS
@@ -731,9 +744,6 @@ mainKeymap c = mkKeymap
 
       -- Whichkeys keychords
   , ("M-<Space>", toSubmap c "appsKeymap" appsKeymap)
-  , ("M-o", toSubmap c "mainappsKeymap" mainappsKeymap)
-  , ("M-;", toSubmap c "systemsKeymap" systemsKeymap)
-  , ("M-S-<Space>", toSubmap c "otherappsKeymap" otherappsKeymap)
   , ("<Print>", toSubmap c "screenshotKeymap" screenshotKeymap)
       --END_KEYS
   ]

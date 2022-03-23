@@ -41,3 +41,6 @@ j,bsp,/home/elyk/.config/bspwm
 j,sc,/home/elyk/scripts
 j,org,/home/elyk/org
 j,wall,/home/elyk/pix/wallpapers
+j,awesome,/home/elyk/.config/awesome
+j,nee4001,/home/elyk/vic/y4/NEE4001
+j,bin,/home/elyk/.local/bin

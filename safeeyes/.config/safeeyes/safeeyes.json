@@ -98,6 +98,20 @@
             "enabled": true,
             "id": "mediacontrol",
             "version": "0.0.1"
+        },
+        {
+            "enabled": true,
+            "id": "zoom",
+            "version": "0.0.1"
+        },
+        {
+            "enabled": false,
+            "id": "weather",
+            "settings": {
+                "api": "",
+                "location": "London,UK"
+            },
+            "version": "0.0.1"
         }
     ],
     "postpone_duration": 5,

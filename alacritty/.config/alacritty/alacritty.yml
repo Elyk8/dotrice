@@ -83,7 +83,7 @@ schemes:
       # }}}
       
 # {{{ Tokyo Night ###
-  tokyo-night: &tokyo-night
+  tokyonight: &tokyonight
     # Default colors
     primary:
       background: '#1a1b26'
@@ -144,7 +144,7 @@ schemes:
       # }}}
 # }}}
 
-# doom-one, dracula, tokyo-night, dark-plus
+# doom-one, dracula, tokyonight, dark-plus
 colors: *doom-one
 
 env:
