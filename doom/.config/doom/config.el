@@ -68,10 +68,11 @@
 
 ;; [[file:config.org::*Changing Defaults][Changing Defaults:1]]
 (setq-default
- delete-by-moving-to-trash t                 ; Delete files to trash
- window-combination-resize t                 ; take new window space from all other windows (not just current)
- x-stretch-cursor t)                         ; Stretch cursor to the glyph width
-(setq undo-limit 80000000                       ; Raise undo-limit to 80Mb
+ delete-by-moving-to-trash t                      ; Delete files to trash
+ window-combination-resize t                      ; take new window space from all other windows (not just current)
+ x-stretch-cursor t)                              ; Stretch cursor to the glyph width
+
+(setq undo-limit 80000000                         ; Raise undo-limit to 80Mb
       evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
       truncate-string-ellipsis "…"                ; Unicode ellispis are nicer than "...", and also save /precious/ space
       password-cache-expiry nil                   ; I can trust my computers ... can't I?
@@ -343,7 +344,7 @@ Not added when either:
 ;; Fonts and Appearance:1 ends here
 
 ;; [[file:config.org::*Fonts and Appearance][Fonts and Appearance:2]]
-(setq doom-theme 'doom-one)
+(setq doom-theme 'doom-dark+)
 ;; (set-frame-parameter (selected-frame) 'alpha '(95 . 95))
 ;; (add-to-list 'default-frame-alist '(alpha . (95 . 95)))
 ;; Fonts and Appearance:2 ends here
@@ -716,5 +717,5 @@ Not added when either:
   ;; Add an extra line to work around bug in which-key imprecise
   ;; (defun add-which-key-line (f &rest r) (progn (apply f (list (cons (+ 2 (car (car r))) (cdr (car r)))))))
   ;; (advice-add 'which-key--show-popup :around #'add-which-key-line)
-  (setq which-key-idle-delay 0.1))
+  (setq which-key-idle-delay 0.5))
 ;; Which-key:1 ends here

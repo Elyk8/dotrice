@@ -12,7 +12,7 @@ import           Data.Maybe                     ( fromJust
                                                 , isJust
                                                 )
 import           Data.Monoid
-import           Data.Ratio                                -- Require for rational (%) operator
+import           Data.Ratio                                    -- Require for rational (%) operator
 import           Data.Semigroup
 import           Foreign.C                      ( CInt )
 import           System.Directory
@@ -22,6 +22,7 @@ import           System.IO                      ( Handle
                                                 , hFlush
                                                 , hPutStrLn
                                                 )
+
 -- Actions Imports
 import           XMonad
 import           XMonad.Actions.CopyWindow
@@ -36,7 +37,6 @@ import           XMonad.Actions.MouseResize
 import           XMonad.Actions.OnScreen
 
 -- Layout Imports
-
 import           XMonad.Actions.PhysicalScreens ( onNextNeighbour )
 import           XMonad.Actions.RotSlaves       ( rotAllDown
                                                 , rotSlavesDown
@@ -110,6 +110,7 @@ import qualified XMonad.Layout.MultiToggle     as MT
 import           XMonad.Layout.MultiToggle.Instances
                                                 ( StdTransformers(MIRROR, NBFULL, NOBORDERS) )
 import           XMonad.Layout.NoBorders
+import           XMonad.Layout.NoFrillsDecoration
 import           XMonad.Layout.Renamed
 import           XMonad.Layout.ResizableTile
 import           XMonad.Layout.ShowWName
@@ -132,6 +133,7 @@ import           XMonad.Layout.WindowArranger   ( WindowArrangerMsg(..)
 import           XMonad.Layout.WindowNavigation
 import           XMonad.Prompt                  ( XPPosition(Bottom) )
 import qualified XMonad.StackSet               as W
+
 -- Util Imports
 import           XMonad.Util.Cursor
 import           XMonad.Util.EZConfig
@@ -180,7 +182,7 @@ myEmacs :: String
 myEmacs = "emacsclient -cne " -- Makes emacs keybindings easier to type
 
 myBorderWidth :: Dimension
-myBorderWidth = 3
+myBorderWidth = 0
 
 myNormalColor :: String
 myNormalColor = basebg
@@ -293,6 +295,17 @@ myTabTheme = def { activeColor = base08
                  , fontName = myFont
                  , decoHeight = 30
                  }
+myTopBarTheme = def { fontName = myFont
+                    , inactiveBorderColor = base08
+                    , inactiveColor = base08
+                    , inactiveTextColor = base08
+                    , activeBorderColor = base04
+                    , activeColor = base04
+                    , activeTextColor = base04
+                    , urgentBorderColor = base02
+                    , urgentTextColor = base02
+                    , decoHeight = 5
+                    }
 
 myShowWNameTheme :: SWNConfig
 myShowWNameTheme =
@@ -333,7 +346,8 @@ myXmobarPP s = filterOutWsPP [scratchpadWorkspaceTag] $ def
                $ wrapL (actionPrefix ++ "Left" ++ actionButton ++ "4>") actionSuffix
                $ wrapL (actionPrefix ++ "Right" ++ actionButton ++ "5>") actionSuffix
                $ layoutColorIsActive s (logLayoutOnScreen s)
-               , wrapL (actionPrefix ++ "q" ++ actionButton ++ "2>" ++ "<fn=4>") ("</fn>" ++ actionSuffix)
+               , wrapL (actionPrefix ++ "q" ++ actionButton ++ "2>" ++ "<fn=4>")
+                       ("</fn>" ++ actionSuffix)
                  $ titleColorIsActive s (shortenL 50 $ logTitleOnScreen s)
                ]
   }
@@ -386,23 +400,25 @@ myFilter = filterOutWs [scratchpadWorkspaceTag]
 tall =
   renamed [Replace "tall"]
     $ smartBorders
+    $ addTopBar
     $ addTabs shrinkText myTabTheme
     $ subLayout [] (smartBorders Simplest)
     $ Mag.magnifierOff
     $ mkToggle (single MIRROR)
     $ limitWindows 5
-    $ mySpacing myGaps
+    $ mySpacing' myGaps
     $ ResizableTall 1 (3 / 100) (1 / 2) []
 
 wide =
   renamed [Replace "wide"]
     $ smartBorders
+    $ addTopBar
     $ addTabs shrinkText myTabTheme
     $ subLayout [] (smartBorders Simplest)
     $ Mag.magnifierOff
     $ Mirror
     $ limitWindows 5
-    $ mySpacing myGaps
+    $ mySpacing' myGaps
     $ ResizableTall 1 (3 / 100) (1 / 2) []
 
 -- monocle =
@@ -415,6 +431,7 @@ wide =
 grid =
   renamed [Replace "grid"]
     $ smartBorders
+    $ addTopBar
     $ addTabs shrinkText myTabTheme
     $ subLayout [] (smartBorders Simplest)
     $ limitWindows 12
@@ -426,6 +443,7 @@ grid =
 spirals =
   renamed [Replace "fibonacci"]
     $ smartBorders
+    $ addTopBar
     $ addTabs shrinkText myTabTheme
     $ subLayout [] (smartBorders Simplest)
     $ Mag.magnifierOff
@@ -436,19 +454,23 @@ spirals =
 three =
   renamed [Replace "three"]
     $ smartBorders
+    $ addTopBar
     $ addTabs shrinkText myTabTheme
     $ subLayout [] (smartBorders Simplest)
     $ limitWindows 7
     $ Mag.magnifierOff
     $ mkToggle (single MIRROR)
-    $ ThreeCol 1 (3 / 100) (1 / 2)
+    $ mySpacing' myGaps
+    $ ThreeColMid 1 (3 / 100) (1 / 2)
 
-floats =
-  renamed [Replace "floats"] $ Mag.magnifierOff $ smartBorders $ limitWindows 20 simplestFloat
+floats = renamed [Replace "floats"] $ Mag.magnifierOff $ smartBorders $ addTopBar $ limitWindows
+  20
+  simplestFloat
 
 deck =
   renamed [Replace "deck"]
     $ smartBorders
+    $ addTopBar
     $ Mag.magnifierOff
     $ mkToggle (single MIRROR)
     $ mySpacing myGaps
@@ -456,6 +478,7 @@ deck =
 
 tabs = renamed [Replace "tabs"] $ tabbed shrinkText myTabTheme
 
+addTopBar = noFrillsDeco shrinkText myTopBarTheme
 -- accordion = renamed [Replace "accordion"] $ mkToggle (single MIRROR) Accordion
 
 myLayoutHook =
@@ -533,10 +556,15 @@ myScratchPads :: [NamedScratchpad]
 myScratchPads =
   [ NS "ncmpcpp" launchNcmpcpp (appName =? "ncmpcpp") (customFloating $ W.RationalRect l t w h)
   , NS "terminal" launchTerminal (appName =? "scratchpad") (customFloating $ W.RationalRect l t w h)
+  , NS "pulsemixer"
+       launchPulsemixer
+       (appName =? "pulsemixer")
+       (customFloating $ W.RationalRect l t w h)
   ]
  where
   launchNcmpcpp = myTerminalScratch ++ "ncmpcpp -e ncmpcpp"
   launchTerminal = myTerminalScratch ++ "scratchpad"
+  launchPulsemixer = myTerminalScratch ++ "pulsemixer -e pulsemixer"
   h = 0.8
   w = 0.6
   t = (1 - h) / 2
@@ -608,7 +636,7 @@ appsKeymap = -- Whichever Keys
   , ("; a", spawn "setwallpaper a2n") -- Change to "a2n" walls
   , ("; d", spawn "setwallpaper dt") -- Change to "dt" walls
   , ("; e", spawn "setwallpaper elyk") -- Change to "my" walls
-  , ("; v", spawn "setsid -f pipewire-mixer") -- Open volume control
+  , ("; v", namedScratchpadAction myScratchPads "pulsemixer")  -- Open volume control
   , ("; w", spawn "nsxiv -rqto $XDG_PICTURES_DIR/wallpapers/*") -- Interactively setwallpaper
   ]
 
@@ -710,7 +738,9 @@ mainKeymap c = mkKeymap
       -- Function keys
   , ("M-<F1>", spawn "buckle-spring") -- Toggle the clicky sound from a buckle spring keyboard
   , ("M-<F2>", spawn "restart-emacs") -- Restart the emacs daemon
-  , ("M-<F3>", spawn "kmonad-refresh") -- Refresh kmonad
+  , ( "M-<F3>"
+    , spawn "notify-send \"Refreshing KMonad in 2 secs\"; kmonad-refresh; notify-send \"Success!\""
+    ) -- Refresh kmonad
 
       -- System
   , ("<XF86Calculator>", spawn (myTerminal ++ " -e bc -l"))
@@ -763,7 +793,7 @@ myKeys conf =
         : [ ((m .|. modm, k), windows $ f i)
           | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_5]
           , (f, m) <-
-            [ (toggleOnScreen 0, 0)
+            [ (viewOnScreen 0, 0)
             , (W.shift, shiftMask)
             , (W.greedyView, mod1Mask)
             , (swapWithCurrent, controlMask)
@@ -771,7 +801,7 @@ myKeys conf =
           ]
         ++ [ ((m .|. modm, k), windows $ f i)
            | (i, k) <- zip (XMonad.workspaces conf) ([xK_6 .. xK_9] ++ [xK_0])
-           , (f, m) <- [(toggleOnScreen 1, 0), (swapWithCurrent, shiftMask)]
+           , (f, m) <- [(viewOnScreen 1, 0), (swapWithCurrent, shiftMask)]
            ]
         ++ [ ((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
            | (key, sc) <- zip [xK_e, xK_w] [0 ..]

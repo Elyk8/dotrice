@@ -252,3 +252,8 @@ ricemamba() {
         . "/home/elyk/.miniconda/etc/profile.d/mamba.sh"
     fi
 }
+
+riceros() {
+    ricemamba
+    mamba activate robostackenv
+}

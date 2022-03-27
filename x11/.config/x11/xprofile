@@ -12,8 +12,7 @@ run() {
 multi-hybrid-graphics
 xrdb -merge ~/.config/x11/Xresources & xrdbpid=$!
 run safeeyes -e &
-run kmonad ~/.config/kmonad/kmonad-external.kbd &
-run kmonad ~/.config/kmonad/kmonad-internal.kbd &
+run kmonad-refresh &
 run /usr/bin/emacs --daemon &
 run syncthing-gtk --minimized &
 run /usr/bin/pipewire &

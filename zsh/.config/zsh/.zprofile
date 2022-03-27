@@ -23,3 +23,6 @@ export QT_SCREEN_SCALE_FACTORS="1;1;1"
 # 	\033[32mparu -S libxft-bgra-git\033[0m
 # and replace \`libxft\`. Afterwards, you may start the graphical server by running \`startx\`."
 # fi
+#
+# Switch escape and caps if tty and no passwd required:
+sudo -n loadkeys ${XDG_CONFIG_HOME:-$HOME/.config}/ttymaps.kmap 2>/dev/null
