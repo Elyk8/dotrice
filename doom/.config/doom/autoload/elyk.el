@@ -82,3 +82,9 @@
     "Run `crontab -e' in a emacs buffer."
     (interactive)
     (with-editor-async-shell-command "crontab -e"))
+
+;;;###autoload
+(defun org-cv-local-variables ()
+  (setq-local org-latex-with-hyperref nil)
+  (setq-local org-latex-default-packages-alist nil)
+  (olivetti-mode -1))

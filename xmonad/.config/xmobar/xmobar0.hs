@@ -48,10 +48,10 @@ Config { font = "xft:Ubuntu:weight=bold:italic:pixelsize=18:antialias=true:hinti
                     \<box type=Bottom width=2 mb=2 color=#51afef><fc=#5294e2> <action=`sh -c thunderbird`>%date%</action></fc></box>{\
 
 
-                    \<box type=Bottom width=2 mb=2 color=#bbc2cf><fc=#bbc2cf> <action=`alacritty -e ncmpcpp`><action=`mpc toggle` button=3>%mpd%</action></action></fc></box>   \
+                    \<box type=Bottom width=2 mb=2 color=#bbc2cf><fc=#bbc2cf> <action=`st -e ncmpcpp`><action=`mpc toggle` button=3>%mpd%</action></action></fc></box>   \
 
 
-                    \<box type=Bottom width=2 mb=2 color=#da8548><fc=#da8548> <action=`alacritty -e gotop`>%battery%</action></fc></box>\
+                    \<box type=Bottom width=2 mb=2 color=#da8548><fc=#da8548> <action=`st -e gotop`>%battery%</action></fc></box> \
 
                     \%trayerpad%"
                     } 

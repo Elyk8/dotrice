@@ -1,0 +1,148 @@
+(defcfg
+  input   (device-file "/dev/input/by-path/platform-i8042-serio-0-event-kbd")
+  output (uinput-sink
+          "My KMonad output"
+          "sleep 0.2s; remaps; sleep 0.2s")
+  fallthrough true
+)
+
+;; Default aliases
+(defalias
+  \             (tap-hold-next 300 \ rmet)
+  caps          (tap-hold-next 300 esc lctl)
+  f4            (tap-hold-next 300 f4 caps)
+  spc           (tap-hold-next-release 200 spc (layer-toggle vim))
+  tab           (tap-hold-next 300 tab lmet)
+  undo C-z
+  redo C-y
+  find C-f
+)
+
+
+;; Toggle between layers
+(defalias
+  game  (tap-hold-next 500 f1 (layer-switch game))
+  dflt  (tap-hold-next 500 f1 (layer-switch default))
+  norm  (tap-hold-next-release 200 bspc (layer-toggle vim))
+  sym   (tap-hold-next-release 200 bspc (layer-toggle sym))
+  alt   (around-next (layer-toggle sym))
+)
+
+;; Home row modifiers
+(defalias
+  s (tap-hold-next-release 200 s lalt)
+  d (tap-hold-next-release 200 d lctl)
+  f (tap-hold-next-release 200 f lsft)
+  n (tap-hold-next-release 200 n rsft)
+  m (tap-hold-next-release 200 m rctl)
+  , (tap-hold-next-release 200 , ralt)
+)
+
+;; VI-like-mode-aliases
+(defalias
+  b (around rctl lft)
+  w (around rctl rght)
+  v (layer-add sel)
+)
+
+;; VI-selection-like-mode-aliases
+(defalias
+  vb (around rctl S-lft)
+  vw (around rctl S-rght)
+  vlf S-lft
+  vrg S-rght
+  vup S-up
+  vdo S-down
+  vho S-home
+  ven S-end
+  ves (layer-rem sel)
+)
+
+(defsrc
+  esc     f1      f2      f3      f4      f5      f6      f7      f8      f9      f10     f11     f12     home    end    ins    del
+  `       1       2       3       4       5       6       7       8       9       0       -       =       bspc
+  tab     q       w       e       r       t       y       u       i       o       p       [       ]       \
+  caps    a       s       d       f       g       h       j       k       l       ;       '       ret
+  lsft    z       x       c       v       b       n       m       ,       .       /       rsft
+  lctl            lmet    lalt    spc                             ralt    prnt    rctrl   pgup    up      pgdn
+                                                                                          lft     down    rght
+)
+
+#| --------------------------------------------------------------------------
+This will be the default layout when I will be comfortable using the default layout
+
+(deflayer default
+  esc     @game   f2      f3      @f4     f5      f6      f7      f8      f9      f10     f11     f12     home    end    ins    del
+  `       1       2       3       4       5       6       7       8       9       0       -       =       bspc
+  @tab    q       @whrm   @ehrm   r       t       y       u       @ihrm   @ohrm   p       [       ]       @\
+  esc     @ahrm   s       d       f       g       h       j       k       l       @;hrm   '       ret
+  lsft    z       x       c       v       b       n       m       ,       .       /       rsft
+  lctl            lmet    lalt    @spc                            ralt    prnt    rctrl   pgup    up      pgdn
+                                                                                          lft     down    rght
+)
+  -------------------------------------------------------------------------- |#
+
+(deflayer default
+  esc     @game   f2      f3      @f4     f5      f6      f7      f8      f9     f10     f11     f12     home    end    ins    del
+  `       1       2       3       4       5       6       7       8       9      0       -       =       bspc
+  @tab    q       w       e       r       t       y       u       i       o      p       [       ]       @\
+  esc     a       @s      @d      @f      g       h       j       k       l      ;       '       ret
+  -       z       x       c       v       b       @n      @m      @,      .      /       rsft
+  -               -       @norm   spc                             @sym    prnt    rctrl   pgup    up      pgdn
+                                                                                          lft     down    rght
+)
+
+(deflayer game
+  esc     @dflt   f2      f3      f4      f5      f6      f7      f8      f9      f10     f11     f12     home    end    ins    del
+  `       1       2       3       4       5       6       7       8       9       0       -       =       bspc
+  tab     q       w       e       r       t       y       u       i       o       p       [       ]       \
+  esc     a       s       d       f       g       h       j       k       l       ;       '       ret
+  lsft    z       x       c       v       b       n       m       ,       .       /       rsft
+  lctl            lmet    lalt    spc                             ralt    prnt    rctrl   pgup    up      pgdn
+                                                                                          lft     down    rght
+)
+
+(deflayer sym
+  -       -       -       -       -       -       -       -       -       -       -       -       -       -       -      -      -
+  -       f1      f2      f3      f4      f5      f6      f7      f8      f9      f10     f11     f12     -
+  -       1       2       3       4       5       6       7       8       9       0       -       -       bspc
+  -       $       +       \(      \)      @       |       -       =       \_      *       -       -
+  -       !       #       {       }       ~       &       [       ]       %       ^       -
+  -               -       -       -                               -       -       -       -       -       -
+                                                                                          -       -       -
+)
+
+(deflayer vim
+  -       -       -       -       -       -       -       -       -       -       -       -       -       -       -      -      -
+  -       1       2       3       4       5       6       7       8       9       0       -       -       -
+  tab     -       @w      end     ret     -       @redo   @undo   -       -       bspc    -       -       -
+  -       home    -       del     @find   -       lft     down    up      rght    -       -       -
+  -       -       -       -       @v      @b      -       -       -       -       -       -
+  -               -       -       spc                             -       -       -       -       -       -
+                                                                                          -       -       -
+)
+
+(deflayer sel
+  -       -       -       -       -       -       -       -       -       -       -       -       -       -       -      -      -
+  -       1       2       3       4       5       6       7       8       9       0       -       -       -
+  -       -       @vw     @ven    -       -       -       -       -       -       -       -       -       -
+  @ves    @vho    -       -       -       -       @vlf    @vdo    @vup    @vrg    -       -       -
+  -       -       -       -       -       @vb     -       -       -       -       -       -
+  -               -       -       -                               @ves    -       -       -       -       -
+                                                                                          -       -       -
+)
+
+;; vim: ft=elisp
+
+#|_________________________________________________________________________________
+
+(deflayer template
+  -       -       -       -       -       -       -       -       -       -       -       -       -       -       -      -      -
+  -       -       -       -       -       -       -       -       -       -       -       -       -       -
+  -       -       -       -       -       -       -       -       -       -       -       -       -       -
+  -       -       -       -       -       -       -       -       -       -       -       -       -
+  -       -       -       -       -       -       -       -       -       -       -       -
+  -               -       -       -                               -       -       -       -       -       -
+                                                                                          -       -       -
+)
+|#

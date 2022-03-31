@@ -604,10 +604,11 @@ appsKeymap = -- Whichever Keys
   , ("r", spawn (myTerminal ++ " -e lf")) -- Lf file manager
   , ("[", spawn "xmonad-keys") -- Window Manager Mappings
   , ("w", runOrRaise "firefox" (className =? "firefox")) -- Launch Firefox
-  , ("b", runOrRaise "brave" (className =? "Brave-browser")) -- Launch Brave
+  , ("c", runOrRaise "brave" (className =? "Brave-browser")) -- Launch Brave
   -- , ("e", spawn (myEmacs ++ "--eval '(switch-to-buffer nil)'")) -- Emacs dashboard
   , ("e", spawn myEmacs) -- Emacs dashboard
   , ("f", spawn "$HOME/.emacs.d/bin/doom everywhere") -- Doom emacs everywhere
+  , ("b", spawn "dmenu-win") -- Dmenu find windows
 
     -- Music and volume control
   , ("n", namedScratchpadAction myScratchPads "ncmpcpp") -- Ncmpcpp Player

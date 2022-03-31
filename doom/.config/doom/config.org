@@ -10,7 +10,7 @@
 - [[#doom-configuration][DOOM Configuration]]
   - [[#async-config-tangling][Async config tangling]]
   - [[#modules][Modules]]
-  - [[#my-packages][My Packages]]
+  - [[#packages][Packages]]
 - [[#native-compilation][Native Compilation]]
 - [[#simple-settings][Simple Settings]]
   - [[#changing-defaults][Changing Defaults]]
@@ -30,6 +30,7 @@
   - [[#keybindings-to-open-dired][Keybindings To Open Dired]]
   - [[#keybindings-within-dired][Keybindings Within Dired]]
   - [[#keybindings-within-dired-with-peep-dired-mode-enabled][Keybindings Within Dired With Peep-Dired-Mode Enabled]]
+- [[#dictionary][Dictionary]]
 - [[#fonts-and-appearance][Fonts and Appearance]]
 - [[#hooks][Hooks]]
 - [[#key-mappings-and-evil][Key Mappings And Evil]]
@@ -39,6 +40,7 @@
   - [[#latex][Latex]]
   - [[#lua][Lua]]
   - [[#haskell][Haskell]]
+  - [[#python][Python]]
 - [[#mouse-settings][Mouse Settings]]
 - [[#open-specific-files][Open Specific Files]]
 - [[#open-specific-applications][Open Specific Applications]]
@@ -50,8 +52,9 @@
   - [[#org-appear][Org-appear]]
   - [[#org-super-agenda][Org-super-agenda]]
   - [[#org-reveal][Org-reveal]]
+  - [[#el-easydraw][El-easydraw]]
   - [[#inkscape][Inkscape]]
-- [[#dictionary][Dictionary]]
+- [[#tramp][Tramp]]
 - [[#which-key][Which-key]]
 
 * Lexical Keybinds
@@ -68,7 +71,6 @@ variables, and virtually no other languages have adopted it.
 #+end_src
 
 * DOOM Configuration
-
 ** Async config tangling
 
 Doom adds an org-mode hook +literate-enable-recompile-h. This is a nice idea,
@@ -158,8 +160,8 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
        ;;layout            ; auie,ctsrnm is the superior home row
 
        :completion
-       (company            ; the ultimate code completion backend
-        +childframe)       ; ... when your children are better than you
+       company            ; the ultimate code completion backend
+        ;; +childframe)       ; ... when your children are better than you
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        ;;(ivy +fuzzy +prescient +icons)               ; a search engine for love and life
@@ -342,7 +344,7 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
        (default +bindings +smartparens))
 #+end_src
 
-** My Packages
+** Packages
 
 #+begin_src emacs-lisp :tangle "packages.el"
 ;; -*- no-byte-compile: t; -*-
@@ -352,14 +354,18 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
 (package! dired-open)
 (package! dired-subtree)
 (package! elfeed-goodies)
+
+;; Org stuff
 (package! org-appear :recipe (:host github :repo "awth13/org-appear")
   :pin "148aa124901ae598f69320e3dcada6325cdc2cf0")
-
 (package! emacs-reveal :recipe (:host gitlab :repo "oer/emacs-reveal"))
 (package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")) :pin "c93f6b61a8d3d2edcf07eda6220278c418d1054b")
 (package! websocket :pin "fda4455333309545c0787a79d73c19ddbeb57980") ; dependency of `org-roam-ui'
-
 (package! org-super-agenda)
+(package! rotate :pin "4e9ac3ff800880bd9b705794ef0f7c99d72900a6")
+(package! edraw-org :recipe (:host github :repo "misohena/el-easydraw"))
+
+;; Kmonad
 (package! kbd-mode
   :recipe (:host github
            :repo "kmonad/kbd-mode"))
@@ -707,31 +713,31 @@ Dired is the file manager within Emacs.  Below, I setup keybindings for image pr
 
 ** Keybindings To Open Dired
 
-| COMMAND    | DESCRIPTION                        | KEYBINDING |
-|------------+------------------------------------+------------|
-| dired      | /Open dired file manager/          | SPC d d    |
+| COMMAND    | DESCRIPTION                          | KEYBINDING |
+|------------+--------------------------------------+------------|
+| dired      | /Open dired file manager/            | SPC d d    |
 | dired-jump | /Jump to current directory in dired/ | SPC d j    |
 
 ** Keybindings Within Dired
 
 *** Basic dired commands
 
-| COMMAND                | DESCRIPTION                                 | KEYBINDING |
-|------------------------+---------------------------------------------+------------|
+| COMMAND                | DESCRIPTION                                   | KEYBINDING |
+|------------------------+-----------------------------------------------+------------|
 | dired-view-file        | /View file in dired/                          | SPC d v    |
 | dired-up-directory     | /Go up in directory tree/                     | h          |
 | dired-find-file        | /Go down in directory tree (or open if file)/ | l          |
-| dired-next-line        | Move down to next line                      | j          |
-| dired-previous-line    | Move up to previous line                    | k          |
-| dired-mark             | Mark file at point                          | m          |
-| dired-unmark           | Unmark file at point                        | u          |
-| dired-do-copy          | Copy current file or marked files           | C          |
-| dired-do-rename        | Rename current file or marked files         | R          |
-| dired-hide-details     | Toggle detailed listings on/off             | (          |
-| dired-git-info-mode    | Toggle git information on/off               | )          |
-| dired-create-directory | Create new empty directory                  | +          |
-| dired-diff             | Compare file at point with another          | =          |
-| dired-subtree-toggle   | Toggle viewing subtree at point             | TAB        |
+| dired-next-line        | Move down to next line                        | j          |
+| dired-previous-line    | Move up to previous line                      | k          |
+| dired-mark             | Mark file at point                            | m          |
+| dired-unmark           | Unmark file at point                          | u          |
+| dired-do-copy          | Copy current file or marked files             | C          |
+| dired-do-rename        | Rename current file or marked files           | R          |
+| dired-hide-details     | Toggle detailed listings on/off               | (          |
+| dired-git-info-mode    | Toggle git information on/off                 | )          |
+| dired-create-directory | Create new empty directory                    | +          |
+| dired-diff             | Compare file at point with another            | =          |
+| dired-subtree-toggle   | Toggle viewing subtree at point               | TAB        |
 
 *** Dired commands using regex
 
@@ -812,14 +818,23 @@ If peep-dired is enabled, you will get image previews as you go up/down with 'j'
 (add-hook 'peep-dired-hook 'evil-normalize-keymaps)
 #+end_src
 
+* Dictionary
+
+This is to setup spell checking inside emacs. I want a custom dictionary and a way to keep mine in check.
+
+#+begin_src emacs-lisp
+(setq ispell-dictionary "en-custom"
+      ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
+#+end_src
+
 * Fonts and Appearance
 
 Settings related to fonts within Doom Emacs:
-+ 'doom-font' -- standard monospace font that is used for most things in Emacs.
-+ 'doom-variable-pitch-font' -- variable font which is useful in some Emacs plugins.
-+ 'doom-big-font' -- used in doom-big-font-mode; useful for presentations.
-+ 'font-lock-comment-face' -- for comments.
-+ 'font-lock-keyword-face' -- for keywords with special significance like 'setq' in elisp.
+- 'doom-font' -- standard monospace font that is used for most things in Emacs.
+- 'doom-variable-pitch-font' -- variable font which is useful in some Emacs plugins.
+- 'doom-big-font' -- used in doom-big-font-mode; useful for presentations.
+- 'font-lock-comment-face' -- for comments.
+- 'font-lock-keyword-face' -- for keywords with special significance like 'setq' in elisp.
 
 #+begin_src emacs-lisp
 (setq doom-font (font-spec :family "monospace" :size 20)
@@ -872,11 +887,32 @@ This is to allow navigating visual lines by using =gj= and =gk=.
       (:prefix "n"
        "L" #'org-latex-preview))
 
-;; Focus new window after splitting
-(setq evil-split-window-below t
-      evil-vsplit-window-right t)
 ;; Implicit /g flag on evil ex substitution, because I use the default behavior less often.
-(setq evil-ex-substitute-global t)
+(after! evil
+  (setq evil-ex-substitute-global t     ; I like my s/../.. to by global by default
+        evil-move-cursor-back nil       ; Don't move the block cursor when toggling insert mode
+        evil-kill-on-visual-paste nil) ; Don't put overwritten text in the kill ring
+  ;; Focus new window after splitting
+  (setq evil-split-window-below t
+        evil-vsplit-window-right t))
+#+end_src
+
+Window rotation is nice, and can be found under =SPC w r= and =SPC w R=. Layout rotation is also nice though. Let’s stash this under =SPC w SPC=, inspired by Tmux’s use of =C-b SPC= to rotate windows.
+
+We could also do with adding the missing arrow-key variants of the window navigation/swapping commands.
+#+begin_src emacs-lisp
+(map! :map evil-window-map
+      "SPC" #'rotate-layout
+      ;; Navigation
+      "<left>"     #'evil-window-left
+      "<down>"     #'evil-window-down
+      "<up>"       #'evil-window-up
+      "<right>"    #'evil-window-right
+      ;; Swapping windows
+      "C-<left>"       #'+evil/window-move-left
+      "C-<down>"       #'+evil/window-move-down
+      "C-<up>"         #'+evil/window-move-up
+      "C-<right>"      #'+evil/window-move-right)
 #+end_src
 
 * KMonad
@@ -884,7 +920,8 @@ This is to allow navigating visual lines by using =gj= and =gk=.
 Nothing to see here. Just some KMonad setup to enable syntax highlighting when editing the config file.
 
 #+begin_src emacs-lisp
-(use-package! kbd-mode)
+(use-package! kbd-mode
+  :defer t)
 #+end_src
 
 * Line Settings
@@ -923,7 +960,7 @@ Change the default Latex to lualatex as it provides access to nicer fonts!
 Stylua as a formatter is much better overall
 
 #+begin_src emacs-lisp
-(after! lua-mode
+(after! lua
   (set-formatter! 'stylua "stylua -" :modes '(lua-mode))
   (setq-hook! 'lua-mode-hook +format-with-lsp nil))
 #+end_src
@@ -933,9 +970,19 @@ Stylua as a formatter is much better overall
 Change the default formatter for Haskell.
 
 #+begin_src emacs-lisp
-(after! haskell-mode
+(after! haskell
   (set-formatter! 'brittany "brittany" :modes '(haskell-mode))
   (setq-hook! 'haskell-mode-hook +format-with-lsp nil))
+#+end_src
+
+** Python
+
+Change the default formatter for python.
+
+#+begin_src emacs-lisp
+(after! python
+  (setq-hook! 'python-mode-hook +format-with-lsp nil)
+  (set-formatter! 'autopep8 "autopep8 -" :modes '(python-mode)))
 #+end_src
 
 * Mouse Settings
@@ -966,8 +1013,8 @@ Keybindings to open files that I work with all the time using the find-file comm
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix ("-" . "Open Apps")
-       :desc "Open my calendar" "c" #'(lambda () (interactive) (=my-calendar))
-       :desc "Open MU4E" "m" #'(lambda () (interactive) (=mu4e))))
+       :desc "Open my calendar" "c" #'(lambda ( (interactive) (=my-calendar))
+       :desc "Open MU4E" "m" #'(lambda () (interactive) (=mu4e)))))
 #+end_src
 
 * Org
@@ -1005,9 +1052,8 @@ I wrapped most of this block in (after! org).  Without this, my settings might b
         '((sequence
            "TODO(t)"           ; A task that is ready to be tackled
            "BLOG(b)"           ; Blog writing assignments
-           "GYM(g)"            ; Things to accomplish at the gym
            "PROJ(p)"           ; A project that contains other tasks
-           "VIDEO(v)"          ; Video assignments
+           "ASSIGNMENTS(a)"    ; Video assignments
            "WAIT(w)"           ; Something is holding up this task
            "|"                 ; The pipe necessary to separate "active" states and "inactive" states
            "DONE(d)"           ; Task has been completed
@@ -1152,6 +1198,15 @@ Make really beautiful presentation using =reveal.js=.
   :after org-mode org-roam-mode)
 #+end_src
 
+** El-easydraw
+
+#+begin_src emacs-lisp
+(use-package! edraw-org
+  :after org
+  :config
+  (edraw-org-setup-default))
+#+end_src
+
 ** Inkscape
 
 Changing the default template used by =ink-make-figure= and =ink-edit-figure=.
@@ -1285,15 +1340,14 @@ Changing the default template used by =ink-make-figure= and =ink-edit-figure=.
   "Default file template.")
 #+end_src
 
-* Dictionary
-
-This is to setup spell checking inside emacs. I want a custom dictionary and a way to keep mine in check.
+* Tramp
 
 #+begin_src emacs-lisp
-(setq ispell-dictionary "en-custom"
-      ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
+(after! tramp
+  (setenv "SHELL" "/bin/bash")
+  (setq tramp-shell-prompt-pattern "\\(?:^\\|
+\\)[^]#$%>\n]*#?[]#$%>] *\\(�\\[[0-9;]*[a-zA-Z] *\\)*")) ;; default + 
 #+end_src
-
 * Which-key
 
 I hate when which-key takes too long to show up. Make it faster!!!
@@ -1304,6 +1358,6 @@ I hate when which-key takes too long to show up. Make it faster!!!
   (setq frame-resize-pixelwise nil)
   ;; Add an extra line to work around bug in which-key imprecise
   ;; (defun add-which-key-line (f &rest r) (progn (apply f (list (cons (+ 2 (car (car r))) (cdr (car r)))))))
-  ;; (advice-add 'which-key--show-popup :around #'add-which-key-line)
+  ;; (advice-add 'which-key--show-popup :around #'add-which-key-line
   (setq which-key-idle-delay 0.5))
 #+end_src

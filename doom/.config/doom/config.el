@@ -331,6 +331,11 @@ Not added when either:
 (add-hook 'peep-dired-hook 'evil-normalize-keymaps)
 ;; Keybindings Within Dired With Peep-Dired-Mode Enabled:1 ends here
 
+;; [[file:config.org::*Dictionary][Dictionary:1]]
+(setq ispell-dictionary "en-custom"
+      ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
+;; Dictionary:1 ends here
+
 ;; [[file:config.org::*Fonts and Appearance][Fonts and Appearance:1]]
 (setq doom-font (font-spec :family "monospace" :size 20)
       doom-variable-pitch-font (font-spec :family "sans" :size 20)
@@ -371,15 +376,34 @@ Not added when either:
       (:prefix "n"
        "L" #'org-latex-preview))
 
-;; Focus new window after splitting
-(setq evil-split-window-below t
-      evil-vsplit-window-right t)
 ;; Implicit /g flag on evil ex substitution, because I use the default behavior less often.
-(setq evil-ex-substitute-global t)
+(after! evil
+  (setq evil-ex-substitute-global t     ; I like my s/../.. to by global by default
+        evil-move-cursor-back nil       ; Don't move the block cursor when toggling insert mode
+        evil-kill-on-visual-paste nil) ; Don't put overwritten text in the kill ring
+  ;; Focus new window after splitting
+  (setq evil-split-window-below t
+        evil-vsplit-window-right t))
 ;; Key Mappings And Evil:1 ends here
 
+;; [[file:config.org::*Key Mappings And Evil][Key Mappings And Evil:2]]
+(map! :map evil-window-map
+      "SPC" #'rotate-layout
+      ;; Navigation
+      "<left>"     #'evil-window-left
+      "<down>"     #'evil-window-down
+      "<up>"       #'evil-window-up
+      "<right>"    #'evil-window-right
+      ;; Swapping windows
+      "C-<left>"       #'+evil/window-move-left
+      "C-<down>"       #'+evil/window-move-down
+      "C-<up>"         #'+evil/window-move-up
+      "C-<right>"      #'+evil/window-move-right)
+;; Key Mappings And Evil:2 ends here
+
 ;; [[file:config.org::*KMonad][KMonad:1]]
-(use-package! kbd-mode)
+(use-package! kbd-mode
+  :defer t)
 ;; KMonad:1 ends here
 
 ;; [[file:config.org::*Line Settings][Line Settings:1]]
@@ -397,16 +421,22 @@ Not added when either:
 ;; Latex:1 ends here
 
 ;; [[file:config.org::*Lua][Lua:1]]
-(after! lua-mode
+(after! lua
   (set-formatter! 'stylua "stylua -" :modes '(lua-mode))
   (setq-hook! 'lua-mode-hook +format-with-lsp nil))
 ;; Lua:1 ends here
 
 ;; [[file:config.org::*Haskell][Haskell:1]]
-(after! haskell-mode
+(after! haskell
   (set-formatter! 'brittany "brittany" :modes '(haskell-mode))
   (setq-hook! 'haskell-mode-hook +format-with-lsp nil))
 ;; Haskell:1 ends here
+
+;; [[file:config.org::*Python][Python:1]]
+(after! python
+  (setq-hook! 'python-mode-hook +format-with-lsp nil)
+  (set-formatter! 'autopep8 "autopep8 -" :modes '(python-mode)))
+;; Python:1 ends here
 
 ;; [[file:config.org::*Mouse Settings][Mouse Settings:1]]
 (map! :n [mouse-8] #'better-jumper-jump-backward
@@ -426,8 +456,8 @@ Not added when either:
 ;; [[file:config.org::*Open Specific Applications][Open Specific Applications:1]]
 (map! :leader
       (:prefix ("-" . "Open Apps")
-       :desc "Open my calendar" "c" #'(lambda () (interactive) (=my-calendar))
-       :desc "Open MU4E" "m" #'(lambda () (interactive) (=mu4e))))
+       :desc "Open my calendar" "c" #'(lambda ( (interactive) (=my-calendar))
+       :desc "Open MU4E" "m" #'(lambda () (interactive) (=mu4e)))))
 ;; Open Specific Applications:1 ends here
 
 ;; [[file:config.org::*Org-base][Org-base:1]]
@@ -459,9 +489,8 @@ Not added when either:
         '((sequence
            "TODO(t)"           ; A task that is ready to be tackled
            "BLOG(b)"           ; Blog writing assignments
-           "GYM(g)"            ; Things to accomplish at the gym
            "PROJ(p)"           ; A project that contains other tasks
-           "VIDEO(v)"          ; Video assignments
+           "ASSIGNMENTS(a)"    ; Video assignments
            "WAIT(w)"           ; Something is holding up this task
            "|"                 ; The pipe necessary to separate "active" states and "inactive" states
            "DONE(d)"           ; Task has been completed
@@ -575,6 +604,13 @@ Not added when either:
 (use-package! emacs-reveal
   :after org-mode org-roam-mode)
 ;; Org-reveal:1 ends here
+
+;; [[file:config.org::*El-easydraw][El-easydraw:1]]
+(use-package! edraw-org
+  :after org
+  :config
+  (edraw-org-setup-default))
+;; El-easydraw:1 ends here
 
 ;; [[file:config.org::*Inkscape][Inkscape:1]]
 (defvar ink-flags-png (list "--export-area-drawing"
@@ -705,10 +741,12 @@ Not added when either:
   "Default file template.")
 ;; Inkscape:1 ends here
 
-;; [[file:config.org::*Dictionary][Dictionary:1]]
-(setq ispell-dictionary "en-custom"
-      ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
-;; Dictionary:1 ends here
+;; [[file:config.org::*Tramp][Tramp:1]]
+(after! tramp
+  (setenv "SHELL" "/bin/bash")
+  (setq tramp-shell-prompt-pattern "\\(?:^\\|
+\\)[^]#$%>\n]*#?[]#$%>] *\\(�\\[[0-9;]*[a-zA-Z] *\\)*")) ;; default + 
+;; Tramp:1 ends here
 
 ;; [[file:config.org::*Which-key][Which-key:1]]
 (after! which-key
@@ -716,6 +754,6 @@ Not added when either:
   (setq frame-resize-pixelwise nil)
   ;; Add an extra line to work around bug in which-key imprecise
   ;; (defun add-which-key-line (f &rest r) (progn (apply f (list (cons (+ 2 (car (car r))) (cdr (car r)))))))
-  ;; (advice-add 'which-key--show-popup :around #'add-which-key-line)
+  ;; (advice-add 'which-key--show-popup :around #'add-which-key-line
   (setq which-key-idle-delay 0.5))
 ;; Which-key:1 ends here
