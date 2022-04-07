@@ -40,7 +40,11 @@ local theme = {
 
         -- Main font
         self.font_name = config.font or "Sans"
+<<<<<<< HEAD
+        self.font_size = dpi(6)
+=======
         self.font_size = dpi(4.5)
+>>>>>>> dc98d66 (commit)
         self.font = self.font_name .. " " .. self.font_size
 
         -- Notifiy font
@@ -50,7 +54,11 @@ local theme = {
 
         -- Icon font for wibar
         self.icon_font_name = config.icon_font or "Font Awesome"
+<<<<<<< HEAD
+        self.icon_font_size = dpi(9)
+=======
         self.icon_font_size = dpi(6)
+>>>>>>> dc98d66 (commit)
         self.icon_font = self.icon_font_name .. " " .. self.icon_font_size
 
         -- Tasklist font should be smaller by a bit

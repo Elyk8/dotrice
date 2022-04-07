@@ -30,15 +30,6 @@
   (doom-project-find-file (expand-file-name "~/.local/src/")))
 
 ;;;###autoload
-(defun greedily-do-daemon-setup ()
-  (require 'org)
-  (when (require 'mu4e nil t)
-    (setq mu4e-confirm-quit t)
-    (setq +mu4e-lock-greedy t)
-    (setq +mu4e-lock-relaxed t)
-    (mu4e~start)))
-
-;;;###autoload
 (defun org-syntax-convert-keyword-case-to-lower ()
   "Convert all #+KEYWORDS to #+keywords."
   (interactive)

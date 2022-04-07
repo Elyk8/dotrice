@@ -1,3 +1,12 @@
 [submodule "/home/elyk/dotrice/safeeyes/.config/safeeyes/plugins"]
 	path = /home/elyk/dotrice/safeeyes/.config/safeeyes/plugins
 	url = https://github.com/safeeyes/safeeyes-plugins.git
+[submodule "xmonad/.config/xmonad/xmobar"]
+	path = xmonad/.config/xmonad/xmobar
+	url = https://github.com/jaor/xmobar
+[submodule "xmonad/.config/xmonad/xmonad-contrib"]
+	path = xmonad/.config/xmonad/xmonad-contrib
+	url = https://github.com/xmonad/xmonad-contrib
+[submodule "xmonad/.config/xmonad/xmonad"]
+	path = xmonad/.config/xmonad/xmonad
+	url = https://github.com/xmonad/xmonad

@@ -151,7 +151,7 @@ Not added when either:
    :contents-sources
    (list
     (cfw:org-create-source "Purple")
-    (cfw:ical-create-source "Victoria University" "https://outlook.office365.com/owa/calendar/14853855dd6541eebbce1f2d68f50dcf@live.vu.edu.au/f754347027b54d97a148bdb20e6a947814803601956198516593/calendar.ics" "Blue"))))
+    (cfw:ical-create-source "Victoria University" "https://outlook.office365.com/owa/calendar/14853855dd6541eebbce1f2d68f50dcf@live.vu.edu.au/f754347027b54d97a148bdb20e6a947814803601956198516593/calendar.ics" "Green"))))
 (defun calendar-init ()
   ;; switch to existing calendar buffer if applicable
   (if-let (win (cl-find-if (lambda (b) (string-match-p "^\\*cfw:" (buffer-name b)))
@@ -159,6 +159,7 @@ Not added when either:
                            :key #'window-buffer))
       (select-window win)
     (calendar-helper)))
+
 (defun =my-calendar ()
   "Activate (or switch to) *my* `calendar' in its workspace."
   (interactive)
@@ -173,63 +174,6 @@ Not added when either:
     (switch-to-buffer (doom-fallback-buffer))
     (calendar-init)))
 ;; iCalendar:1 ends here
-
-;; [[file:config.org::*MU4E][MU4E:1]]
-(after! mu4e
-  (set-email-account!
-   "main"
-   '((user-full-name         . "Kyle")
-     (mu4e-sent-folder       . "/kylese58/[Gmail]/Sent Mail")
-     (mu4e-trash-folder      . "/kylese58/[Gmail]/Bin")
-     (mu4e-drafts-folder     . "/kylese58/[Gmail]/Drafts")
-     (mu4e-refile-folder     . "/kylese58/[Gmail]/All Mail")
-     (smtpmail-smtp-user     . "kylese58@gmail.com"))
-   t)
-  (set-email-account!
-   "personal"
-   '((user-full-name         . "Kyle")
-     (mu4e-sent-folder       . "/entaroaldaris666/[Gmail]/Sent Mail")
-     (mu4e-trash-folder      . "/entaroaldaris666/[Gmail]/Bin")
-     (mu4e-drafts-folder     . "/entaroaldaris666/[Gmail]/Drafts")
-     (mu4e-refile-folder     . "/entaroaldaris666/[Gmail]/All Mail")
-     (smtpmail-smtp-user     . "entaroaldaris666@gmail.com"))
-   nil)
-  (set-email-account!
-   "vu"
-   '((user-full-name         . "Kyle Se")
-     (mu4e-sent-folder       . "/vu/Sent")
-     (mu4e-trash-folder      . "/vu/Deleted Items")
-     (mu4e-drafts-folder     . "/vu/Drafts")
-     (mu4e-refile-folder     . "/vu/Archive")
-     (smtpmail-smtp-user     . "kyle.sehinson@live.vu.edu.au"))
-   nil)
-  (set-email-account!
-   "outlook"
-   '((user-full-name         . "Kyle")
-     (mu4e-sent-folder       . "/kylelive/Sent")
-     (mu4e-trash-folder      . "/kylelive/Deleted Items")
-     (mu4e-drafts-folder     . "/kylelive/Drafts")
-     (mu4e-refile-folder     . "/kylelive/Archive")
-     (smtpmail-smtp-user     . "k_05dragon@live.com"))
-   nil)
-  )
-;; MU4E:1 ends here
-
-;; [[file:config.org::*MU4E][MU4E:2]]
-(when (daemonp)
-  (add-hook! 'emacs-startup-hook #'greedily-do-daemon-setup))
-;; MU4E:2 ends here
-
-;; [[file:config.org::*MU4E][MU4E:3]]
-(after! mu4e
-  (setq mu4e-get-mail-command "mbsync -ac ~/.config/mbsync/config"
-        mu4e-update-interval 300 ;; get emails and index every 5 minutes
-        mu4e-compose-format-flowed t ;; send emails with format=flowed
-        ;; mu4e-index-cleanup nil ;; no need to run cleanup after indexing for gmail
-        ;; mu4e-index-lazy-check t
-        mu4e-headers-date-format "%d.%m.%y" ;; more sensible date format
-        ))
-;; MU4E:3 ends here
 
 ;; [[file:config.org::*Completion][Completion:1]]
 (use-package! company
@@ -259,7 +203,6 @@ Not added when either:
       :desc "Open configs" :ne ">" #'find-in-configs
       :desc "Open suckless stuff" :ne "x" #'find-in-suckless
       :desc "Open scripts" :ne "e" #'find-in-scripts
-      :desc "Open MU4E" :ne "m" #'=mu4e
       :desc "Notes (roam)" :ne "n" #'org-roam-node-find
       :desc "Dired" :ne "d" #'dired
       :desc "Switch buffer" :ne "b" #'+vertico/switch-workspace-buffer
@@ -378,8 +321,14 @@ Not added when either:
 
 ;; Implicit /g flag on evil ex substitution, because I use the default behavior less often.
 (after! evil
+<<<<<<< HEAD
+  (map! :nv "Q" #'evil-fill-and-move)
+  (setq evil-ex-substitute-global t     ; I like my s/../.. to by global by default
+        ;;evil-move-cursor-back nil       ; Don't move the block cursor when toggling insert mode
+=======
   (setq evil-ex-substitute-global t     ; I like my s/../.. to by global by default
         evil-move-cursor-back nil       ; Don't move the block cursor when toggling insert mode
+>>>>>>> dc98d66 (commit)
         evil-kill-on-visual-paste nil) ; Don't put overwritten text in the kill ring
   ;; Focus new window after splitting
   (setq evil-split-window-below t
@@ -409,8 +358,8 @@ Not added when either:
 ;; [[file:config.org::*Line Settings][Line Settings:1]]
 (setq display-line-numbers-type t) ;; By disabling line number, we improve performance significantly
 (map! :leader
-     :desc "Comment or uncomment lines" "TAB TAB" #'comment-line
     (:prefix ("t" . "toggle")
+     :desc "Comment or uncomment lines" "TAB" #'comment-line
      :desc "Toggle line numbers" "l" #'doom/toggle-line-numbers
      :desc "Toggle line highlight in frame" "h" #'hl-line-mode
      :desc "Toggle line highlight globally" "H" #'global-hl-line-mode))
@@ -421,6 +370,20 @@ Not added when either:
 ;; Latex:1 ends here
 
 ;; [[file:config.org::*Lua][Lua:1]]
+<<<<<<< HEAD
+(set-formatter! 'stylua "stylua -" :modes '(lua-mode))
+(setq-hook! 'lua-mode-hook +format-with-lsp nil)
+;; Lua:1 ends here
+
+;; [[file:config.org::*Haskell][Haskell:1]]
+(set-formatter! 'brittany "brittany" :modes '(haskell-mode))
+(setq-hook! 'haskell-mode-hook +format-with-lsp nil)
+;; Haskell:1 ends here
+
+;; [[file:config.org::*Python][Python:1]]
+(set-formatter! 'autopep8 "autopep8 -" :modes '(python-mode))
+(setq-hook! 'python-mode-hook +format-with-lsp nil)
+=======
 (after! lua
   (set-formatter! 'stylua "stylua -" :modes '(lua-mode))
   (setq-hook! 'lua-mode-hook +format-with-lsp nil))
@@ -436,6 +399,7 @@ Not added when either:
 (after! python
   (setq-hook! 'python-mode-hook +format-with-lsp nil)
   (set-formatter! 'autopep8 "autopep8 -" :modes '(python-mode)))
+>>>>>>> dc98d66 (commit)
 ;; Python:1 ends here
 
 ;; [[file:config.org::*Mouse Settings][Mouse Settings:1]]
@@ -453,6 +417,8 @@ Not added when either:
        ))
 ;; Open Specific Files:1 ends here
 
+<<<<<<< HEAD
+=======
 ;; [[file:config.org::*Open Specific Applications][Open Specific Applications:1]]
 (map! :leader
       (:prefix ("-" . "Open Apps")
@@ -460,14 +426,18 @@ Not added when either:
        :desc "Open MU4E" "m" #'(lambda () (interactive) (=mu4e)))))
 ;; Open Specific Applications:1 ends here
 
+>>>>>>> dc98d66 (commit)
 ;; [[file:config.org::*Org-base][Org-base:1]]
 (map! :leader
-      :desc "Org babel tangle" "m B" #'org-babel-tangle)
+      :desc "Org babel tangle" "m TAB" #'org-babel-tangle)
 
 (after! org-superstar
   (setq org-superstar-headline-bullets-list '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
         org-superstar-item-bullet-alist '((?+ . ?➤) (?- . ?✦)) ; changes +/- symbols in item lists
         org-superstar-prettify-item-bullets t ))
+
+(after! org-fancy-priorities
+  (setq org-fancy-priorities-list '("⚡" "⬆" "⬇" "☕")))
 
 (after! org
   (plist-put org-format-latex-options :scale 4) ;; Make latex equations preview larger

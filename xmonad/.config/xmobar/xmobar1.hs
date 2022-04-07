@@ -30,8 +30,7 @@ Config { font = "xft:Ubuntu:weight=bold:italic:pixelsize=16:antialias=true:hinti
                     , Run UnsafeXPropertyLog "_XMONAD_LOG_1"
                     ]
                     
-       , template = " <action=`jgmenu_run`><icon=haskell_20.xpm/></action> \
-                    \%_XMONAD_LOG_1%}{\
+       , template = " %_XMONAD_LOG_1%}{\
 
 
                     \<box type=Bottom width=2 mb=2 color=#51afef><fc=#aac0f0><fn=3> </fn><action=`alacritty -e gotop`>%uname%</action></fc></box>   \

@@ -2,7 +2,7 @@
 
 Config { font = "xft:Ubuntu:weight=bold:italic:pixelsize=18:antialias=true:hinting=true"
        , additionalFonts = [ "xft:Iosevka Nerd Font:weight=heavy:pixelsize=20:antialias=true:hinting=true"
-                           , "xft:Font Awesome 6 Free Solid:pixelsize=18"
+                           , "xft:Font Awesome 6 Free Solid:pixelsize=20"
                            , "xft:Font Awesome 6 Brands:pixelsize=18"
                            , "xft:Iosevka Nerd Font:weight=heavy:italic:pixelsize=20:antialias=true:hinting=true"
                            ]
@@ -28,8 +28,8 @@ Config { font = "xft:Ubuntu:weight=bold:italic:pixelsize=18:antialias=true:hinti
                     , Run Battery [
                       "-t", "<acstatus><left>% <fn=2>\xF017 </fn><timeleft>",
                       "--",
-                      "-O", "<fn=2>\xF585 </fn>", -- Charging
-                      "-o", "<fn=2>\xF58D </fn>", -- Discharning
+                      "-O", "<fn=2>\xF5E7 </fn>", -- Charging
+                      "-o", "<fn=2>\xF242 </fn>", -- Discharning
                       "-i", "<fn=2>\xF1E6 </fn>", -- Idle
                       "-h", "green",
                       "-l", "red"
@@ -41,8 +41,7 @@ Config { font = "xft:Ubuntu:weight=bold:italic:pixelsize=18:antialias=true:hinti
                     , Run UnsafeXPropertyLog "_XMONAD_LOG_0"
                     ]
                     
-      , template = " <action=`jgmenu_run`><icon=haskell_20.xpm/></action> \
-                    \%_XMONAD_LOG_0%}\
+      , template = " %_XMONAD_LOG_0%}\
 
 
                     \<box type=Bottom width=2 mb=2 color=#51afef><fc=#5294e2> <action=`sh -c thunderbird`>%date%</action></fc></box>{\

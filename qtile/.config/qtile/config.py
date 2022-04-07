@@ -1,5 +1,9 @@
 from libqtile import layout
 from libqtile.config import Click, Drag, Group, Match, Screen
+<<<<<<< HEAD
+from libqtile.config import ScratchPad, DropDown
+=======
+>>>>>>> dc98d66 (commit)
 from libqtile.config import Key, KeyChord
 from libqtile.lazy import lazy
 
@@ -14,6 +18,8 @@ emacs = "emacsclient -cn"
 keys = [
     # A list of available commands that can be bound to keys can be found
     # at https://docs.qtile.org/en/latest/manual/config/lazy.html
+<<<<<<< HEAD
+=======
     # LEADER BINDINGS
     KeyChord(
         [mod],
@@ -68,6 +74,7 @@ keys = [
     ),
     Key([mod], "Escape", lazy.spawn("sysact"), desc="Power menu"),
 
+>>>>>>> dc98d66 (commit)
     # Window controls
     Key([mod], "j", lazy.layout.down(), desc='Move focus down in current stack pane'),
     Key([mod], "k", lazy.layout.up(), desc='Move focus up in current stack pane'),
@@ -80,6 +87,10 @@ keys = [
 
     # Move windows between left/right columns or move up/down in current stack.
     # Moving out of range in Columns layout will create new column.
+<<<<<<< HEAD
+    Key([mod, "shift"], "h", lazy.layout.shuffle_left(), desc="Move window to the left"),
+    Key([mod, "shift"], "l", lazy.layout.shuffle_right(), desc="Move window to the right",),
+=======
     Key(
         [mod, "shift"], "h", lazy.layout.shuffle_left(), desc="Move window to the left"
     ),
@@ -89,6 +100,7 @@ keys = [
         lazy.layout.shuffle_right(),
         desc="Move window to the right",
     ),
+>>>>>>> dc98d66 (commit)
     Key([mod, "shift"], "j", lazy.layout.shuffle_down(), desc="Move window down"),
     Key([mod, "shift"], "k", lazy.layout.shuffle_up(), desc="Move window up"),
     # Grow windows. If current window is on the edge of screen and direction
@@ -105,12 +117,19 @@ keys = [
     # Split = all windows displayed
     # Unsplit = 1 window displayed, like Max layout, but still with
     # multiple stack panes
+<<<<<<< HEAD
+    Key([mod, "shift"], "Return",
+        lazy.layout.toggle_split(),
+        desc="Toggle between split and unsplit sides of stack",
+        ),
+=======
     Key(
         [mod, "shift"],
         "Return",
         lazy.layout.toggle_split(),
         desc="Toggle between split and unsplit sides of stack",
     ),
+>>>>>>> dc98d66 (commit)
 
     # Toggle between different layouts as defined below
     Key([mod], "b", lazy.next_layout(), desc="Toggle between layouts"),
@@ -134,6 +153,27 @@ groups = [
     Group("3", label="三"),
     Group("4", label="四"),
     Group("5", label="五"),
+<<<<<<< HEAD
+    Group("6", label="六"),
+    Group("7", label="七"),
+    Group("8", label="八"),
+    Group("9", label="九"),
+    Group("0", label="十"),
+]
+
+pinned_groups = ['12345', '67890']
+all_groups = ''.join(pinned_groups)
+
+for j, names in enumerate(pinned_groups):
+    keys.extend(Key([mod], i, lazy.to_screen(j), lazy.group[i].toscreen()) for i in names)
+
+keys.extend(Key([mod, 'shift'], i, lazy.window.togroup(i)) for i in all_groups)
+
+groups.append(ScratchPad("scratchpad", [
+    DropDown("mixer", [terminal + " -e pulsemixer"], width=0.4, on_focus_lost_hide=True),
+    DropDown("ncmpcpp", [terminal + " -e ncmpcpp"], opacity=0.9, width=0.8, height=0.9, x=0.1, y=0.05, on_focus_lost_hide=True),
+]))
+=======
 ]
 
 for i in groups:
@@ -160,6 +200,7 @@ for i in groups:
             #     desc="move focused window to group {}".format(i.name)),
         ]
     )
+>>>>>>> dc98d66 (commit)
 
 
 layoutTheme = {"border_width": 3,

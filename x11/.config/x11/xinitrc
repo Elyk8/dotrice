@@ -18,4 +18,11 @@ eval "$(gnome-keyring-daemon --start)"
 export SSH_AUTH_SOCK
 
 ssh-agent
+<<<<<<< HEAD
+# dbus-launch qtile start
+# dbus-launch dwm
+# dbus-launch awesome
+dbus-launch xmonad
+=======
 dbus-launch qtile start
+>>>>>>> dc98d66 (commit)

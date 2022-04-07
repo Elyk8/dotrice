@@ -10,11 +10,12 @@ Xcursor.theme: Breeze-Blue
 XTerm*termName: xterm-256color
 
 emacs.toolBar: 0
-emacs.menuBar: 0
+emacs.menuBar: off
 emacs.verticalScrollBars: off
+emacs.title: Emacs
 
 ! Font Settings
-*.font: monospace:weight:medium:size=13:antialias=true:autohint=true
+*.font: monospace:weight:medium:size=12:antialias=true:autohint=true
 *.font2: JoyPixels:pixelsize=19:antialias=true:autohint=true
 
 nsxiv.font: monospace:weight=medium:size=11:antialias=true:autohint=true

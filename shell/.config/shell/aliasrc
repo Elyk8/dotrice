@@ -190,7 +190,7 @@ alias lg='lazygit'
 # Colorize commands when possible.
 alias l='exa --group-directories-first --git'
 alias ll='exa --icons --all -l --group-directories-first --git'
-alias ls='exa --icons --all --group-directories-first --git'
+alias ls='exa --icons --group-directories-first --git'
 alias lt='exa -T --git-ignore --level=2 --group-directories-first'
 alias llt='exa -lT --git-ignore --level=2 --group-directories-first'
 alias lT='exa -T --git-ignore --level=4 --group-directories-first'
@@ -221,6 +221,7 @@ alias lf='lfcd'
 
 se() { fd -atf --base-directory ~/.config | fzf | xargs -r "$EDITOR"; }
 sr() { fd -atf --base-directory ~/scripts | fzf | xargs -r "$EDITOR"; }
+sc() { fd -Hatf --base-directory ~/dotrice | fzf | xargs -r "$EDITOR"; }
 xevv() { xev | awk -F'[ )]+' '/^KeyPress/ { a[NR+2] } NR in a { printf "%-3s %s\n", $5, $8 }'; }
 
 rosstart() {

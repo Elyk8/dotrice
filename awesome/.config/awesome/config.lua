@@ -4,21 +4,36 @@ local module = {}
 -- "light", "dark", "mirage" and "xrdb"
 module.color_scheme     = "xrdb"
 --module.font             = "InputSans Nerd Font"
+<<<<<<< HEAD
+-- module.font             = "DejaVu Sans Bold"
+module.font             = "Mononoki Nerd Font"
+module.icon_font        = "Mononoki Nerd Font"
+module.notify_font      = "Mononoki Nerd Font"
+=======
 module.font             = "DejaVu Sans Bold"
 module.icon_font        = "InputSans Nerd Font"
 module.notify_font      = "InputSans Nerd Font"
+>>>>>>> dc98d66 (commit)
 module.tasklist_font    = "DejaVu Sans"
 --module.icon_font      = "Font Awesome 5 Pro Bold "
 
 -- Use gaps?
+<<<<<<< HEAD
+module.gap              = 5
+=======
 module.gap              = 2
+>>>>>>> dc98d66 (commit)
 
 -- Your city for the weather forecast widget
 -- units can be either:
 -- "metric" (celsius)
 -- "imperial" (farenheight)
 module.city_id          = 5393212
+<<<<<<< HEAD
+module.units            = "metric"
+=======
 module.units            = "imperial"
+>>>>>>> dc98d66 (commit)
 
 -- 0 to use font-awesome glyps
 -- 1 to use icons from lain lib

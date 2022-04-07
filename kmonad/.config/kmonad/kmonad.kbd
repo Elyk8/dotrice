@@ -4,6 +4,10 @@
           "My KMonad output"
           "sleep 0.2s; remaps; sleep 0.2s")
   fallthrough true
+<<<<<<< HEAD
+  allow-cmd true
+=======
+>>>>>>> dc98d66 (commit)
 )
 
 ;; Default aliases
@@ -16,6 +20,11 @@
   undo C-z
   redo C-y
   find C-f
+<<<<<<< HEAD
+  mid (cmd-button "xdotool mousedown 2"
+                  "xdotool mouseup 2")
+=======
+>>>>>>> dc98d66 (commit)
 )
 
 
@@ -23,19 +32,32 @@
 (defalias
   game  (tap-hold-next 500 f1 (layer-switch game))
   dflt  (tap-hold-next 500 f1 (layer-switch default))
+<<<<<<< HEAD
+  vim  (tap-hold-next-release 200 bspc (layer-toggle vim))
+  sym   (tap-hold-next-release 200 bspc (layer-toggle sym))
+=======
   norm  (tap-hold-next-release 200 bspc (layer-toggle vim))
   sym   (tap-hold-next-release 200 bspc (layer-toggle sym))
   alt   (around-next (layer-toggle sym))
+>>>>>>> dc98d66 (commit)
 )
 
 ;; Home row modifiers
 (defalias
+<<<<<<< HEAD
+  alt (tap-hold-next-release 200 z lalt)
+  sft (tap-hold-next-release 200 x lsft)
+  n (tap-hold-next-release 200 n rsft)
+  m (tap-hold-next-release 200 m ralt)
+  , (tap-hold-next-release 200 , rctl)
+=======
   s (tap-hold-next-release 200 s lalt)
   d (tap-hold-next-release 200 d lctl)
   f (tap-hold-next-release 200 f lsft)
   n (tap-hold-next-release 200 n rsft)
   m (tap-hold-next-release 200 m rctl)
   , (tap-hold-next-release 200 , ralt)
+>>>>>>> dc98d66 (commit)
 )
 
 ;; VI-like-mode-aliases
@@ -83,17 +105,30 @@ This will be the default layout when I will be comfortable using the default lay
   -------------------------------------------------------------------------- |#
 
 (deflayer default
+<<<<<<< HEAD
+  esc     @game   f2      f3      @f4     f5      f6      f7      f8      f9     f10     f11     f12     home   end    ins    del
+  `       1       2       3       4       5       6       7       8       9      0       -       =       bspc
+  @tab    q       w       e       r       t       y       u       i       o      p       [       ]       @\
+  @caps   a       s       d       f       g       h       j       k       l      ;       '       ret
+  -       @alt    @sft    c       v       b       @n      @m      @,      .      /       @sym
+  -               @mid    @vim    spc                             ralt    prnt    rctrl   pgup    up      pgdn
+=======
   esc     @game   f2      f3      @f4     f5      f6      f7      f8      f9     f10     f11     f12     home    end    ins    del
   `       1       2       3       4       5       6       7       8       9      0       -       =       bspc
   @tab    q       w       e       r       t       y       u       i       o      p       [       ]       @\
   esc     a       @s      @d      @f      g       h       j       k       l      ;       '       ret
   -       z       x       c       v       b       @n      @m      @,      .      /       rsft
   -               -       @norm   spc                             @sym    prnt    rctrl   pgup    up      pgdn
+>>>>>>> dc98d66 (commit)
                                                                                           lft     down    rght
 )
 
 (deflayer game
+<<<<<<< HEAD
+  esc     @dflt   f2      f3      f4      f5      f6      f7      f8      f9      f10     f11     f12     home   end    ins    del
+=======
   esc     @dflt   f2      f3      f4      f5      f6      f7      f8      f9      f10     f11     f12     home    end    ins    del
+>>>>>>> dc98d66 (commit)
   `       1       2       3       4       5       6       7       8       9       0       -       =       bspc
   tab     q       w       e       r       t       y       u       i       o       p       [       ]       \
   esc     a       s       d       f       g       h       j       k       l       ;       '       ret
@@ -103,7 +138,11 @@ This will be the default layout when I will be comfortable using the default lay
 )
 
 (deflayer sym
+<<<<<<< HEAD
+  -       -       -       -       -       -       -       -       -       -       -       -       -       -      -      -      -
+=======
   -       -       -       -       -       -       -       -       -       -       -       -       -       -       -      -      -
+>>>>>>> dc98d66 (commit)
   -       f1      f2      f3      f4      f5      f6      f7      f8      f9      f10     f11     f12     -
   -       1       2       3       4       5       6       7       8       9       0       -       -       bspc
   -       $       +       \(      \)      @       |       -       =       \_      *       -       -
@@ -113,7 +152,11 @@ This will be the default layout when I will be comfortable using the default lay
 )
 
 (deflayer vim
+<<<<<<< HEAD
+  -       mute    vold    volu    -       brdn    bru     -       -       -       previoussong       playpause   nextsong    -      -      -      -
+=======
   -       -       -       -       -       -       -       -       -       -       -       -       -       -       -      -      -
+>>>>>>> dc98d66 (commit)
   -       1       2       3       4       5       6       7       8       9       0       -       -       -
   tab     -       @w      end     ret     -       @redo   @undo   -       -       bspc    -       -       -
   -       home    -       del     @find   -       lft     down    up      rght    -       -       -
