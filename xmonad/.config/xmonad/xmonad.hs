@@ -516,8 +516,6 @@ keyMapDoc name = do
     , "24"
     ]
 
-<<<<<<< HEAD
-=======
 toSubmap :: XConfig l -> String -> [(String, X ())] -> X ()
 toSubmap c name m = do
   pipe <- keyMapDoc name

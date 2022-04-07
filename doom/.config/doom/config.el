@@ -321,14 +321,9 @@ Not added when either:
 
 ;; Implicit /g flag on evil ex substitution, because I use the default behavior less often.
 (after! evil
-<<<<<<< HEAD
   (map! :nv "Q" #'evil-fill-and-move)
   (setq evil-ex-substitute-global t     ; I like my s/../.. to by global by default
         ;;evil-move-cursor-back nil       ; Don't move the block cursor when toggling insert mode
-=======
-  (setq evil-ex-substitute-global t     ; I like my s/../.. to by global by default
-        evil-move-cursor-back nil       ; Don't move the block cursor when toggling insert mode
->>>>>>> dc98d66 (commit)
         evil-kill-on-visual-paste nil) ; Don't put overwritten text in the kill ring
   ;; Focus new window after splitting
   (setq evil-split-window-below t
@@ -370,7 +365,6 @@ Not added when either:
 ;; Latex:1 ends here
 
 ;; [[file:config.org::*Lua][Lua:1]]
-<<<<<<< HEAD
 (set-formatter! 'stylua "stylua -" :modes '(lua-mode))
 (setq-hook! 'lua-mode-hook +format-with-lsp nil)
 ;; Lua:1 ends here
@@ -383,23 +377,12 @@ Not added when either:
 ;; [[file:config.org::*Python][Python:1]]
 (set-formatter! 'autopep8 "autopep8 -" :modes '(python-mode))
 (setq-hook! 'python-mode-hook +format-with-lsp nil)
-=======
-(after! lua
-  (set-formatter! 'stylua "stylua -" :modes '(lua-mode))
-  (setq-hook! 'lua-mode-hook +format-with-lsp nil))
-;; Lua:1 ends here
-
-;; [[file:config.org::*Haskell][Haskell:1]]
-(after! haskell
-  (set-formatter! 'brittany "brittany" :modes '(haskell-mode))
-  (setq-hook! 'haskell-mode-hook +format-with-lsp nil))
-;; Haskell:1 ends here
+;; Python:1 ends here
 
 ;; [[file:config.org::*Python][Python:1]]
 (after! python
   (setq-hook! 'python-mode-hook +format-with-lsp nil)
   (set-formatter! 'autopep8 "autopep8 -" :modes '(python-mode)))
->>>>>>> dc98d66 (commit)
 ;; Python:1 ends here
 
 ;; [[file:config.org::*Mouse Settings][Mouse Settings:1]]
@@ -417,16 +400,6 @@ Not added when either:
        ))
 ;; Open Specific Files:1 ends here
 
-<<<<<<< HEAD
-=======
-;; [[file:config.org::*Open Specific Applications][Open Specific Applications:1]]
-(map! :leader
-      (:prefix ("-" . "Open Apps")
-       :desc "Open my calendar" "c" #'(lambda ( (interactive) (=my-calendar))
-       :desc "Open MU4E" "m" #'(lambda () (interactive) (=mu4e)))))
-;; Open Specific Applications:1 ends here
-
->>>>>>> dc98d66 (commit)
 ;; [[file:config.org::*Org-base][Org-base:1]]
 (map! :leader
       :desc "Org babel tangle" "m TAB" #'org-babel-tangle)
@@ -530,10 +503,10 @@ Not added when either:
           )))
 
 (use-package! websocket
-  :after org-roam-mode)
+  :after org-roam)
 
 (use-package! org-roam-ui
-  :after org-roam-mode
+  :after org-roam
   :config
   (setq org-roam-ui-sync-theme t
         org-roam-ui-follow t
@@ -572,8 +545,15 @@ Not added when either:
 
 ;; [[file:config.org::*Org-reveal][Org-reveal:1]]
 (use-package! emacs-reveal
-  :after org-mode org-roam-mode)
+  :after org org-roam)
 ;; Org-reveal:1 ends here
+
+;; [[file:config.org::*El-easydraw][El-easydraw:1]]
+(use-package! edraw-org
+  :after org
+  :config
+  (edraw-org-setup-default))
+;; El-easydraw:1 ends here
 
 ;; [[file:config.org::*El-easydraw][El-easydraw:1]]
 (use-package! edraw-org

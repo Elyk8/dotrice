@@ -186,6 +186,6 @@
        ;;twitter           ; twitter client https://twitter.com/vnought
 
        :config
-       ;;literate
+       literate
        (default +bindings +smartparens))
 ;; Modules:1 ends here

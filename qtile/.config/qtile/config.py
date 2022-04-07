@@ -1,9 +1,6 @@
 from libqtile import layout
 from libqtile.config import Click, Drag, Group, Match, Screen
-<<<<<<< HEAD
 from libqtile.config import ScratchPad, DropDown
-=======
->>>>>>> dc98d66 (commit)
 from libqtile.config import Key, KeyChord
 from libqtile.lazy import lazy
 
@@ -18,8 +15,6 @@ emacs = "emacsclient -cn"
 keys = [
     # A list of available commands that can be bound to keys can be found
     # at https://docs.qtile.org/en/latest/manual/config/lazy.html
-<<<<<<< HEAD
-=======
     # LEADER BINDINGS
     KeyChord(
         [mod],
@@ -87,10 +82,8 @@ keys = [
 
     # Move windows between left/right columns or move up/down in current stack.
     # Moving out of range in Columns layout will create new column.
-<<<<<<< HEAD
     Key([mod, "shift"], "h", lazy.layout.shuffle_left(), desc="Move window to the left"),
     Key([mod, "shift"], "l", lazy.layout.shuffle_right(), desc="Move window to the right",),
-=======
     Key(
         [mod, "shift"], "h", lazy.layout.shuffle_left(), desc="Move window to the left"
     ),
@@ -100,7 +93,6 @@ keys = [
         lazy.layout.shuffle_right(),
         desc="Move window to the right",
     ),
->>>>>>> dc98d66 (commit)
     Key([mod, "shift"], "j", lazy.layout.shuffle_down(), desc="Move window down"),
     Key([mod, "shift"], "k", lazy.layout.shuffle_up(), desc="Move window up"),
     # Grow windows. If current window is on the edge of screen and direction
@@ -117,12 +109,10 @@ keys = [
     # Split = all windows displayed
     # Unsplit = 1 window displayed, like Max layout, but still with
     # multiple stack panes
-<<<<<<< HEAD
     Key([mod, "shift"], "Return",
         lazy.layout.toggle_split(),
         desc="Toggle between split and unsplit sides of stack",
         ),
-=======
     Key(
         [mod, "shift"],
         "Return",
@@ -153,7 +143,6 @@ groups = [
     Group("3", label="三"),
     Group("4", label="四"),
     Group("5", label="五"),
-<<<<<<< HEAD
     Group("6", label="六"),
     Group("7", label="七"),
     Group("8", label="八"),
@@ -173,7 +162,6 @@ groups.append(ScratchPad("scratchpad", [
     DropDown("mixer", [terminal + " -e pulsemixer"], width=0.4, on_focus_lost_hide=True),
     DropDown("ncmpcpp", [terminal + " -e ncmpcpp"], opacity=0.9, width=0.8, height=0.9, x=0.1, y=0.05, on_focus_lost_hide=True),
 ]))
-=======
 ]
 
 for i in groups:
