@@ -22,11 +22,6 @@ run sxhkd &
 
 autostart="redshift clipmenud flashfocus lxsession nm-applet picom mpd"
 
-<<<<<<< HEAD
-=======
-autostart="redshift clipmenud flashfocus dunst lxsession nm-applet picom mpd musnify-mpd"
-
->>>>>>> dc98d66 (commit)
 for program in $autostart; do
     pidof -s "$program" || setsid -f "$program"
 done >/dev/null 2>&1
