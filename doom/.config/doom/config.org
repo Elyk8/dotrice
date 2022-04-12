@@ -5,6 +5,56 @@
 #+property: header-args:elisp :exports code
 #+property: header-args :tangle no :results silent :eval no-export
 
+* Table of Contents :toc:
+- [[#lexical-keybinds][Lexical Keybinds]]
+- [[#doom-configuration][DOOM Configuration]]
+  - [[#async-config-tangling][Async config tangling]]
+  - [[#modules][Modules]]
+  - [[#packages][Packages]]
+- [[#simple-settings][Simple Settings]]
+  - [[#autoload][Autoload]]
+  - [[#changing-defaults][Changing Defaults]]
+  - [[#window-title][Window title]]
+  - [[#native-compilation][Native Compilation]]
+  - [[#fonts-and-appearance][Fonts and Appearance]]
+  - [[#hooks][Hooks]]
+- [[#built-in-packages-configurations][Built-in packages configurations]]
+  - [[#company][Company]]
+  - [[#dashboard][Dashboard]]
+  - [[#dired][Dired]]
+  - [[#dictionary][Dictionary]]
+  - [[#evil][Evil]]
+  - [[#icalendar][iCalendar]]
+  - [[#org][Org]]
+  - [[#org-journal][Org-journal]]
+  - [[#org-roam][Org-roam]]
+  - [[#tramp][Tramp]]
+  - [[#vertico][Vertico]]
+  - [[#which-key][Which-key]]
+- [[#third-party-packages][Third-party packages]]
+  - [[#el-easydraw][El-easydraw]]
+  - [[#kmonad][KMonad]]
+  - [[#inkscape][Inkscape]]
+  - [[#org-roam-graph][Org roam graph]]
+  - [[#org-appear][Org-appear]]
+  - [[#org-super-agenda][Org-super-agenda]]
+  - [[#org-reveal][Org-reveal]]
+- [[#keybindings-evil-etc][Keybindings, Evil, etc...]]
+  - [[#bookmarks][Bookmarks]]
+  - [[#buffers][Buffers]]
+  - [[#ibuffer-mode][ibuffer mode]]
+  - [[#dashboard-1][Dashboard]]
+  - [[#dired-1][Dired]]
+  - [[#evil-1][Evil]]
+  - [[#line-settings][Line settings]]
+  - [[#org-1][Org]]
+  - [[#open-specific-files][Open Specific Files]]
+- [[#language][Language]]
+  - [[#latex][Latex]]
+  - [[#lua][Lua]]
+  - [[#haskell][Haskell]]
+  - [[#python][Python]]
+
 * Lexical Keybinds
 
 #+begin_quote
@@ -277,6 +327,7 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
        yaml              ; JSON, but readable
        ;;zig               ; C, but simpler
 
+
        :email
        ;; (:if (executable-find "mu") (mu4e +org +gmail))
        ;;notmuch
@@ -336,6 +387,84 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
 
 * Simple Settings
 
+** Autoload
+
+These are just personal functions which I have added to doom emacs. I want them
+autoloaded when I start DOOM and, thus, they are defined in an =.el= file in the
+autoload directory.
+
+#+begin_src emacs-lisp :tangle "autoload/elyk.el"
+;;; ~/.config/doom/autoload/elyk.el -*- lexical-binding: t; -*-
+
+;;;###autoload
+(defun find-in-dotfiles ()
+  "Open a file somewhere in ~/dotrice via a fuzzy filename search."
+  (interactive)
+  (doom-project-find-file (expand-file-name "~/dotrice")))
+
+(defun find-in-configs ()
+  "Open a file somewhere in ~/.config via a fuzzy filename search."
+  (interactive)
+  (doom-project-find-file (expand-file-name "~/.config/")))
+
+;;;###autoload
+(defun browse-dotfiles ()
+  "Browse the files in ~/dotrice."
+  (interactive)
+  (doom-project-browse (expand-file-name "~/dotrice/")))
+
+;;;###autoload
+(defun find-in-scripts ()
+  "Open a file somewhere in scripts directory, ~/script via a fuzzy filename search."
+  (interactive)
+  (doom-project-find-file (expand-file-name "~/scripts")))
+
+;;;###autoload
+(defun find-in-suckless ()
+  "Open a file somewhere in the suckless directory, ~/.local/src via a fuzzy filename search."
+  (interactive)
+  (doom-project-find-file (expand-file-name "~/.local/src/")))
+
+;;;###autoload
+(defun org-syntax-convert-keyword-case-to-lower ()
+  "Convert all #+KEYWORDS to #+keywords."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (let ((count 0)
+          (case-fold-search nil))
+      (while (re-search-forward "^[ \t]*#\\+[A-Z_]+" nil t)
+        (unless (s-matches-p "RESULTS" (match-string 0))
+          (replace-match (downcase (match-string 0)) t)
+          (setq count (1+ count))))
+      (message "Replaced %d occurances" count))))
+
+;;;###autoload
+(defun locally-defer-font-lock ()
+  "Set jit-lock defer and stealth, when buffer is over a certain size."
+  (when (> (buffer-size) 50000)
+    (setq-local jit-lock-defer-time 0.05
+                jit-lock-stealth-time 1)))
+
+;;;###autoload
+(defun elk/org-roam-rename-to-new-title ()
+  "Change the file name after changing the title."
+  (when-let*
+      ((old-file (buffer-file-name))
+       (is-roam-file (org-roam-file-p old-file))
+       (is-roam-buffer (org-roam-buffer-p))
+       (file-node (save-excursion
+                    (goto-char 1)
+                    (org-roam-node-at-point)))
+       (slug (org-roam-node-slug file-node))
+       (new-file (expand-file-name (replace-regexp-in-string "-.*\\.org" (format "-%s.org" slug) old-file)))
+       (different-name? (not (string-equal old-file new-file))))
+    (rename-buffer (file-name-nondirectory new-file))
+    (rename-file old-file new-file 1)
+    (set-visited-file-name new-file)
+    (set-buffer-modified-p nil)))
+#+end_src
+
 ** Changing Defaults
 
 These are better defaults (or preferences for me) which I would want to be on always.
@@ -347,7 +476,7 @@ These are better defaults (or preferences for me) which I would want to be on al
  x-stretch-cursor t)                              ; Stretch cursor to the glyph width
 
 (setq undo-limit 80000000                         ; Raise undo-limit to 80Mb
-      display-line-numbers-type nil               ; By disabling line number, we improve performance significantly
+      ;; display-line-numbers-type nil               ; By disabling line number, we improve performance significantly
       evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
       truncate-string-ellipsis "…"                ; Unicode ellispis are nicer than "...", and also save /precious/ space
       password-cache-expiry nil                   ; I can trust my computers ... can't I?
@@ -365,7 +494,9 @@ When I bring up Doom's scratch buffer with SPC x, it's often to play with elisp 
 
 ** Window title
 
-Sometimes, the window title shows something useless, such as the hostname or the username. We want to display something much more useful. These functions are set to display the file name, the project name and the save state of the file.
+Sometimes, the window title shows something useless, such as the hostname or the
+username. We want to display something much more useful. These functions are set
+to display the file name, the project name and the save state of the file.
 
 #+begin_src emacs-lisp
 (setq frame-title-format
@@ -385,7 +516,8 @@ Sometimes, the window title shows something useless, such as the hostname or the
 
 ** Native Compilation
 
-I have been using native compilation for improved performance. We just want less verbose in our verbose.
+I have been using native compilation for improved performance. We just want less
+verbose in our verbose.
 
 #+begin_src emacs-lisp
 ;; Silence compiler warnings as they can be pretty disruptive
@@ -414,7 +546,9 @@ Settings related to fonts within Doom Emacs:
   '(font-lock-keyword-face :slant italic))
 #+end_src
 
-Set the theme of doom emacs here. To try out new themes, I set a keybinding for counsel-load-theme with 'SPC h t'. It is hear that you can also set the transparency of each emacs frame.
+Set the theme of doom emacs here. To try out new themes, I set a keybinding for
+counsel-load-theme with 'SPC h t'. It is hear that you can also set the
+transparency of each emacs frame.
 
 #+begin_src emacs-lisp
 (setq doom-theme 'doom-dark+)
@@ -459,7 +593,8 @@ An evil mode indicator is redundant with cursor shape
 
 ** Dashboard
 
-The dashboard contains too many things to my taste. It must be something which you can use to display and use shortcuts.
+The dashboard contains too many things to my taste. It must be something which
+you can use to display and use shortcuts.
 
 #+begin_src emacs-lisp
 (setq doom-fallback-buffer-name "► Doom"
@@ -499,7 +634,8 @@ For example, I set all .png files to open in =sxiv= and all .mp4 files to open i
 
 ** Dictionary
 
-This is to setup spell checking inside emacs. I want a custom dictionary and a way to keep mine in check.
+This is to setup spell checking inside emacs. I want a custom dictionary and a
+way to keep mine in check.
 
 #+begin_src emacs-lisp
 (setq ispell-dictionary "en-custom"
@@ -707,6 +843,14 @@ We want to change the file name when the title of the note changes.
 \\)[^]#$%>\n]*#?[]#$%>] *\\(�\\[[0-9;]*[a-zA-Z] *\\)*")) ;; default + 
 #+end_src
 
+** Vertico
+
+#+begin_src emacs-lisp
+(after! vertico
+  ;; Different scroll margin
+  (setq vertico-scroll-margin 3))
+#+end_src
+
 ** Which-key
 
 I hate when which-key takes too long to show up. Make it faster!!!
@@ -735,7 +879,8 @@ I hate when which-key takes too long to show up. Make it faster!!!
 
 ** KMonad
 
-Nothing to see here. Just some KMonad setup to enable syntax highlighting when editing the config file.
+Nothing to see here. Just some KMonad setup to enable syntax highlighting when
+editing the config file.
 
 #+begin_src emacs-lisp
 (use-package! kbd-mode
@@ -1210,6 +1355,12 @@ for these bindings is 'SPC =' plus 'key' since Doom Emacs does not use 'SPC ='.
 
 * Language
 
+First of all, disable LSP formatting option
+
+#+begin_src emacs-lisp
+(setq +format-with-lsp nil)
+#+end_src
+
 ** Latex
 
 Change the default Latex to lualatex as it provides access to nicer fonts!
@@ -1224,7 +1375,6 @@ Stylua as a formatter is much better overall
 
 #+begin_src emacs-lisp
 (set-formatter! 'stylua "stylua -" :modes '(lua-mode))
-(setq-hook! 'lua-mode-hook +format-with-lsp nil)
 #+end_src
 
 ** Haskell
@@ -1233,7 +1383,6 @@ Change the default formatter for Haskell.
 
 #+begin_src emacs-lisp
 (set-formatter! 'brittany "brittany" :modes '(haskell-mode))
-(setq-hook! 'haskell-mode-hook +format-with-lsp nil)
 #+end_src
 
 ** Python
@@ -1242,5 +1391,4 @@ Change the default formatter for python.
 
 #+begin_src emacs-lisp
 (set-formatter! 'autopep8 "autopep8 -" :modes '(python-mode))
-(setq-hook! 'python-mode-hook +format-with-lsp nil)
 #+end_src

@@ -1,3 +1,4 @@
+;; [[file:../config.org::*Autoload][Autoload:1]]
 ;;; ~/.config/doom/autoload/elyk.el -*- lexical-binding: t; -*-
 
 ;;;###autoload
@@ -67,15 +68,4 @@
     (rename-file old-file new-file 1)
     (set-visited-file-name new-file)
     (set-buffer-modified-p nil)))
-
-;;;###autoload
-(defun crontab-e ()
-    "Run `crontab -e' in a emacs buffer."
-    (interactive)
-    (with-editor-async-shell-command "crontab -e"))
-
-;;;###autoload
-(defun org-cv-local-variables ()
-  (setq-local org-latex-with-hyperref nil)
-  (setq-local org-latex-default-packages-alist nil)
-  (olivetti-mode -1))
+;; Autoload:1 ends here

@@ -1,8 +1,9 @@
-# -*- editorconfig-conf -*-
+# -*- conf -*-
 # Basic vars
-set shell bash
-set shellopts '-eu'
+set shell zsh
+set shellopts '-euy'
 set ifs "\n"
+set filesep "\n"  # default already
 set scrolloff 10
 set icons
 set period 1
@@ -52,6 +53,16 @@ cmd open ${{
       ;;
   esac
 }}
+
+# Change the title name when changing directories
+cmd on-cd &{{
+    # '&' commands run silently in background (which is what we want here),
+    # but are not connected to stdout.
+    # To make sure our escape sequence still reaches stdout we pipe it to /dev/tty
+    printf "\033]0; $(pwd | sed "s|$HOME|~|") - lf\007" > /dev/tty
+}}
+# also run at startup
+on-cd
 
 # COMMANDS
 # Trash cli bindings
@@ -117,14 +128,30 @@ cmd chmod ${{
 }}
 
 cmd unarchive ${{
-  case "$fx" in
-      *.zip|*.tar.gz|*.tar.bz2|*.tar|*.rar) aunpack "$fx" ;;
-      *) echo "Unsupported format" ;;
-  esac
+  archives="$(printf "%s\n" "$fx")"
+  for i in $archives; do
+      case "$i" in
+          *.zip | *.tar.gz | *.tar.bz2 | *.tar | *.rar)
+              aunpack "$i"
+              ;;
+          *) echo "Unsupported format" ;;
+      esac
+  done
 }}
 
-cmd zip %apack "$f.zip" $(printf "$f" | grep -o '[^/]*$')
-cmd tar %apack "$f.tar" $(printf "$f" | grep -o '[^/]*$')
+cmd zip ${{
+  zips="$(printf "%s\n" "$fx" | grep -o "[^/]*$")"
+  for i in $zips; do
+    apack "$f.zip" "$i"
+  done
+}}
+
+cmd tar ${{
+  tars="$(printf "%s\n" "$fx" | grep -o "[^/]*$")"
+  for i in $tars; do
+    apack "$f.tar" "$i"
+  done
+}}
 
 cmd dragon %setsid -f dragon-drop -a -x $fx
 cmd dragon-stay %setsid -f dragon-drop -a $fx
@@ -161,6 +188,27 @@ cmd apparish_jump ${{
   res="$(source "$HOME/.config/shell/apparix" 2&>/dev/null && apparish | awk '{ print $3}' | sort | fzf --header "Jump to Bookmark:" )"
   lf -remote "send $id cd \"$res\""
 }}
+
+# y (select for copy) and P to paste soft-link
+# d (select for cut) and P to paste hard-link
+cmd link %{{
+    set -- $(cat ~/.local/share/lf/files)
+    mode="$1"
+    shift
+    if [ "$#" -lt 1 ]; then
+        lf -remote "send $id echo no files to link"
+        exit 0
+    fi
+    case "$mode" in
+        # symbolically copy mode is indicating a soft link
+        copy) ln -sr -t . -- "$@";;
+        # while a move mode is indicating a hard link
+        move) ln -t . -- "$@";;
+    esac
+    rm ~/.local/share/lf/files
+    lf -remote "send clear"
+}}
+map P :link
 
 # MAPPINGS
 ## Remove some defaults

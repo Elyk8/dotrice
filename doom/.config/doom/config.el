@@ -68,7 +68,7 @@
  x-stretch-cursor t)                              ; Stretch cursor to the glyph width
 
 (setq undo-limit 80000000                         ; Raise undo-limit to 80Mb
-      display-line-numbers-type nil               ; By disabling line number, we improve performance significantly
+      ;; display-line-numbers-type nil               ; By disabling line number, we improve performance significantly
       evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
       truncate-string-ellipsis "…"                ; Unicode ellispis are nicer than "...", and also save /precious/ space
       password-cache-expiry nil                   ; I can trust my computers ... can't I?
@@ -326,6 +326,12 @@
   (setq tramp-shell-prompt-pattern "\\(?:^\\|
 \\)[^]#$%>\n]*#?[]#$%>] *\\(�\\[[0-9;]*[a-zA-Z] *\\)*")) ;; default + 
 ;; Tramp:1 ends here
+
+;; [[file:config.org::*Vertico][Vertico:1]]
+(after! vertico
+  ;; Different scroll margin
+  (setq vertico-scroll-margin 3))
+;; Vertico:1 ends here
 
 ;; [[file:config.org::*Which-key][Which-key:1]]
 (after! which-key
@@ -666,21 +672,22 @@
        ))
 ;; Open Specific Files:1 ends here
 
+;; [[file:config.org::*Language][Language:1]]
+(setq +format-with-lsp nil)
+;; Language:1 ends here
+
 ;; [[file:config.org::*Latex][Latex:1]]
 (setq-default TeX-engine 'luatex)
 ;; Latex:1 ends here
 
 ;; [[file:config.org::*Lua][Lua:1]]
 (set-formatter! 'stylua "stylua -" :modes '(lua-mode))
-(setq-hook! 'lua-mode-hook +format-with-lsp nil)
 ;; Lua:1 ends here
 
 ;; [[file:config.org::*Haskell][Haskell:1]]
 (set-formatter! 'brittany "brittany" :modes '(haskell-mode))
-(setq-hook! 'haskell-mode-hook +format-with-lsp nil)
 ;; Haskell:1 ends here
 
 ;; [[file:config.org::*Python][Python:1]]
 (set-formatter! 'autopep8 "autopep8 -" :modes '(python-mode))
-(setq-hook! 'python-mode-hook +format-with-lsp nil)
 ;; Python:1 ends here

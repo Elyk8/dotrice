@@ -172,6 +172,7 @@
        yaml              ; JSON, but readable
        ;;zig               ; C, but simpler
 
+
        :email
        ;; (:if (executable-find "mu") (mu4e +org +gmail))
        ;;notmuch
