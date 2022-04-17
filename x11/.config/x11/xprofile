@@ -13,7 +13,7 @@ multi-hybrid-graphics
 xrdb -merge ~/.config/x11/Xresources & xrdbpid=$!
 # run safeeyes -e &
 run kmonad-refresh &
-run /usr/bin/emacs --daemon &
+#run /usr/bin/emacs --daemon &
 run syncthing-gtk --minimized &
 run /usr/bin/pipewire &
 run pacmac-tray &
@@ -29,8 +29,7 @@ done >/dev/null 2>&1
 
 run dunst-reload &
 run "$HOME"/.fehbg &
-sleep 5 && run volctl && mictray &
+sleep 10 && run volctl && run mictray &
 
-sleep 5 && xsetwacom set "GAOMON Gaomon Tablet stylus" MapToOutput "HEAD-1" &
 xsetroot -cursor_name left_ptr
 [ -n "$xrdbpid" ] && wait "$xrdbpid"

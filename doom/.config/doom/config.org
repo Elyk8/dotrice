@@ -4,6 +4,7 @@
 #+property: header-args :emacs-lisp :tangle yes
 
 * Table of Contents :toc:
+- [[#table-of-contents][Table of Contents]]
 - [[#lexical-keybinds][Lexical Keybinds]]
 - [[#doom-configuration][DOOM Configuration]]
   - [[#async-config-tangling][Async config tangling]]
@@ -432,11 +433,7 @@ autoload directory.
 (defun find-in-dotfiles ()
   "Open a file somewhere in ~/dotrice via a fuzzy filename search."
   (interactive)
-<<<<<<< HEAD
   (doom-project-find-file (expand-file-name "~/.dotrice")))
-=======
-  (doom-project-find-file (expand-file-name "~/dotrice")))
->>>>>>> 9e01986 (commit)
 
 (defun find-in-configs ()
   "Open a file somewhere in ~/.config via a fuzzy filename search."
@@ -447,21 +444,13 @@ autoload directory.
 (defun browse-dotfiles ()
   "Browse the files in ~/dotrice."
   (interactive)
-<<<<<<< HEAD
   (doom-project-browse (expand-file-name "~/.dotrice/")))
-=======
-  (doom-project-browse (expand-file-name "~/dotrice/")))
->>>>>>> 9e01986 (commit)
 
 ;;;###autoload
 (defun find-in-scripts ()
   "Open a file somewhere in scripts directory, ~/script via a fuzzy filename search."
   (interactive)
-<<<<<<< HEAD
   (doom-project-find-file (expand-file-name "~/.scripts")))
-=======
-  (doom-project-find-file (expand-file-name "~/scripts")))
->>>>>>> 9e01986 (commit)
 
 ;;;###autoload
 (defun find-in-suckless ()
@@ -533,8 +522,6 @@ These are better defaults (or preferences for me) which I would want to be on al
 (setq mouse-autoselect-window t
       focus-follows-mouse t)
 
-<<<<<<< HEAD
-=======
 (setq undo-limit 80000000                         ; Raise undo-limit to 80Mb
       ;; display-line-numbers-type nil               ; By disabling line number, we improve performance significantly
       evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
@@ -542,7 +529,6 @@ These are better defaults (or preferences for me) which I would want to be on al
       password-cache-expiry nil                   ; I can trust my computers ... can't I?
       scroll-preserve-screen-position 'always     ; Don't have `point' jump around
       scroll-margin 2)                            ; It's nice to maintain a little margin
->>>>>>> 9e01986 (commit)
 ;; (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;; Prevents some cases of Emacs flickering.
 #+end_src
 
@@ -770,7 +756,7 @@ Here I set up my calendar
 
 #+begin_src emacs-lisp
 (setq doom-modeline-buffer-file-name-style 'auto
-      doom-modeline-enable-word-count t         ; Show word count in modeline
+      ;;doom-modeline-enable-word-count t         ; Show word count in modeline
       inhibit-compacting-font-caches t          ; Don’t compact font caches during GC.
       find-file-visit-truename t)               ; Display true name instead of relative name
 #+end_src
@@ -981,11 +967,15 @@ I have currently disabled EXWM until it is not slow.
 
 
 #+begin_src emacs-lisp
+(defun efs/run-in-background (command)
+  (let ((command-parts (split-string command "[ ]+")))
+    (apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr command-parts)))))
+
 (defun elk/set-wallpaper ()
   (interactive)
   ;; NOTE: You will need to update this to a valid background path!
   (start-process-shell-command
-      "feh" nil  "$HOME/.fehbg"))
+   "feh" nil  "$HOME/.fehbg"))
 
 (defun elk/exwm-init-hook ()
   ;; Make workspace 1 be the one where we land at startup
@@ -1003,7 +993,7 @@ I have currently disabled EXWM until it is not slow.
   ;; Show the time and date in modeline
   (setq display-time-day-and-date t)
   (display-time-mode 1))
-  ;; Also take a look at display-time-format and format-time-string
+;; Also take a look at display-time-format and format-time-string
 
 (defun elk/exwm-update-class ()
   (exwm-workspace-rename-buffer exwm-class-name))
@@ -1019,7 +1009,7 @@ I have currently disabled EXWM until it is not slow.
     ("Discord" (exwm-workspace-move-window 3))
     ("Sol" (exwm-workspace-move-window 3))
     ("mpv" (exwm-floating-toggle-floating)
-           (exwm-layout-toggle-mode-line))))
+     (exwm-layout-toggle-mode-line))))
 
 ;; This function should be used only after configuring autorandr!
 (defun elk/update-displays ()
@@ -1027,6 +1017,11 @@ I have currently disabled EXWM until it is not slow.
   (elk/set-wallpaper)
   (message "Display config: %s"
            (string-trim (shell-command-to-string "autorandr --current"))))
+
+(defun elk/fix-exwm-floating-windows ()
+  (setq-local exwm-workspace-warp-cursor nil
+              mouse-autoselect-window nil
+              focus-follows-mouse nil))
 
 (use-package! exwm-modeline
   :after exwm)
@@ -1083,24 +1078,25 @@ I have currently disabled EXWM until it is not slow.
   (setq exwm-systemtray-height 24)
   (exwm-systemtray-enable)
 
-  ;; Automatically send the mouse cursor to the selected workspace's display
-  ;;(setq exwm-workspace-warp-cursor t)
-
   ;; Window focus should follow the mouse pointer
-  (setq mouse-autoselect-window t
+  (setq exwm-workspace-warp-cursor t
+        mouse-autoselect-window t
         focus-follows-mouse t)
+
+  ;; However, for floating windows, this will break EXWM. So we disable the above for floating mode.
+  (add-hook 'exwm-floating-setup-hook #'elk/fix-exwm-floating-windows)
 
   ;; These keys should always pass through to Emacs
   (setq exwm-input-prefix-keys
-    '(?\C-x
-      ?\C-u
-      ?\C-h
-      ?\M-x
-      ?\M-`
-      ?\M-&
-      ?\M-:
-      ?\C-\M-j  ;; Buffer list
-      ?\C-\ ))  ;; Ctrl+Space
+        '(?\C-x
+          ?\C-u
+          ?\C-h
+          ?\M-x
+          ?\M-`
+          ?\M-&
+          ?\M-:
+          ?\C-\M-j  ;; Buffer list
+          ?\C-\ ))  ;; Ctrl+Space
 
   ;; Ctrl+Q will enable the next key to be sent directly
   (define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
@@ -1181,15 +1177,12 @@ I have currently disabled EXWM until it is not slow.
 
 Nothing to see here. Just some KMonad setup to enable syntax highlighting when
 editing the config file.
-<<<<<<< HEAD
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! kbd-mode
   :recipe (:host github
            :repo "kmonad/kbd-mode"))
 #+end_src
-=======
->>>>>>> 9e01986 (commit)
 
 #+begin_src emacs-lisp
 (use-package! kbd-mode
@@ -1794,13 +1787,8 @@ I defined some special keybindings to open my frequently used files/projects. I 
 
 First of all, disable LSP formatting option
 
-<<<<<<< HEAD
-(setq +format-with-lsp nil)
-#+begin_src emacs-lisp
-=======
 #+begin_src emacs-lisp
 (setq +format-with-lsp nil)
->>>>>>> 9e01986 (commit)
 #+end_src
 
 ** Latex

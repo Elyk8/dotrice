@@ -76,8 +76,6 @@
 (setq mouse-autoselect-window t
       focus-follows-mouse t)
 
-<<<<<<< HEAD
-=======
 (setq undo-limit 80000000                         ; Raise undo-limit to 80Mb
       ;; display-line-numbers-type nil               ; By disabling line number, we improve performance significantly
       evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
@@ -85,7 +83,6 @@
       password-cache-expiry nil                   ; I can trust my computers ... can't I?
       scroll-preserve-screen-position 'always     ; Don't have `point' jump around
       scroll-margin 2)                            ; It's nice to maintain a little margin
->>>>>>> 9e01986 (commit)
 ;; (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;; Prevents some cases of Emacs flickering.
 
 (setq doom-scratch-initial-major-mode 'lisp-interaction-mode)
@@ -198,7 +195,7 @@
     (calendar-init)))
 
 (setq doom-modeline-buffer-file-name-style 'auto
-      doom-modeline-enable-word-count t         ; Show word count in modeline
+      ;;doom-modeline-enable-word-count t         ; Show word count in modeline
       inhibit-compacting-font-caches t          ; Don’t compact font caches during GC.
       find-file-visit-truename t)               ; Display true name instead of relative name
 
@@ -305,20 +302,10 @@
   (setq tramp-shell-prompt-pattern "\\(?:^\\|
 \\)[^]#$%>\n]*#?[]#$%>] *\\(�\\[[0-9;]*[a-zA-Z] *\\)*")) ;; default + 
 
-<<<<<<< HEAD
 (after! vertico
   ;; Different scroll margin
   (setq vertico-scroll-margin 3))
 
-=======
-;; [[file:config.org::*Vertico][Vertico:1]]
-(after! vertico
-  ;; Different scroll margin
-  (setq vertico-scroll-margin 3))
-;; Vertico:1 ends here
-
-;; [[file:config.org::*Which-key][Which-key:1]]
->>>>>>> 9e01986 (commit)
 (after! which-key
   (setq which-key-allow-imprecise-window-fit nil) ; Comment this if experiencing crashes
   (setq frame-resize-pixelwise nil)
@@ -327,11 +314,15 @@
   ;; (advice-add 'which-key--show-popup :around #'add-which-key-line
   (setq which-key-idle-delay 0.5))
 
+(defun efs/run-in-background (command)
+  (let ((command-parts (split-string command "[ ]+")))
+    (apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr command-parts)))))
+
 (defun elk/set-wallpaper ()
   (interactive)
   ;; NOTE: You will need to update this to a valid background path!
   (start-process-shell-command
-      "feh" nil  "$HOME/.fehbg"))
+   "feh" nil  "$HOME/.fehbg"))
 
 (defun elk/exwm-init-hook ()
   ;; Make workspace 1 be the one where we land at startup
@@ -349,7 +340,7 @@
   ;; Show the time and date in modeline
   (setq display-time-day-and-date t)
   (display-time-mode 1))
-  ;; Also take a look at display-time-format and format-time-string
+;; Also take a look at display-time-format and format-time-string
 
 (defun elk/exwm-update-class ()
   (exwm-workspace-rename-buffer exwm-class-name))
@@ -365,7 +356,7 @@
     ("Discord" (exwm-workspace-move-window 3))
     ("Sol" (exwm-workspace-move-window 3))
     ("mpv" (exwm-floating-toggle-floating)
-           (exwm-layout-toggle-mode-line))))
+     (exwm-layout-toggle-mode-line))))
 
 ;; This function should be used only after configuring autorandr!
 (defun elk/update-displays ()
@@ -373,6 +364,11 @@
   (elk/set-wallpaper)
   (message "Display config: %s"
            (string-trim (shell-command-to-string "autorandr --current"))))
+
+(defun elk/fix-exwm-floating-windows ()
+  (setq-local exwm-workspace-warp-cursor nil
+              mouse-autoselect-window nil
+              focus-follows-mouse nil))
 
 (use-package! exwm-modeline
   :after exwm)
@@ -429,24 +425,25 @@
   (setq exwm-systemtray-height 24)
   (exwm-systemtray-enable)
 
-  ;; Automatically send the mouse cursor to the selected workspace's display
-  ;;(setq exwm-workspace-warp-cursor t)
-
   ;; Window focus should follow the mouse pointer
-  (setq mouse-autoselect-window t
+  (setq exwm-workspace-warp-cursor t
+        mouse-autoselect-window t
         focus-follows-mouse t)
+
+  ;; However, for floating windows, this will break EXWM. So we disable the above for floating mode.
+  (add-hook 'exwm-floating-setup-hook #'elk/fix-exwm-floating-windows)
 
   ;; These keys should always pass through to Emacs
   (setq exwm-input-prefix-keys
-    '(?\C-x
-      ?\C-u
-      ?\C-h
-      ?\M-x
-      ?\M-`
-      ?\M-&
-      ?\M-:
-      ?\C-\M-j  ;; Buffer list
-      ?\C-\ ))  ;; Ctrl+Space
+        '(?\C-x
+          ?\C-u
+          ?\C-h
+          ?\M-x
+          ?\M-`
+          ?\M-&
+          ?\M-:
+          ?\C-\M-j  ;; Buffer list
+          ?\C-\ ))  ;; Ctrl+Space
 
   ;; Ctrl+Q will enable the next key to be sent directly
   (define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
@@ -865,32 +862,12 @@
 (elk/add-project-keybinding "x" "~/.config/xmonad/" "Xmonad")
 (elk/add-project-keybinding "z" "~/.config/zsh/" "Zsh")
 
-
-
-<<<<<<< HEAD
-=======
-;; [[file:config.org::*Language][Language:1]]
 (setq +format-with-lsp nil)
-;; Language:1 ends here
 
-;; [[file:config.org::*Latex][Latex:1]]
->>>>>>> 9e01986 (commit)
 (setq-default TeX-engine 'luatex)
 
 (set-formatter! 'stylua "stylua -" :modes '(lua-mode))
-<<<<<<< HEAD
-=======
-;; Lua:1 ends here
->>>>>>> 9e01986 (commit)
 
 (set-formatter! 'brittany "brittany" :modes '(haskell-mode))
-<<<<<<< HEAD
-=======
-;; Haskell:1 ends here
->>>>>>> 9e01986 (commit)
 
 (set-formatter! 'autopep8 "autopep8 -" :modes '(python-mode))
-<<<<<<< HEAD
-=======
-;; Python:1 ends here
->>>>>>> 9e01986 (commit)

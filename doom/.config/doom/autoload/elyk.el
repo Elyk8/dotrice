@@ -1,4 +1,3 @@
-;; [[file:../config.org::*Autoload][Autoload:1]]
 ;;; ~/.config/doom/autoload/elyk.el -*- lexical-binding: t; -*-
 
 ;;;###autoload
@@ -68,7 +67,3 @@
     (rename-file old-file new-file 1)
     (set-visited-file-name new-file)
     (set-buffer-modified-p nil)))
-<<<<<<< HEAD
-=======
-;; Autoload:1 ends here
->>>>>>> 9e01986 (commit)
