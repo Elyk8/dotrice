@@ -1,4 +1,3 @@
-;; [[file:config.org::*Modules][Modules:1]]
 ;;; init.el -*- lexical-binding: t; -*-
 (doom! :input
        ;;chinese
@@ -81,16 +80,16 @@
        (eval +overlay)     ; run code, run (also, repls)
        ;;gist              ; interacting with github gists
        lookup              ; navigate your code and its documentation
-       (lsp +eglot)               ; M-x vscode
+       (lsp +eglot)        ; M-x vscode
        magit             ; a git porcelain for Emacs
-       ;;make              ; run make tasks from Emacs
+       make              ; run make tasks from Emacs
        ;;pass              ; password manager for nerds
        pdf               ; pdf enhancements
        ;;prodigy           ; FIXME managing external services & code builders
        rgb               ; creating color strings
        ;;taskrunner        ; taskrunner for all your projects
        ;;terraform         ; infrastructure as code
-       ;;tmux              ; an API for interacting with tmux
+       tmux              ; an API for interacting with tmux
        ;;upload            ; map local to remote projects via ssh/ftp
 
        :os
@@ -148,7 +147,7 @@
         +journal             ; enable org journal
         +pretty              ; replace asterisks with pretty org bullets
         +publish             ; create static websites with org
-        +dragndrop           ; drag & drop files/images into org buffers
+        ;;+dragndrop           ; drag & drop files/images into org buffers
         +roam2)              ; org roam v2
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
@@ -189,4 +188,3 @@
        :config
        literate
        (default +bindings +smartparens))
-;; Modules:1 ends here

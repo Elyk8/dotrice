@@ -1,8 +1,5 @@
-;; [[file:config.org::*Lexical Keybinds][Lexical Keybinds:1]]
 ;;; config.el -*- lexical-binding: t; -*-
-;; Lexical Keybinds:1 ends here
 
-;; [[file:config.org::*Async config tangling][Async config tangling:1]]
 (defvar +literate-tangle--proc nil)
 (defvar +literate-tangle--proc-start-time nil)
 
@@ -59,14 +56,28 @@
     (switch-to-buffer " *tangle config*")
     (signal 'quit nil)))
 (add-hook! 'kill-emacs-hook #'+literate-tangle-check-finished)
-;; Async config tangling:1 ends here
 
-;; [[file:config.org::*Changing Defaults][Changing Defaults:1]]
 (setq-default
- delete-by-moving-to-trash t                      ; Delete files to trash
- window-combination-resize t                      ; take new window space from all other windows (not just current)
- x-stretch-cursor t)                              ; Stretch cursor to the glyph width
+ delete-by-moving-to-trash t                    ; Delete files to trash
+ window-combination-resize t                    ; take new window space from all other windows (not just current)
+ x-stretch-cursor t)                            ; Stretch cursor to the glyph width
 
+(setq undo-limit 80000000                       ; Raise undo-limit to 80Mb
+      display-line-numbers-type nil             ; By disabling line number, we improve performance significantly
+      evil-want-fine-undo t                     ; By default while in insert all changes are one big blob. Be more granular
+      truncate-string-ellipsis "…"              ; Unicode ellispis are nicer than "...", and also save /precious/ space
+      password-cache-expiry nil                 ; I can trust my computers ... can't I?
+      scroll-preserve-screen-position 'always   ; Don't have `point' jump around
+      scroll-margin 2                           ; It's nice to maintain a little margin
+      confirm-kill-emacs nil                    ; Disable exit confirmation
+      )
+
+;; Set focus to follow the mouse
+(setq mouse-autoselect-window t
+      focus-follows-mouse t)
+
+<<<<<<< HEAD
+=======
 (setq undo-limit 80000000                         ; Raise undo-limit to 80Mb
       ;; display-line-numbers-type nil               ; By disabling line number, we improve performance significantly
       evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
@@ -74,14 +85,11 @@
       password-cache-expiry nil                   ; I can trust my computers ... can't I?
       scroll-preserve-screen-position 'always     ; Don't have `point' jump around
       scroll-margin 2)                            ; It's nice to maintain a little margin
+>>>>>>> 9e01986 (commit)
 ;; (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;; Prevents some cases of Emacs flickering.
-;; Changing Defaults:1 ends here
 
-;; [[file:config.org::*Changing Defaults][Changing Defaults:2]]
 (setq doom-scratch-initial-major-mode 'lisp-interaction-mode)
-;; Changing Defaults:2 ends here
 
-;; [[file:config.org::*Window title][Window title:1]]
 (setq frame-title-format
       '(""
         (:eval
@@ -94,16 +102,12 @@
          (let ((project-name (projectile-project-name)))
            (unless (string= "-" project-name)
              (format (if (buffer-modified-p)  " ◉ %s" " ● %s") project-name))))))
-;; Window title:1 ends here
 
-;; [[file:config.org::*Native Compilation][Native Compilation:1]]
 ;; Silence compiler warnings as they can be pretty disruptive
 (setq native-comp-async-report-warnings-errors nil)
-;; Native Compilation:1 ends here
 
-;; [[file:config.org::*Fonts and Appearance][Fonts and Appearance:1]]
-(setq doom-font (font-spec :family "monospace" :size 20)
-      doom-variable-pitch-font (font-spec :family "sans" :size 20)
+(setq doom-font (font-spec :family "monospace" :size 18)
+      doom-variable-pitch-font (font-spec :family "sans" :size 18)
       doom-big-font (font-spec :family "monospace" :size 34))
 (after! doom-themes
   (setq doom-themes-enable-bold t
@@ -111,33 +115,26 @@
 (custom-set-faces!
   '(font-lock-comment-face :slant italic)
   '(font-lock-keyword-face :slant italic))
-;; Fonts and Appearance:1 ends here
 
-;; [[file:config.org::*Fonts and Appearance][Fonts and Appearance:2]]
 (setq doom-theme 'doom-dark+)
-;; (set-frame-parameter (selected-frame) 'alpha '(95 . 95))
-;; (add-to-list 'default-frame-alist '(alpha . (95 . 95)))
-;; Fonts and Appearance:2 ends here
+(set-frame-parameter (selected-frame) 'alpha '(95 . 95))
+(add-to-list 'default-frame-alist '(alpha . (95 . 95)))
 
-;; [[file:config.org::*Hooks][Hooks:1]]
 (remove-hook 'text-mode-hook #'auto-fill-mode) ;; Prevent lines from auto breaking
-;; Hooks:1 ends here
 
-;; [[file:config.org::*Company][Company:1]]
+(setq! citar-library-paths '("~/dox/bibliography/")
+       citar-notes-paths "~/dox/notes/")
+
 (use-package! company
   :after-call (company-mode global-company-mode company-complete
                             company-complete-common company-manual-begin company-grab-line)
   :config
   (setq company-idle-delay nil
         company-tooltip-limit 10))
-;; Company:1 ends here
 
-;; [[file:config.org::*Company][Company:2]]
 (advice-add #'doom-modeline-segment--modals :override #'ignore)
 ;; (setq doom-modeline-buffer-file-name-style 'file-name)
-;; Company:2 ends here
 
-;; [[file:config.org::*Dashboard][Dashboard:1]]
 (setq doom-fallback-buffer-name "► Doom"
       +doom-dashboard-name "► Doom")
 
@@ -150,13 +147,9 @@
 ;; (add-transient-hook! #'+doom-dashboard-mode (+doom-dashboard-setup-modified-keymap))
 ;; (add-transient-hook! #'+doom-dashboard-mode :append (+doom-dashboard-setup-modified-keymap))
 ;; (add-hook! 'doom-init-ui-hook :append (+doom-dashboard-setup-modified-keymap))
-;; Dashboard:1 ends here
 
-;; [[file:config.org::*Dired][Dired:1]]
 (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
-;; Dired:1 ends here
 
-;; [[file:config.org::*Dired][Dired:2]]
 (setq dired-open-extensions '(("gif" . "open")
                               ("jpg" . "open")
                               ("png" . "open")
@@ -164,14 +157,10 @@
                               ("mp4" . "open")))
 (setq find-file-visit-truename nil ;; Don't expand symlinks if you don't want to go insane.
       dired-kill-when-opening-new-dired-buffer t) ;; Kill the current buffer when selecting a new directory.
-;; Dired:2 ends here
 
-;; [[file:config.org::*Dictionary][Dictionary:1]]
 (setq ispell-dictionary "en-custom"
       ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
-;; Dictionary:1 ends here
 
-;; [[file:config.org::*Evil][Evil:1]]
 (after! evil
   (setq evil-ex-substitute-global t     ; I like my s/../.. to by global by default
         ;;evil-move-cursor-back nil       ; Don't move the block cursor when toggling insert mode
@@ -179,9 +168,7 @@
   ;; Focus new window after splitting
   (setq evil-split-window-below t
         evil-vsplit-window-right t))
-;; Evil:1 ends here
 
-;; [[file:config.org::*iCalendar][iCalendar:1]]
 (defun calendar-helper () ;; doesn't have to be interactive
   (cfw:open-calendar-buffer
    :contents-sources
@@ -209,9 +196,12 @@
     (delete-other-windows)
     (switch-to-buffer (doom-fallback-buffer))
     (calendar-init)))
-;; iCalendar:1 ends here
 
-;; [[file:config.org::*Org base][Org base:1]]
+(setq doom-modeline-buffer-file-name-style 'auto
+      doom-modeline-enable-word-count t         ; Show word count in modeline
+      inhibit-compacting-font-caches t          ; Don’t compact font caches during GC.
+      find-file-visit-truename t)               ; Display true name instead of relative name
+
 (after! org
   (plist-put org-format-latex-options :scale 4) ;; Make latex equations preview larger
   (setq org-directory "~/org/"
@@ -238,21 +228,15 @@
            "|"                 ; The pipe necessary to separate "active" states and "inactive" states
            "DONE(d)"           ; Task has been completed
            "CANCELLED(c)" )))) ; Task has been cancelled
-;; Org base:1 ends here
 
-;; [[file:config.org::*Org superstar][Org superstar:1]]
 (after! org-superstar
   (setq org-superstar-headline-bullets-list '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
         org-superstar-item-bullet-alist '((?+ . ?➤) (?- . ?✦)) ; changes +/- symbols in item lists
         org-superstar-prettify-item-bullets t ))
-;; Org superstar:1 ends here
 
-;; [[file:config.org::*Org fancy priorities][Org fancy priorities:1]]
 (after! org-fancy-priorities
   (setq org-fancy-priorities-list '("⚡" "⬆" "⬇" "☕")))
-;; Org fancy priorities:1 ends here
 
-;; [[file:config.org::*Set font sizes for each header level in Org][Set font sizes for each header level in Org:1]]
 (custom-set-faces
   '(org-level-1 ((t (:inherit outline-1 :height 1.4))))
   '(org-level-2 ((t (:inherit outline-2 :height 1.3))))
@@ -260,23 +244,19 @@
   '(org-level-4 ((t (:inherit outline-4 :height 1.1))))
   '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
 )
-;; Set font sizes for each header level in Org:1 ends here
 
-;; [[file:config.org::*Make navigation less clunky][Make navigation less clunky:1]]
 (after! org
   (add-hook 'org-mode-hook #'locally-defer-font-lock))
-;; Make navigation less clunky:1 ends here
 
-;; [[file:config.org::*Org-journal][Org-journal:1]]
+(setq org-odt-preferred-output-format "docx")
+
 (after! org-journal
   (setq org-journal-dir (concat org-directory "journal")
         org-journal-date-prefix "* "
         org-journal-time-prefix "** "
         org-journal-date-format "%B %d, %Y (%A) "
         org-journal-file-format "%Y-%m-%d.org"))
-;; Org-journal:1 ends here
 
-;; [[file:config.org::*Org-roam][Org-roam:1]]
 (after! org-roam
   (setq org-roam-directory "~/org/roam"
         org-roam-completion-everywhere t
@@ -313,20 +293,24 @@
            :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Tag\n\n")
            :unnarrowed t)
           )))
-;; Org-roam:1 ends here
 
-;; [[file:config.org::*Org-roam][Org-roam:2]]
 (after! org-roam
   (add-hook! 'after-save-hook #'elk/org-roam-rename-to-new-title))
-;; Org-roam:2 ends here
 
-;; [[file:config.org::*Tramp][Tramp:1]]
+(after! org
+  (require 'ox-taskjuggler))
+
 (after! tramp
   (setenv "SHELL" "/bin/bash")
   (setq tramp-shell-prompt-pattern "\\(?:^\\|
 \\)[^]#$%>\n]*#?[]#$%>] *\\(�\\[[0-9;]*[a-zA-Z] *\\)*")) ;; default + 
-;; Tramp:1 ends here
 
+<<<<<<< HEAD
+(after! vertico
+  ;; Different scroll margin
+  (setq vertico-scroll-margin 3))
+
+=======
 ;; [[file:config.org::*Vertico][Vertico:1]]
 (after! vertico
   ;; Different scroll margin
@@ -334,6 +318,7 @@
 ;; Vertico:1 ends here
 
 ;; [[file:config.org::*Which-key][Which-key:1]]
+>>>>>>> 9e01986 (commit)
 (after! which-key
   (setq which-key-allow-imprecise-window-fit nil) ; Comment this if experiencing crashes
   (setq frame-resize-pixelwise nil)
@@ -341,21 +326,194 @@
   ;; (defun add-which-key-line (f &rest r) (progn (apply f (list (cons (+ 2 (car (car r))) (cdr (car r)))))))
   ;; (advice-add 'which-key--show-popup :around #'add-which-key-line
   (setq which-key-idle-delay 0.5))
-;; Which-key:1 ends here
 
-;; [[file:config.org::*El-easydraw][El-easydraw:1]]
+(defun elk/set-wallpaper ()
+  (interactive)
+  ;; NOTE: You will need to update this to a valid background path!
+  (start-process-shell-command
+      "feh" nil  "$HOME/.fehbg"))
+
+(defun elk/exwm-init-hook ()
+  ;; Make workspace 1 be the one where we land at startup
+  (exwm-workspace-switch-create 1)
+
+  ;; Open eshell by default
+  ;;(eshell)
+
+  ;; Set exwm modeline to display workspace
+  (exwm-modeline-mode 1)
+
+  ;; Show battery status in the mode line
+  (display-battery-mode 1)
+
+  ;; Show the time and date in modeline
+  (setq display-time-day-and-date t)
+  (display-time-mode 1))
+  ;; Also take a look at display-time-format and format-time-string
+
+(defun elk/exwm-update-class ()
+  (exwm-workspace-rename-buffer exwm-class-name))
+
+(defun elk/exwm-update-title ()
+  (pcase exwm-class-name
+    ("Firefox" (exwm-workspace-rename-buffer (format "Firefox: %s" exwm-title)))))
+
+(defun elk/configure-window-by-class ()
+  (interactive)
+  (pcase exwm-class-name
+    ("Firefox" (exwm-workspace-move-window 2))
+    ("Discord" (exwm-workspace-move-window 3))
+    ("Sol" (exwm-workspace-move-window 3))
+    ("mpv" (exwm-floating-toggle-floating)
+           (exwm-layout-toggle-mode-line))))
+
+;; This function should be used only after configuring autorandr!
+(defun elk/update-displays ()
+  (elk/run-in-background "autorandr --change --force")
+  (elk/set-wallpaper)
+  (message "Display config: %s"
+           (string-trim (shell-command-to-string "autorandr --current"))))
+
+(use-package! exwm-modeline
+  :after exwm)
+
+(use-package! exwm
+  :config
+  ;; Set the default number of workspaces
+  (setq exwm-workspace-number 5)
+
+  ;; When window "class" updates, use it to set the buffer name
+  (add-hook 'exwm-update-class-hook #'elk/exwm-update-class)
+
+  ;; When window title updates, use it to set the buffer name
+  (add-hook 'exwm-update-title-hook #'elk/exwm-update-title)
+
+  ;; Configure windows as they're created
+  (add-hook 'exwm-manage-finish-hook #'elk/configure-window-by-class)
+
+  ;; When EXWM starts up, do some extra confifuration
+  (add-hook 'exwm-init-hook #'elk/exwm-init-hook)
+
+  ;; NOTE: Uncomment the following two options if you want window buffers
+  ;;       to be available on all workspaces!
+
+  ;; Automatically move EXWM buffer to current workspace when selected
+  ;;(setq exwm-layout-show-all-buffers t)
+
+  ;; Display all EXWM buffers in every workspace buffer list
+  ;;(setq exwm-workspace-show-all-buffers t)
+
+  ;; NOTE: Uncomment this option if you want to detach the minibuffer!
+  ;; Detach the minibuffer (show it with exwm-workspace-toggle-minibuffer)
+  ;;(setq exwm-workspace-minibuffer-position 'top)
+
+  ;; Set the screen resolution (update this to be the correct resolution for your screen!)
+  (require 'exwm-randr)
+  (exwm-randr-enable)
+  (start-process-shell-command "xrandr" nil "multi-hybrid-graphics")
+
+  ;; This will need to be updated to the name of a display!  You can find
+  ;; the names of your displays by looking at arandr or the output of xrandr
+  (setq exwm-randr-workspace-monitor-plist '(2 "HDMI-1-0" 3 "HDMI-1-0"))
+
+  ;; NOTE: Uncomment these lines after setting up autorandr!
+  ;; React to display connectivity changes, do initial display update
+  ;;(add-hook 'exwm-randr-screen-change-hook #'elk/update-displays)
+  ;;(elk/update-displays)
+
+  ;; Set the wallpaper after changing the resolution
+  (elk/set-wallpaper)
+
+  ;; Load the system tray before exwm-init
+  (require 'exwm-systemtray)
+  (setq exwm-systemtray-height 24)
+  (exwm-systemtray-enable)
+
+  ;; Automatically send the mouse cursor to the selected workspace's display
+  ;;(setq exwm-workspace-warp-cursor t)
+
+  ;; Window focus should follow the mouse pointer
+  (setq mouse-autoselect-window t
+        focus-follows-mouse t)
+
+  ;; These keys should always pass through to Emacs
+  (setq exwm-input-prefix-keys
+    '(?\C-x
+      ?\C-u
+      ?\C-h
+      ?\M-x
+      ?\M-`
+      ?\M-&
+      ?\M-:
+      ?\C-\M-j  ;; Buffer list
+      ?\C-\ ))  ;; Ctrl+Space
+
+  ;; Ctrl+Q will enable the next key to be sent directly
+  (define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
+
+  ;; Set up global key bindings.  These always work, no matter the input state!
+  ;; Keep in mind that changing this list after EXWM initializes has no effect.
+  (setq exwm-input-global-keys
+        `(
+          ;; Reset to line-mode (C-c C-k switches to char-mode via exwm-input-release-keyboard)
+          ([?\s-r] . exwm-reset)
+
+          ;; Splits
+          ([?\s-v] . evil-window-vsplit)
+          ([?\s-z] . evil-window-split)
+
+          ;; Switch workspace
+          ([?\s-w] . exwm-workspace-switch)
+          ([?\s-W] . exwm-workspace-swap)
+          ([?\s-\C-w] . exwm-workspace-move)
+          ([?\s-`] . (lambda () (interactive) (exwm-workspace-switch-create 0)))
+
+          ;; Killing buffers and windows
+          ([?\s-b] . ibuffer)
+          ([?\s-c] . kill-current-buffer)
+          ([?\s-q] . +workspace/close-window-or-workspace)
+
+          ;; Change focus between windows
+          ([?\s-h] . evil-window-left)
+          ([?\s-j] . evil-window-next)
+          ([?\s-k] . evil-window-prev)
+          ([?\s-l] . evil-window-right)
+
+          ;; Move windows around
+          ([?\s-H] . +evil/window-move-left)
+          ([?\s-J] . +evil/window-move-down)
+          ([?\s-K] . +evil/window-move-up)
+          ([?\s-L] . +evil/window-move-right)
+
+          ([?\s-g] . exwm-floating-toggle-floating)
+          ([?\s-m] . exwm-layout-toggle-mode-line)
+          ([f11] . exwm-layout-toggle-fullscreen)
+
+          ;; Launch applications via shell command
+          ([?\s-&] . (lambda (command)
+                       (interactive (list (read-shell-command "$ ")))
+                       (start-process-shell-command command nil command)))
+
+          ;; 's-N': Switch to certain workspace with Super (Win) plus a number key (0 - 9)
+          ,@(mapcar (lambda (i)
+                      `(,(kbd (format "s-%d" i)) .
+                        (lambda ()
+                          (interactive)
+                          (exwm-workspace-switch-create ,i))))
+                    (number-sequence 0 9))))
+
+  (exwm-input-set-key (kbd "s-d") 'counsel-linux-app)
+
+  (exwm-enable))
+
 (use-package! edraw-org
   :after org
   :config
   (edraw-org-setup-default))
-;; El-easydraw:1 ends here
 
-;; [[file:config.org::*KMonad][KMonad:1]]
 (use-package! kbd-mode
   :defer t)
-;; KMonad:1 ends here
 
-;; [[file:config.org::*Inkscape][Inkscape:1]]
 (defvar ink-flags-png (list "--export-area-drawing"
                             "--export-dpi 100"
                             "--export-type=png"
@@ -482,9 +640,38 @@
   </g>
 </svg>"
   "Default file template.")
-;; Inkscape:1 ends here
 
-;; [[file:config.org::*Org roam graph][Org roam graph:1]]
+(use-package! ox-moderncv
+  :after org)
+
+(defun elk/org-download-paste-clipboard (&optional use-default-filename)
+  (interactive "P")
+  (require 'org-download)
+  (let ((file
+         (if (not use-default-filename)
+             (read-string (format "Filename [%s]: "
+                                  org-download-screenshot-basename)
+                          nil nil org-download-screenshot-basename)
+           nil)))
+    (org-download-clipboard file)))
+
+(use-package! org-download
+  :after org
+  :config
+  (setq org-download-method 'directory)
+  (setq org-download-image-dir "images")
+  (setq org-download-heading-lvl nil)
+  (setq org-download-timestamp "%Y%m%d-%H%M%S_")
+  (setq org-image-actual-width 300)
+  (map! :map org-mode-map
+        :leader
+        (:prefix ("m a")
+        "p" #'elk/org-download-paste-clipboard)))
+
+(use-package! org-roam-bibtex
+  :after org-roam
+  :hook (org-roam-mode . org-roam-bibtex-mode))
+
 (use-package! websocket
   :after org-roam)
 
@@ -498,42 +685,42 @@
   (map! :leader (:prefix ("n" . notes)
                  (:prefix ("r" . roam)
                   :desc "Open Web Graph" "w" #'org-roam-ui-mode))))
-;; Org roam graph:1 ends here
 
-;; [[file:config.org::*Org-appear][Org-appear:1]]
 (use-package! org-appear
   :after org
-  :hook (org-mode . org-appear-mode)
+  :hook (org-mode . (lambda ()
+                      (org-appear-mode t)
+                      (add-hook 'evil-insert-state-entry-hook #'org-appear-manual-start nil t)
+                      (add-hook 'evil-insert-state-exit-hook #'org-appear-manual-stop nil t)))
   :config
   (setq org-appear-autoemphasis t
         org-appear-autosubmarkers t
-        org-appear-autolinks nil)
+        org-appear-autolinks nil
+        org-appear-trigger 'manual)
   ;; for proper first-time setup, `org-appear--set-elements'
   ;; needs to be run after other hooks have acted.
   (run-at-time nil nil #'org-appear--set-elements))
-;; Org-appear:1 ends here
 
-;; [[file:config.org::*Org-super-agenda][Org-super-agenda:1]]
+(use-package! org-archive
+  :after org
+  :config
+  (setq org-archive-location "archive.org::datetree/"))
+
+(use-package! org-auto-tangle
+  :defer t
+  :hook (org-mode . org-auto-tangle-mode))
+
 (use-package! org-super-agenda
   :after org-agenda
   :config
   (setq org-super-agenda-groups '((:auto-dir-name t)))
   (org-super-agenda-mode))
-;; Org-super-agenda:1 ends here
 
-;; [[file:config.org::*Org-reveal][Org-reveal:1]]
-(use-package! ox-reveal
-  :after org)
-;; Org-reveal:1 ends here
-
-;; [[file:config.org::*Bookmarks][Bookmarks:1]]
 (map! :leader
       (:prefix ("b". "buffer")
        :desc "List bookmarks" "L" #'list-bookmarks
        :desc "Save current bookmarks to bookmark file" "w" #'bookmark-save))
-;; Bookmarks:1 ends here
 
-;; [[file:config.org::*ibuffer mode][ibuffer mode:1]]
 (map! :map ibuffer-mode-map
       (:prefix "f"
       :n "c" 'ibuffer-filter-by-content
@@ -546,9 +733,7 @@
       (:prefix "g"
       :n "h" 'ibuffer-do-kill-lines
       :n "H" 'ibuffer-update))
-;; ibuffer mode:1 ends here
 
-;; [[file:config.org::*Dashboard][Dashboard:1]]
 (map! :mode +doom-dashboard-mode
       :map +doom-dashboard-mode-map
       :desc "Find file" :ne "f" #'find-file
@@ -567,9 +752,7 @@
       :desc "Browse in project" :ne "p" #'doom/browse-in-other-project
       :desc "Set theme" :ne "t" #'consult-theme
       :desc "Quit" :ne "Q" #'save-buffers-kill-terminal)
-;; Dashboard:1 ends here
 
-;; [[file:config.org::*File permissions and ownership][File permissions and ownership:1]]
 (map! :leader
       (:prefix ("d" . "dired")
        :desc "Open dired" "d" #'dired
@@ -600,21 +783,15 @@
   (kbd "% u") 'dired-upcase
   (kbd "; d") 'epa-dired-do-decrypt
   (kbd "; e") 'epa-dired-o-encrypt)
-;; File permissions and ownership:1 ends here
 
-;; [[file:config.org::*Keybindings Within Dired With Peep-Dired-Mode Enabled][Keybindings Within Dired With Peep-Dired-Mode Enabled:1]]
 (evil-define-key 'normal peep-dired-mode-map
   (kbd "j") 'peep-dired-next-file
   (kbd "k") 'peep-dired-prev-file)
 (add-hook 'peep-dired-hook 'evil-normalize-keymaps)
-;; Keybindings Within Dired With Peep-Dired-Mode Enabled:1 ends here
 
-;; [[file:config.org::*Display line wrapping][Display line wrapping:1]]
 (after! evil
   (map! :nv "Q" #'evil-fill-and-move))
-;; Display line wrapping:1 ends here
 
-;; [[file:config.org::*Window management][Window management:1]]
 (map! :map evil-window-map
       "SPC" #'rotate-layout
       ;; Navigation
@@ -627,18 +804,14 @@
       "C-<down>"       #'+evil/window-move-down
       "C-<up>"         #'+evil/window-move-up
       "C-<right>"      #'+evil/window-move-right)
-;; Window management:1 ends here
 
-;; [[file:config.org::*Line settings][Line settings:1]]
 (map! :leader
     (:prefix ("t" . "toggle")
-     :desc "Comment or uncomment lines" "TAB" #'comment-line
+     :desc "Comment or uncomment lines" "/" #'comment-line
      :desc "Toggle line numbers" "l" #'doom/toggle-line-numbers
      :desc "Toggle line highlight in frame" "h" #'hl-line-mode
      :desc "Toggle line highlight globally" "H" #'global-hl-line-mode))
-;; Line settings:1 ends here
 
-;; [[file:config.org::*Movement][Movement:1]]
 (map! (:after evil-org
        :map evil-org-mode-map
        :n "gk" (cmd! (if (org-on-heading-p)
@@ -655,39 +828,69 @@
        "T" #'browse-dotfiles)
       (:prefix "n"
        "L" #'org-latex-preview))
-;; Movement:1 ends here
 
-;; [[file:config.org::*Org babel][Org babel:1]]
-(map! :leader
+(map! :map org-mode-map
+      :leader
       :desc "Org babel tangle" "m TAB" #'org-babel-tangle)
-;; Org babel:1 ends here
 
-;; [[file:config.org::*Open Specific Files][Open Specific Files:1]]
-(map! :leader
-      (:prefix ("=" . "Open File")
-       :desc "Edit agenda file" "a" #'(lambda () (interactive) (find-file (concat org-directory "agenda.org")))
-       :desc "Edit doom config.org" "c" #'(lambda () (interactive) (find-file (expand-file-name "config.org" doom-private-dir)))
-       :desc "Edit autoload/elyk.el" "u" #'(lambda () (interactive) (find-file (expand-file-name "autoload/elyk.el" doom-private-dir)))
-       :desc "Edit xmonad xmonad.hs" "x" #'(lambda () (interactive) (find-file "~/.config/xmonad/xmonad.hs"))
-       ))
-;; Open Specific Files:1 ends here
+(defun elk/add-file-keybinding (key file &optional desc)
+  (let ((key key)
+        (file file)
+        (desc desc))
+    (map! :leader
+          (:prefix ("-" . "Open File")
+           :desc (or desc file)
+           key
+           #'(lambda () (interactive) (find-file file))))))
 
+(defun elk/add-project-keybinding (key file &optional desc)
+  (let ((key key)
+        (file file)
+        (desc desc))
+    (map! :leader
+          (:prefix ("=" . "Open Project")
+           :desc (or desc file)
+           key
+           #'(lambda () (interactive) (doom-project-find-file file))))))
+
+(elk/add-file-keybinding "a" "~/org/agenda.org" "Agenda agenda.org")
+(elk/add-file-keybinding "f" "~/.config/fontconfig/fonts.conf" "Fonts config fonts.conf")
+(elk/add-file-keybinding "s" "~/.config/sxhkd/sxhkdrc.org" "Sxhkdrc sxhkdrc.org")
+(elk/add-file-keybinding "k" "~/.config/kmonad/kmonad.kbd" "Kmonad kmonad.kbd")
+(elk/add-file-keybinding "d" (expand-file-name "config.org" doom-private-dir) "Doom config.org")
+(elk/add-file-keybinding "x" "~/.config/xmonad/xmonad.hs" "Xmonad xmonad.hs")
+
+(elk/add-project-keybinding "d" "~/.config/doom/" "Doom")
+(elk/add-project-keybinding "s" "~/.config/shell/" "Shell")
+(elk/add-project-keybinding "x" "~/.config/xmonad/" "Xmonad")
+(elk/add-project-keybinding "z" "~/.config/zsh/" "Zsh")
+
+
+
+<<<<<<< HEAD
+=======
 ;; [[file:config.org::*Language][Language:1]]
 (setq +format-with-lsp nil)
 ;; Language:1 ends here
 
 ;; [[file:config.org::*Latex][Latex:1]]
+>>>>>>> 9e01986 (commit)
 (setq-default TeX-engine 'luatex)
-;; Latex:1 ends here
 
-;; [[file:config.org::*Lua][Lua:1]]
 (set-formatter! 'stylua "stylua -" :modes '(lua-mode))
+<<<<<<< HEAD
+=======
 ;; Lua:1 ends here
+>>>>>>> 9e01986 (commit)
 
-;; [[file:config.org::*Haskell][Haskell:1]]
 (set-formatter! 'brittany "brittany" :modes '(haskell-mode))
+<<<<<<< HEAD
+=======
 ;; Haskell:1 ends here
+>>>>>>> 9e01986 (commit)
 
-;; [[file:config.org::*Python][Python:1]]
 (set-formatter! 'autopep8 "autopep8 -" :modes '(python-mode))
+<<<<<<< HEAD
+=======
 ;; Python:1 ends here
+>>>>>>> 9e01986 (commit)

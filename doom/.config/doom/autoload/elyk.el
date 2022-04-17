@@ -5,7 +5,7 @@
 (defun find-in-dotfiles ()
   "Open a file somewhere in ~/dotrice via a fuzzy filename search."
   (interactive)
-  (doom-project-find-file (expand-file-name "~/dotrice")))
+  (doom-project-find-file (expand-file-name "~/.dotrice")))
 
 (defun find-in-configs ()
   "Open a file somewhere in ~/.config via a fuzzy filename search."
@@ -16,13 +16,13 @@
 (defun browse-dotfiles ()
   "Browse the files in ~/dotrice."
   (interactive)
-  (doom-project-browse (expand-file-name "~/dotrice/")))
+  (doom-project-browse (expand-file-name "~/.dotrice/")))
 
 ;;;###autoload
 (defun find-in-scripts ()
   "Open a file somewhere in scripts directory, ~/script via a fuzzy filename search."
   (interactive)
-  (doom-project-find-file (expand-file-name "~/scripts")))
+  (doom-project-find-file (expand-file-name "~/.scripts")))
 
 ;;;###autoload
 (defun find-in-suckless ()
@@ -68,4 +68,7 @@
     (rename-file old-file new-file 1)
     (set-visited-file-name new-file)
     (set-buffer-modified-p nil)))
+<<<<<<< HEAD
+=======
 ;; Autoload:1 ends here
+>>>>>>> 9e01986 (commit)

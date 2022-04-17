@@ -18,7 +18,5 @@ eval "$(gnome-keyring-daemon --start)"
 export SSH_AUTH_SOCK
 
 ssh-agent
-# dbus-launch qtile start
-# dbus-launch dwm
-# dbus-launch awesome
-dbus-launch xmonad
+
+dbus-launch --exit-with-session emacs

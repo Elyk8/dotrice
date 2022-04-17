@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # Adds `~/.local/bin` to $PATH
-PATH="$PATH:$HOME/.local/bin:$HOME/.ghcup/bin:$HOME/.cabal/bin:${$(find -L $HOME/scripts -type d -printf %p:)%%:}"
+PATH="$PATH:$HOME/.local/bin:$HOME/.ghcup/bin:$HOME/.cabal/bin:${$(find -L $HOME/.scripts -type d -printf %p:)%%:}"
 export PATH
 
 unsetopt PROMPT_SP
@@ -98,7 +98,7 @@ export VIDEO="mpv"
 export IMAGE="nsxiv"
 export OPENER="xdg-open"
 export PAGER="less -S"
-export MANPAGER="lvim -c 'set ft=man nonumber nolist ts=8 laststatus=1 showtabline=1' '+Man!' -"
+export MANPAGER="nvim -c 'set ft=man nonumber nolist ts=8 laststatus=1 showtabline=1' '+Man!' -"
 # Others
 export MOZ_USE_XINPUT2="1"                    # Mozilla smooth scrolling/touchpads.
 export AWT_TOOLKIT="MToolkit wmname LG3D"     # May have to install wmname

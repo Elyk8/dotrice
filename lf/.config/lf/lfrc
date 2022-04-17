@@ -221,6 +221,7 @@ map d
 map c
 map e
 map f
+map t
 
 # Fuzzy finder
 map o :fzf

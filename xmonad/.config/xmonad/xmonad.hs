@@ -12,7 +12,7 @@ import           Data.Maybe                     ( fromJust
                                                 , isJust
                                                 )
 import           Data.Monoid
-import           Data.Ratio                                      -- Require for rational (%) operator
+import           Data.Ratio                                         -- Require for rational (%) operator
 import           Data.Semigroup
 import           Foreign.C                      ( CInt )
 import           System.Directory
@@ -304,7 +304,7 @@ myXmobarPP s = filterOutWsPP [scratchpadWorkspaceTag] $ def
 
 -- {{{ WORKSPACES
 myWorkspaces :: [[Char]]
-myWorkspaces = ["dev", "sys", "www", "dis", "msg"]
+myWorkspaces = ["ter", "work", "www", "dis", "msg"]
 
 myWorkspaceIndices :: M.Map [Char] Integer
 myWorkspaceIndices = M.fromList $ zip myWorkspaces [1 ..]
@@ -439,6 +439,7 @@ myManageHook =
     . concat
     $ [ [ title =? t --> doIgnore | t <- myIgnores ]
       , [ className =? c --> doShift (head myWorkspaces) | c <- myW1C ]
+      , [ className =? c --> doShift (myWorkspaces !! 1) | c <- myW2C ]
       , [ className =? c --> doShift (myWorkspaces !! 2) | c <- myW3C ]
       , [ className =? c --> doShift (myWorkspaces !! 3) | c <- myW4C ]
       , [ className =? c --> doShift (myWorkspaces !! 4) | c <- myW5C ]
@@ -460,7 +461,8 @@ myManageHook =
   iconName = stringProperty "WM_ICON_NAME"
   myIgnores = ["SafeEyes-0", "SafeEyes-1"]
   myW1C = ["VSCodium"]
-  myW3C = ["Brave-browser", "qutebrowser", "librewolf", "firefox", "Chromium"]
+  myW2C = ["Chromium", "Zotero"]
+  myW3C = ["Brave-browser", "qutebrowser", "librewolf", "firefox"]
   myW4C = ["discord", "zoom"]
   myW5C = ["VirtualBox Manager", "VirtualBox Machine", "Thunderbird"]
   myFloatC = ["confirm", "file_progress", "dialog", "download", "error", "toolbar", "Gmrun"]
@@ -531,6 +533,9 @@ mainKeymap c = mkKeymap
 
       -- Useful programs to have a keybinding for launch
   , ("M-<Esc>", spawn "sysact") -- Exit prompt using dmenu
+
+    -- Fallback to open a terminal just in case sxhkd breaks
+  , ("M-<F1>", spawn "$TERMINAL")
 
       -- Sticky Windows
   , ("M-v", windows copyToAll) -- Make focused window always visible in all workspaces
@@ -606,7 +611,7 @@ myKeys conf =
         : [ ((m .|. modm, k), windows $ f i)
           | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_5]
           , (f, m) <-
-            [ (viewOnScreen 0, 0)
+            [ (onlyOnScreen 0, 0)
             , (W.shift, shiftMask)
             , (W.greedyView, mod1Mask)
             , (swapWithCurrent, controlMask)
@@ -614,7 +619,7 @@ myKeys conf =
           ]
         ++ [ ((m .|. modm, k), windows $ f i)
            | (i, k) <- zip (XMonad.workspaces conf) ([xK_6 .. xK_9] ++ [xK_0])
-           , (f, m) <- [(viewOnScreen 1, 0), (swapWithCurrent, shiftMask)]
+           , (f, m) <- [(onlyOnScreen 1, 0), (swapWithCurrent, shiftMask)]
            ]
         ++ [ ((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
            | (key, sc) <- zip [xK_w, xK_e] [0 ..]

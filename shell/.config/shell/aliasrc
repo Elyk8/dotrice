@@ -220,8 +220,8 @@ alias br='bulk-rename'
 alias lf='lfcd'
 
 se() { fd -atf --base-directory ~/.config | fzf | xargs -r "$EDITOR"; }
-sr() { fd -atf --base-directory ~/scripts | fzf | xargs -r "$EDITOR"; }
-sc() { fd -Hatf --base-directory ~/dotrice | fzf | xargs -r "$EDITOR"; }
+sr() { fd -atf --base-directory ~/.scripts | fzf | xargs -r "$EDITOR"; }
+sc() { fd -Hatf --base-directory ~/.dotrice | fzf | xargs -r "$EDITOR"; }
 xevv() { xev | awk -F'[ )]+' '/^KeyPress/ { a[NR+2] } NR in a { printf "%-3s %s\n", $5, $8 }'; }
 
 rosstart() {

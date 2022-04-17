@@ -19,6 +19,7 @@ run /usr/bin/pipewire &
 run pacmac-tray &
 run birdtray &
 run sxhkd &
+run dm-wacom &
 
 autostart="redshift clipmenud flashfocus lxsession nm-applet picom mpd"
 
@@ -31,4 +32,5 @@ run "$HOME"/.fehbg &
 sleep 5 && run volctl && mictray &
 
 sleep 5 && xsetwacom set "GAOMON Gaomon Tablet stylus" MapToOutput "HEAD-1" &
+xsetroot -cursor_name left_ptr
 [ -n "$xrdbpid" ] && wait "$xrdbpid"
