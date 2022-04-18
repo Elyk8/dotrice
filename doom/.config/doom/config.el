@@ -72,10 +72,6 @@
       confirm-kill-emacs nil                    ; Disable exit confirmation
       )
 
-;; Set focus to follow the mouse
-(setq mouse-autoselect-window t
-      focus-follows-mouse t)
-
 (setq undo-limit 80000000                         ; Raise undo-limit to 80Mb
       ;; display-line-numbers-type nil               ; By disabling line number, we improve performance significantly
       evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
@@ -103,8 +99,8 @@
 ;; Silence compiler warnings as they can be pretty disruptive
 (setq native-comp-async-report-warnings-errors nil)
 
-(setq doom-font (font-spec :family "monospace" :size 18)
-      doom-variable-pitch-font (font-spec :family "sans" :size 18)
+(setq doom-font (font-spec :family "monospace" :size 20)
+      doom-variable-pitch-font (font-spec :family "sans" :size 20)
       doom-big-font (font-spec :family "monospace" :size 34))
 (after! doom-themes
   (setq doom-themes-enable-bold t
@@ -355,7 +351,9 @@
   (display-battery-mode 1)
 
   ;; Show the time and date in modeline
-  (setq display-time-day-and-date t)
+  (setq display-time-day-and-date t
+        display-time-format " [ %H:%M %d/%m/%y]"
+        display-time-default-load-average nil)
   (display-time-mode 1))
 ;; Also take a look at display-time-format and format-time-string
 
@@ -371,9 +369,8 @@
   (pcase exwm-class-name
     ("firefox" (exwm-workspace-move-window 2))
     ("discord" (exwm-workspace-move-window 3))
-    ("Sol" (exwm-workspace-move-window 3))
-    ("mpv" (exwm-floating-toggle-floating)
-     (exwm-layout-toggle-mode-line))))
+    ("Virt-manager" (exwm-workspace-move-window 5))
+    ))
 
 ;; This function should be used only after configuring autorandr!
 (defun elk/update-displays ()
@@ -415,7 +412,7 @@
 
 DIR is either 'left or 'right."
   (nth
-   (% (+ (cl-position
+   (%    (+ (cl-position
           (elk/exwm-get-current-monitor)
           elk/exwm-monitor-list
           :test #'string-equal)
@@ -460,7 +457,6 @@ DIR is either 'left or 'right."
             (plist-put exwm-randr-workspace-monitor-plist
                        exwm-workspace-current-index
                        new-monitor))))
-  (elk/exwm-switch-to-other-monitor)
   (exwm-randr-refresh))
 
 (defun elk/exwm-windmove (dir)
@@ -531,6 +527,10 @@ DIR is either 'left or 'right."
   ;; Detach the minibuffer (show it with exwm-workspace-toggle-minibuffer)
   ;;(setq exwm-workspace-minibuffer-position 'top)
 
+
+  ;; Show `exwm' buffers in buffer switching prompts.
+  (add-hook 'exwm-mode-hook #'doom-mark-buffer-as-real-h)
+
   ;; Set the screen resolution (update this to be the correct resolution for your screen!)
   (require 'exwm-randr)
   (exwm-randr-enable)
@@ -570,11 +570,11 @@ DIR is either 'left or 'right."
   (setq exwm-input-prefix-keys
         '(?\C-x
           ?\C-u
-          ?\C-h
           ?\M-x
           ?\M-`
           ?\M-&
           ?\M-:
+          ?\M-\
           ?\C-\M-j  ;; Buffer list
           ?\C-\ ))  ;; Ctrl+Space
 
@@ -604,7 +604,7 @@ DIR is either 'left or 'right."
           ([?\s-`] . (lambda () (interactive) (exwm-workspace-switch-create 0)))
 
           ;; Killing buffers and windows
-          ([?\s-b] . ibuffer)
+          ([?\s-b] . switch-to-buffer)
           ([?\s-c] . kill-current-buffer)
           ([?\s-q] . +workspace/close-window-or-workspace)
 
@@ -638,6 +638,9 @@ DIR is either 'left or 'right."
                     (number-sequence 0 9))))
 
   (exwm-input-set-key (kbd "s-d") 'counsel-linux-app)
+  ;; Emacs server is not required to run EXWM but it has some interesting uses
+  ;; (see next section).
+  (server-start)
   (exwm-enable))
 
 (use-package! edraw-org

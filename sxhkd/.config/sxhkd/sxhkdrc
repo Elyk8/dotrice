@@ -24,10 +24,6 @@ super + space ; r
 super + space ; n
       pidof ncmpcpp || $TERMINAL -e ncmpcpp
 
-# Open emacs client
-super + space ; e
-      samedirall emacsclient -cn
-
 # Dmenu list opened windows
 super + space ; b
       dm-win
@@ -39,10 +35,6 @@ super + space ; w
 # Open Chromium
 super + space ; c
       pidof chromium >/dev/null && wmctrl -lx | awk '$3 ~ "Chromium" {print $1}' | head -1 | xargs -r xdotool windowactivate || chromium
-
-# Doom Emacs everywhere
-super + space ; f
-      $HOME/.emacs.d/bin/doom everywhere
 
 # Toggle mute microphone
 super + space ; m
@@ -220,8 +212,8 @@ super + F2
       buckle-spring
 
 # Refresh doom configuration and restart the emacs daemon
-super + F3
-      restart-emacs
+#super + F3
+#      restart-emacs
 
 # Refresh kmonad configuration
 super + F4
