@@ -291,6 +291,23 @@
            :unnarrowed t)
           )))
 
+(defun elk/org-roam-rename-to-new-title ()
+  "Change the file name after changing the title."
+  (when-let*
+      ((old-file (buffer-file-name))
+       (is-roam-file (org-roam-file-p old-file))
+       (is-roam-buffer (org-roam-buffer-p))
+       (file-node (save-excursion
+                    (goto-char 1)
+                    (org-roam-node-at-point)))
+       (slug (org-roam-node-slug file-node))
+       (new-file (expand-file-name (replace-regexp-in-string "-.*\\.org" (format "-%s.org" slug) old-file)))
+       (different-name? (not (string-equal old-file new-file))))
+    (rename-buffer (file-name-nondirectory new-file))
+    (rename-file old-file new-file 1)
+    (set-visited-file-name new-file)
+    (set-buffer-modified-p nil)))
+
 (after! org-roam
   (add-hook! 'after-save-hook #'elk/org-roam-rename-to-new-title))
 
@@ -314,7 +331,7 @@
   ;; (advice-add 'which-key--show-popup :around #'add-which-key-line
   (setq which-key-idle-delay 0.5))
 
-(defun efs/run-in-background (command)
+(defun elk/run-in-background (command)
   (let ((command-parts (split-string command "[ ]+")))
     (apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr command-parts)))))
 
@@ -352,8 +369,8 @@
 (defun elk/configure-window-by-class ()
   (interactive)
   (pcase exwm-class-name
-    ("Firefox" (exwm-workspace-move-window 2))
-    ("Discord" (exwm-workspace-move-window 3))
+    ("firefox" (exwm-workspace-move-window 2))
+    ("discord" (exwm-workspace-move-window 3))
     ("Sol" (exwm-workspace-move-window 3))
     ("mpv" (exwm-floating-toggle-floating)
      (exwm-layout-toggle-mode-line))))
@@ -370,13 +387,124 @@
               mouse-autoselect-window nil
               focus-follows-mouse nil))
 
+(setq elk/exwm-last-workspaces '(1))
+
+(defun elk/exwm-store-last-workspace ()
+  "Save the last workspace to `elk/exwm-last-workspaces'."
+  (setq elk/exwm-last-workspaces
+        (seq-uniq (cons exwm-workspace-current-index
+                        elk/exwm-last-workspaces))))
+
+(defun elk/exwm-last-workspaces-clear ()
+  "Clean `elk/exwm-last-workspaces' from deleted workspaces."
+  (setq elk/exwm-last-workspaces
+        (seq-filter
+         (lambda (i) (nth i exwm-workspace--list))
+         elk/exwm-last-workspaces)))
+
+(setq elk/exwm-monitor-list '(nil "HDMI-1-0"))
+
+(defun elk/exwm-get-current-monitor ()
+  "Return the current monitor name or nil."
+  (plist-get exwm-randr-workspace-output-plist
+             (cl-position (selected-frame)
+                          exwm-workspace--list)))
+
+(defun elk/exwm-get-other-monitor (dir)
+  "Cycle the monitor list in the direction DIR.
+
+DIR is either 'left or 'right."
+  (nth
+   (% (+ (cl-position
+          (elk/exwm-get-current-monitor)
+          elk/exwm-monitor-list
+          :test #'string-equal)
+         (length elk/exwm-monitor-list)
+         (pcase dir
+           ('right 1)
+           ('left -1)))
+      (length elk/exwm-monitor-list))
+   elk/exwm-monitor-list))
+
+(defun elk/exwm-switch-to-other-monitor (&optional dir)
+  "Switch to another monitor."
+  (interactive)
+  (elk/exwm-last-workspaces-clear)
+  (exwm-workspace-switch
+   (cl-loop with other-monitor = (elk/exwm-get-other-monitor (or dir 'right))
+            for i in (append elk/exwm-last-workspaces
+                             (cl-loop for i from 0
+                                      for _ in exwm-workspace--list
+                                      collect i))
+            if (if other-monitor
+                   (string-equal (plist-get exwm-randr-workspace-output-plist i)
+                                 other-monitor)
+                 (not (plist-get exwm-randr-workspace-output-plist i)))
+            return i)))
+
+(defun elk/exwm-workspace-switch-monitor ()
+  "Move the current workspace to another monitor."
+  (interactive)
+  (let ((new-monitor (elk/exwm-get-other-monitor 'right))
+        (current-monitor (elk/exwm-get-current-monitor)))
+    (when (and current-monitor
+               (>= 1
+                   (cl-loop for (key value) on exwm-randr-workspace-monitor-plist
+                            by 'cddr
+                            if (string-equal value current-monitor) sum 1)))
+      (error "Can't remove the last workspace on the monitor!"))
+    (setq exwm-randr-workspace-monitor-plist
+          (map-delete exwm-randr-workspace-monitor-plist exwm-workspace-current-index))
+    (when new-monitor
+      (setq exwm-randr-workspace-monitor-plist
+            (plist-put exwm-randr-workspace-monitor-plist
+                       exwm-workspace-current-index
+                       new-monitor))))
+  (elk/exwm-switch-to-other-monitor)
+  (exwm-randr-refresh))
+
+(defun elk/exwm-windmove (dir)
+  "Move to window or monitor in the direction DIR."
+  (if (or (eq dir 'down) (eq dir 'up))
+      (windmove-do-window-select dir)
+    (let ((other-window (windmove-find-other-window dir))
+          (other-monitor (elk/exwm-get-other-monitor dir))
+          (opposite-dir (pcase dir
+                          ('left 'right)
+                          ('right 'left))))
+      (if other-window
+          (windmove-do-window-select dir)
+        (elk/exwm-switch-to-other-monitor dir)
+        (cl-loop while (windmove-find-other-window opposite-dir)
+                 do (windmove-do-window-select opposite-dir))))))
+
+(defun elk/exwm-fill-other-window (&rest _)
+  "Open the most recently used buffer in the next window."
+  (interactive)
+  (when (and (eq major-mode 'exwm-mode) (not (eq (next-window) (get-buffer-window))))
+    (let ((other-exwm-buffer
+           (cl-loop with other-buffer = (persp-other-buffer)
+                    for buf in (sort (persp-current-buffers) (lambda (a _) (eq a other-buffer)))
+                    with current-buffer = (current-buffer)
+                    when (and (not (eq current-buffer buf))
+                              (buffer-live-p buf)
+                              (not (string-match-p (persp--make-ignore-buffer-rx) (buffer-name buf)))
+                              (not (get-buffer-window buf)))
+                    return buf)))
+      (when other-exwm-buffer
+        (with-selected-window (next-window)
+          (switch-to-buffer other-exwm-buffer))))))
+
 (use-package! exwm-modeline
-  :after exwm)
+  :after exwm
+  :config
+  (setq exwm-modeline-short t
+        exwm-modeline-display-urgent nil))
 
 (use-package! exwm
   :config
   ;; Set the default number of workspaces
-  (setq exwm-workspace-number 5)
+  (setq exwm-workspace-number 6)
 
   ;; When window "class" updates, use it to set the buffer name
   (add-hook 'exwm-update-class-hook #'elk/exwm-update-class)
@@ -412,10 +540,15 @@
   ;; the names of your displays by looking at arandr or the output of xrandr
   (setq exwm-randr-workspace-monitor-plist '(2 "HDMI-1-0" 3 "HDMI-1-0"))
 
+
+  ;; Swapping workspaces between monitors
+  (add-hook 'exwm-workspace-switch-hook
+            #'elk/exwm-store-last-workspace)
+
   ;; NOTE: Uncomment these lines after setting up autorandr!
   ;; React to display connectivity changes, do initial display update
-  ;;(add-hook 'exwm-randr-screen-change-hook #'elk/update-displays)
-  ;;(elk/update-displays)
+  (add-hook 'exwm-randr-screen-change-hook #'elk/update-displays)
+  (elk/update-displays)
 
   ;; Set the wallpaper after changing the resolution
   (elk/set-wallpaper)
@@ -448,6 +581,10 @@
   ;; Ctrl+Q will enable the next key to be sent directly
   (define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
 
+  ;; Find a better window for the split
+  (advice-add 'evil-window-split :after #'elk/exwm-fill-other-window)
+  (advice-add 'evil-window-vsplit :after #'elk/exwm-fill-other-window)
+
   ;; Set up global key bindings.  These always work, no matter the input state!
   ;; Keep in mind that changing this list after EXWM initializes has no effect.
   (setq exwm-input-global-keys
@@ -460,8 +597,9 @@
           ([?\s-z] . evil-window-split)
 
           ;; Switch workspace
-          ([?\s-w] . exwm-workspace-switch)
-          ([?\s-W] . exwm-workspace-swap)
+          ([?\s-w] . (lambda () (interactive) (elk/exwm-switch-to-other-monitor)))
+          ([?\s-e] . (lambda () (interactive) (elk/exwm-workspace-switch-monitor)))
+          ([?\s-W] . exwm-workspace-move-window)
           ([?\s-\C-w] . exwm-workspace-move)
           ([?\s-`] . (lambda () (interactive) (exwm-workspace-switch-create 0)))
 
@@ -500,7 +638,6 @@
                     (number-sequence 0 9))))
 
   (exwm-input-set-key (kbd "s-d") 'counsel-linux-app)
-
   (exwm-enable))
 
 (use-package! edraw-org

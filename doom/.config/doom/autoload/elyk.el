@@ -49,21 +49,3 @@
   (when (> (buffer-size) 50000)
     (setq-local jit-lock-defer-time 0.05
                 jit-lock-stealth-time 1)))
-
-;;;###autoload
-(defun elk/org-roam-rename-to-new-title ()
-  "Change the file name after changing the title."
-  (when-let*
-      ((old-file (buffer-file-name))
-       (is-roam-file (org-roam-file-p old-file))
-       (is-roam-buffer (org-roam-buffer-p))
-       (file-node (save-excursion
-                    (goto-char 1)
-                    (org-roam-node-at-point)))
-       (slug (org-roam-node-slug file-node))
-       (new-file (expand-file-name (replace-regexp-in-string "-.*\\.org" (format "-%s.org" slug) old-file)))
-       (different-name? (not (string-equal old-file new-file))))
-    (rename-buffer (file-name-nondirectory new-file))
-    (rename-file old-file new-file 1)
-    (set-visited-file-name new-file)
-    (set-buffer-modified-p nil)))

@@ -142,7 +142,6 @@
        ;;ocaml             ; an objective camel
        (org
         +gnuplot
-        +pomodoro
         +present
         +journal             ; enable org journal
         +pretty              ; replace asterisks with pretty org bullets
