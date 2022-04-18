@@ -1,0 +1,37 @@
+! NVCode
+*background: #1E1E1E
+*foreground: #D8DEE9
+
+*cursorcolor: #D8DEE9
+
+trayerColor: 0x1E1E1E
+
+! terminal padding color
+*borderColor: #1E1E1E
+
+*color0:    #3B4252
+*color1:    #D54646
+*color2:    #23D18B
+*color3:    #D7BA7D
+*color4:    #569CD6
+*color5:    #C586C0
+*color6:    #29B8DB
+*color7:    #abb2bf
+
+*color8:    #3B4252
+*color9:    #D54646
+*color10:   #23D18B
+*color11:   #D7BA7D
+*color12:   #569CD6
+*color13:   #C586C0
+*color14:   #29B8DB
+*color15:   #ECEFF4
+
+dmenu.normbgcolor:  #1E1E1E
+dmenu.normfgcolor:  #D8DEE9
+
+dmenu.selbgcolor:  #3B4252
+dmenu.selfgcolor:  #ECEFF4
+
+dmenu.selhlbgcolor:  #005577
+dmenu.selhlfgcolor:  #D7BA7D

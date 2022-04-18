@@ -109,7 +109,7 @@
   '(font-lock-comment-face :slant italic)
   '(font-lock-keyword-face :slant italic))
 
-(setq doom-theme 'doom-dark+)
+(setq doom-theme 'doom-vibrant)
 (set-frame-parameter (selected-frame) 'alpha '(95 . 95))
 (add-to-list 'default-frame-alist '(alpha . (95 . 95)))
 
@@ -190,10 +190,16 @@
     (switch-to-buffer (doom-fallback-buffer))
     (calendar-init)))
 
-(setq doom-modeline-buffer-file-name-style 'auto
-      ;;doom-modeline-enable-word-count t         ; Show word count in modeline
-      inhibit-compacting-font-caches t          ; Don’t compact font caches during GC.
-      find-file-visit-truename t)               ; Display true name instead of relative name
+(after! doom-modeline
+  (setq doom-modeline-buffer-file-name-style 'auto
+        all-the-icons-scale-factor 1.1
+        ;;doom-modeline-enable-word-count t         ; Show word count in modeline
+        inhibit-compacting-font-caches t          ; Don’t compact font caches during GC.
+        find-file-visit-truename t))              ; Display true name instead of relative name
+
+(custom-set-faces!
+  '(mode-line :height 1.0)
+  '(mode-line-inactive :height 1.0))
 
 (after! org
   (plist-put org-format-latex-options :scale 4) ;; Make latex equations preview larger
@@ -327,6 +333,11 @@
   ;; (advice-add 'which-key--show-popup :around #'add-which-key-line
   (setq which-key-idle-delay 0.5))
 
+;; Make the launcher only show app names
+(use-package! counsel
+  :custom
+  (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only))
+
 (defun elk/run-in-background (command)
   (let ((command-parts (split-string command "[ ]+")))
     (apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr command-parts)))))
@@ -341,21 +352,12 @@
   ;; Make workspace 1 be the one where we land at startup
   (exwm-workspace-switch-create 1)
 
+  ;; Start polybar
+  (elk/start-panel)
+
   ;; Open eshell by default
   ;;(eshell)
-
-  ;; Set exwm modeline to display workspace
-  (exwm-modeline-mode 1)
-
-  ;; Show battery status in the mode line
-  (display-battery-mode 1)
-
-  ;; Show the time and date in modeline
-  (setq display-time-day-and-date t
-        display-time-format " [ %H:%M %d/%m/%y]"
-        display-time-default-load-average nil)
-  (display-time-mode 1))
-;; Also take a look at display-time-format and format-time-string
+  )
 
 (defun elk/exwm-update-class ()
   (exwm-workspace-rename-buffer exwm-class-name))
@@ -413,14 +415,14 @@
 DIR is either 'left or 'right."
   (nth
    (%    (+ (cl-position
-          (elk/exwm-get-current-monitor)
-          elk/exwm-monitor-list
-          :test #'string-equal)
-         (length elk/exwm-monitor-list)
-         (pcase dir
-           ('right 1)
-           ('left -1)))
-      (length elk/exwm-monitor-list))
+             (elk/exwm-get-current-monitor)
+             elk/exwm-monitor-list
+             :test #'string-equal)
+            (length elk/exwm-monitor-list)
+            (pcase dir
+              ('right 1)
+              ('left -1)))
+         (length elk/exwm-monitor-list))
    elk/exwm-monitor-list))
 
 (defun elk/exwm-switch-to-other-monitor (&optional dir)
@@ -491,48 +493,40 @@ DIR is either 'left or 'right."
         (with-selected-window (next-window)
           (switch-to-buffer other-exwm-buffer))))))
 
-(use-package! exwm-modeline
+(defvar elk/polybar-process nil
+  "Holds the process of the running Polybar instance, if any")
+
+(defun elk/kill-panel ()
+  (interactive)
+  (when elk/polybar-process
+    (ignore-errors
+      (kill-process elk/polybar-process)))
+  (setq elk/polybar-process nil))
+
+(defun elk/start-panel ()
+  (interactive)
+  (elk/kill-panel)
+  (setq elk/polybar-process (start-process-shell-command "polybar" nil "polybar panel")))
+
+(defun elk/send-polybar-hook (module-name hook-index)
+  (start-process-shell-command "polybar-msg" nil (format "polybar-msg hook %s %s" module-name hook-index)))
+
+(defun elk/send-polybar-exwm-workspace ()
+  (elk/send-polybar-hook "exwm-workspace" 1))
+
+(defun elk/polybar-exwm-workspace ()
+  (pcase exwm-workspace-current-index
+    (0 "0")
+    (1 "1")
+    (2 "2")
+    (3 "3")
+    (4 "4")
+    (5 "5")))
+
+(use-package! exwm-randr
   :after exwm
   :config
-  (setq exwm-modeline-short t
-        exwm-modeline-display-urgent nil))
-
-(use-package! exwm
-  :config
-  ;; Set the default number of workspaces
-  (setq exwm-workspace-number 6)
-
-  ;; When window "class" updates, use it to set the buffer name
-  (add-hook 'exwm-update-class-hook #'elk/exwm-update-class)
-
-  ;; When window title updates, use it to set the buffer name
-  (add-hook 'exwm-update-title-hook #'elk/exwm-update-title)
-
-  ;; Configure windows as they're created
-  (add-hook 'exwm-manage-finish-hook #'elk/configure-window-by-class)
-
-  ;; When EXWM starts up, do some extra confifuration
-  (add-hook 'exwm-init-hook #'elk/exwm-init-hook)
-
-  ;; NOTE: Uncomment the following two options if you want window buffers
-  ;;       to be available on all workspaces!
-
-  ;; Automatically move EXWM buffer to current workspace when selected
-  ;;(setq exwm-layout-show-all-buffers t)
-
-  ;; Display all EXWM buffers in every workspace buffer list
-  ;;(setq exwm-workspace-show-all-buffers t)
-
-  ;; NOTE: Uncomment this option if you want to detach the minibuffer!
-  ;; Detach the minibuffer (show it with exwm-workspace-toggle-minibuffer)
-  ;;(setq exwm-workspace-minibuffer-position 'top)
-
-
-  ;; Show `exwm' buffers in buffer switching prompts.
-  (add-hook 'exwm-mode-hook #'doom-mark-buffer-as-real-h)
-
   ;; Set the screen resolution (update this to be the correct resolution for your screen!)
-  (require 'exwm-randr)
   (exwm-randr-enable)
   (start-process-shell-command "xrandr" nil "multi-hybrid-graphics")
 
@@ -540,31 +534,43 @@ DIR is either 'left or 'right."
   ;; the names of your displays by looking at arandr or the output of xrandr
   (setq exwm-randr-workspace-monitor-plist '(2 "HDMI-1-0" 3 "HDMI-1-0"))
 
-
-  ;; Swapping workspaces between monitors
-  (add-hook 'exwm-workspace-switch-hook
-            #'elk/exwm-store-last-workspace)
-
   ;; NOTE: Uncomment these lines after setting up autorandr!
   ;; React to display connectivity changes, do initial display update
   (add-hook 'exwm-randr-screen-change-hook #'elk/update-displays)
   (elk/update-displays)
 
   ;; Set the wallpaper after changing the resolution
-  (elk/set-wallpaper)
+  (elk/set-wallpaper))
 
-  ;; Load the system tray before exwm-init
-  (require 'exwm-systemtray)
-  (setq exwm-systemtray-height 24)
-  (exwm-systemtray-enable)
-
-  ;; Window focus should follow the mouse pointer
+(use-package! exwm
+  :init
   (setq exwm-workspace-warp-cursor t
         mouse-autoselect-window t
-        focus-follows-mouse t)
+        focus-follows-mouse t)          ; Window focus should follow the mouse pointer
+  (server-start)                        ; Start the emacs server
+  (setq exwm-workspace-number 6)        ; Set the default number of workspaces
+  :config
+  (add-hook 'exwm-update-class-hook #'elk/exwm-update-class) ;; When window "class" updates, use it to set the buffer name
+  (add-hook 'exwm-update-title-hook #'elk/exwm-update-title) ;; When window title updates, use it to set the buffer name
+  (add-hook 'exwm-manage-finish-hook #'elk/configure-window-by-class) ;; Configure windows as they're created
+  (add-hook 'exwm-init-hook #'elk/exwm-init-hook) ;; When EXWM starts up, do some extra confifuration
 
-  ;; However, for floating windows, this will break EXWM. So we disable the above for floating mode.
-  (add-hook 'exwm-floating-setup-hook #'elk/fix-exwm-floating-windows)
+  ;; NOTE: Uncomment the following two options if you want window buffers
+  ;;       to be available on all workspaces!
+
+  ;;(setq exwm-layout-show-all-buffers t) ;; Automatically move EXWM buffer to current workspace when selected
+  ;;(setq exwm-workspace-show-all-buffers t) ;; Display all EXWM buffers in every workspace buffer list
+
+  ;; NOTE: Uncomment this option if you want to detach the minibuffer!
+  ;;(setq exwm-workspace-minibuffer-position 'top) ;; Detach the minibuffer (show it with exwm-workspace-toggle-minibuffer)
+
+  (add-hook 'exwm-mode-hook #'doom-mark-buffer-as-real-h) ;; Show `exwm' buffers in buffer switching prompts.
+
+  (add-hook 'exwm-workspace-switch-hook #'elk/exwm-store-last-workspace) ;; Swapping workspaces between monitors
+
+  (add-hook 'exwm-floating-setup-hook #'elk/fix-exwm-floating-windows) ;; For floating windows, this will break EXWM. So we disable the above for floating mode.
+
+  (add-hook 'exwm-workspace-switch-hook #'elk/send-polybar-exwm-workspace) ;; Update panel indicator when workspace changes
 
   ;; These keys should always pass through to Emacs
   (setq exwm-input-prefix-keys
@@ -638,9 +644,7 @@ DIR is either 'left or 'right."
                     (number-sequence 0 9))))
 
   (exwm-input-set-key (kbd "s-d") 'counsel-linux-app)
-  ;; Emacs server is not required to run EXWM but it has some interesting uses
-  ;; (see next section).
-  (server-start)
+
   (exwm-enable))
 
 (use-package! edraw-org
@@ -928,6 +932,20 @@ DIR is either 'left or 'right."
 
 (after! evil
   (map! :nv "Q" #'evil-fill-and-move))
+
+(after! evil
+  (defun elk/ex-kill-buffer-and-close ()
+    (interactive)
+    (unless (char-equal (elt (buffer-name) 0) ?*)
+      (kill-this-buffer)))
+
+  (defun elk/ex-save-kill-buffer-and-close ()
+    (interactive)
+    (save-buffer)
+    (kill-this-buffer))
+
+  (evil-ex-define-cmd "q[uit]" 'elk/ex-kill-buffer-and-close )
+  (evil-ex-define-cmd "wq" 'elk/ex-save-kill-buffer-and-close))
 
 (map! :map evil-window-map
       "SPC" #'rotate-layout

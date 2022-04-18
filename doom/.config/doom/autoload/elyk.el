@@ -49,3 +49,13 @@
   (when (> (buffer-size) 50000)
     (setq-local jit-lock-defer-time 0.05
                 jit-lock-stealth-time 1)))
+
+;;;###autoload
+(defun elk/exwm-update-global-keys ()
+  "Function to apply changes to `exwm-input-global-keys'"
+  (interactive)
+  (setq exwm-input--global-keys nil)
+  (dolist (i exwm-input-global-keys)
+    (exwm-input--set-key (car i) (cdr i)))
+  (when exwm--connection
+    (exwm-input--update-global-prefix-keys)))

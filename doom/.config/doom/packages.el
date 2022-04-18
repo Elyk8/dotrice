@@ -11,7 +11,6 @@
 (package! dired-subtree)
 
 (package! exwm)
-(package! exwm-modeline)
 
 (package! edraw-org :recipe (:host github :repo "misohena/el-easydraw"))
 
