@@ -38,7 +38,7 @@ These are keybindings which one uses the most. Thus we want as fewer key-presses
 #+begin_src conf
 # Open desktop applications
 super + space ; space
-        dm-j4dmenu-desktop
+      emacsclient -e '(counsel-linux-app)'
 
 # Dmenu run executables
 super + space ; d
@@ -58,7 +58,7 @@ super + space ; n
 
 # Dmenu list opened windows
 super + space ; b
-      dm-win
+      emacsclient -e '(ibuffer)'
 
 # Open Firefox
 super + space ; w

@@ -12,6 +12,8 @@
 
 (package! exwm)
 
+(package! counsel)
+
 (package! edraw-org :recipe (:host github :repo "misohena/el-easydraw"))
 
 (package! kbd-mode

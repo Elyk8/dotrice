@@ -126,7 +126,6 @@
         company-tooltip-limit 10))
 
 (advice-add #'doom-modeline-segment--modals :override #'ignore)
-;; (setq doom-modeline-buffer-file-name-style 'file-name)
 
 (setq doom-fallback-buffer-name "► Doom"
       +doom-dashboard-name "► Doom")
@@ -324,6 +323,9 @@
 (after! vertico
   ;; Different scroll margin
   (setq vertico-scroll-margin 3))
+
+(after! vterm
+  (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no"))
 
 (after! which-key
   (setq which-key-allow-imprecise-window-fit nil) ; Comment this if experiencing crashes
@@ -553,6 +555,7 @@ DIR is either 'left or 'right."
   (add-hook 'exwm-update-class-hook #'elk/exwm-update-class) ;; When window "class" updates, use it to set the buffer name
   (add-hook 'exwm-update-title-hook #'elk/exwm-update-title) ;; When window title updates, use it to set the buffer name
   (add-hook 'exwm-manage-finish-hook #'elk/configure-window-by-class) ;; Configure windows as they're created
+  (add-hook 'exwm-manage-finish-hook #'(lambda () (interactive) (evil-insert-state))) ;; Configure windows as they're created
   (add-hook 'exwm-init-hook #'elk/exwm-init-hook) ;; When EXWM starts up, do some extra confifuration
 
   ;; NOTE: Uncomment the following two options if you want window buffers
@@ -565,11 +568,8 @@ DIR is either 'left or 'right."
   ;;(setq exwm-workspace-minibuffer-position 'top) ;; Detach the minibuffer (show it with exwm-workspace-toggle-minibuffer)
 
   (add-hook 'exwm-mode-hook #'doom-mark-buffer-as-real-h) ;; Show `exwm' buffers in buffer switching prompts.
-
   (add-hook 'exwm-workspace-switch-hook #'elk/exwm-store-last-workspace) ;; Swapping workspaces between monitors
-
   (add-hook 'exwm-floating-setup-hook #'elk/fix-exwm-floating-windows) ;; For floating windows, this will break EXWM. So we disable the above for floating mode.
-
   (add-hook 'exwm-workspace-switch-hook #'elk/send-polybar-exwm-workspace) ;; Update panel indicator when workspace changes
 
   ;; These keys should always pass through to Emacs
@@ -580,9 +580,8 @@ DIR is either 'left or 'right."
           ?\M-`
           ?\M-&
           ?\M-:
-          ?\M-\
           ?\C-\M-j  ;; Buffer list
-          ?\C-\ ))  ;; Ctrl+Space
+          ?\M-\ ))  ;; Alt+Space
 
   ;; Ctrl+Q will enable the next key to be sent directly
   (define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
@@ -604,13 +603,10 @@ DIR is either 'left or 'right."
 
           ;; Switch workspace
           ([?\s-w] . (lambda () (interactive) (elk/exwm-switch-to-other-monitor)))
-          ([?\s-e] . (lambda () (interactive) (elk/exwm-workspace-switch-monitor)))
-          ([?\s-W] . exwm-workspace-move-window)
-          ([?\s-\C-w] . exwm-workspace-move)
+          ([?\s-W] . (lambda () (interactive) (elk/exwm-workspace-switch-monitor)))
           ([?\s-`] . (lambda () (interactive) (exwm-workspace-switch-create 0)))
 
           ;; Killing buffers and windows
-          ([?\s-b] . switch-to-buffer)
           ([?\s-c] . kill-current-buffer)
           ([?\s-q] . +workspace/close-window-or-workspace)
 
@@ -628,6 +624,8 @@ DIR is either 'left or 'right."
 
           ([?\s-g] . exwm-floating-toggle-floating)
           ([?\s-m] . exwm-layout-toggle-mode-line)
+          ([?\s-i] . exwm-input-toggle-keyboard) ;; Toggle between "line-mode" and "char-mode" in an EXWM window
+
           ([f11] . exwm-layout-toggle-fullscreen)
 
           ;; Launch applications via shell command
@@ -641,9 +639,20 @@ DIR is either 'left or 'right."
                         (lambda ()
                           (interactive)
                           (exwm-workspace-switch-create ,i))))
-                    (number-sequence 0 9))))
+                    (number-sequence 0 9))
 
-  (exwm-input-set-key (kbd "s-d") 'counsel-linux-app)
+          ,@(cl-mapcar (lambda (c n)
+                         `(,(kbd (format "s-%c" c)) .
+                           (lambda ()
+                             (interactive)
+                             (exwm-workspace-move-window ,n)
+                             (exwm-workspace-switch ,n))))
+                       '(?\) ?! ?@ ?# ?$ ?% ?^ ?& ?* ?\()
+                       ;; '(?\= ?! ?\" ?# ?¤ ?% ?& ?/ ?\( ?\))
+                       (number-sequence 0 9))))
+
+  (add-hook 'exwm-input--input-mode-change-hook
+            'force-mode-line-update)
 
   (exwm-enable))
 

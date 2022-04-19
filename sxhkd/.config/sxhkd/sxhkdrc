@@ -6,7 +6,7 @@ super + slash
 
 # Open desktop applications
 super + space ; space
-        dm-j4dmenu-desktop
+      emacsclient -e '(counsel-linux-app)'
 
 # Dmenu run executables
 super + space ; d
@@ -26,7 +26,7 @@ super + space ; n
 
 # Dmenu list opened windows
 super + space ; b
-      dm-win
+      emacsclient -e '(ibuffer)'
 
 # Open Firefox
 super + space ; w
