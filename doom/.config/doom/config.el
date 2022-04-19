@@ -115,8 +115,8 @@
 
 (remove-hook 'text-mode-hook #'auto-fill-mode) ;; Prevent lines from auto breaking
 
-(setq! citar-library-paths '("~/dox/bibliography/")
-       citar-notes-paths "~/dox/notes/")
+(setq! bibtex-completion-library-paths '("~/dox/bibliography/")
+       bibtex-completion-notes-paths "~/dox/notes/")
 
 (use-package! company
   :after-call (company-mode global-company-mode company-complete
@@ -320,25 +320,15 @@
   (setq tramp-shell-prompt-pattern "\\(?:^\\|
 \\)[^]#$%>\n]*#?[]#$%>] *\\(�\\[[0-9;]*[a-zA-Z] *\\)*")) ;; default + 
 
-(after! vertico
-  ;; Different scroll margin
-  (setq vertico-scroll-margin 3))
-
 (after! vterm
   (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no"))
 
 (after! which-key
-  (setq which-key-allow-imprecise-window-fit nil) ; Comment this if experiencing crashes
-  (setq frame-resize-pixelwise nil)
+  (setq which-key-allow-imprecise-window-fit t) ; Comment this if experiencing crashes
   ;; Add an extra line to work around bug in which-key imprecise
-  ;; (defun add-which-key-line (f &rest r) (progn (apply f (list (cons (+ 2 (car (car r))) (cdr (car r)))))))
-  ;; (advice-add 'which-key--show-popup :around #'add-which-key-line
-  (setq which-key-idle-delay 0.5))
-
-;; Make the launcher only show app names
-(use-package! counsel
-  :custom
-  (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only))
+   (defun add-which-key-line (f &rest r) (progn (apply f (list (cons (+ 1 (car (car r))) (cdr (car r)))))))
+   (advice-add 'which-key--show-popup :around #'add-which-key-line)
+  (setq which-key-idle-delay 0.1))
 
 (defun elk/run-in-background (command)
   (let ((command-parts (split-string command "[ ]+")))
@@ -372,6 +362,7 @@
   (interactive)
   (pcase exwm-class-name
     ("firefox" (exwm-workspace-move-window 2))
+    ("Chromium" (exwm-workspace-move-window 2))
     ("discord" (exwm-workspace-move-window 3))
     ("Virt-manager" (exwm-workspace-move-window 5))
     ))
@@ -495,6 +486,10 @@ DIR is either 'left or 'right."
         (with-selected-window (next-window)
           (switch-to-buffer other-exwm-buffer))))))
 
+;; Make the launcher only show app names
+(after! counsel
+  (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)))
+
 (defvar elk/polybar-process nil
   "Holds the process of the running Polybar instance, if any")
 
@@ -555,7 +550,6 @@ DIR is either 'left or 'right."
   (add-hook 'exwm-update-class-hook #'elk/exwm-update-class) ;; When window "class" updates, use it to set the buffer name
   (add-hook 'exwm-update-title-hook #'elk/exwm-update-title) ;; When window title updates, use it to set the buffer name
   (add-hook 'exwm-manage-finish-hook #'elk/configure-window-by-class) ;; Configure windows as they're created
-  (add-hook 'exwm-manage-finish-hook #'(lambda () (interactive) (evil-insert-state))) ;; Configure windows as they're created
   (add-hook 'exwm-init-hook #'elk/exwm-init-hook) ;; When EXWM starts up, do some extra confifuration
 
   ;; NOTE: Uncomment the following two options if you want window buffers
@@ -571,6 +565,8 @@ DIR is either 'left or 'right."
   (add-hook 'exwm-workspace-switch-hook #'elk/exwm-store-last-workspace) ;; Swapping workspaces between monitors
   (add-hook 'exwm-floating-setup-hook #'elk/fix-exwm-floating-windows) ;; For floating windows, this will break EXWM. So we disable the above for floating mode.
   (add-hook 'exwm-workspace-switch-hook #'elk/send-polybar-exwm-workspace) ;; Update panel indicator when workspace changes
+
+  (add-hook 'exwm-manage-finish-hook #'(lambda () (interactive) (evil-insert-state))) ;; This allows the use of doom alternate leader key in x windows
 
   ;; These keys should always pass through to Emacs
   (setq exwm-input-prefix-keys
@@ -663,6 +659,9 @@ DIR is either 'left or 'right."
 
 (use-package! kbd-mode
   :defer t)
+
+(use-package! dmenu
+  :commands (dmenu dmenu-save-to-file))
 
 (defvar ink-flags-png (list "--export-area-drawing"
                             "--export-dpi 100"
@@ -896,7 +895,7 @@ DIR is either 'left or 'right."
       :desc "Open scripts" :ne "e" #'find-in-scripts
       :desc "Notes (roam)" :ne "n" #'org-roam-node-find
       :desc "Dired" :ne "d" #'dired
-      :desc "Switch buffer" :ne "b" #'+vertico/switch-workspace-buffer
+      :desc "Switch buffer" :ne "b" #'+ivy/switch-workspace-buffer
       :desc "Switch buffers (all)" :ne "B" #'consult-buffer
       :desc "IBuffer" :ne "i" #'ibuffer
       :desc "Browse in project" :ne "p" #'doom/browse-in-other-project

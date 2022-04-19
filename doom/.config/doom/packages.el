@@ -12,13 +12,13 @@
 
 (package! exwm)
 
-(package! counsel)
-
 (package! edraw-org :recipe (:host github :repo "misohena/el-easydraw"))
 
 (package! kbd-mode
   :recipe (:host github
            :repo "kmonad/kbd-mode"))
+
+(package! dmenu)
 
 (package! ink :recipe (:host github :repo "foxfriday/ink"))
 

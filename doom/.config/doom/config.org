@@ -1,6 +1,4 @@
-#+description: This is my personal doom emacs config
-#+property: header-args :tangle no :results silent :eval no-export
-#+property: header-args :elisp :exports code
+#+deproperty: header-args :elisp :exports code
 #+property: header-args :emacs-lisp :tangle yes
 
 * Table of Contents :toc:
@@ -18,7 +16,7 @@
   - [[#fonts-and-appearance][Fonts and Appearance]]
   - [[#hooks][Hooks]]
 - [[#built-in-packages-configurations][Built-in packages configurations]]
-  - [[#citar][Citar]]
+  - [[#bibtex-completion][Bibtex Completion]]
   - [[#company][Company]]
   - [[#dashboard][Dashboard]]
   - [[#dired][Dired]]
@@ -31,17 +29,16 @@
   - [[#org-roam][Org-roam]]
   - [[#task-juggler][Task juggler]]
   - [[#tramp][Tramp]]
-  - [[#vertico][Vertico]]
   - [[#vterm][VTerm]]
   - [[#which-key][Which-key]]
 - [[#exwm][EXWM]]
-  - [[#counsel][Counsel]]
   - [[#initialisation][Initialisation]]
   - [[#polybar][Polybar]]
   - [[#exwm-configuration][EXWM Configuration]]
 - [[#third-party-packages][Third-party packages]]
   - [[#el-easydraw][El-easydraw]]
   - [[#kmonad][KMonad]]
+  - [[#dmenu][Dmenu]]
   - [[#inkscape][Inkscape]]
   - [[#org-cv][Org CV]]
   - [[#org-download][Org Download]]
@@ -91,7 +88,6 @@
   - [[#org-journal][Org-journal]]
   - [[#org-roam][Org-roam]]
   - [[#tramp][Tramp]]
-  - [[#vertico][Vertico]]
   - [[#which-key][Which-key]]
 - [[#third-party-packages][Third-party packages]]
   - [[#el-easydraw][El-easydraw]]
@@ -227,8 +223,8 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
         +childframe)       ; ... when your children are better than you
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
-       ;;(ivy +fuzzy +prescient +icons)               ; a search engine for love and life
-       (vertico +icons)    ; the search engine of the future
+       (ivy +fuzzy +prescient +icons)               ; a search engine for love and life
+       ;;(vertico +icons)    ; the search engine of the future
 
        :ui
        ;;deft              ; notational velocity for Emacs
@@ -409,6 +405,8 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
 
 
 ** Packages
+
+Some of the built-in packages, which I don't use, are listed here.
 
 #+begin_src emacs-lisp :tangle "packages.el"
 ;; -*- no-byte-compile: t; -*-
@@ -608,14 +606,14 @@ Here, we specify stuff that we want to run on startup
 
 * Built-in packages configurations
 
-** Citar
+** Bibtex Completion
 
 Configuration may change depending on the completion system used. Since this
-config uses =vertico=, =citar= will be used.
+config uses =ivy=, =bibtex-completion= will be used.
 
 #+begin_src emacs-lisp
-(setq! citar-library-paths '("~/dox/bibliography/")
-       citar-notes-paths "~/dox/notes/")
+(setq! bibtex-completion-library-paths '("~/dox/bibliography/")
+       bibtex-completion-notes-paths "~/dox/notes/")
 #+end_src
 
 
@@ -948,22 +946,14 @@ We want to change the file name when the title of the note changes.
 \\)[^]#$%>\n]*#?[]#$%>] *\\(�\\[[0-9;]*[a-zA-Z] *\\)*")) ;; default + 
 #+end_src
 
-** Vertico
-
-#+begin_src emacs-lisp
-(after! vertico
-  ;; Different scroll margin
-  (setq vertico-scroll-margin 3))
-#+end_src
-
 ** VTerm
 
-Don't use system libvterm as it may cause issues.
+Don't use system ~libvterm~. We don't want any crashes when using outdated
+libraries in the main repositories of our distribution.
 
 #+begin_src emacs-lisp
 (after! vterm
   (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no"))
-
 #+end_src
 
 ** Which-key
@@ -972,12 +962,11 @@ I hate when which-key takes too long to show up. Make it faster!!!
 
 #+begin_src emacs-lisp
 (after! which-key
-  (setq which-key-allow-imprecise-window-fit nil) ; Comment this if experiencing crashes
-  (setq frame-resize-pixelwise nil)
+  (setq which-key-allow-imprecise-window-fit t) ; Comment this if experiencing crashes
   ;; Add an extra line to work around bug in which-key imprecise
-  ;; (defun add-which-key-line (f &rest r) (progn (apply f (list (cons (+ 2 (car (car r))) (cdr (car r)))))))
-  ;; (advice-add 'which-key--show-popup :around #'add-which-key-line
-  (setq which-key-idle-delay 0.5))
+   (defun add-which-key-line (f &rest r) (progn (apply f (list (cons (+ 1 (car (car r))) (cdr (car r)))))))
+   (advice-add 'which-key--show-popup :around #'add-which-key-line)
+  (setq which-key-idle-delay 0.1))
 #+end_src
 
 
@@ -987,19 +976,6 @@ I have currently disabled EXWM until it is not slow.
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! exwm)
-#+end_src
-
-** Counsel
-
-#+begin_src emacs-lisp :tangle packages.el
-(package! counsel)
-#+end_src
-
-#+begin_src emacs-lisp
-;; Make the launcher only show app names
-(use-package! counsel
-  :custom
-  (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only))
 #+end_src
 
 ** Initialisation
@@ -1037,6 +1013,7 @@ I have currently disabled EXWM until it is not slow.
   (interactive)
   (pcase exwm-class-name
     ("firefox" (exwm-workspace-move-window 2))
+    ("Chromium" (exwm-workspace-move-window 2))
     ("discord" (exwm-workspace-move-window 3))
     ("Virt-manager" (exwm-workspace-move-window 5))
     ))
@@ -1161,6 +1138,13 @@ DIR is either 'left or 'right."
           (switch-to-buffer other-exwm-buffer))))))
 #+end_src
 
+#+begin_src emacs-lisp
+;; Make the launcher only show app names
+(after! counsel
+  (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)))
+#+end_src
+
+
 ** Polybar
 
 #+begin_src emacs-lisp
@@ -1267,7 +1251,6 @@ DIR is either 'left or 'right."
   (add-hook 'exwm-update-class-hook #'elk/exwm-update-class) ;; When window "class" updates, use it to set the buffer name
   (add-hook 'exwm-update-title-hook #'elk/exwm-update-title) ;; When window title updates, use it to set the buffer name
   (add-hook 'exwm-manage-finish-hook #'elk/configure-window-by-class) ;; Configure windows as they're created
-  (add-hook 'exwm-manage-finish-hook #'(lambda () (interactive) (evil-insert-state))) ;; Configure windows as they're created
   (add-hook 'exwm-init-hook #'elk/exwm-init-hook) ;; When EXWM starts up, do some extra confifuration
 
   ;; NOTE: Uncomment the following two options if you want window buffers
@@ -1283,6 +1266,8 @@ DIR is either 'left or 'right."
   (add-hook 'exwm-workspace-switch-hook #'elk/exwm-store-last-workspace) ;; Swapping workspaces between monitors
   (add-hook 'exwm-floating-setup-hook #'elk/fix-exwm-floating-windows) ;; For floating windows, this will break EXWM. So we disable the above for floating mode.
   (add-hook 'exwm-workspace-switch-hook #'elk/send-polybar-exwm-workspace) ;; Update panel indicator when workspace changes
+
+  (add-hook 'exwm-manage-finish-hook #'(lambda () (interactive) (evil-insert-state))) ;; This allows the use of doom alternate leader key in x windows
 
   ;; These keys should always pass through to Emacs
   (setq exwm-input-prefix-keys
@@ -1400,6 +1385,19 @@ editing the config file.
 #+begin_src emacs-lisp
 (use-package! kbd-mode
   :defer t)
+#+end_src
+
+** Dmenu
+
+Provide dmenu functionality in emacs.
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! dmenu)
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package! dmenu
+  :commands (dmenu dmenu-save-to-file))
 #+end_src
 
 ** Inkscape
@@ -1771,7 +1769,7 @@ These are bindings which only works in the Doom dashboard.
       :desc "Open scripts" :ne "e" #'find-in-scripts
       :desc "Notes (roam)" :ne "n" #'org-roam-node-find
       :desc "Dired" :ne "d" #'dired
-      :desc "Switch buffer" :ne "b" #'+vertico/switch-workspace-buffer
+      :desc "Switch buffer" :ne "b" #'+ivy/switch-workspace-buffer
       :desc "Switch buffers (all)" :ne "B" #'consult-buffer
       :desc "IBuffer" :ne "i" #'ibuffer
       :desc "Browse in project" :ne "p" #'doom/browse-in-other-project

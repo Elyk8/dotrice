@@ -42,7 +42,7 @@ super + space ; space
 
 # Dmenu run executables
 super + space ; d
-      dmenu_run -p "Run: " -l 8
+      emacsclient -e '(dmenu)'
 
 # Open terminal emulator
 super + space ; t
