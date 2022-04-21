@@ -49,7 +49,7 @@
   - [[#org-archive][Org Archive]]
   - [[#org-auto-tangle][Org Auto Tangle]]
   - [[#org-super-agenda][Org Super Agenda]]
-  - [[#stumpwm][StumpWM]]
+  - [[#pomodoro][Pomodoro]]
   - [[#thesaurus][Thesaurus]]
 - [[#keybindings-evil-etc][Keybindings, Evil, etc...]]
   - [[#bookmarks][Bookmarks]]
@@ -311,7 +311,6 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
        (org
         +gnuplot
         +present
-        +pomodoro
         +journal             ; enable org journal
         +pretty              ; replace asterisks with pretty org bullets
         +publish             ; create static websites with org
@@ -1159,6 +1158,32 @@ DIR is either 'left or 'right."
         (cl-loop while (windmove-find-other-window opposite-dir)
                  do (windmove-do-window-select opposite-dir))))))
 
+(defun elk/exwm-direction-exists-p (dir)
+  "Check if there is space in the direction DIR.
+
+Does not take the minibuffer into account."
+  (cl-some (lambda (dir)
+             (let ((win (windmove-find-other-window dir)))
+               (and win (not (window-minibuffer-p win)))))
+           (pcase dir
+             ('width '(left right))
+             ('height '(up down)))))
+
+(defun elk/exwm-move-window (dir)
+  "Move the current window in the direction DIR."
+  (let ((other-window (windmove-find-other-window dir))
+        (other-direction (elk/exwm-direction-exists-p
+                          (pcase dir
+                            ('up 'width)
+                            ('down 'width)
+                            ('left 'height)
+                            ('right 'height)))))
+    (cond
+     ((and other-window (not (window-minibuffer-p other-window)))
+      (window-swap-states (selected-window) other-window))
+     (other-direction
+      (evil-move-window dir)))))
+
 (defun elk/exwm-fill-other-window (&rest _)
   "Open the most recently used buffer in the next window."
   (interactive)
@@ -1175,6 +1200,37 @@ DIR is either 'left or 'right."
       (when other-exwm-buffer
         (with-selected-window (next-window)
           (switch-to-buffer other-exwm-buffer))))))
+
+(setq elk/exwm-resize-value 5)
+(defun elk/exwm-resize-window (dir kind &optional value)
+  "Resize the current window in the direction DIR.
+
+DIR is either 'height or 'width, KIND is either 'shrink or
+ 'grow.  VALUE is `elk/exwm-resize-value' by default.
+
+If the window is an EXWM floating window, execute the
+corresponding command from the exwm-layout group, execute the
+command from the evil-window group."
+  (unless value
+    (setq value elk/exwm-resize-value))
+  (let* ((is-exwm-floating
+          (and (derived-mode-p 'exwm-mode)
+               exwm--floating-frame))
+         (func (if is-exwm-floating
+                   (intern
+                    (concat
+                     "exwm-layout-"
+                     (pcase kind ('shrink "shrink") ('grow "enlarge"))
+                     "-window"
+                     (pcase dir ('height "") ('width "-horizontally"))))
+                 (intern
+                  (concat
+                   "evil-window"
+                   (pcase kind ('shrink "-decrease-") ('grow "-increase-"))
+                   (symbol-name dir))))))
+    (when is-exwm-floating
+      (setq value (* 5 value)))
+    (funcall func value)))
 #+end_src
 
 
@@ -1318,6 +1374,11 @@ DIR is either 'left or 'right."
   (desktop-environment-screenshot-directory (concat (getenv "HOME") "/pix/screenshots")))
 #+end_src
 
+
+*** Perspective Exwm
+
+
+
 *** Main
 
 #+begin_src emacs-lisp
@@ -1384,7 +1445,8 @@ DIR is either 'left or 'right."
          :desc "Terminal Launch ncmpcpp" "n" #'(lambda() (interactive) (elk/run-in-background (concat (getenv "TERMINAL") " -e ncmpcpp") ))
          :desc "Mute/Unmute microphone" "m" #'(lambda() (interactive) (elk/run-in-background "mic-toggle"))
          (:prefix ("o" . "Other Applications")
-          :desc "Launch discord" "d" #'(lambda() (interactive) (elk/run-in-background "discord"))
+          :desc "Launch Discord" "d" #'(lambda() (interactive) (elk/run-in-background "discord"))
+          :desc "Launch Thunderbird" "e" #'(lambda() (interactive) (elk/run-in-background "thunderbird"))
           :desc "Launch FTB" "f" #'(lambda() (interactive) (elk/run-in-background "/media/FTBA/FTBApp"))
           :desc "Launch Zotero" "t" #'(lambda() (interactive) (elk/run-in-background "zotero"))
           :desc "Launch Zoom" "z" #'(lambda() (interactive) (elk/run-in-background "zoom")))
@@ -1428,21 +1490,34 @@ DIR is either 'left or 'right."
           ([?\s-q] . +workspace/close-window-or-workspace)
 
           ;; Change focus between windows
-          ([?\s-h] . evil-window-left)
-          ([?\s-j] . evil-window-next)
-          ([?\s-k] . evil-window-prev)
-          ([?\s-l] . evil-window-right)
+          ([?\s-h] . (lambda () (interactive) (elk/exwm-windmove 'left)))
+          ([?\s-l] . (lambda () (interactive) (elk/exwm-windmove 'right)))
+          ([?\s-k] . (lambda () (interactive) (elk/exwm-windmove 'up)))
+          ([?\s-j] . (lambda () (interactive) (elk/exwm-windmove 'down)))
 
           ;; Move windows around
-          ([?\s-H] . +evil/window-move-left)
-          ([?\s-J] . +evil/window-move-down)
-          ([?\s-K] . +evil/window-move-up)
-          ([?\s-L] . +evil/window-move-right)
+          ([?\s-H] . (lambda () (interactive) (elk/exwm-move-window 'left)))
+          ([?\s-L] . (lambda () (interactive) (elk/exwm-move-window 'right)))
+          ([?\s-K] . (lambda () (interactive) (elk/exwm-move-window 'up)))
+          ([?\s-J] . (lambda () (interactive) (elk/exwm-move-window 'down)))
+
+          ([?\s-\C-h] . (lambda () (interactive) (elk/exwm-resize-window 'width 'shrink)))
+          ([?\s-\C-j] . (lambda () (interactive) (elk/exwm-resize-window 'height 'grow)))
+          ([?\s-\C-k] . (lambda () (interactive) (elk/exwm-resize-window 'height 'shrink)))
+          ([?\s-\C-l] . (lambda () (interactive) (elk/exwm-resize-window 'width 'grow)))
+          ([?\s-\C-=] . balance-windows)
 
           ([?\s-g] . exwm-floating-toggle-floating)
           ([?\s-f] . exwm-layout-toggle-fullscreen)
           ([?\s-m] . exwm-layout-toggle-mode-line)
           ([?\s-i] . exwm-input-toggle-keyboard) ;; Toggle between "line-mode" and "char-mode" in an EXWM window
+
+          ;; Music control using mpc
+          ([?\s-p] . (lambda() (interactive) (elk/run-in-background "mpc toggle")) )
+          ([?\s-\]] . (lambda() (interactive) (elk/run-in-background "mpc next")) )
+          ([?\s-\[] . (lambda() (interactive) (elk/run-in-background "mpc prev")) )
+          ([?\s-=] . (lambda() (interactive) (elk/run-in-background "mpc volume +2 && mpc-volume")) )
+          ([?\s--] . (lambda() (interactive) (elk/run-in-background "mpc volume -2 && mpc-volume")) )
 
           ;; Launch applications via shell command
           ([?\s-&] . (lambda (command)
@@ -1818,20 +1893,28 @@ selectively for each Org file where it is desired.
   (org-super-agenda-mode))
 #+end_src
 
-** StumpWM
+** Pomodoro
 
 #+begin_src emacs-lisp :tangle packages.el
-(package! stumpwm-mode)
-(package! sly)
+(package! pomm)
 #+end_src
 
 #+begin_src emacs-lisp
-(use-package! stumpwm-mode
-  :defer t
-  :hook lisp-mode)
-
-(use-package! sly
-  :defer t)
+(use-package! pomm
+  :commands (pomm)
+  :config
+  (setq alert-default-style 'libnotify
+        pomm-audio-enabled t
+        pomm-audio-player-executable "pomodoro-play"
+        pomm-audio-files '((work . "/home/elyk/.dotrice/applications/.local/share/sounds/work.wav" )
+                           (tick . "/home/elyk/.emacs.d/.local/straight/build-28.1/pomm/resources/tick.wav")
+                           (short-break . "/home/elyk/.dotrice/applications/.local/share/sounds/break.wav")
+                           (long-break . "home/elyk/.dotrice/applications/.local/share/sounds/break.wav")
+                           (stop . "/home/elyk/.emacs.d/.local/straight/build-28.1/pomm/resources/tick.wav")))
+  (map! (:leader
+         :prefix ("t")
+         :desc "Pomodoro" :n "t" #'pomm))
+  (pomm-mode-line-mode))
 #+end_src
 
 ** Thesaurus

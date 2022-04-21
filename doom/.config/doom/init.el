@@ -143,7 +143,6 @@
        (org
         +gnuplot
         +present
-        +pomodoro
         +journal             ; enable org journal
         +pretty              ; replace asterisks with pretty org bullets
         +publish             ; create static websites with org

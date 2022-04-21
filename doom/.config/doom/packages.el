@@ -49,8 +49,7 @@
 
 (package! org-super-agenda)
 
-(package! stumpwm-mode)
-(package! sly)
+(package! pomm)
 
 (package! company-english-helper :recipe (:host github :repo "manateelazycat/company-english-helper"))
 (package! emacs-powerthesaurus :recipe (:host github :repo "SavchenkoValeriy/emacs-powerthesaurus"))
