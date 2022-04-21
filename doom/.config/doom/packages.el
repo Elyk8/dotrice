@@ -4,13 +4,16 @@
  irony
  rtags
  evil-snipe
- mpc-mode
  solaire-mode)
 
 (package! dired-open)
 (package! dired-subtree)
 
 (package! exwm)
+
+(package! app-launcher :recipe (:host github :repo "SebastienWae/app-launcher"))
+
+(package! desktop-environment)
 
 (package! edraw-org :recipe (:host github :repo "misohena/el-easydraw"))
 
@@ -45,5 +48,11 @@
 (package! org-auto-tangle)
 
 (package! org-super-agenda)
+
+(package! stumpwm-mode)
+(package! sly)
+
+(package! company-english-helper :recipe (:host github :repo "manateelazycat/company-english-helper"))
+(package! emacs-powerthesaurus :recipe (:host github :repo "SavchenkoValeriy/emacs-powerthesaurus"))
 
 (package! rotate :pin "4e9ac3ff800880bd9b705794ef0f7c99d72900a6")

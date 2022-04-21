@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=EXWM
+Comment=Doom Emacs Window Manager
+Exec=sh /home/elyk/.config/doom/desktop/start-exwm.sh
+TryExec=sh
+Type=Application
+X-LightDM-DesktopName=exwm
+DesktopNames=exwm

@@ -2,7 +2,6 @@
 #+property: header-args :emacs-lisp :tangle yes
 
 * Table of Contents :toc:
-- [[#table-of-contents][Table of Contents]]
 - [[#lexical-keybinds][Lexical Keybinds]]
 - [[#doom-configuration][DOOM Configuration]]
   - [[#async-config-tangling][Async config tangling]]
@@ -16,17 +15,19 @@
   - [[#fonts-and-appearance][Fonts and Appearance]]
   - [[#hooks][Hooks]]
 - [[#built-in-packages-configurations][Built-in packages configurations]]
-  - [[#bibtex-completion][Bibtex Completion]]
+  - [[#citar][Citar]]
   - [[#company][Company]]
   - [[#dashboard][Dashboard]]
   - [[#dired][Dired]]
   - [[#dictionary][Dictionary]]
+  - [[#ediff][Ediff]]
   - [[#evil][Evil]]
   - [[#icalendar][iCalendar]]
   - [[#modeline][Modeline]]
   - [[#org][Org]]
   - [[#org-journal][Org-journal]]
-  - [[#org-roam][Org-roam]]
+  - [[#org-roam][Org roam]]
+  - [[#shells][Shells]]
   - [[#task-juggler][Task juggler]]
   - [[#tramp][Tramp]]
   - [[#vterm][VTerm]]
@@ -48,6 +49,8 @@
   - [[#org-archive][Org Archive]]
   - [[#org-auto-tangle][Org Auto Tangle]]
   - [[#org-super-agenda][Org Super Agenda]]
+  - [[#stumpwm][StumpWM]]
+  - [[#thesaurus][Thesaurus]]
 - [[#keybindings-evil-etc][Keybindings, Evil, etc...]]
   - [[#bookmarks][Bookmarks]]
   - [[#buffers][Buffers]]
@@ -58,55 +61,6 @@
   - [[#line-settings][Line settings]]
   - [[#org-1][Org]]
   - [[#open-specific-filesprojects][Open Specific Files/Projects]]
-- [[#language][Language]]
-  - [[#latex][Latex]]
-  - [[#lua][Lua]]
-  - [[#haskell][Haskell]]
-  - [[#python][Python]]
-
-* Table of Contents :toc:
-- [[#lexical-keybinds][Lexical Keybinds]]
-- [[#doom-configuration][DOOM Configuration]]
-  - [[#async-config-tangling][Async config tangling]]
-  - [[#modules][Modules]]
-  - [[#packages][Packages]]
-- [[#simple-settings][Simple Settings]]
-  - [[#autoload][Autoload]]
-  - [[#changing-defaults][Changing Defaults]]
-  - [[#window-title][Window title]]
-  - [[#native-compilation][Native Compilation]]
-  - [[#fonts-and-appearance][Fonts and Appearance]]
-  - [[#hooks][Hooks]]
-- [[#built-in-packages-configurations][Built-in packages configurations]]
-  - [[#company][Company]]
-  - [[#dashboard][Dashboard]]
-  - [[#dired][Dired]]
-  - [[#dictionary][Dictionary]]
-  - [[#evil][Evil]]
-  - [[#icalendar][iCalendar]]
-  - [[#org][Org]]
-  - [[#org-journal][Org-journal]]
-  - [[#org-roam][Org-roam]]
-  - [[#tramp][Tramp]]
-  - [[#which-key][Which-key]]
-- [[#third-party-packages][Third-party packages]]
-  - [[#el-easydraw][El-easydraw]]
-  - [[#kmonad][KMonad]]
-  - [[#inkscape][Inkscape]]
-  - [[#org-roam-graph][Org roam graph]]
-  - [[#org-appear][Org-appear]]
-  - [[#org-super-agenda][Org-super-agenda]]
-  - [[#org-reveal][Org-reveal]]
-- [[#keybindings-evil-etc][Keybindings, Evil, etc...]]
-  - [[#bookmarks][Bookmarks]]
-  - [[#buffers][Buffers]]
-  - [[#ibuffer-mode][ibuffer mode]]
-  - [[#dashboard-1][Dashboard]]
-  - [[#dired-1][Dired]]
-  - [[#evil-1][Evil]]
-  - [[#line-settings][Line settings]]
-  - [[#org-1][Org]]
-  - [[#open-specific-files][Open Specific Files]]
 - [[#language][Language]]
   - [[#latex][Latex]]
   - [[#lua][Lua]]
@@ -223,8 +177,8 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
         +childframe)       ; ... when your children are better than you
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
-       (ivy +fuzzy +prescient +icons)               ; a search engine for love and life
-       ;;(vertico +icons)    ; the search engine of the future
+       ;;(ivy +fuzzy +icons)               ; a search engine for love and life
+       (vertico +icons)    ; the search engine of the future
 
        :ui
        ;;deft              ; notational velocity for Emacs
@@ -273,7 +227,7 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
        vc                ; version-control and Emacs, sitting in a tree
 
        :term
-       ;;eshell            ; the elisp shell that works everywhere
+       eshell            ; the elisp shell that works everywhere
        ;;shell             ; simple shell REPL for Emacs
        ;;term              ; basic terminal emulator for Emacs
        vterm             ; the best terminal emulation in Ema
@@ -357,6 +311,7 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
        (org
         +gnuplot
         +present
+        +pomodoro
         +journal             ; enable org journal
         +pretty              ; replace asterisks with pretty org bullets
         +publish             ; create static websites with org
@@ -415,7 +370,6 @@ Some of the built-in packages, which I don't use, are listed here.
  irony
  rtags
  evil-snipe
- mpc-mode
  solaire-mode)
 #+end_src
 
@@ -480,16 +434,6 @@ autoload directory.
   (when (> (buffer-size) 50000)
     (setq-local jit-lock-defer-time 0.05
                 jit-lock-stealth-time 1)))
-
-;;;###autoload
-(defun elk/exwm-update-global-keys ()
-  "Function to apply changes to `exwm-input-global-keys'"
-  (interactive)
-  (setq exwm-input--global-keys nil)
-  (dolist (i exwm-input-global-keys)
-    (exwm-input--set-key (car i) (cdr i)))
-  (when exwm--connection
-    (exwm-input--update-global-prefix-keys)))
 #+end_src
 
 ** Changing Defaults
@@ -507,19 +451,18 @@ These are better defaults (or preferences for me) which I would want to be on al
       evil-want-fine-undo t                     ; By default while in insert all changes are one big blob. Be more granular
       truncate-string-ellipsis "…"              ; Unicode ellispis are nicer than "...", and also save /precious/ space
       password-cache-expiry nil                 ; I can trust my computers ... can't I?
-      scroll-preserve-screen-position 'always   ; Don't have `point' jump around
       scroll-margin 2                           ; It's nice to maintain a little margin
       confirm-kill-emacs nil                    ; Disable exit confirmation
       )
 
-(setq undo-limit 80000000                         ; Raise undo-limit to 80Mb
-      ;; display-line-numbers-type nil               ; By disabling line number, we improve performance significantly
-      evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
-      truncate-string-ellipsis "…"                ; Unicode ellispis are nicer than "...", and also save /precious/ space
-      password-cache-expiry nil                   ; I can trust my computers ... can't I?
-      scroll-preserve-screen-position 'always     ; Don't have `point' jump around
-      scroll-margin 2)                            ; It's nice to maintain a little margin
 ;; (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;; Prevents some cases of Emacs flickering.
+
+;; Improve scrolling
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))      ; one line at a time
+      mouse-wheel-progressive-speed nil                 ; don't accelerate scrolling
+      mouse-wheel-follow-mouse 't                       ; scroll window under mouse
+      scroll-preserve-screen-position 'always           ; Don't have `point' jump around
+      scroll-step 1)                                    ; keyboard scroll one line at a time
 #+end_src
 
 When I bring up Doom's scratch buffer with SPC x, it's often to play with elisp or note something down (that isn't worth an entry in my notes). I can do both in `lisp-interaction-mode'.
@@ -560,7 +503,6 @@ verbose in our verbose.
 ;; Silence compiler warnings as they can be pretty disruptive
 (setq native-comp-async-report-warnings-errors nil)
 #+end_src
-
 
 ** Fonts and Appearance
 
@@ -606,21 +548,21 @@ Here, we specify stuff that we want to run on startup
 
 * Built-in packages configurations
 
-** Bibtex Completion
+** Citar
 
 Configuration may change depending on the completion system used. Since this
-config uses =ivy=, =bibtex-completion= will be used.
+config uses =vertico=, =citar= will be used.
 
 #+begin_src emacs-lisp
-(setq! bibtex-completion-library-paths '("~/dox/bibliography/")
-       bibtex-completion-notes-paths "~/dox/notes/")
+(setq! citar-library-paths '("~/dox/bibliography/")
+       citar-notes-paths "~/dox/notes/")
 #+end_src
 
 
 ** Company
 
 IMO, modern editors have trained a bad habit into us all: a burning need for
-completion all the time -- as we type, as we breathe, as we pray to the
+completion ll the time -- as we type, as we breathe, as we pray to the
 ancient ones -- but how often do you *really* need that information? I say
 rarely. So opt for manual completion:
 
@@ -669,7 +611,8 @@ you can use to display and use shortcuts.
 Get file icons in dired
 
 #+begin_src emacs-lisp
-(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+(add-hook! 'dired-mode-hook 'all-the-icons-dired-mode)
+(add-hook! 'dired-mode 'dired-async-mode)
 #+end_src
 
 With dired-open plugin, you can launch external programs for certain extensions
@@ -693,6 +636,15 @@ way to keep mine in check.
 #+begin_src emacs-lisp
 (setq ispell-dictionary "en-custom"
       ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
+#+end_src
+
+** Ediff
+
+;; Don't let ediff break EXWM, keep it in one frame
+#+begin_src emacs-lisp
+(setq ediff-diff-options "-w"
+      ediff-split-window-function 'split-window-horizontally
+      ediff-window-setup-function 'ediff-setup-windows-plain)
 #+end_src
 
 ** Evil
@@ -778,16 +730,42 @@ Here I set up my calendar
           ("arch-wiki" . "https://wiki.archlinux.org/index.php/")
           ("ddg" . "https://duckduckgo.com/?q=")
           ("wiki" . "https://en.wikipedia.org/wiki/"))
-        org-todo-keywords        ; This overwrites the default Doom org-todo-keywords
+        org-todo-keywords
         '((sequence
-           "TODO(t)"           ; A task that is ready to be tackled
-           "BLOG(b)"           ; Blog writing assignments
-           "PROJ(p)"           ; A project that contains other tasks
-           "ASSIGNMENTS(a)"    ; Video assignments
-           "WAIT(w)"           ; Something is holding up this task
-           "|"                 ; The pipe necessary to separate "active" states and "inactive" states
-           "DONE(d)"           ; Task has been completed
-           "CANCELLED(c)" )))) ; Task has been cancelled
+           "TODO(t)"  ; A task that needs doing & is ready to do
+           "PROJ(p)"  ; An ongoing project that cannot be completed in one step
+           "INPROCESS(s)"  ; A task that is in progress
+           "⚑ WAITING(w)"  ; Something is holding up this task; or it is paused
+           "|"
+           "☟ NEXT(n)"
+           "✰ IMPORTANT(i)"
+           "DONE(d)"  ; Task successfully completed
+           "✘ CANCELED(c@)") ; Task was cancelled, aborted or is no longer applicable
+          (sequence
+           "✍ NOTE(N)"
+           "FIXME(f)"
+           "☕ BREAK(b)"
+           "❤ LOVE(l)"
+           "REVIEW(r)"
+           )) ; Task was completed
+        org-todo-keyword-faces
+        '(
+          ("TODO" . (:foreground "#ff39a3" :weight bold))
+          ("INPROCESS"  . "orangered")
+          ("✘ CANCELED" . (:foreground "white" :background "#4d4d4d" :weight bold))
+          ("⚑ WAITING" . "pink")
+          ("☕ BREAK" . "gray")
+          ("❤ LOVE" . (:foreground "VioletRed4"
+                       ;; :background "#7A586A"
+                       :weight bold))
+          ("☟ NEXT" . (:foreground "DeepSkyBlue"
+                       ;; :background "#7A586A"
+                       :weight bold))
+          ("✰ IMPORTANT" . (:foreground "greenyellow"
+                            ;; :background "#7A586A"
+                            :weight bold))
+          ("DONE" . "#008080")
+          ("FIXME" . "IndianRed")))) ; Task has been cancelled
 #+end_src
 
 *** Org superstar
@@ -795,6 +773,7 @@ Here I set up my calendar
 #+begin_src emacs-lisp
 (after! org-superstar
   (setq org-superstar-headline-bullets-list '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
+  ;; (setq org-superstar-headline-bullets-list '("一" "二" "三" "四" "五" "六" "七" "八")
         org-superstar-item-bullet-alist '((?+ . ?➤) (?- . ?✦)) ; changes +/- symbols in item lists
         org-superstar-prettify-item-bullets t ))
 #+end_src
@@ -854,7 +833,9 @@ When I tell Org-Mode to export to ODT at my day job, I actually want DOCX.
         org-journal-file-format "%Y-%m-%d.org"))
 #+end_src
 
-** Org-roam
+** Org roam
+
+*** Org roam base
 
 | COMMAND                         | DESCRIPTION                     | KEYBINDING  |
 |---------------------------------+---------------------------------+-------------|
@@ -904,6 +885,17 @@ When I tell Org-Mode to export to ODT at my day job, I actually want DOCX.
           )))
 #+end_src
 
+*** Org roam journal
+
+Obviously the better way for org journalling.
+
+#+begin_src emacs-lisp
+(after! org-roam
+  (setq org-roam-dailies-capture-templates
+        '(("d" "default" entry "* %<%I:%M %p>: %?"
+           :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n")))))
+#+end_src
+
 We want to change the file name when the title of the note changes.
 
 #+begin_src emacs-lisp
@@ -929,6 +921,25 @@ We want to change the file name when the title of the note changes.
 #+end_src
 
 
+** Shells
+
+Configuration for ~eshell~.
+
+#+begin_src emacs-lisp
+(setq shell-file-name "/bin/zsh"
+      vterm-max-scrollback 5000)
+
+(after! eshell
+  (setq eshell-rc-script "~/.config/doom/eshell/profile"
+        eshell-aliases-file "~/.config/doom/eshell/aliasrc"
+        eshell-history-size 5000
+        eshell-buffer-maximum-lines 5000
+        eshell-hist-ignoredups t
+        eshell-scroll-to-bottom-on-input t
+        eshell-destroy-buffer-when-process-dies t
+        eshell-visual-commands'("bash" "xsh" "htop" "ssh" "top" "fish")))
+#+end_src
+
 ** Task juggler
 
 #+begin_src emacs-lisp
@@ -953,7 +964,7 @@ libraries in the main repositories of our distribution.
 
 #+begin_src emacs-lisp
 (after! vterm
-  (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no"))
+  (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=Off"))
 #+end_src
 
 ** Which-key
@@ -964,9 +975,9 @@ I hate when which-key takes too long to show up. Make it faster!!!
 (after! which-key
   (setq which-key-allow-imprecise-window-fit t) ; Comment this if experiencing crashes
   ;; Add an extra line to work around bug in which-key imprecise
-   (defun add-which-key-line (f &rest r) (progn (apply f (list (cons (+ 1 (car (car r))) (cdr (car r)))))))
-   (advice-add 'which-key--show-popup :around #'add-which-key-line)
-  (setq which-key-idle-delay 0.1))
+  (defun add-which-key-line (f &rest r) (progn (apply f (list (cons (+ 1 (car (car r))) (cdr (car r)))))))
+  (advice-add 'which-key--show-popup :around #'add-which-key-line)
+  (setq which-key-idle-delay 0.2))
 #+end_src
 
 
@@ -979,6 +990,33 @@ I have currently disabled EXWM until it is not slow.
 #+end_src
 
 ** Initialisation
+
+*** Autoload Functions
+
+#+begin_src emacs-lisp :tangle "autoload/elyk.el"
+;;;###autoload
+(defun elk/exwm-update-global-keys ()
+  "Function to apply changes to `exwm-input-global-keys'"
+  (interactive)
+  (setq exwm-input--global-keys nil)
+  (dolist (i exwm-input-global-keys)
+    (exwm-input--set-key (car i) (cdr i)))
+  (when exwm--connection
+    (exwm-input--update-global-prefix-keys)))
+
+;;;###autoload
+(defun elk/exwm-floating-toggle-pinned (&optional id)
+  (interactive)
+  (when-let ((exwm--floating-frame)
+             (window-id (or id exwm--id)))
+    ;; This approach is more reliable for now even with the workspace snap-back
+    (setq exwm--desktop 0xffffffff)))
+    ;; (if (seq-contains dw/exwm--floating-pinned-windows window-id)
+    ;;   (setq dw/exwm--floating-pinned-windows (remq window-id dw/exwm--floating-pinned-windows))
+    ;;   (push window-id dw/exwm--floating-pinned-windows))))
+#+end_src
+
+*** EXWM Functions
 
 #+begin_src emacs-lisp
 (defun elk/run-in-background (command)
@@ -996,11 +1034,10 @@ I have currently disabled EXWM until it is not slow.
   (exwm-workspace-switch-create 1)
 
   ;; Start polybar
-  (elk/start-panel)
+  (elk/start-panel))
 
   ;; Open eshell by default
-  ;;(eshell)
-  )
+  ;; (+eshell/here))
 
 (defun elk/exwm-update-class ()
   (exwm-workspace-rename-buffer exwm-class-name))
@@ -1016,6 +1053,8 @@ I have currently disabled EXWM until it is not slow.
     ("Chromium" (exwm-workspace-move-window 2))
     ("discord" (exwm-workspace-move-window 3))
     ("Virt-manager" (exwm-workspace-move-window 5))
+    ("mpv" (exwm-floating-toggle-floating)
+     (elk/exwm-floating-toggle-pinned))
     ))
 
 ;; This function should be used only after configuring autorandr!
@@ -1138,12 +1177,6 @@ DIR is either 'left or 'right."
           (switch-to-buffer other-exwm-buffer))))))
 #+end_src
 
-#+begin_src emacs-lisp
-;; Make the launcher only show app names
-(after! counsel
-  (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)))
-#+end_src
-
 
 ** Polybar
 
@@ -1237,6 +1270,54 @@ DIR is either 'left or 'right."
   (elk/set-wallpaper))
 #+end_src
 
+*** App Launcher
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! app-launcher :recipe (:host github :repo "SebastienWae/app-launcher"))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package! app-launcher
+  :commands (app-launcher-run-app))
+#+end_src
+
+*** Desktop Environment
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! desktop-environment)
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package! desktop-environment
+  :after exwm
+  :diminish desktop-environment-mode
+  :config
+  (progn
+    (unbind-key "s-l" desktop-environment-mode-map)
+    (desktop-environment-mode))
+  :custom
+  (desktop-environment-volume-get-command "volume")
+  (desktop-environment-volume-get-regexp "^\\([0-9]+\\)")
+  (desktop-environment-volume-set-command "volume %s")
+  (desktop-environment-volume-normal-increment "up")
+  (desktop-environment-volume-normal-decrement "down")
+  (desktop-environment-volume-small-increment "sup")
+  (desktop-environment-volume-small-decrement "sdown")
+  (desktop-environment-volume-toggle-command "volume mute")
+  (desktop-environment-volume-toggle-microphone-command "mic-toggle")
+
+  (desktop-environment-brightness-get-command "brightness")
+  (desktop-environment-brightness-set-command "brightness %s")
+  (desktop-environment-brightness-get-regexp "^\\([0-9]+\\)")
+  (desktop-environment-brightness-normal-increment "up")
+  (desktop-environment-brightness-normal-decrement "down")
+  (desktop-environment-brightness-small-increment "sup")
+  (desktop-environment-brightness-small-decrement "sdown")
+
+  (desktop-environment-screenshot-command "flameshot gui")
+  (desktop-environment-screenshot-directory (concat (getenv "HOME") "/pix/screenshots")))
+#+end_src
+
 *** Main
 
 #+begin_src emacs-lisp
@@ -1247,6 +1328,7 @@ DIR is either 'left or 'right."
         focus-follows-mouse t)          ; Window focus should follow the mouse pointer
   (server-start)                        ; Start the emacs server
   (setq exwm-workspace-number 6)        ; Set the default number of workspaces
+
   :config
   (add-hook 'exwm-update-class-hook #'elk/exwm-update-class) ;; When window "class" updates, use it to set the buffer name
   (add-hook 'exwm-update-title-hook #'elk/exwm-update-title) ;; When window title updates, use it to set the buffer name
@@ -1278,7 +1360,8 @@ DIR is either 'left or 'right."
           ?\M-&
           ?\M-:
           ?\C-\M-j  ;; Buffer list
-          ?\M-\ ))  ;; Alt+Space
+          ?\M-\     ;; Alt+Space
+          ?\s-\ ))
 
   ;; Ctrl+Q will enable the next key to be sent directly
   (define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
@@ -1287,7 +1370,41 @@ DIR is either 'left or 'right."
   (advice-add 'evil-window-split :after #'elk/exwm-fill-other-window)
   (advice-add 'evil-window-vsplit :after #'elk/exwm-fill-other-window)
 
-  ;; Set up global key bindings.  These always work, no matter the input state!
+  ;; Super + space prefix key for general keybindings
+  (map! (:prefix "s-SPC"
+         :desc "System activity" "q" #'(lambda() (interactive) (elk/run-in-background "sysact"))
+         "b" #'switch-to-buffer
+         "SPC" #'app-launcher-run-app
+         :desc "Launch Firefox" "w" #'(lambda() (interactive) (elk/run-in-background "prime-run firefox"))
+         :desc "Launch Chromium" "c" #'(lambda() (interactive) (elk/run-in-background "prime-run chromium"))
+         "d" #'dmenu
+         "e" #'+eshell/here
+         :desc "Launch alacritty terminal" "t" #'(lambda() (interactive) (elk/run-in-background (getenv "TERMINAL") ))
+         :desc "Terminal Launch lf" "r" #'(lambda() (interactive) (elk/run-in-background (concat (getenv "TERMINAL") " -e lf") ))
+         :desc "Terminal Launch ncmpcpp" "n" #'(lambda() (interactive) (elk/run-in-background (concat (getenv "TERMINAL") " -e ncmpcpp") ))
+         :desc "Mute/Unmute microphone" "m" #'(lambda() (interactive) (elk/run-in-background "mic-toggle"))
+         (:prefix ("o" . "Other Applications")
+          :desc "Launch discord" "d" #'(lambda() (interactive) (elk/run-in-background "discord"))
+          :desc "Launch FTB" "f" #'(lambda() (interactive) (elk/run-in-background "/media/FTBA/FTBApp"))
+          :desc "Launch Zotero" "t" #'(lambda() (interactive) (elk/run-in-background "zotero"))
+          :desc "Launch Zoom" "z" #'(lambda() (interactive) (elk/run-in-background "zoom")))
+         (:prefix ("p" . "Dmenu Scripts")
+          :desc "Select man pages" "a" #'(lambda() (interactive) (elk/run-in-background "dm-man"))
+          :desc "Clipmenu" "c" #'(lambda() (interactive) (elk/run-in-background "clipmenu"))
+          :desc "Change colorscheme" "C" #'(lambda() (interactive) (elk/run-in-background "dm-colorscheme"))
+          :desc "Kill selected application" "k" #'(lambda() (interactive) (elk/run-in-background "dm-kill"))
+          :desc "Mount drives" "o" #'(lambda() (interactive) (elk/run-in-background "dm-mount"))
+          :desc "Unmount drives" "u" #'(lambda() (interactive) (elk/run-in-background "dm-umount"))
+          :desc "Passmenu" "p" #'(lambda() (interactive) (elk/run-in-background "dm-passmenu"))
+          :desc "FM Radio" "b" #'(lambda() (interactive) (elk/run-in-background "dm-beats"))
+          :desc "Weather forecast" "w" #'(lambda() (interactive) (elk/run-in-background "weatherforecast")))
+         (:prefix (";" . "System settings")
+          :desc "Set wallpaper from a2n gallery" "a" #'(lambda() (interactive) (elk/run-in-background "setwallpaper a2n"))
+          :desc "Set wallpaper from dt gallery" "d" #'(lambda() (interactive) (elk/run-in-background "setwallpaper dt"))
+          :desc "Set wallpaper from elyk gallery" "e" #'(lambda() (interactive) (elk/run-in-background "setwallpaper elyk"))
+          :desc "Open pulsemixer" "v" #'(lambda() (interactive) (elk/run-in-background (concat (getenv "TERMINAL") " -e pulsemixer") )))))
+
+  ;; Set global key bindings.  These always work, no matter the input state!
   ;; Keep in mind that changing this list after EXWM initializes has no effect.
   (setq exwm-input-global-keys
         `(
@@ -1302,6 +1419,9 @@ DIR is either 'left or 'right."
           ([?\s-w] . (lambda () (interactive) (elk/exwm-switch-to-other-monitor)))
           ([?\s-W] . (lambda () (interactive) (elk/exwm-workspace-switch-monitor)))
           ([?\s-`] . (lambda () (interactive) (exwm-workspace-switch-create 0)))
+
+          ;; Change layouts
+          ([?\s-b] . (lambda () (interactive) (rotate-layout)))
 
           ;; Killing buffers and windows
           ([?\s-c] . kill-current-buffer)
@@ -1320,10 +1440,9 @@ DIR is either 'left or 'right."
           ([?\s-L] . +evil/window-move-right)
 
           ([?\s-g] . exwm-floating-toggle-floating)
+          ([?\s-f] . exwm-layout-toggle-fullscreen)
           ([?\s-m] . exwm-layout-toggle-mode-line)
           ([?\s-i] . exwm-input-toggle-keyboard) ;; Toggle between "line-mode" and "char-mode" in an EXWM window
-
-          ([f11] . exwm-layout-toggle-fullscreen)
 
           ;; Launch applications via shell command
           ([?\s-&] . (lambda (command)
@@ -1348,12 +1467,10 @@ DIR is either 'left or 'right."
                        ;; '(?\= ?! ?\" ?# ?¤ ?% ?& ?/ ?\( ?\))
                        (number-sequence 0 9))))
 
-  (add-hook 'exwm-input--input-mode-change-hook
-            'force-mode-line-update)
+  (add-hook 'exwm-input--input-mode-change-hook 'force-mode-line-update)
 
   (exwm-enable))
 #+end_src
-
 
 
 * Third-party packages
@@ -1691,9 +1808,50 @@ selectively for each Org file where it is desired.
   :after org-agenda
   :config
   (setq org-super-agenda-groups '((:auto-dir-name t)))
+  (setq org-agenda-skip-scheduled-if-done t
+        org-agenda-skip-deadline-if-done t
+        org-agenda-include-deadlines t
+        org-agenda-include-diary nil
+        org-agenda-block-separator nil
+        org-agenda-compact-blocks t
+        org-agenda-start-with-log-mode t)
   (org-super-agenda-mode))
 #+end_src
 
+** StumpWM
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! stumpwm-mode)
+(package! sly)
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package! stumpwm-mode
+  :defer t
+  :hook lisp-mode)
+
+(use-package! sly
+  :defer t)
+#+end_src
+
+** Thesaurus
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! company-english-helper :recipe (:host github :repo "manateelazycat/company-english-helper"))
+(package! emacs-powerthesaurus :recipe (:host github :repo "SavchenkoValeriy/emacs-powerthesaurus"))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package! emacs-powerthesaurus
+  :after-call (powerthesaurus-lookup-synonyms-dwim
+               powerthesaurus-lookup-antonyms-dwim powerthesaurus-lookup-related-dwim
+               powerthesaurus-lookup-definitions-dwim powerthesaurus-lookup-sentences-dwim ))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package! company-english-helper
+  :after company)
+#+end_src
 
 * Keybindings, Evil, etc...
 
@@ -1769,7 +1927,7 @@ These are bindings which only works in the Doom dashboard.
       :desc "Open scripts" :ne "e" #'find-in-scripts
       :desc "Notes (roam)" :ne "n" #'org-roam-node-find
       :desc "Dired" :ne "d" #'dired
-      :desc "Switch buffer" :ne "b" #'+ivy/switch-workspace-buffer
+      :desc "Switch buffer" :ne "b" #'+vertico/switch-workspace-buffer
       :desc "Switch buffers (all)" :ne "B" #'consult-buffer
       :desc "IBuffer" :ne "i" #'ibuffer
       :desc "Browse in project" :ne "p" #'doom/browse-in-other-project
@@ -1780,41 +1938,6 @@ These are bindings which only works in the Doom dashboard.
 ** Dired
 
 *** Basic dired commands
-
-| COMMAND                | DESCRIPTION                                 | KEYBINDING |
-|------------------------+---------------------------------------------+------------|
-| dired-view-file        | /View file in dired/                          | SPC d v    |
-| dired-up-directory     | /Go up in directory tree/                   | h          |
-| dired-find-file        | /Go down in directory tree (or open if file)/ | l          |
-| dired-next-line        | Move down to next line                      | j          |
-| dired-previous-line    | Move up to previous line                    | k          |
-| dired-mark             | Mark file at point                          | m          |
-| dired-unmark           | Unmark file at point                        | u          |
-| dired-do-copy          | Copy current file or marked files           | C          |
-| dired-do-rename        | Rename current file or marked files         | R          |
-| dired-hide-details     | Toggle detailed listings on/off             | (          |
-| dired-git-info-mode    | Toggle git information on/off               | )          |
-| dired-create-directory | Create new empty directory                  | +          |
-| dired-diff             | Compare file at point with another          | =          |
-| dired-subtree-toggle   | Toggle viewing subtree at point             | TAB        |
-
-*** Dired commands using regex
-
-| COMMAND                 | DESCRIPTION                | KEYBINDING |
-|-------------------------+----------------------------+------------|
-| dired-mark-files-regexp | Mark files using regex     | % m        |
-| dired-do-copy-regexp    | Copy files using regex     | % C        |
-| dired-do-rename-regexp  | Rename files using regex   | % R        |
-| dired-mark-files-regexp | Mark all files using regex | * %        |
-
-*** File permissions and ownership
-
-| COMMAND         | DESCRIPTION                      | KEYBINDING |
-|-----------------+----------------------------------+------------|
-| dired-do-chgrp  | Change the group of marked files | g G        |
-| dired-do-chmod  | Change the mode of marked files  | M          |
-| dired-do-chown  | Change the owner of marked files | O          |
-| dired-do-rename | Rename file or all marked files  | R          |
 
 #+begin_src emacs-lisp
 (map! :leader

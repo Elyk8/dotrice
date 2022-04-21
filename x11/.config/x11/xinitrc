@@ -19,4 +19,6 @@ export SSH_AUTH_SOCK
 
 ssh-agent
 
-dbus-launch --exit-with-session emacs -mm
+#/usr/bin/emacs --daemon &
+exec dbus-launch --exit-with-session emacs -mm
+#exec dbus-launch --exit-with-session stumpwm

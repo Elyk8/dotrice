@@ -67,19 +67,18 @@
       evil-want-fine-undo t                     ; By default while in insert all changes are one big blob. Be more granular
       truncate-string-ellipsis "…"              ; Unicode ellispis are nicer than "...", and also save /precious/ space
       password-cache-expiry nil                 ; I can trust my computers ... can't I?
-      scroll-preserve-screen-position 'always   ; Don't have `point' jump around
       scroll-margin 2                           ; It's nice to maintain a little margin
       confirm-kill-emacs nil                    ; Disable exit confirmation
       )
 
-(setq undo-limit 80000000                         ; Raise undo-limit to 80Mb
-      ;; display-line-numbers-type nil               ; By disabling line number, we improve performance significantly
-      evil-want-fine-undo t                       ; By default while in insert all changes are one big blob. Be more granular
-      truncate-string-ellipsis "…"                ; Unicode ellispis are nicer than "...", and also save /precious/ space
-      password-cache-expiry nil                   ; I can trust my computers ... can't I?
-      scroll-preserve-screen-position 'always     ; Don't have `point' jump around
-      scroll-margin 2)                            ; It's nice to maintain a little margin
 ;; (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;; Prevents some cases of Emacs flickering.
+
+;; Improve scrolling
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))      ; one line at a time
+      mouse-wheel-progressive-speed nil                 ; don't accelerate scrolling
+      mouse-wheel-follow-mouse 't                       ; scroll window under mouse
+      scroll-preserve-screen-position 'always           ; Don't have `point' jump around
+      scroll-step 1)                                    ; keyboard scroll one line at a time
 
 (setq doom-scratch-initial-major-mode 'lisp-interaction-mode)
 
@@ -115,8 +114,8 @@
 
 (remove-hook 'text-mode-hook #'auto-fill-mode) ;; Prevent lines from auto breaking
 
-(setq! bibtex-completion-library-paths '("~/dox/bibliography/")
-       bibtex-completion-notes-paths "~/dox/notes/")
+(setq! citar-library-paths '("~/dox/bibliography/")
+       citar-notes-paths "~/dox/notes/")
 
 (use-package! company
   :after-call (company-mode global-company-mode company-complete
@@ -140,7 +139,8 @@
 ;; (add-transient-hook! #'+doom-dashboard-mode :append (+doom-dashboard-setup-modified-keymap))
 ;; (add-hook! 'doom-init-ui-hook :append (+doom-dashboard-setup-modified-keymap))
 
-(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+(add-hook! 'dired-mode-hook 'all-the-icons-dired-mode)
+(add-hook! 'dired-mode 'dired-async-mode)
 
 (setq dired-open-extensions '(("gif" . "open")
                               ("jpg" . "open")
@@ -152,6 +152,10 @@
 
 (setq ispell-dictionary "en-custom"
       ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
+
+(setq ediff-diff-options "-w"
+      ediff-split-window-function 'split-window-horizontally
+      ediff-window-setup-function 'ediff-setup-windows-plain)
 
 (after! evil
   (setq evil-ex-substitute-global t     ; I like my s/../.. to by global by default
@@ -216,19 +220,46 @@
           ("arch-wiki" . "https://wiki.archlinux.org/index.php/")
           ("ddg" . "https://duckduckgo.com/?q=")
           ("wiki" . "https://en.wikipedia.org/wiki/"))
-        org-todo-keywords        ; This overwrites the default Doom org-todo-keywords
+        org-todo-keywords
         '((sequence
-           "TODO(t)"           ; A task that is ready to be tackled
-           "BLOG(b)"           ; Blog writing assignments
-           "PROJ(p)"           ; A project that contains other tasks
-           "ASSIGNMENTS(a)"    ; Video assignments
-           "WAIT(w)"           ; Something is holding up this task
-           "|"                 ; The pipe necessary to separate "active" states and "inactive" states
-           "DONE(d)"           ; Task has been completed
-           "CANCELLED(c)" )))) ; Task has been cancelled
+           "TODO(t)"  ; A task that needs doing & is ready to do
+           "PROJ(p)"  ; An ongoing project that cannot be completed in one step
+           "INPROCESS(s)"  ; A task that is in progress
+           "⚑ WAITING(w)"  ; Something is holding up this task; or it is paused
+           "|"
+           "☟ NEXT(n)"
+           "✰ IMPORTANT(i)"
+           "DONE(d)"  ; Task successfully completed
+           "✘ CANCELED(c@)") ; Task was cancelled, aborted or is no longer applicable
+          (sequence
+           "✍ NOTE(N)"
+           "FIXME(f)"
+           "☕ BREAK(b)"
+           "❤ LOVE(l)"
+           "REVIEW(r)"
+           )) ; Task was completed
+        org-todo-keyword-faces
+        '(
+          ("TODO" . (:foreground "#ff39a3" :weight bold))
+          ("INPROCESS"  . "orangered")
+          ("✘ CANCELED" . (:foreground "white" :background "#4d4d4d" :weight bold))
+          ("⚑ WAITING" . "pink")
+          ("☕ BREAK" . "gray")
+          ("❤ LOVE" . (:foreground "VioletRed4"
+                       ;; :background "#7A586A"
+                       :weight bold))
+          ("☟ NEXT" . (:foreground "DeepSkyBlue"
+                       ;; :background "#7A586A"
+                       :weight bold))
+          ("✰ IMPORTANT" . (:foreground "greenyellow"
+                            ;; :background "#7A586A"
+                            :weight bold))
+          ("DONE" . "#008080")
+          ("FIXME" . "IndianRed")))) ; Task has been cancelled
 
 (after! org-superstar
   (setq org-superstar-headline-bullets-list '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
+  ;; (setq org-superstar-headline-bullets-list '("一" "二" "三" "四" "五" "六" "七" "八")
         org-superstar-item-bullet-alist '((?+ . ?➤) (?- . ?✦)) ; changes +/- symbols in item lists
         org-superstar-prettify-item-bullets t ))
 
@@ -292,6 +323,11 @@
            :unnarrowed t)
           )))
 
+(after! org-roam
+  (setq org-roam-dailies-capture-templates
+        '(("d" "default" entry "* %<%I:%M %p>: %?"
+           :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n")))))
+
 (defun elk/org-roam-rename-to-new-title ()
   "Change the file name after changing the title."
   (when-let*
@@ -312,6 +348,19 @@
 (after! org-roam
   (add-hook! 'after-save-hook #'elk/org-roam-rename-to-new-title))
 
+(setq shell-file-name "/bin/zsh"
+      vterm-max-scrollback 5000)
+
+(after! eshell
+  (setq eshell-rc-script "~/.config/doom/eshell/profile"
+        eshell-aliases-file "~/.config/doom/eshell/aliasrc"
+        eshell-history-size 5000
+        eshell-buffer-maximum-lines 5000
+        eshell-hist-ignoredups t
+        eshell-scroll-to-bottom-on-input t
+        eshell-destroy-buffer-when-process-dies t
+        eshell-visual-commands'("bash" "xsh" "htop" "ssh" "top" "fish")))
+
 (after! org
   (require 'ox-taskjuggler))
 
@@ -321,14 +370,14 @@
 \\)[^]#$%>\n]*#?[]#$%>] *\\(�\\[[0-9;]*[a-zA-Z] *\\)*")) ;; default + 
 
 (after! vterm
-  (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no"))
+  (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=Off"))
 
 (after! which-key
   (setq which-key-allow-imprecise-window-fit t) ; Comment this if experiencing crashes
   ;; Add an extra line to work around bug in which-key imprecise
-   (defun add-which-key-line (f &rest r) (progn (apply f (list (cons (+ 1 (car (car r))) (cdr (car r)))))))
-   (advice-add 'which-key--show-popup :around #'add-which-key-line)
-  (setq which-key-idle-delay 0.1))
+  (defun add-which-key-line (f &rest r) (progn (apply f (list (cons (+ 1 (car (car r))) (cdr (car r)))))))
+  (advice-add 'which-key--show-popup :around #'add-which-key-line)
+  (setq which-key-idle-delay 0.2))
 
 (defun elk/run-in-background (command)
   (let ((command-parts (split-string command "[ ]+")))
@@ -345,11 +394,10 @@
   (exwm-workspace-switch-create 1)
 
   ;; Start polybar
-  (elk/start-panel)
+  (elk/start-panel))
 
   ;; Open eshell by default
-  ;;(eshell)
-  )
+  ;; (+eshell/here))
 
 (defun elk/exwm-update-class ()
   (exwm-workspace-rename-buffer exwm-class-name))
@@ -365,6 +413,8 @@
     ("Chromium" (exwm-workspace-move-window 2))
     ("discord" (exwm-workspace-move-window 3))
     ("Virt-manager" (exwm-workspace-move-window 5))
+    ("mpv" (exwm-floating-toggle-floating)
+     (elk/exwm-floating-toggle-pinned))
     ))
 
 ;; This function should be used only after configuring autorandr!
@@ -486,10 +536,6 @@ DIR is either 'left or 'right."
         (with-selected-window (next-window)
           (switch-to-buffer other-exwm-buffer))))))
 
-;; Make the launcher only show app names
-(after! counsel
-  (counsel-linux-app-format-function #'counsel-linux-app-format-function-name-only)))
-
 (defvar elk/polybar-process nil
   "Holds the process of the running Polybar instance, if any")
 
@@ -539,6 +585,38 @@ DIR is either 'left or 'right."
   ;; Set the wallpaper after changing the resolution
   (elk/set-wallpaper))
 
+(use-package! app-launcher
+  :commands (app-launcher-run-app))
+
+(use-package! desktop-environment
+  :after exwm
+  :diminish desktop-environment-mode
+  :config
+  (progn
+    (unbind-key "s-l" desktop-environment-mode-map)
+    (desktop-environment-mode))
+  :custom
+  (desktop-environment-volume-get-command "volume")
+  (desktop-environment-volume-get-regexp "^\\([0-9]+\\)")
+  (desktop-environment-volume-set-command "volume %s")
+  (desktop-environment-volume-normal-increment "up")
+  (desktop-environment-volume-normal-decrement "down")
+  (desktop-environment-volume-small-increment "sup")
+  (desktop-environment-volume-small-decrement "sdown")
+  (desktop-environment-volume-toggle-command "volume mute")
+  (desktop-environment-volume-toggle-microphone-command "mic-toggle")
+
+  (desktop-environment-brightness-get-command "brightness")
+  (desktop-environment-brightness-set-command "brightness %s")
+  (desktop-environment-brightness-get-regexp "^\\([0-9]+\\)")
+  (desktop-environment-brightness-normal-increment "up")
+  (desktop-environment-brightness-normal-decrement "down")
+  (desktop-environment-brightness-small-increment "sup")
+  (desktop-environment-brightness-small-decrement "sdown")
+
+  (desktop-environment-screenshot-command "flameshot gui")
+  (desktop-environment-screenshot-directory (concat (getenv "HOME") "/pix/screenshots")))
+
 (use-package! exwm
   :init
   (setq exwm-workspace-warp-cursor t
@@ -546,6 +624,7 @@ DIR is either 'left or 'right."
         focus-follows-mouse t)          ; Window focus should follow the mouse pointer
   (server-start)                        ; Start the emacs server
   (setq exwm-workspace-number 6)        ; Set the default number of workspaces
+
   :config
   (add-hook 'exwm-update-class-hook #'elk/exwm-update-class) ;; When window "class" updates, use it to set the buffer name
   (add-hook 'exwm-update-title-hook #'elk/exwm-update-title) ;; When window title updates, use it to set the buffer name
@@ -577,7 +656,8 @@ DIR is either 'left or 'right."
           ?\M-&
           ?\M-:
           ?\C-\M-j  ;; Buffer list
-          ?\M-\ ))  ;; Alt+Space
+          ?\M-\     ;; Alt+Space
+          ?\s-\ ))
 
   ;; Ctrl+Q will enable the next key to be sent directly
   (define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
@@ -586,7 +666,41 @@ DIR is either 'left or 'right."
   (advice-add 'evil-window-split :after #'elk/exwm-fill-other-window)
   (advice-add 'evil-window-vsplit :after #'elk/exwm-fill-other-window)
 
-  ;; Set up global key bindings.  These always work, no matter the input state!
+  ;; Super + space prefix key for general keybindings
+  (map! (:prefix "s-SPC"
+         :desc "System activity" "q" #'(lambda() (interactive) (elk/run-in-background "sysact"))
+         "b" #'switch-to-buffer
+         "SPC" #'app-launcher-run-app
+         :desc "Launch Firefox" "w" #'(lambda() (interactive) (elk/run-in-background "prime-run firefox"))
+         :desc "Launch Chromium" "c" #'(lambda() (interactive) (elk/run-in-background "prime-run chromium"))
+         "d" #'dmenu
+         "e" #'+eshell/here
+         :desc "Launch alacritty terminal" "t" #'(lambda() (interactive) (elk/run-in-background (getenv "TERMINAL") ))
+         :desc "Terminal Launch lf" "r" #'(lambda() (interactive) (elk/run-in-background (concat (getenv "TERMINAL") " -e lf") ))
+         :desc "Terminal Launch ncmpcpp" "n" #'(lambda() (interactive) (elk/run-in-background (concat (getenv "TERMINAL") " -e ncmpcpp") ))
+         :desc "Mute/Unmute microphone" "m" #'(lambda() (interactive) (elk/run-in-background "mic-toggle"))
+         (:prefix ("o" . "Other Applications")
+          :desc "Launch discord" "d" #'(lambda() (interactive) (elk/run-in-background "discord"))
+          :desc "Launch FTB" "f" #'(lambda() (interactive) (elk/run-in-background "/media/FTBA/FTBApp"))
+          :desc "Launch Zotero" "t" #'(lambda() (interactive) (elk/run-in-background "zotero"))
+          :desc "Launch Zoom" "z" #'(lambda() (interactive) (elk/run-in-background "zoom")))
+         (:prefix ("p" . "Dmenu Scripts")
+          :desc "Select man pages" "a" #'(lambda() (interactive) (elk/run-in-background "dm-man"))
+          :desc "Clipmenu" "c" #'(lambda() (interactive) (elk/run-in-background "clipmenu"))
+          :desc "Change colorscheme" "C" #'(lambda() (interactive) (elk/run-in-background "dm-colorscheme"))
+          :desc "Kill selected application" "k" #'(lambda() (interactive) (elk/run-in-background "dm-kill"))
+          :desc "Mount drives" "o" #'(lambda() (interactive) (elk/run-in-background "dm-mount"))
+          :desc "Unmount drives" "u" #'(lambda() (interactive) (elk/run-in-background "dm-umount"))
+          :desc "Passmenu" "p" #'(lambda() (interactive) (elk/run-in-background "dm-passmenu"))
+          :desc "FM Radio" "b" #'(lambda() (interactive) (elk/run-in-background "dm-beats"))
+          :desc "Weather forecast" "w" #'(lambda() (interactive) (elk/run-in-background "weatherforecast")))
+         (:prefix (";" . "System settings")
+          :desc "Set wallpaper from a2n gallery" "a" #'(lambda() (interactive) (elk/run-in-background "setwallpaper a2n"))
+          :desc "Set wallpaper from dt gallery" "d" #'(lambda() (interactive) (elk/run-in-background "setwallpaper dt"))
+          :desc "Set wallpaper from elyk gallery" "e" #'(lambda() (interactive) (elk/run-in-background "setwallpaper elyk"))
+          :desc "Open pulsemixer" "v" #'(lambda() (interactive) (elk/run-in-background (concat (getenv "TERMINAL") " -e pulsemixer") )))))
+
+  ;; Set global key bindings.  These always work, no matter the input state!
   ;; Keep in mind that changing this list after EXWM initializes has no effect.
   (setq exwm-input-global-keys
         `(
@@ -601,6 +715,9 @@ DIR is either 'left or 'right."
           ([?\s-w] . (lambda () (interactive) (elk/exwm-switch-to-other-monitor)))
           ([?\s-W] . (lambda () (interactive) (elk/exwm-workspace-switch-monitor)))
           ([?\s-`] . (lambda () (interactive) (exwm-workspace-switch-create 0)))
+
+          ;; Change layouts
+          ([?\s-b] . (lambda () (interactive) (rotate-layout)))
 
           ;; Killing buffers and windows
           ([?\s-c] . kill-current-buffer)
@@ -619,10 +736,9 @@ DIR is either 'left or 'right."
           ([?\s-L] . +evil/window-move-right)
 
           ([?\s-g] . exwm-floating-toggle-floating)
+          ([?\s-f] . exwm-layout-toggle-fullscreen)
           ([?\s-m] . exwm-layout-toggle-mode-line)
           ([?\s-i] . exwm-input-toggle-keyboard) ;; Toggle between "line-mode" and "char-mode" in an EXWM window
-
-          ([f11] . exwm-layout-toggle-fullscreen)
 
           ;; Launch applications via shell command
           ([?\s-&] . (lambda (command)
@@ -647,8 +763,7 @@ DIR is either 'left or 'right."
                        ;; '(?\= ?! ?\" ?# ?¤ ?% ?& ?/ ?\( ?\))
                        (number-sequence 0 9))))
 
-  (add-hook 'exwm-input--input-mode-change-hook
-            'force-mode-line-update)
+  (add-hook 'exwm-input--input-mode-change-hook 'force-mode-line-update)
 
   (exwm-enable))
 
@@ -863,7 +978,29 @@ DIR is either 'left or 'right."
   :after org-agenda
   :config
   (setq org-super-agenda-groups '((:auto-dir-name t)))
+  (setq org-agenda-skip-scheduled-if-done t
+        org-agenda-skip-deadline-if-done t
+        org-agenda-include-deadlines t
+        org-agenda-include-diary nil
+        org-agenda-block-separator nil
+        org-agenda-compact-blocks t
+        org-agenda-start-with-log-mode t)
   (org-super-agenda-mode))
+
+(use-package! stumpwm-mode
+  :defer t
+  :hook lisp-mode)
+
+(use-package! sly
+  :defer t)
+
+(use-package! emacs-powerthesaurus
+  :after-call (powerthesaurus-lookup-synonyms-dwim
+               powerthesaurus-lookup-antonyms-dwim powerthesaurus-lookup-related-dwim
+               powerthesaurus-lookup-definitions-dwim powerthesaurus-lookup-sentences-dwim ))
+
+(use-package! company-english-helper
+  :after company)
 
 (map! :leader
       (:prefix ("b". "buffer")
@@ -895,7 +1032,7 @@ DIR is either 'left or 'right."
       :desc "Open scripts" :ne "e" #'find-in-scripts
       :desc "Notes (roam)" :ne "n" #'org-roam-node-find
       :desc "Dired" :ne "d" #'dired
-      :desc "Switch buffer" :ne "b" #'+ivy/switch-workspace-buffer
+      :desc "Switch buffer" :ne "b" #'+vertico/switch-workspace-buffer
       :desc "Switch buffers (all)" :ne "B" #'consult-buffer
       :desc "IBuffer" :ne "i" #'ibuffer
       :desc "Browse in project" :ne "p" #'doom/browse-in-other-project

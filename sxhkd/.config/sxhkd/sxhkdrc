@@ -6,11 +6,15 @@ super + slash
 
 # Open desktop applications
 super + space ; space
-      emacsclient -e '(counsel-linux-app)'
+      emacsclient -e '(app-launcher-run-app)'
 
 # Dmenu run executables
 super + space ; d
       emacsclient -e '(dmenu)'
+
+# Open ESHELL
+super + space ; e
+      emacsclient -e '(+eshell/here)'
 
 # Open terminal emulator
 super + space ; t

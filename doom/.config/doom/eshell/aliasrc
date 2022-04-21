@@ -1,0 +1,25 @@
+# Aliases for emacs commands
+alias ff find-file $1
+
+# Changing "ls" to "exa"
+alias l exa --group-directories-first --git
+alias ll exa --icons --all -l --group-directories-first --git
+alias ls exa --icons --group-directories-first --git
+alias lt exa -T --git-ignore --level=2 --group-directories-first
+alias llt exa -lT --git-ignore --level=2 --group-directories-first
+alias lT exa -T --git-ignore --level=4 --group-directories-first
+alias l exa --all | rg '^\.'
+
+# Merge Xresources
+alias merge xrdb -merge ~/.Xresources
+
+# Aliases for doom emacs utilties
+alias doomsync ~/.emacs.d/bin/doom sync
+alias doomdoctor ~/.emacs.d/bin/doom doctor
+alias doomupgrade ~/.emacs.d/bin/doom upgrade
+alias doompurge ~/.emacs.d/bin/doom purge
+
+# Confirm before overwriting something
+alias cp cp -i $1
+alias mv mv -i $1
+alias rm rm -i $1

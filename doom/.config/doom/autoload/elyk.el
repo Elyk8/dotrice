@@ -59,3 +59,14 @@
     (exwm-input--set-key (car i) (cdr i)))
   (when exwm--connection
     (exwm-input--update-global-prefix-keys)))
+
+;;;###autoload
+(defun elk/exwm-floating-toggle-pinned (&optional id)
+  (interactive)
+  (when-let ((exwm--floating-frame)
+             (window-id (or id exwm--id)))
+    ;; This approach is more reliable for now even with the workspace snap-back
+    (setq exwm--desktop 0xffffffff)))
+    ;; (if (seq-contains dw/exwm--floating-pinned-windows window-id)
+    ;;   (setq dw/exwm--floating-pinned-windows (remq window-id dw/exwm--floating-pinned-windows))
+    ;;   (push window-id dw/exwm--floating-pinned-windows))))

@@ -9,8 +9,8 @@
         +childframe)       ; ... when your children are better than you
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
-       (ivy +fuzzy +prescient +icons)               ; a search engine for love and life
-       ;;(vertico +icons)    ; the search engine of the future
+       ;;(ivy +fuzzy +icons)               ; a search engine for love and life
+       (vertico +icons)    ; the search engine of the future
 
        :ui
        ;;deft              ; notational velocity for Emacs
@@ -59,7 +59,7 @@
        vc                ; version-control and Emacs, sitting in a tree
 
        :term
-       ;;eshell            ; the elisp shell that works everywhere
+       eshell            ; the elisp shell that works everywhere
        ;;shell             ; simple shell REPL for Emacs
        ;;term              ; basic terminal emulator for Emacs
        vterm             ; the best terminal emulation in Ema
@@ -143,6 +143,7 @@
        (org
         +gnuplot
         +present
+        +pomodoro
         +journal             ; enable org journal
         +pretty              ; replace asterisks with pretty org bullets
         +publish             ; create static websites with org

@@ -8,17 +8,16 @@ run() {
 }
 
 # /usr/bin/prime-offload
-# multi-monitor
-multi-hybrid-graphics
+#multi-monitor
+#multi-hybrid-graphics
 xrdb -merge ~/.config/x11/Xresources & xrdbpid=$!
 # run safeeyes -e &
 run kmonad-refresh &
 #run /usr/bin/emacs --daemon &
-run syncthing-gtk --minimized &
+#run syncthing-gtk --minimized &
 run /usr/bin/pipewire &
 run pacmac-tray &
-run birdtray &
-run sxhkd &
+#run sxhkd &
 run dm-wacom &
 
 autostart="redshift clipmenud flashfocus lxsession nm-applet picom mpd"
@@ -29,7 +28,7 @@ done >/dev/null 2>&1
 
 run dunst-reload &
 run "$HOME"/.fehbg &
-sleep 10 && run volctl && run mictray &
+run mictray &
 
 xsetroot -cursor_name left_ptr
 [ -n "$xrdbpid" ] && wait "$xrdbpid"
