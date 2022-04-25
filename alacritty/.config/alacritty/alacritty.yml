@@ -194,7 +194,7 @@ window:
   #   # scrollback is enabled (history > 0).
   #   multiplier: 10
 
-  opacity: 0.0
+  opacity: 0.9
 
 # Allow terminal applications to change Alacritty's window title.
   dynamic_title: true

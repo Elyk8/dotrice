@@ -32,8 +32,12 @@
   - [[#tramp][Tramp]]
   - [[#vterm][VTerm]]
   - [[#which-key][Which-key]]
+- [[#i3-and-emacs][i3 and Emacs]]
+  - [[#config-syntax-highlighting][Config syntax highlighting]]
+  - [[#integration][Integration]]
 - [[#exwm][EXWM]]
   - [[#initialisation][Initialisation]]
+  - [[#run-or-raise][Run or Raise]]
   - [[#polybar][Polybar]]
   - [[#exwm-configuration][EXWM Configuration]]
 - [[#third-party-packages][Third-party packages]]
@@ -184,7 +188,7 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
        ;;deft              ; notational velocity for Emacs
        doom              ; what makes DOOM look the way it does
        doom-dashboard    ; a nifty splash screen for Emacs
-       doom-quit         ; DOOM quit-message prompts when you quit Emacs
+       ;;doom-quit         ; DOOM quit-message prompts when you quit Emacs
        (emoji +unicode)  ; 🙂
        hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        ;;hydra
@@ -195,7 +199,7 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
        nav-flash         ; blink cursor line after big motions
        ;;neotree           ; a project drawer, like NERDTree for vim
        ophints           ; highlight the region an operation acts on
-       (popup +all)   ; tame sudden yet inevitable temporary windows
+       (popup +all +defaults)   ; tame sudden yet inevitable temporary windows
        ;;tabs              ; a tab bar for Emacs
        treemacs          ; a project drawer, like neotree but cooler
        ;;unicode           ; extended unicode support for various languages
@@ -212,7 +216,7 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
        format  ; automated prettiness
        ;;god               ; run Emacs commands without modifier keys
        ;;lispy             ; vim for lisp, for people who don't like vim
-       ;;multiple-cursors  ; editing in many places at once
+       multiple-cursors  ; editing in many places at once
        ;;objed             ; text object editing for the innocent
        ;;parinfer          ; turn lisp into python, sort of
        ;;rotate-text       ; cycle region at point between text candidates
@@ -347,7 +351,7 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
        :app
        calendar
        ;;emms
-       everywhere        ; *leave* Emacs!? You must be joking
+       ;;everywhere        ; *leave* Emacs!? You must be joking
        ;;irc               ; how neckbeards socialize
        (rss +org)        ; emacs as an RSS reader
        ;;twitter           ; twitter client https://twitter.com/vnought
@@ -515,6 +519,7 @@ Settings related to fonts within Doom Emacs:
 #+begin_src emacs-lisp
 (setq doom-font (font-spec :family "monospace" :size 20)
       doom-variable-pitch-font (font-spec :family "sans" :size 20)
+      doom-unicode-font (font-spec :family "JoyPixels" :size 20)
       doom-big-font (font-spec :family "monospace" :size 34))
 (after! doom-themes
   (setq doom-themes-enable-bold t
@@ -950,8 +955,8 @@ Configuration for ~eshell~.
 ** Tramp
 
 #+begin_src emacs-lisp
+(setenv "SHELL" "/bin/zsh")
 (after! tramp
-  (setenv "SHELL" "/bin/bash")
   (setq tramp-shell-prompt-pattern "\\(?:^\\|
 \\)[^]#$%>\n]*#?[]#$%>] *\\(�\\[[0-9;]*[a-zA-Z] *\\)*")) ;; default + 
 #+end_src
@@ -980,11 +985,116 @@ I hate when which-key takes too long to show up. Make it faster!!!
 #+end_src
 
 
-* EXWM
+* i3 and Emacs
 
-I have currently disabled EXWM until it is not slow.
+** Config syntax highlighting
+
+This package builds on =conf-space-mode= (which is the major mode emacs assigns to
+i3wm’s config file by default) and expands its font-lock capabilities to provide
+proper syntax highlighting for the small language i3wm’s config uses.
+
+The new syntax highlighting faces do not define their own colours, but instead
+derive from Emacs’ own font-locking faces, making sure that they fit in with any
+theme.
+
+Features and settings outside font-locking are not touched and will be inherited
+from conf-space-mode.
 
 #+begin_src emacs-lisp :tangle packages.el
+(package! i3wm-config-mode :recipe (:host github :repo "Alexander-Miller/i3wm-Config-Mode"))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package! i3wm-config-mode
+  :defer t)
+#+end_src
+
+
+** Integration
+
+Basic integration of emacs with i3 window manager.
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! transpose-frame)
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package! transpose-frame
+  :commands (transpose-frame))
+#+end_src
+
+#+begin_src emacs-lisp
+(defun elk/emacs-i3-windmove (dir)
+  (let ((other-window (windmove-find-other-window dir)))
+    (if (or (null other-window) (window-minibuffer-p other-window))
+        (- (error dir))
+      (windmove-do-window-select dir))))
+
+(defun elk/emacs-i3-direction-exists-p (dir)
+  (some (lambda (dir)
+          (let ((win (windmove-find-other-window dir)))
+            (and win (not (window-minibuffer-p win)))))
+        (pcase dir
+          ('width '(left right))
+          ('height '(up down)))))
+
+(defun elk/emacs-i3-move-window (dir)
+  (let ((other-window (windmove-find-other-window dir))
+        (other-direction (elk/emacs-i3-direction-exists-p
+                          (pcase dir
+                            ('up 'width)
+                            ('down 'width)
+                            ('left 'height)
+                            ('right 'height)))))
+    (cond
+     ((and other-window (not (window-minibuffer-p other-window)))
+      (window-swap-states (selected-window) other-window))
+     (other-direction
+      (evil-move-window dir))
+     (t (error dir)))))
+
+(defun elk/emacs-i3-resize-window (dir kind value)
+  (if (or (one-window-p)
+          (not (elk/emacs-i3-direction-exists-p dir)))
+      (- (error (concat (symbol-name kind) (symbol-name dir))))
+    (setq value (/ value 2))
+    (pcase kind
+      ('shrink
+       (pcase dir
+         ('width
+          (evil-window-decrease-width value))
+         ('height
+          (evil-window-decrease-height value))))
+      ('grow
+       (pcase dir
+         ('width
+          (evil-window-increase-width value))
+         ('height
+          (evil-window-increase-height value)))))))
+
+(defun elk/emacs-i3-integration (command)
+  (pcase command
+    ((rx bos "focus")
+     (elk/emacs-i3-windmove
+      (intern (elt (split-string command) 1))))
+    ((rx bos "move")
+     (elk/emacs-i3-move-window
+      (intern (elt (split-string command) 1))))
+    ((rx bos "resize")
+     (elk/emacs-i3-resize-window
+       (intern (elt (split-string command) 2))
+       (intern (elt (split-string command) 1))
+       (string-to-number (elt (split-string command) 3))))
+    ("layout toggle split" (transpose-frame))
+    ("split v" (evil-window-split))
+    ("split h" (evil-window-vsplit))
+    ("kill" (evil-quit))
+    (- (error command))))
+#+end_src
+
+* EXWM
+
+#+begin_src emacs-lisp :tangle packages.el :tangle no
 (package! exwm)
 #+end_src
 
@@ -992,7 +1102,7 @@ I have currently disabled EXWM until it is not slow.
 
 *** Autoload Functions
 
-#+begin_src emacs-lisp :tangle "autoload/elyk.el"
+#+begin_src emacs-lisp :tangle "autoload/elyk.el" :tangle no
 ;;;###autoload
 (defun elk/exwm-update-global-keys ()
   "Function to apply changes to `exwm-input-global-keys'"
@@ -1017,7 +1127,7 @@ I have currently disabled EXWM until it is not slow.
 
 *** EXWM Functions
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (defun elk/run-in-background (command)
   (let ((command-parts (split-string command "[ ]+")))
     (apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr command-parts)))))
@@ -1028,15 +1138,20 @@ I have currently disabled EXWM until it is not slow.
   (start-process-shell-command
    "feh" nil  "$HOME/.fehbg"))
 
+(defvar elk/exclude-buffer-modes '(helm-major-mode messages-buffer-mode special-mode))
+(defun elk-buffer-predicate (buf)
+  (with-current-buffer buf
+    (if (memq major-mode elk/exclude-buffer-modes)
+        nil
+      (exwm-layout--other-buffer-predicate buf))))
+
 (defun elk/exwm-init-hook ()
   ;; Make workspace 1 be the one where we land at startup
   (exwm-workspace-switch-create 1)
+  (lambda () (interactive) (modify-all-frames-parameters '((buffer-predicate . elk-buffer-predicate))))
 
   ;; Start polybar
   (elk/start-panel))
-
-  ;; Open eshell by default
-  ;; (+eshell/here))
 
 (defun elk/exwm-update-class ()
   (exwm-workspace-rename-buffer exwm-class-name))
@@ -1234,9 +1349,55 @@ command from the evil-window group."
 #+end_src
 
 
+** Run or Raise
+
+Raise the specified app if it's already started, otherwise start it. This should
+ideally raise buffer the previous buffer, not the current one meaning: if I had
+chrome on the right side and I call this from the left side it should show up on
+the right side
+
+#+begin_src emacs-lisp :tangle no
+(defun elk/run-or-raise (buffer-prefix &optional cmd)
+  (let ((existing-buffer
+         (cl-dolist (buffer (buffer-list))
+           (if (string-prefix-p buffer-prefix (buffer-name buffer))
+               (    cl-return buffer)))))
+    (if existing-buffer
+        ;; it's currently displayed, go to it
+        (if (get-buffer-window existing-buffer)
+            (message (format "%s" (pop-to-buffer existing-buffer)))
+          (exwm-workspace-switch-to-buffer existing-buffer))
+      (start-process-shell-command buffer-prefix nil cmd))))
+
+(defun goto-wm-discord ()
+  "raise 'Discord' "
+  (interactive)
+  (elk/run-or-raise "discord" "/usr/bin/discord"))
+
+(defun goto-wm-firefox ()
+  "raise 'Firefox' or start it"
+  (interactive)
+  (elk/run-or-raise "firefox" "/usr/bin/firefox"))
+
+(defun goto-wm-chromium ()
+  "raise 'Chromium' or start it"
+  (interactive)
+  (elk/run-or-raise "Chromium" "/usr/bin/chromium"))
+
+(defun goto-wm-zotero ()
+  "raise 'Zotero' or start it"
+  (interactive)
+  (elk/run-or-raise "Zotero" "/usr/bin/zotero"))
+
+(defun goto-wm-zoom ()
+  "raise 'Zoom' or start it"
+  (interactive)
+  (elk/run-or-raise "Zoom" "/usr/bin/zoom"))
+#+end_src
+
 ** Polybar
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (defvar elk/polybar-process nil
   "Holds the process of the running Polybar instance, if any")
 
@@ -1250,7 +1411,7 @@ command from the evil-window group."
 (defun elk/start-panel ()
   (interactive)
   (elk/kill-panel)
-  (setq elk/polybar-process (start-process-shell-command "polybar" nil "polybar panel")))
+  (setq elk/polybar-process (start-process-shell-command "polybar" nil "polybar exwm")))
 
 (defun elk/send-polybar-hook (module-name hook-index)
   (start-process-shell-command "polybar-msg" nil (format "polybar-msg hook %s %s" module-name hook-index)))
@@ -1305,7 +1466,7 @@ command from the evil-window group."
 
 *** Randr
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package! exwm-randr
   :after exwm
   :config
@@ -1328,22 +1489,22 @@ command from the evil-window group."
 
 *** App Launcher
 
-#+begin_src emacs-lisp :tangle packages.el
+#+begin_src emacs-lisp :tangle packages.el :tangle no
 (package! app-launcher :recipe (:host github :repo "SebastienWae/app-launcher"))
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package! app-launcher
   :commands (app-launcher-run-app))
 #+end_src
 
 *** Desktop Environment
 
-#+begin_src emacs-lisp :tangle packages.el
+#+begin_src emacs-lisp :tangle packages.el :tangle no
 (package! desktop-environment)
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package! desktop-environment
   :after exwm
   :diminish desktop-environment-mode
@@ -1374,14 +1535,9 @@ command from the evil-window group."
   (desktop-environment-screenshot-directory (concat (getenv "HOME") "/pix/screenshots")))
 #+end_src
 
-
-*** Perspective Exwm
-
-
-
 *** Main
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package! exwm
   :init
   (setq exwm-workspace-warp-cursor t
@@ -1399,8 +1555,8 @@ command from the evil-window group."
   ;; NOTE: Uncomment the following two options if you want window buffers
   ;;       to be available on all workspaces!
 
-  ;;(setq exwm-layout-show-all-buffers t) ;; Automatically move EXWM buffer to current workspace when selected
-  ;;(setq exwm-workspace-show-all-buffers t) ;; Display all EXWM buffers in every workspace buffer list
+  ;; (setq exwm-layout-show-all-buffers t) ;; Automatically move EXWM buffer to current workspace when selected
+  ;; (setq exwm-workspace-show-all-buffers t) ;; Display all EXWM buffers in every workspace buffer list
 
   ;; NOTE: Uncomment this option if you want to detach the minibuffer!
   ;;(setq exwm-workspace-minibuffer-position 'top) ;; Detach the minibuffer (show it with exwm-workspace-toggle-minibuffer)
@@ -1436,8 +1592,8 @@ command from the evil-window group."
          :desc "System activity" "q" #'(lambda() (interactive) (elk/run-in-background "sysact"))
          "b" #'switch-to-buffer
          "SPC" #'app-launcher-run-app
-         :desc "Launch Firefox" "w" #'(lambda() (interactive) (elk/run-in-background "prime-run firefox"))
-         :desc "Launch Chromium" "c" #'(lambda() (interactive) (elk/run-in-background "prime-run chromium"))
+         :desc "Launch Firefox" "w" #'goto-wm-firefox
+         :desc "Launch Chromium" "c" #'goto-wm-chromium
          "d" #'dmenu
          "e" #'+eshell/here
          :desc "Launch alacritty terminal" "t" #'(lambda() (interactive) (elk/run-in-background (getenv "TERMINAL") ))
@@ -1445,14 +1601,15 @@ command from the evil-window group."
          :desc "Terminal Launch ncmpcpp" "n" #'(lambda() (interactive) (elk/run-in-background (concat (getenv "TERMINAL") " -e ncmpcpp") ))
          :desc "Mute/Unmute microphone" "m" #'(lambda() (interactive) (elk/run-in-background "mic-toggle"))
          (:prefix ("o" . "Other Applications")
-          :desc "Launch Discord" "d" #'(lambda() (interactive) (elk/run-in-background "discord"))
+          :desc "Launch Discord" "d" #'goto-wm-discord
           :desc "Launch Thunderbird" "e" #'(lambda() (interactive) (elk/run-in-background "thunderbird"))
           :desc "Launch FTB" "f" #'(lambda() (interactive) (elk/run-in-background "/media/FTBA/FTBApp"))
-          :desc "Launch Zotero" "t" #'(lambda() (interactive) (elk/run-in-background "zotero"))
-          :desc "Launch Zoom" "z" #'(lambda() (interactive) (elk/run-in-background "zoom")))
+          :desc "Launch Zotero" "t" #'goto-wm-zotero
+          :desc "Launch Zoom" "z" #'goto-wm-zoom)
          (:prefix ("p" . "Dmenu Scripts")
           :desc "Select man pages" "a" #'(lambda() (interactive) (elk/run-in-background "dm-man"))
           :desc "Clipmenu" "c" #'(lambda() (interactive) (elk/run-in-background "clipmenu"))
+          :desc "Network Manager" "n" #'(lambda() (interactive) (elk/run-in-background "networkmanager_dmenu"))
           :desc "Change colorscheme" "C" #'(lambda() (interactive) (elk/run-in-background "dm-colorscheme"))
           :desc "Kill selected application" "k" #'(lambda() (interactive) (elk/run-in-background "dm-kill"))
           :desc "Mount drives" "o" #'(lambda() (interactive) (elk/run-in-background "dm-mount"))
@@ -1492,8 +1649,8 @@ command from the evil-window group."
           ;; Change focus between windows
           ([?\s-h] . (lambda () (interactive) (elk/exwm-windmove 'left)))
           ([?\s-l] . (lambda () (interactive) (elk/exwm-windmove 'right)))
-          ([?\s-k] . (lambda () (interactive) (elk/exwm-windmove 'up)))
-          ([?\s-j] . (lambda () (interactive) (elk/exwm-windmove 'down)))
+          ([?\s-k] . evil-window-prev)
+          ([?\s-j] . evil-window-next)
 
           ;; Move windows around
           ([?\s-H] . (lambda () (interactive) (elk/exwm-move-window 'left)))
@@ -1911,10 +2068,11 @@ selectively for each Org file where it is desired.
                            (short-break . "/home/elyk/.dotrice/applications/.local/share/sounds/break.wav")
                            (long-break . "home/elyk/.dotrice/applications/.local/share/sounds/break.wav")
                            (stop . "/home/elyk/.emacs.d/.local/straight/build-28.1/pomm/resources/tick.wav")))
-  (map! (:leader
-         :prefix ("t")
-         :desc "Pomodoro" :n "t" #'pomm))
-  (pomm-mode-line-mode))
+  (add-hook 'pomm-on-tick-hook 'pomm-update-mode-line-string)
+  (add-hook 'pomm-on-status-changed-hook 'pomm-update-mode-line-string))
+(map! (:leader
+       :prefix ("t")
+       :desc "Pomodoro" :n "t" #'pomm))
 #+end_src
 
 ** Thesaurus
@@ -2108,7 +2266,7 @@ rotation is also nice though. Let’s stash this under =SPC w SPC=, inspired by
 Tmux’s use of =C-b SPC= to rotate windows.
 
 #+begin_src emacs-lisp :tangle packages.el
-(package! rotate :pin "4e9ac3ff800880bd9b705794ef0f7c99d72900a6")
+(package! rotate)
 #+end_src
 
 We could also do with adding the missing arrow-key variants of the window
@@ -2207,6 +2365,7 @@ I defined some special keybindings to open my frequently used files/projects. I 
 
 (elk/add-file-keybinding "a" "~/org/agenda.org" "Agenda agenda.org")
 (elk/add-file-keybinding "f" "~/.config/fontconfig/fonts.conf" "Fonts config fonts.conf")
+(elk/add-file-keybinding "i" "~/.config/i3/i3.org" "i3 i3.org")
 (elk/add-file-keybinding "s" "~/.config/sxhkd/sxhkdrc.org" "Sxhkdrc sxhkdrc.org")
 (elk/add-file-keybinding "k" "~/.config/kmonad/kmonad.kbd" "Kmonad kmonad.kbd")
 (elk/add-file-keybinding "d" (expand-file-name "config.org" doom-private-dir) "Doom config.org")

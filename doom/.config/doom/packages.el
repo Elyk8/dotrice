@@ -9,11 +9,9 @@
 (package! dired-open)
 (package! dired-subtree)
 
-(package! exwm)
+(package! i3wm-config-mode :recipe (:host github :repo "Alexander-Miller/i3wm-Config-Mode"))
 
-(package! app-launcher :recipe (:host github :repo "SebastienWae/app-launcher"))
-
-(package! desktop-environment)
+(package! transpose-frame)
 
 (package! edraw-org :recipe (:host github :repo "misohena/el-easydraw"))
 
@@ -54,4 +52,4 @@
 (package! company-english-helper :recipe (:host github :repo "manateelazycat/company-english-helper"))
 (package! emacs-powerthesaurus :recipe (:host github :repo "SavchenkoValeriy/emacs-powerthesaurus"))
 
-(package! rotate :pin "4e9ac3ff800880bd9b705794ef0f7c99d72900a6")
+(package! rotate)

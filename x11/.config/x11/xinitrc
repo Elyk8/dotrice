@@ -17,8 +17,11 @@ fi
 eval "$(gnome-keyring-daemon --start)"
 export SSH_AUTH_SOCK
 
-ssh-agent
-
 #/usr/bin/emacs --daemon &
-exec dbus-launch --exit-with-session emacs -mm
 #exec dbus-launch --exit-with-session stumpwm
+
+#while :; do
+#	dbus-launch --exit-with-session ssh-agent emacs -mm
+#done
+
+dbus-launch --exit-with-session ssh-agent i3

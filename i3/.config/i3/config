@@ -1,0 +1,252 @@
+set $mod Mod4
+font pango:monospace 11
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+# Move cursor between monitors
+mouse_warping output
+
+# Most needed keybindigs
+# reload the configuration file
+bindsym $mod+Shift+c reload
+
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+
+# exit i3 (logs you out of your X session)
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+
+bindsym $mod+q exec --no-startup-id emacs-i3-integration kill
+
+bindsym $mod+h exec --no-startup-id emacs-i3-integration focus left
+bindsym $mod+j exec --no-startup-id emacs-i3-integration focus down
+bindsym $mod+k exec --no-startup-id emacs-i3-integration focus up
+bindsym $mod+l exec --no-startup-id emacs-i3-integration focus right
+
+bindsym $mod+Left exec --no-startup-id emacs-i3-integration focus left
+bindsym $mod+Down exec --no-startup-id emacs-i3-integration focus down
+bindsym $mod+Up exec --no-startup-id emacs-i3-integration focus up
+bindsym $mod+Right exec --no-startup-id emacs-i3-integration focus right
+
+bindsym $mod+Shift+h exec --no-startup-id emacs-i3-integration move left
+bindsym $mod+Shift+j exec --no-startup-id emacs-i3-integration move down
+bindsym $mod+Shift+k exec --no-startup-id emacs-i3-integration move up
+bindsym $mod+Shift+l exec --no-startup-id emacs-i3-integration move right
+
+bindsym $mod+Shift+Left exec --no-startup-id emacs-i3-integration move left
+bindsym $mod+Shift+Down exec --no-startup-id emacs-i3-integration move down
+bindsym $mod+Shift+Up exec --no-startup-id emacs-i3-integration move up
+bindsym $mod+Shift+Right exec --no-startup-id emacs-i3-integration move right
+
+bindsym $mod+v exec --no-startup-id emacs-i3-integration split h
+bindsym $mod+s exec --no-startup-id emacs-i3-integration split v
+
+bindsym $mod+period exec i3-switch-tabs right
+bindsym $mod+comma exec i3-switch-tabs left
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen toggle
+
+bindsym $mod+c layout stacking
+bindsym $mod+t layout tabbed
+bindsym $mod+e exec --no-startup-id emacs-i3-integration layout toggle split
+
+bindsym $mod+Shift+f floating toggle
+bindsym $mod+z focus mode_toggle
+
+bindsym $mod++Shift+w move workspace to output right
+bindsym $mod+w focus output right
+
+bindsym $mod+a focus parent
+bindsym $mod+Shift+A focus child
+
+bindsym $mod+i sticky toggle
+
+bindsym $mod+x floating enable; sticky enable; move position 1220 0; resize set width 700 px
+
+workspace_auto_back_and_forth yes
+
+set $w1 "1:一 🚀"
+set $w2 "2:二 🌍"
+set $w3 "3:三 💬"
+set $w4 "4:四 🛠️️"
+set $w5 "5:五 🖥"
+#set $w7 "7 🛰️"
+#set $w8 "8 📝"
+#set $w9 "9 🎵"
+#set $w10 "10 📦"
+
+set $primary eDP1
+set $secondary HDMI-1-0
+
+workspace $w1 output $primary
+workspace $w2 output $secondary
+workspace $w3 output $secondary
+workspace $w4 output $primary
+workspace $w5 output $primary
+
+bindsym $mod+1 workspace $w1
+bindsym $mod+2 workspace $w2
+bindsym $mod+3 workspace $w3
+bindsym $mod+4 workspace $w4
+bindsym $mod+5 workspace $w5
+#bindsym $mod+6 workspace 6
+#bindsym $mod+7 workspace $w7
+#bindsym $mod+8 workspace $w8
+#bindsym $mod+9 workspace $w9
+#bindsym $mod+0 workspace $w10
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace $w1
+bindsym $mod+Shift+2 move container to workspace $w2
+bindsym $mod+Shift+3 move container to workspace $w3
+bindsym $mod+Shift+4 move container to workspace $w4
+bindsym $mod+Shift+5 move container to workspace $w5
+#bindsym $mod+Shift+6 move container to workspace 6
+#bindsym $mod+Shift+7 move container to workspace $w7
+#bindsym $mod+Shift+8 move container to workspace $w8
+#bindsym $mod+Shift+9 move container to workspace $w9
+#bindsym $mod+Shift+0 move container to workspace $w10
+
+assign [class="Emacs"] $w1
+assign [class="qutebrowser"] $w2
+assign [class="firefox"] $w2
+assign [class="Chromium"] $w2
+assign [class="discord"] $w3
+assign [class="zoom"] $w3
+assign [class="Virt-manager"] $w5
+
+for_window [title="VirtScreen"] floating enable
+
+for_window [class="cinnamon-settings*"] floating enable
+for_window [title="Picture-in-Picture"] sticky enable
+for_window [window_role="GtkFileChooserDialog"] resize set width 1000 px height 800 px
+for_window [window_role="GtkFileChooserDialog"] move position center
+
+for_window [instance="dropdown_*"] floating enable
+for_window [instance="dropdown_*"] move scratchpad
+for_window [instance="dropdown_*"] sticky enable
+for_window [instance="dropdown_*"] scratchpad show
+for_window [instance="dropdown_*"] move position center
+
+bindsym $mod+u exec --no-startup-id dropdown
+
+# Borders
+# for_window [class=".*"] border pixel 0
+default_border pixel 2
+hide_edge_borders both
+
+# Gaps
+set $default_inner 10
+set $default_outer 0
+
+gaps inner $default_inner
+gaps outer $default_outer
+
+smart_gaps on
+
+mode "inner gaps" {
+    bindsym plus gaps inner current plus 5
+    bindsym minus gaps inner current minus 5
+    bindsym Shift+plus gaps inner all plus 5
+    bindsym Shift+minus gaps inner all minus 5
+    bindsym 0 gaps inner current set 0
+    bindsym Shift+0 gaps inner all set 0
+
+    bindsym r gaps inner current set $default_inner
+    bindsym Shift+r gaps inner all set $default_inner
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+mode "outer gaps" {
+    bindsym plus gaps outer current plus 5
+    bindsym minus gaps outer current minus 5
+    bindsym Shift+plus gaps outer all plus 5
+    bindsym Shift+minus gaps outer all minus 5
+    bindsym 0 gaps outer current set 0
+    bindsym Shift+0 gaps outer all set 0
+
+    bindsym r gaps outer current set $default_outer
+    bindsym Shift+r gaps outer all set $default_outer
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+bindsym $mod+g mode "inner gaps"
+bindsym $mod+Shift+g mode "outer gaps"
+
+mode "resize" {
+
+    bindsym h exec --no-startup-id emacs-i3-integration resize shrink width 10 px or 10 ppt
+    bindsym j exec --no-startup-id emacs-i3-integration resize grow height 10 px or 10 ppt
+    bindsym k exec --no-startup-id emacs-i3-integration resize shrink height 10 px or 10 ppt
+    bindsym l exec --no-startup-id emacs-i3-integration resize grow width 10 px or 10 ppt
+
+    bindsym Shift+h exec --no-startup-id emacs-i3-integration resize shrink width 100 px or 100 ppt
+    bindsym Shift+j exec --no-startup-id emacs-i3-integration resize grow height 100 px or 100 ppt
+    bindsym Shift+k exec --no-startup-id emacs-i3-integration resize shrink height 100 px or 100 ppt
+    bindsym Shift+l exec --no-startup-id emacs-i3-integration resize grow width 100 px or 100 ppt
+
+    # same bindings, but for the arrow keys
+    bindsym Left  exec --no-startup-id emacs-i3-integration resize shrink width 10 px or 10 ppt
+    bindsym Down  exec --no-startup-id emacs-i3-integration resize grow height 10 px or 10 ppt
+    bindsym Up    exec --no-startup-id emacs-i3-integration resize shrink height 10 px or 10 ppt
+    bindsym Right exec --no-startup-id emacs-i3-integration resize grow width 10 px or 10 ppt
+
+    bindsym Shift+Left  exec --no-startup-id emacs-i3-integration resize shrink width 100 px or 100 ppt
+    bindsym Shift+Down  exec --no-startup-id emacs-i3-integration resize grow height 100 px or 100 ppt
+    bindsym Shift+Up    exec --no-startup-id emacs-i3-integration resize shrink height 100 px or 100 ppt
+    bindsym Shift+Right exec --no-startup-id emacs-i3-integration resize grow width 100 px or 100 ppt
+
+    bindsym equal exec i3-emacs-balance-windows
+
+    # back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+mode "move" {
+    bindsym $mod+Tab focus right
+
+    bindsym Left  move left
+    bindsym Down  move down
+    bindsym Up    move up
+    bindsym Right move right
+
+    bindsym h     move left
+    bindsym j     move down
+    bindsym k     move up
+    bindsym l     move right
+
+    # back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+bindsym $mod+m mode "move" focus floating
+
+# Startup
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+exec --no-startup-id emacsclient -c
+
+# Colors
+set_from_resource $bg-color            background
+set_from_resource $active-color        color4
+set_from_resource $inactive-bg-color   color8
+set_from_resource $text-color          foreground
+set_from_resource $inactive-text-color color7
+set_from_resource $urgent-bg-color     color1
+set_from_resource $urgent-text-color   color0
+
+# window colors
+#                       border              background         text                 indicator       child border
+client.focused          $active-color       $bg-color          $text-color          $bg-color       $active-color
+client.unfocused        $bg-color           $inactive-bg-color $inactive-text-color $bg-color       $bg-color
+client.focused_inactive $active-color       $inactive-bg-color $inactive-text-color $bg-color       $bg-color
+client.urgent           $urgent-bg-color    $urgent-bg-color   $urgent-text-color   $bg-color       $urgent-bg-color

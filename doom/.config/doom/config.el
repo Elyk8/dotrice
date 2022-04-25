@@ -100,6 +100,7 @@
 
 (setq doom-font (font-spec :family "monospace" :size 20)
       doom-variable-pitch-font (font-spec :family "sans" :size 20)
+      doom-unicode-font (font-spec :family "JoyPixels" :size 20)
       doom-big-font (font-spec :family "monospace" :size 34))
 (after! doom-themes
   (setq doom-themes-enable-bold t
@@ -364,8 +365,8 @@
 (after! org
   (require 'ox-taskjuggler))
 
+(setenv "SHELL" "/bin/zsh")
 (after! tramp
-  (setenv "SHELL" "/bin/bash")
   (setq tramp-shell-prompt-pattern "\\(?:^\\|
 \\)[^]#$%>\n]*#?[]#$%>] *\\(�\\[[0-9;]*[a-zA-Z] *\\)*")) ;; default + 
 
@@ -379,161 +380,29 @@
   (advice-add 'which-key--show-popup :around #'add-which-key-line)
   (setq which-key-idle-delay 0.2))
 
-(defun elk/run-in-background (command)
-  (let ((command-parts (split-string command "[ ]+")))
-    (apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr command-parts)))))
+(use-package! i3wm-config-mode
+  :defer t)
 
-(defun elk/set-wallpaper ()
-  (interactive)
-  ;; NOTE: You will need to update this to a valid background path!
-  (start-process-shell-command
-   "feh" nil  "$HOME/.fehbg"))
+(use-package! transpose-frame
+  :commands (transpose-frame))
 
-(defun elk/exwm-init-hook ()
-  ;; Make workspace 1 be the one where we land at startup
-  (exwm-workspace-switch-create 1)
+(defun elk/emacs-i3-windmove (dir)
+  (let ((other-window (windmove-find-other-window dir)))
+    (if (or (null other-window) (window-minibuffer-p other-window))
+        (- (error dir))
+      (windmove-do-window-select dir))))
 
-  ;; Start polybar
-  (elk/start-panel))
+(defun elk/emacs-i3-direction-exists-p (dir)
+  (some (lambda (dir)
+          (let ((win (windmove-find-other-window dir)))
+            (and win (not (window-minibuffer-p win)))))
+        (pcase dir
+          ('width '(left right))
+          ('height '(up down)))))
 
-  ;; Open eshell by default
-  ;; (+eshell/here))
-
-(defun elk/exwm-update-class ()
-  (exwm-workspace-rename-buffer exwm-class-name))
-
-(defun elk/exwm-update-title ()
-  (pcase exwm-class-name
-    ("Firefox" (exwm-workspace-rename-buffer (format "Firefox: %s" exwm-title)))))
-
-(defun elk/configure-window-by-class ()
-  (interactive)
-  (pcase exwm-class-name
-    ("firefox" (exwm-workspace-move-window 2))
-    ("Chromium" (exwm-workspace-move-window 2))
-    ("discord" (exwm-workspace-move-window 3))
-    ("Virt-manager" (exwm-workspace-move-window 5))
-    ("mpv" (exwm-floating-toggle-floating)
-     (elk/exwm-floating-toggle-pinned))
-    ))
-
-;; This function should be used only after configuring autorandr!
-(defun elk/update-displays ()
-  (elk/run-in-background "autorandr --change --force")
-  (elk/set-wallpaper)
-  (message "Display config: %s"
-           (string-trim (shell-command-to-string "autorandr --current"))))
-
-(defun elk/fix-exwm-floating-windows ()
-  (setq-local exwm-workspace-warp-cursor nil
-              mouse-autoselect-window nil
-              focus-follows-mouse nil))
-
-(setq elk/exwm-last-workspaces '(1))
-
-(defun elk/exwm-store-last-workspace ()
-  "Save the last workspace to `elk/exwm-last-workspaces'."
-  (setq elk/exwm-last-workspaces
-        (seq-uniq (cons exwm-workspace-current-index
-                        elk/exwm-last-workspaces))))
-
-(defun elk/exwm-last-workspaces-clear ()
-  "Clean `elk/exwm-last-workspaces' from deleted workspaces."
-  (setq elk/exwm-last-workspaces
-        (seq-filter
-         (lambda (i) (nth i exwm-workspace--list))
-         elk/exwm-last-workspaces)))
-
-(setq elk/exwm-monitor-list '(nil "HDMI-1-0"))
-
-(defun elk/exwm-get-current-monitor ()
-  "Return the current monitor name or nil."
-  (plist-get exwm-randr-workspace-output-plist
-             (cl-position (selected-frame)
-                          exwm-workspace--list)))
-
-(defun elk/exwm-get-other-monitor (dir)
-  "Cycle the monitor list in the direction DIR.
-
-DIR is either 'left or 'right."
-  (nth
-   (%    (+ (cl-position
-             (elk/exwm-get-current-monitor)
-             elk/exwm-monitor-list
-             :test #'string-equal)
-            (length elk/exwm-monitor-list)
-            (pcase dir
-              ('right 1)
-              ('left -1)))
-         (length elk/exwm-monitor-list))
-   elk/exwm-monitor-list))
-
-(defun elk/exwm-switch-to-other-monitor (&optional dir)
-  "Switch to another monitor."
-  (interactive)
-  (elk/exwm-last-workspaces-clear)
-  (exwm-workspace-switch
-   (cl-loop with other-monitor = (elk/exwm-get-other-monitor (or dir 'right))
-            for i in (append elk/exwm-last-workspaces
-                             (cl-loop for i from 0
-                                      for _ in exwm-workspace--list
-                                      collect i))
-            if (if other-monitor
-                   (string-equal (plist-get exwm-randr-workspace-output-plist i)
-                                 other-monitor)
-                 (not (plist-get exwm-randr-workspace-output-plist i)))
-            return i)))
-
-(defun elk/exwm-workspace-switch-monitor ()
-  "Move the current workspace to another monitor."
-  (interactive)
-  (let ((new-monitor (elk/exwm-get-other-monitor 'right))
-        (current-monitor (elk/exwm-get-current-monitor)))
-    (when (and current-monitor
-               (>= 1
-                   (cl-loop for (key value) on exwm-randr-workspace-monitor-plist
-                            by 'cddr
-                            if (string-equal value current-monitor) sum 1)))
-      (error "Can't remove the last workspace on the monitor!"))
-    (setq exwm-randr-workspace-monitor-plist
-          (map-delete exwm-randr-workspace-monitor-plist exwm-workspace-current-index))
-    (when new-monitor
-      (setq exwm-randr-workspace-monitor-plist
-            (plist-put exwm-randr-workspace-monitor-plist
-                       exwm-workspace-current-index
-                       new-monitor))))
-  (exwm-randr-refresh))
-
-(defun elk/exwm-windmove (dir)
-  "Move to window or monitor in the direction DIR."
-  (if (or (eq dir 'down) (eq dir 'up))
-      (windmove-do-window-select dir)
-    (let ((other-window (windmove-find-other-window dir))
-          (other-monitor (elk/exwm-get-other-monitor dir))
-          (opposite-dir (pcase dir
-                          ('left 'right)
-                          ('right 'left))))
-      (if other-window
-          (windmove-do-window-select dir)
-        (elk/exwm-switch-to-other-monitor dir)
-        (cl-loop while (windmove-find-other-window opposite-dir)
-                 do (windmove-do-window-select opposite-dir))))))
-
-(defun elk/exwm-direction-exists-p (dir)
-  "Check if there is space in the direction DIR.
-
-Does not take the minibuffer into account."
-  (cl-some (lambda (dir)
-             (let ((win (windmove-find-other-window dir)))
-               (and win (not (window-minibuffer-p win)))))
-           (pcase dir
-             ('width '(left right))
-             ('height '(up down)))))
-
-(defun elk/exwm-move-window (dir)
-  "Move the current window in the direction DIR."
+(defun elk/emacs-i3-move-window (dir)
   (let ((other-window (windmove-find-other-window dir))
-        (other-direction (elk/exwm-direction-exists-p
+        (other-direction (elk/emacs-i3-direction-exists-p
                           (pcase dir
                             ('up 'width)
                             ('down 'width)
@@ -543,300 +412,46 @@ Does not take the minibuffer into account."
      ((and other-window (not (window-minibuffer-p other-window)))
       (window-swap-states (selected-window) other-window))
      (other-direction
-      (evil-move-window dir)))))
+      (evil-move-window dir))
+     (t (error dir)))))
 
-(defun elk/exwm-fill-other-window (&rest _)
-  "Open the most recently used buffer in the next window."
-  (interactive)
-  (when (and (eq major-mode 'exwm-mode) (not (eq (next-window) (get-buffer-window))))
-    (let ((other-exwm-buffer
-           (cl-loop with other-buffer = (persp-other-buffer)
-                    for buf in (sort (persp-current-buffers) (lambda (a _) (eq a other-buffer)))
-                    with current-buffer = (current-buffer)
-                    when (and (not (eq current-buffer buf))
-                              (buffer-live-p buf)
-                              (not (string-match-p (persp--make-ignore-buffer-rx) (buffer-name buf)))
-                              (not (get-buffer-window buf)))
-                    return buf)))
-      (when other-exwm-buffer
-        (with-selected-window (next-window)
-          (switch-to-buffer other-exwm-buffer))))))
+(defun elk/emacs-i3-resize-window (dir kind value)
+  (if (or (one-window-p)
+          (not (elk/emacs-i3-direction-exists-p dir)))
+      (- (error (concat (symbol-name kind) (symbol-name dir))))
+    (setq value (/ value 2))
+    (pcase kind
+      ('shrink
+       (pcase dir
+         ('width
+          (evil-window-decrease-width value))
+         ('height
+          (evil-window-decrease-height value))))
+      ('grow
+       (pcase dir
+         ('width
+          (evil-window-increase-width value))
+         ('height
+          (evil-window-increase-height value)))))))
 
-(setq elk/exwm-resize-value 5)
-(defun elk/exwm-resize-window (dir kind &optional value)
-  "Resize the current window in the direction DIR.
-
-DIR is either 'height or 'width, KIND is either 'shrink or
- 'grow.  VALUE is `elk/exwm-resize-value' by default.
-
-If the window is an EXWM floating window, execute the
-corresponding command from the exwm-layout group, execute the
-command from the evil-window group."
-  (unless value
-    (setq value elk/exwm-resize-value))
-  (let* ((is-exwm-floating
-          (and (derived-mode-p 'exwm-mode)
-               exwm--floating-frame))
-         (func (if is-exwm-floating
-                   (intern
-                    (concat
-                     "exwm-layout-"
-                     (pcase kind ('shrink "shrink") ('grow "enlarge"))
-                     "-window"
-                     (pcase dir ('height "") ('width "-horizontally"))))
-                 (intern
-                  (concat
-                   "evil-window"
-                   (pcase kind ('shrink "-decrease-") ('grow "-increase-"))
-                   (symbol-name dir))))))
-    (when is-exwm-floating
-      (setq value (* 5 value)))
-    (funcall func value)))
-
-(defvar elk/polybar-process nil
-  "Holds the process of the running Polybar instance, if any")
-
-(defun elk/kill-panel ()
-  (interactive)
-  (when elk/polybar-process
-    (ignore-errors
-      (kill-process elk/polybar-process)))
-  (setq elk/polybar-process nil))
-
-(defun elk/start-panel ()
-  (interactive)
-  (elk/kill-panel)
-  (setq elk/polybar-process (start-process-shell-command "polybar" nil "polybar panel")))
-
-(defun elk/send-polybar-hook (module-name hook-index)
-  (start-process-shell-command "polybar-msg" nil (format "polybar-msg hook %s %s" module-name hook-index)))
-
-(defun elk/send-polybar-exwm-workspace ()
-  (elk/send-polybar-hook "exwm-workspace" 1))
-
-(defun elk/polybar-exwm-workspace ()
-  (pcase exwm-workspace-current-index
-    (0 "0")
-    (1 "1")
-    (2 "2")
-    (3 "3")
-    (4 "4")
-    (5 "5")))
-
-(use-package! exwm-randr
-  :after exwm
-  :config
-  ;; Set the screen resolution (update this to be the correct resolution for your screen!)
-  (exwm-randr-enable)
-  (start-process-shell-command "xrandr" nil "multi-hybrid-graphics")
-
-  ;; This will need to be updated to the name of a display!  You can find
-  ;; the names of your displays by looking at arandr or the output of xrandr
-  (setq exwm-randr-workspace-monitor-plist '(2 "HDMI-1-0" 3 "HDMI-1-0"))
-
-  ;; NOTE: Uncomment these lines after setting up autorandr!
-  ;; React to display connectivity changes, do initial display update
-  (add-hook 'exwm-randr-screen-change-hook #'elk/update-displays)
-  (elk/update-displays)
-
-  ;; Set the wallpaper after changing the resolution
-  (elk/set-wallpaper))
-
-(use-package! app-launcher
-  :commands (app-launcher-run-app))
-
-(use-package! desktop-environment
-  :after exwm
-  :diminish desktop-environment-mode
-  :config
-  (progn
-    (unbind-key "s-l" desktop-environment-mode-map)
-    (desktop-environment-mode))
-  :custom
-  (desktop-environment-volume-get-command "volume")
-  (desktop-environment-volume-get-regexp "^\\([0-9]+\\)")
-  (desktop-environment-volume-set-command "volume %s")
-  (desktop-environment-volume-normal-increment "up")
-  (desktop-environment-volume-normal-decrement "down")
-  (desktop-environment-volume-small-increment "sup")
-  (desktop-environment-volume-small-decrement "sdown")
-  (desktop-environment-volume-toggle-command "volume mute")
-  (desktop-environment-volume-toggle-microphone-command "mic-toggle")
-
-  (desktop-environment-brightness-get-command "brightness")
-  (desktop-environment-brightness-set-command "brightness %s")
-  (desktop-environment-brightness-get-regexp "^\\([0-9]+\\)")
-  (desktop-environment-brightness-normal-increment "up")
-  (desktop-environment-brightness-normal-decrement "down")
-  (desktop-environment-brightness-small-increment "sup")
-  (desktop-environment-brightness-small-decrement "sdown")
-
-  (desktop-environment-screenshot-command "flameshot gui")
-  (desktop-environment-screenshot-directory (concat (getenv "HOME") "/pix/screenshots")))
-
-(use-package! exwm
-  :init
-  (setq exwm-workspace-warp-cursor t
-        mouse-autoselect-window t
-        focus-follows-mouse t)          ; Window focus should follow the mouse pointer
-  (server-start)                        ; Start the emacs server
-  (setq exwm-workspace-number 6)        ; Set the default number of workspaces
-
-  :config
-  (add-hook 'exwm-update-class-hook #'elk/exwm-update-class) ;; When window "class" updates, use it to set the buffer name
-  (add-hook 'exwm-update-title-hook #'elk/exwm-update-title) ;; When window title updates, use it to set the buffer name
-  (add-hook 'exwm-manage-finish-hook #'elk/configure-window-by-class) ;; Configure windows as they're created
-  (add-hook 'exwm-init-hook #'elk/exwm-init-hook) ;; When EXWM starts up, do some extra confifuration
-
-  ;; NOTE: Uncomment the following two options if you want window buffers
-  ;;       to be available on all workspaces!
-
-  ;;(setq exwm-layout-show-all-buffers t) ;; Automatically move EXWM buffer to current workspace when selected
-  ;;(setq exwm-workspace-show-all-buffers t) ;; Display all EXWM buffers in every workspace buffer list
-
-  ;; NOTE: Uncomment this option if you want to detach the minibuffer!
-  ;;(setq exwm-workspace-minibuffer-position 'top) ;; Detach the minibuffer (show it with exwm-workspace-toggle-minibuffer)
-
-  (add-hook 'exwm-mode-hook #'doom-mark-buffer-as-real-h) ;; Show `exwm' buffers in buffer switching prompts.
-  (add-hook 'exwm-workspace-switch-hook #'elk/exwm-store-last-workspace) ;; Swapping workspaces between monitors
-  (add-hook 'exwm-floating-setup-hook #'elk/fix-exwm-floating-windows) ;; For floating windows, this will break EXWM. So we disable the above for floating mode.
-  (add-hook 'exwm-workspace-switch-hook #'elk/send-polybar-exwm-workspace) ;; Update panel indicator when workspace changes
-
-  (add-hook 'exwm-manage-finish-hook #'(lambda () (interactive) (evil-insert-state))) ;; This allows the use of doom alternate leader key in x windows
-
-  ;; These keys should always pass through to Emacs
-  (setq exwm-input-prefix-keys
-        '(?\C-x
-          ?\C-u
-          ?\M-x
-          ?\M-`
-          ?\M-&
-          ?\M-:
-          ?\C-\M-j  ;; Buffer list
-          ?\M-\     ;; Alt+Space
-          ?\s-\ ))
-
-  ;; Ctrl+Q will enable the next key to be sent directly
-  (define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
-
-  ;; Find a better window for the split
-  (advice-add 'evil-window-split :after #'elk/exwm-fill-other-window)
-  (advice-add 'evil-window-vsplit :after #'elk/exwm-fill-other-window)
-
-  ;; Super + space prefix key for general keybindings
-  (map! (:prefix "s-SPC"
-         :desc "System activity" "q" #'(lambda() (interactive) (elk/run-in-background "sysact"))
-         "b" #'switch-to-buffer
-         "SPC" #'app-launcher-run-app
-         :desc "Launch Firefox" "w" #'(lambda() (interactive) (elk/run-in-background "prime-run firefox"))
-         :desc "Launch Chromium" "c" #'(lambda() (interactive) (elk/run-in-background "prime-run chromium"))
-         "d" #'dmenu
-         "e" #'+eshell/here
-         :desc "Launch alacritty terminal" "t" #'(lambda() (interactive) (elk/run-in-background (getenv "TERMINAL") ))
-         :desc "Terminal Launch lf" "r" #'(lambda() (interactive) (elk/run-in-background (concat (getenv "TERMINAL") " -e lf") ))
-         :desc "Terminal Launch ncmpcpp" "n" #'(lambda() (interactive) (elk/run-in-background (concat (getenv "TERMINAL") " -e ncmpcpp") ))
-         :desc "Mute/Unmute microphone" "m" #'(lambda() (interactive) (elk/run-in-background "mic-toggle"))
-         (:prefix ("o" . "Other Applications")
-          :desc "Launch Discord" "d" #'(lambda() (interactive) (elk/run-in-background "discord"))
-          :desc "Launch Thunderbird" "e" #'(lambda() (interactive) (elk/run-in-background "thunderbird"))
-          :desc "Launch FTB" "f" #'(lambda() (interactive) (elk/run-in-background "/media/FTBA/FTBApp"))
-          :desc "Launch Zotero" "t" #'(lambda() (interactive) (elk/run-in-background "zotero"))
-          :desc "Launch Zoom" "z" #'(lambda() (interactive) (elk/run-in-background "zoom")))
-         (:prefix ("p" . "Dmenu Scripts")
-          :desc "Select man pages" "a" #'(lambda() (interactive) (elk/run-in-background "dm-man"))
-          :desc "Clipmenu" "c" #'(lambda() (interactive) (elk/run-in-background "clipmenu"))
-          :desc "Change colorscheme" "C" #'(lambda() (interactive) (elk/run-in-background "dm-colorscheme"))
-          :desc "Kill selected application" "k" #'(lambda() (interactive) (elk/run-in-background "dm-kill"))
-          :desc "Mount drives" "o" #'(lambda() (interactive) (elk/run-in-background "dm-mount"))
-          :desc "Unmount drives" "u" #'(lambda() (interactive) (elk/run-in-background "dm-umount"))
-          :desc "Passmenu" "p" #'(lambda() (interactive) (elk/run-in-background "dm-passmenu"))
-          :desc "FM Radio" "b" #'(lambda() (interactive) (elk/run-in-background "dm-beats"))
-          :desc "Weather forecast" "w" #'(lambda() (interactive) (elk/run-in-background "weatherforecast")))
-         (:prefix (";" . "System settings")
-          :desc "Set wallpaper from a2n gallery" "a" #'(lambda() (interactive) (elk/run-in-background "setwallpaper a2n"))
-          :desc "Set wallpaper from dt gallery" "d" #'(lambda() (interactive) (elk/run-in-background "setwallpaper dt"))
-          :desc "Set wallpaper from elyk gallery" "e" #'(lambda() (interactive) (elk/run-in-background "setwallpaper elyk"))
-          :desc "Open pulsemixer" "v" #'(lambda() (interactive) (elk/run-in-background (concat (getenv "TERMINAL") " -e pulsemixer") )))))
-
-  ;; Set global key bindings.  These always work, no matter the input state!
-  ;; Keep in mind that changing this list after EXWM initializes has no effect.
-  (setq exwm-input-global-keys
-        `(
-          ;; Reset to line-mode (C-c C-k switches to char-mode via exwm-input-release-keyboard)
-          ([?\s-r] . exwm-reset)
-
-          ;; Splits
-          ([?\s-v] . evil-window-vsplit)
-          ([?\s-z] . evil-window-split)
-
-          ;; Switch workspace
-          ([?\s-w] . (lambda () (interactive) (elk/exwm-switch-to-other-monitor)))
-          ([?\s-W] . (lambda () (interactive) (elk/exwm-workspace-switch-monitor)))
-          ([?\s-`] . (lambda () (interactive) (exwm-workspace-switch-create 0)))
-
-          ;; Change layouts
-          ([?\s-b] . (lambda () (interactive) (rotate-layout)))
-
-          ;; Killing buffers and windows
-          ([?\s-c] . kill-current-buffer)
-          ([?\s-q] . +workspace/close-window-or-workspace)
-
-          ;; Change focus between windows
-          ([?\s-h] . (lambda () (interactive) (elk/exwm-windmove 'left)))
-          ([?\s-l] . (lambda () (interactive) (elk/exwm-windmove 'right)))
-          ([?\s-k] . (lambda () (interactive) (elk/exwm-windmove 'up)))
-          ([?\s-j] . (lambda () (interactive) (elk/exwm-windmove 'down)))
-
-          ;; Move windows around
-          ([?\s-H] . (lambda () (interactive) (elk/exwm-move-window 'left)))
-          ([?\s-L] . (lambda () (interactive) (elk/exwm-move-window 'right)))
-          ([?\s-K] . (lambda () (interactive) (elk/exwm-move-window 'up)))
-          ([?\s-J] . (lambda () (interactive) (elk/exwm-move-window 'down)))
-
-          ([?\s-\C-h] . (lambda () (interactive) (elk/exwm-resize-window 'width 'shrink)))
-          ([?\s-\C-j] . (lambda () (interactive) (elk/exwm-resize-window 'height 'grow)))
-          ([?\s-\C-k] . (lambda () (interactive) (elk/exwm-resize-window 'height 'shrink)))
-          ([?\s-\C-l] . (lambda () (interactive) (elk/exwm-resize-window 'width 'grow)))
-          ([?\s-\C-=] . balance-windows)
-
-          ([?\s-g] . exwm-floating-toggle-floating)
-          ([?\s-f] . exwm-layout-toggle-fullscreen)
-          ([?\s-m] . exwm-layout-toggle-mode-line)
-          ([?\s-i] . exwm-input-toggle-keyboard) ;; Toggle between "line-mode" and "char-mode" in an EXWM window
-
-          ;; Music control using mpc
-          ([?\s-p] . (lambda() (interactive) (elk/run-in-background "mpc toggle")) )
-          ([?\s-\]] . (lambda() (interactive) (elk/run-in-background "mpc next")) )
-          ([?\s-\[] . (lambda() (interactive) (elk/run-in-background "mpc prev")) )
-          ([?\s-=] . (lambda() (interactive) (elk/run-in-background "mpc volume +2 && mpc-volume")) )
-          ([?\s--] . (lambda() (interactive) (elk/run-in-background "mpc volume -2 && mpc-volume")) )
-
-          ;; Launch applications via shell command
-          ([?\s-&] . (lambda (command)
-                       (interactive (list (read-shell-command "$ ")))
-                       (start-process-shell-command command nil command)))
-
-          ;; 's-N': Switch to certain workspace with Super (Win) plus a number key (0 - 9)
-          ,@(mapcar (lambda (i)
-                      `(,(kbd (format "s-%d" i)) .
-                        (lambda ()
-                          (interactive)
-                          (exwm-workspace-switch-create ,i))))
-                    (number-sequence 0 9))
-
-          ,@(cl-mapcar (lambda (c n)
-                         `(,(kbd (format "s-%c" c)) .
-                           (lambda ()
-                             (interactive)
-                             (exwm-workspace-move-window ,n)
-                             (exwm-workspace-switch ,n))))
-                       '(?\) ?! ?@ ?# ?$ ?% ?^ ?& ?* ?\()
-                       ;; '(?\= ?! ?\" ?# ?¤ ?% ?& ?/ ?\( ?\))
-                       (number-sequence 0 9))))
-
-  (add-hook 'exwm-input--input-mode-change-hook 'force-mode-line-update)
-
-  (exwm-enable))
+(defun elk/emacs-i3-integration (command)
+  (pcase command
+    ((rx bos "focus")
+     (elk/emacs-i3-windmove
+      (intern (elt (split-string command) 1))))
+    ((rx bos "move")
+     (elk/emacs-i3-move-window
+      (intern (elt (split-string command) 1))))
+    ((rx bos "resize")
+     (elk/emacs-i3-resize-window
+       (intern (elt (split-string command) 2))
+       (intern (elt (split-string command) 1))
+       (string-to-number (elt (split-string command) 3))))
+    ("layout toggle split" (transpose-frame))
+    ("split v" (evil-window-split))
+    ("split h" (evil-window-vsplit))
+    ("kill" (evil-quit))
+    (- (error command))))
 
 (use-package! edraw-org
   :after org
@@ -1069,10 +684,11 @@ command from the evil-window group."
                            (short-break . "/home/elyk/.dotrice/applications/.local/share/sounds/break.wav")
                            (long-break . "home/elyk/.dotrice/applications/.local/share/sounds/break.wav")
                            (stop . "/home/elyk/.emacs.d/.local/straight/build-28.1/pomm/resources/tick.wav")))
-  (map! (:leader
-         :prefix ("t")
-         :desc "Pomodoro" :n "t" #'pomm))
-  (pomm-mode-line-mode))
+  (add-hook 'pomm-on-tick-hook 'pomm-update-mode-line-string)
+  (add-hook 'pomm-on-status-changed-hook 'pomm-update-mode-line-string))
+(map! (:leader
+       :prefix ("t")
+       :desc "Pomodoro" :n "t" #'pomm))
 
 (use-package! emacs-powerthesaurus
   :after-call (powerthesaurus-lookup-synonyms-dwim
@@ -1235,6 +851,7 @@ command from the evil-window group."
 
 (elk/add-file-keybinding "a" "~/org/agenda.org" "Agenda agenda.org")
 (elk/add-file-keybinding "f" "~/.config/fontconfig/fonts.conf" "Fonts config fonts.conf")
+(elk/add-file-keybinding "i" "~/.config/i3/i3.org" "i3 i3.org")
 (elk/add-file-keybinding "s" "~/.config/sxhkd/sxhkdrc.org" "Sxhkdrc sxhkdrc.org")
 (elk/add-file-keybinding "k" "~/.config/kmonad/kmonad.kbd" "Kmonad kmonad.kbd")
 (elk/add-file-keybinding "d" (expand-file-name "config.org" doom-private-dir) "Doom config.org")

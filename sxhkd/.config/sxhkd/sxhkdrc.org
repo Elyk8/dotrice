@@ -38,15 +38,16 @@ These are keybindings which one uses the most. Thus we want as fewer key-presses
 #+begin_src conf
 # Open desktop applications
 super + space ; space
-      emacsclient -e '(app-launcher-run-app)'
+      dm-j4dmenu-desktop
+      #emacsclient -e '(app-launcher-run-app)'
 
 # Dmenu run executables
 super + space ; d
-      emacsclient -e '(dmenu)'
+      dmenu_run -bw 0
 
 # Open ESHELL
 super + space ; e
-      emacsclient -e '(+eshell/here)'
+      emacsclient -c -n
 
 # Open terminal emulator
 super + space ; t
@@ -62,7 +63,7 @@ super + space ; n
 
 # Dmenu list opened windows
 super + space ; b
-      emacsclient -e '(ibuffer)'
+      dm-win
 
 # Open Firefox
 super + space ; w
@@ -74,7 +75,7 @@ super + space ; c
 
 # Toggle mute microphone
 super + space ; m
-      mic-toggle
+      microphone toggle
 #+end_src
 
 * =Super + space= followed by =O=, opening.
@@ -247,14 +248,6 @@ For media and music control, one does not want the leader key to be used, since
 one does not desire added delay when changing songs or volume.
 
 #+begin_src conf
-# MPC Move backwards 10 secs
-super + comma
-      mpc seek -10
-
-# MPC Move forwards 10 secs
-super + period
-      mpc seek +10
-
 # MPC Previous song
 super + bracketleft
       mpc prev

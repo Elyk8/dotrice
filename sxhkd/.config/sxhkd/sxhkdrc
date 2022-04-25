@@ -6,15 +6,16 @@ super + slash
 
 # Open desktop applications
 super + space ; space
-      emacsclient -e '(app-launcher-run-app)'
+      dm-j4dmenu-desktop
+      #emacsclient -e '(app-launcher-run-app)'
 
 # Dmenu run executables
 super + space ; d
-      emacsclient -e '(dmenu)'
+      dmenu_run -bw 0
 
 # Open ESHELL
 super + space ; e
-      emacsclient -e '(+eshell/here)'
+      emacsclient -c -n
 
 # Open terminal emulator
 super + space ; t
@@ -30,7 +31,7 @@ super + space ; n
 
 # Dmenu list opened windows
 super + space ; b
-      emacsclient -e '(ibuffer)'
+      dm-win
 
 # Open Firefox
 super + space ; w
@@ -42,7 +43,7 @@ super + space ; c
 
 # Toggle mute microphone
 super + space ; m
-      mic-toggle
+      microphone toggle
 
 # Open Discord
 super + space ; o ; d
@@ -182,14 +183,6 @@ Print ; shift + c
 # Take screenshot of whole desktop into clipboard
 Print ; shift + f
       maimpick 'Fullscreen (copy)'
-
-# MPC Move backwards 10 secs
-super + comma
-      mpc seek -10
-
-# MPC Move forwards 10 secs
-super + period
-      mpc seek +10
 
 # MPC Previous song
 super + bracketleft
