@@ -115,8 +115,9 @@
 
 (remove-hook 'text-mode-hook #'auto-fill-mode) ;; Prevent lines from auto breaking
 
-(setq! citar-library-paths '("~/dox/bibliography/")
-       citar-notes-paths "~/dox/notes/")
+(setq! citar-bibliography '("~/dox/bibliography/references.bib" "~/dox/bibliography/Capstone Project.bib")
+       citar-library-paths '("~/dox/bibliography/")
+       citar-notes-paths '("~/dox/notes/"))
 
 (use-package! company
   :after-call (company-mode global-company-mode company-complete
@@ -148,8 +149,6 @@
                               ("png" . "open")
                               ("mkv" . "open")
                               ("mp4" . "open")))
-(setq find-file-visit-truename nil ;; Don't expand symlinks if you don't want to go insane.
-      dired-kill-when-opening-new-dired-buffer t) ;; Kill the current buffer when selecting a new directory.
 
 (setq ispell-dictionary "en-custom"
       ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
@@ -280,6 +279,19 @@
 
 (setq org-odt-preferred-output-format "docx")
 
+(with-eval-after-load 'ox-latex
+  (add-to-list 'org-latex-classes
+               '("org-plain-latex"
+                 "\\documentclass{article}
+           [NO-DEFAULT-PACKAGES]
+           [PACKAGES]
+           [EXTRA]"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+
 (after! org-journal
   (setq org-journal-dir (concat org-directory "journal")
         org-journal-date-prefix "* "
@@ -302,6 +314,9 @@
            :unnarrowed t)
           ("c" "podcasts" plain (file "~/org/templates/podcasts.org")
            :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: @ %^{Tag}\n\n")
+           :unnarrowed t)
+          ("e" "latex" plain (file "~/org/templates/reportex.org")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: < %^{Unit Code}\n\n")
            :unnarrowed t)
           ("i" "ideas" plain (file "~/org/templates/ideas.org")
            :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: > %^{Tag}\n\n")
@@ -349,6 +364,24 @@
 (after! org-roam
   (add-hook! 'after-save-hook #'elk/org-roam-rename-to-new-title))
 
+(defun elk/org-roam-filter-by-tag (tag-name)
+  (lambda (node)
+    (member tag-name (org-roam-node-tags node))))
+
+(defun elk/org-roam-list-notes-by-tag (tag-name)
+  (mapcar #'org-roam-node-file
+          (seq-filter
+           (elk/org-roam-filter-by-tag tag-name)
+           (org-roam-node-list))))
+
+(defun elk/org-roam-refresh-agenda-list ()
+  (interactive)
+  (setq org-agenda-files (elk/org-roam-list-notes-by-tag "=")))
+
+;; Build the agenda list the first time for the session
+(after! org-roam
+  (add-hook! 'org-roam-mode-hook #'elk/org-roam-refresh-agenda-list))
+
 (setq shell-file-name "/bin/zsh"
       vterm-max-scrollback 5000)
 
@@ -363,7 +396,39 @@
         eshell-visual-commands'("bash" "xsh" "htop" "ssh" "top" "fish")))
 
 (after! org
-  (require 'ox-taskjuggler))
+  (require 'ox-taskjuggler)
+  (setq org-taskjuggler-default-reports
+        '("textreport report \"Plan\" {
+formats html
+header '== %title =='
+center -8<-
+[#Plan Plan] | [#Resource_Allocation Resource Allocation]
+----
+=== Plan ===
+<[report id=\"plan\"]>
+----
+=== Resource Allocation ===
+<[report id=\"resourceGraph\"]>
+->8-
+}
+# A traditional Gantt chart with a project overview.
+taskreport plan \"\" {
+headline \"Project Plan\"
+columns bsi, name, start, end, effort, effortdone, effortleft, chart { width 1000 }
+loadunit shortauto
+hideresource 1
+}
+# A graph showing resource allocation. It identifies whether each
+# resource is under- or over-allocated for.
+resourcereport resourceGraph \"\" {
+headline \"Resource Allocation Graph\"
+columns no, name, effort, weekly { width 1000 }
+loadunit shortauto
+hidetask ~(isleaf() & isleaf_())
+sorttasks plan.start.up
+}")
+        )
+  (setq org-taskjuggler-default-project-duration 999))
 
 (setenv "SHELL" "/bin/zsh")
 (after! tramp
@@ -376,8 +441,8 @@
 (after! which-key
   (setq which-key-allow-imprecise-window-fit t) ; Comment this if experiencing crashes
   ;; Add an extra line to work around bug in which-key imprecise
-  (defun add-which-key-line (f &rest r) (progn (apply f (list (cons (+ 1 (car (car r))) (cdr (car r)))))))
-  (advice-add 'which-key--show-popup :around #'add-which-key-line)
+  ;; (defun add-which-key-line (f &rest r) (progn (apply f (list (cons (+ 1 (car (car r))) (cdr (car r)))))))
+  ;; (advice-add 'which-key--show-popup :around #'add-which-key-line)
   (setq which-key-idle-delay 0.2))
 
 (use-package! i3wm-config-mode
@@ -852,10 +917,13 @@
 (elk/add-file-keybinding "a" "~/org/agenda.org" "Agenda agenda.org")
 (elk/add-file-keybinding "f" "~/.config/fontconfig/fonts.conf" "Fonts config fonts.conf")
 (elk/add-file-keybinding "i" "~/.config/i3/i3.org" "i3 i3.org")
+(elk/add-file-keybinding "l" "~/dox/budget.ledger")
+(elk/add-file-keybinding "p" "~/.config/polybar/polybar.org" "Polybar polybar.org")
 (elk/add-file-keybinding "s" "~/.config/sxhkd/sxhkdrc.org" "Sxhkdrc sxhkdrc.org")
 (elk/add-file-keybinding "k" "~/.config/kmonad/kmonad.kbd" "Kmonad kmonad.kbd")
 (elk/add-file-keybinding "d" (expand-file-name "config.org" doom-private-dir) "Doom config.org")
-(elk/add-file-keybinding "x" "~/.config/xmonad/xmonad.hs" "Xmonad xmonad.hs")
+(elk/add-file-keybinding "X" "~/.config/xmonad/xmonad.hs" "Xmonad xmonad.hs")
+(elk/add-file-keybinding "x" "~/.config/x11/x.org" "X11 x.org")
 
 (elk/add-project-keybinding "d" "~/.config/doom/" "Doom")
 (elk/add-project-keybinding "s" "~/.config/shell/" "Shell")

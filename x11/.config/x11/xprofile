@@ -1,5 +1,4 @@
 #!/bin/sh
-
 run() {
     if ! pgrep "$1" > /dev/null ;
     then
@@ -8,9 +7,9 @@ run() {
 }
 
 # /usr/bin/prime-offload
-#multi-monitor
-multi-hybrid-graphics
+# multi-monitor
 xrdb -merge ~/.config/x11/Xresources & xrdbpid=$!
+# run autorandr --change
 # run safeeyes -e &
 run kmonad-refresh &
 run /usr/bin/emacs --daemon &
@@ -20,17 +19,12 @@ run pacmac-tray &
 run sxhkd &
 run dm-wacom &
 run picom -b &
-run umonitor --listen --daemonize &
-
-autostart="redshift clipmenud lxsession mpd"
-
-for program in $autostart; do
-    pidof -s "$program" || setsid -f "$program"
-done >/dev/null 2>&1
-
+run clipmenud &
+run redshift &
+run lxsession &
+run mpd &
 run dunst-reload &
 run "$HOME"/.fehbg &
-run mictray &
 
 xsetroot -cursor_name left_ptr
 [ -n "$xrdbpid" ] && wait "$xrdbpid"

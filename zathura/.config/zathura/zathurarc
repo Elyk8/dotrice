@@ -1,5 +1,11 @@
 # Basic Settings
 
+#stop at page boundries
+set scroll-page-aware "true"
+set smooth-scroll "true"
+set scroll-full-overlap 0.01
+set scroll-step 100
+
 set dbus-service true
 set synctex true
 set sandbox none
@@ -10,7 +16,6 @@ set page-padding 1
 set selection-clipboard clipboard
 set highlight-transparency .5
 set zoom-center "true"
-set render-loading "false"
 map <Space> toggle_index
 map D toggle_page_mode
 map r reload
@@ -40,25 +45,25 @@ set recolor-keephue             true      # keep original color
 # }}}
 
 # Doom-one {{{
-# set default-bg                  "#282C34" # bg
-# set default-fg                  "#BBC2CF" # fg
-# set render-loading              true
-# set render-loading-bg           "#282C34" # bg
-# set render-loading-fg           "#BBC2CF" # fg
+set default-bg                  "#282C34" # bg
+set default-fg                  "#46D9FF" # fg
+set render-loading              true
+set render-loading-bg           "#282C34" # bg
+set render-loading-fg           "#46D9FF" # fg
 
-# # Recolor book content's color
-# set recolor-lightcolor          "#282C34" # bg
-# set recolor-darkcolor           "#BBC2CF" # fg
+# Recolor book content's color
+set recolor-lightcolor          "#282C34" # bg
+set recolor-darkcolor           "#46D9FF" # fg
 # }}}
 
 # Darkplus {{{
-set default-bg                  "#1E1E1E" # bg
-set default-fg                  "#D8DEE9" # fg
-set render-loading              true
-set render-loading-bg           "#1E1E1E" # bg
-set render-loading-fg           "#D8DEE9" # fg
+# set default-bg                  "#1E1E1E" # bg
+# set default-fg                  "#D8DEE9" # fg
+# set render-loading              true
+# set render-loading-bg           "#1E1E1E" # bg
+# set render-loading-fg           "#D8DEE9" # fg
 
-# Recolor book content's color
-set recolor-lightcolor          "#1E1E1E" # bg
-set recolor-darkcolor           "#D8DEE9" # fg
+# # Recolor book content's color
+# set recolor-lightcolor          "#1E1E1E" # bg
+# set recolor-darkcolor           "#D8DEE9" # fg
 # }}}

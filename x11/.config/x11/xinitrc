@@ -1,5 +1,4 @@
 #!/bin/sh
-
 # xinitrc runs automatically when you run startx.
 
 # There are some small but important commands that need to be run when we start
@@ -9,9 +8,9 @@
 # I source them here with the line below.
 
 if [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/x11/xprofile" ]; then
-	. "${XDG_CONFIG_HOME:-$HOME/.config}/x11/xprofile"
+    . "${XDG_CONFIG_HOME:-$HOME/.config}/x11/xprofile"
 else
-	. "$HOME/.xprofile"
+    . "$HOME/.xprofile"
 fi
 
 eval "$(gnome-keyring-daemon --start)"

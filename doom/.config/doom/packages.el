@@ -30,10 +30,10 @@
 (package! org-download)
 
 ;; When using org-roam via the `+roam` flag
-(unpin! org-roam)
+;(unpin! org-roam)
 
 ;; When using bibtex-completion via the `biblio` module
-(unpin! bibtex-completion helm-bibtex ivy-bibtex)
+;(unpin! bibtex-completion helm-bibtex ivy-bibtex)
 
 (package! org-roam-bibtex
   :recipe (:host github :repo "org-roam/org-roam-bibtex"))

@@ -1,0 +1,110 @@
+#+title: X
+#+property: header-args :tangle no
+#+auto_tangle: t
+
+* Xinitrc
+
+#+begin_src sh :shebang #!/bin/sh :tangle xinitrc
+# xinitrc runs automatically when you run startx.
+
+# There are some small but important commands that need to be run when we start
+# the graphical environment. There is a link to this file in ~/.xprofile
+# because that file is run automatically if someone uses a display manager
+# (login screen) and so they are needed there. To prevent doubling up commands,
+# I source them here with the line below.
+
+if [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/x11/xprofile" ]; then
+    . "${XDG_CONFIG_HOME:-$HOME/.config}/x11/xprofile"
+else
+    . "$HOME/.xprofile"
+fi
+
+eval "$(gnome-keyring-daemon --start)"
+export SSH_AUTH_SOCK
+
+#/usr/bin/emacs --daemon &
+#exec dbus-launch --exit-with-session stumpwm
+
+#while :; do
+#	dbus-launch --exit-with-session ssh-agent emacs -mm
+#done
+
+dbus-launch --exit-with-session ssh-agent i3
+#+end_src
+
+* Xprofile
+
+#+begin_src sh :shebang #!/bin/sh :tangle xprofile
+run() {
+    if ! pgrep "$1" > /dev/null ;
+    then
+        "$@"&
+    fi
+}
+
+# /usr/bin/prime-offload
+# multi-monitor
+xrdb -merge ~/.config/x11/Xresources & xrdbpid=$!
+# run autorandr --change
+# run safeeyes -e &
+run kmonad-refresh &
+run /usr/bin/emacs --daemon &
+#run syncthing-gtk --minimized &
+run /usr/bin/pipewire &
+run pacmac-tray &
+run sxhkd &
+run dm-wacom &
+run picom -b &
+run clipmenud &
+run redshift &
+run lxsession &
+run mpd &
+run dunst-reload &
+run "$HOME"/.fehbg &
+
+xsetroot -cursor_name left_ptr
+[ -n "$xrdbpid" ] && wait "$xrdbpid"
+#+end_src
+
+* Xresources
+
+** General settings
+
+#+begin_src conf-xdefaults :tangle Xresources
+Xft.dpi: 120
+Xft.autohint: true
+Xft.Hinting: 1
+Xft.RGBA: rgb
+Xft.HintStyle: hintslight
+Xft.Antialias: 1
+Xft.lcdfilter: lcdfilter
+Xcursor.theme: Breeze-Blue
+
+XTerm*termName: xterm-256color
+
+emacs.toolBar: 0
+emacs.menuBar: off
+emacs.verticalScrollBars: off
+emacs.title: Emacs
+
+! Font Settings
+,*.font: monospace:weight:medium:size=12:antialias=true:autohint=true
+,*.font2: JoyPixels:pixelsize=19:antialias=true:autohint=true
+
+nsxiv.font: monospace:weight=medium:size=11:antialias=true:autohint=true
+dmenu.font: monospace:weight=medium:size=11:antialias=true:autohint=true
+
+! general
+st.alpha: 0.95
+#+end_src
+
+** Colorscheme
+
+#+begin_src conf-xdefaults :tangle Xresources
+! #include "./Xresources.d/dark-plus.xresources"
+! #include "./Xresources.d/tokyonight.xresources"
+#include "./Xresources.d/doom-one.xresources"
+! #include "./Xresources.d/git.xresources"
+! #include "./Xresources.d/gitdark.xresources"
+! #include "./Xresources.d/dracula.xresources"
+#+end_src

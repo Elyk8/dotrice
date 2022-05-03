@@ -67,11 +67,11 @@ bindsym $mod+x floating enable; sticky enable; move position 1220 0; resize set 
 
 workspace_auto_back_and_forth yes
 
-set $w1 "1:一 🚀"
-set $w2 "2:二 🌍"
-set $w3 "3:三 💬"
-set $w4 "4:四 🛠️️"
-set $w5 "5:五 🖥"
+set $w1 "1:一."
+set $w2 "2:二."
+set $w3 "3:三."
+set $w4 "4:四."
+set $w5 "5:五."
 #set $w7 "7 🛰️"
 #set $w8 "8 📝"
 #set $w9 "9 🎵"
@@ -109,16 +109,16 @@ bindsym $mod+Shift+5 move container to workspace $w5
 #bindsym $mod+Shift+9 move container to workspace $w9
 #bindsym $mod+Shift+0 move container to workspace $w10
 
-assign [class="Emacs"] $w1
+bindsym $mod+d exec --no-startup-id i3-display-swap
+
 assign [class="qutebrowser"] $w2
 assign [class="firefox"] $w2
-assign [class="Chromium"] $w2
 assign [class="discord"] $w3
 assign [class="zoom"] $w3
+assign [class="Chromium"] $w4
 assign [class="Virt-manager"] $w5
 
 for_window [title="VirtScreen"] floating enable
-
 for_window [class="cinnamon-settings*"] floating enable
 for_window [title="Picture-in-Picture"] sticky enable
 for_window [window_role="GtkFileChooserDialog"] resize set width 1000 px height 800 px
@@ -129,8 +129,6 @@ for_window [instance="dropdown_*"] move scratchpad
 for_window [instance="dropdown_*"] sticky enable
 for_window [instance="dropdown_*"] scratchpad show
 for_window [instance="dropdown_*"] move position center
-
-bindsym $mod+u exec --no-startup-id dropdown
 
 # Borders
 # for_window [class=".*"] border pixel 0
@@ -233,7 +231,8 @@ bindsym $mod+m mode "move" focus floating
 
 # Startup
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
-exec --no-startup-id emacsclient -c
+exec_always --no-startup-id $HOME/.fehbg
+exec_always --no-startup-id autorandr --change --force
 
 # Colors
 set_from_resource $bg-color            background

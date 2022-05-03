@@ -45,7 +45,7 @@ super + space ; space
 super + space ; d
       dmenu_run -bw 0
 
-# Open ESHELL
+# Open an emacs frame
 super + space ; e
       emacsclient -c -n
 
@@ -59,7 +59,7 @@ super + space ; r
 
 # Open ncmpcpp music player
 super + space ; n
-      pidof ncmpcpp || $TERMINAL -e ncmpcpp
+      dropdown "scratch-ncmpcpp" "$TERMINAL -e ncmpcpp" "1000" "700"
 
 # Dmenu list opened windows
 super + space ; b
@@ -182,7 +182,7 @@ super + space ; semicolon ; e
 
 # Open pulsemixer volume manager
 super + space ; semicolon ; v
-      $TERMINAL -e pulsemixer
+      dropdown "scratch-pulsemixer" "$TERMINAL -e pulsemixer" "1000" "700"
 
 # Interactively setwallpaper using nsxiv
 super + space ; semicolon ; w
@@ -272,13 +272,17 @@ super + p
 * =super += function keys
 
 #+begin_src conf
+# Lock the screen
+super + F1
+      slock -i $(fd -atf --base-directory $HOME/pix/wallpapers/dt -0 | shuf -z -n 1)
+
 # Toggle Buckle spring keyboard sound effect
 super + F2
       buckle-spring
 
 # Refresh doom configuration and restart the emacs daemon
-#super + F3
-#      restart-emacs
+super + F3
+      restart-emacs
 
 # Refresh kmonad configuration
 super + F4
