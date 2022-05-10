@@ -189,5 +189,5 @@
        (default +bindings +smartparens)
 
        :hostconfig
-       (:if (string-suffix-p "skynet" (string-trim (shell-command-to-string "uname -n")))
+       (:if (string= "skynet" (string-trim (shell-command-to-string "uname -n")))
         skynet))
