@@ -186,4 +186,8 @@
 
        :config
        literate
-       (default +bindings +smartparens))
+       (default +bindings +smartparens)
+
+       :hostconfig
+       (:if (string-suffix-p "skynet" (string-trim (shell-command-to-string "uname -n")))
+        skynet))

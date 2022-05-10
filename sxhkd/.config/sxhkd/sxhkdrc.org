@@ -67,11 +67,11 @@ super + space ; b
 
 # Open Firefox
 super + space ; w
-      pidof firefox >/dev/null && wmctrl -lx | awk '$3 ~ "Firefox" {print $1}' | head -1 | xargs -r xdotool windowactivate || firefox
+      prime-run firefox
 
 # Open Chromium
 super + space ; c
-      pidof chromium >/dev/null && wmctrl -lx | awk '$3 ~ "Chromium" {print $1}' | head -1 | xargs -r xdotool windowactivate || chromium
+      prime-run chromium
 
 # Toggle mute microphone
 super + space ; m
@@ -287,5 +287,8 @@ super + F3
 # Refresh kmonad configuration
 super + F4
       notify-send "Refreshing KMonad in 2 secs"; kmonad-refresh; notify-send "Success!"
+
+super + {F11, F12}
+      brightness {down,up}
 #+end_src
 

@@ -26,7 +26,7 @@
 (defalias
   game  (tap-hold-next 500 f1 (layer-switch game))
   dflt  (tap-hold-next 500 f1 (layer-switch default))
-  vim  (tap-hold-next-release 200 bspc (layer-toggle vim))
+  vim   (tap-hold-next-release 200 bspc (layer-toggle vim))
   sym   (tap-hold-next-release 200 bspc (layer-toggle sym))
 )
 
@@ -88,8 +88,8 @@ This will be the default layout when I will be comfortable using the default lay
   `       1       2       3       4       5       6       7       8       9      0       -       =       bspc
   @tab    q       w       e       r       t       y       u       i       o      p       [       ]       @\
   @caps   a       s       d       f       g       h       j       k       l      ;       '       ret
-  @vim    z       @sft    c       v       b       @n      @m      @,      .      /       rsft
-  -               @mid    lalt    spc                             @sym    prnt   rctrl   pgup    up      pgdn
+  lsft    z       x       c       v       b       n       m       ,       .      /       rsft
+  -               @vim    lalt    spc                             ralt    prnt   rctrl   pgup    up      pgdn
                                                                                          lft     down    rght
 )
 

@@ -6,6 +6,7 @@
 - [[#doom-configuration][DOOM Configuration]]
   - [[#async-config-tangling][Async config tangling]]
   - [[#modules][Modules]]
+  - [[#hostname-based-configuration][Hostname based configuration]]
   - [[#packages][Packages]]
 - [[#simple-settings][Simple Settings]]
   - [[#autoload][Autoload]]
@@ -83,7 +84,6 @@ variables, and virtually no other languages have adopted it.
 #+begin_src emacs-lisp
 ;;; config.el -*- lexical-binding: t; -*-
 #+end_src
-
 
 * DOOM Configuration
 
@@ -358,9 +358,27 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
 
        :config
        literate
-       (default +bindings +smartparens))
+       (default +bindings +smartparens)
+
+       :hostconfig
+       (:if (string-suffix-p "skynet" (string-trim (shell-command-to-string "uname -n")))
+        skynet))
 #+end_src
 
+** Hostname based configuration
+
+With the day I will manage the same configuration on several different machines,
+I would like to have specific parts of the configuration enabled for only
+specific machines.
+
+#+begin_src emacs-lisp :tangle "modules/hostconfig/skynet/packages.el"
+;; -*- no-byte-compile: t; -*-
+;;; hostconfig/skynet/packages.el
+#+end_src
+
+#+begin_src emacs-lisp :tangle "modules/hostconfig/skynet/config.el"
+;;; hostconfig/skynet/config.el -*- lexical-binding: t; -*-
+#+end_src
 
 ** Packages
 
@@ -548,6 +566,7 @@ Here, we specify stuff that we want to run on startup
 #+begin_src emacs-lisp
 (remove-hook 'text-mode-hook #'auto-fill-mode) ;; Prevent lines from auto breaking
 #+end_src
+
 
 
 * Built-in packages configurations
@@ -1078,11 +1097,11 @@ theme.
 Features and settings outside font-locking are not touched and will be inherited
 from conf-space-mode.
 
-#+begin_src emacs-lisp :tangle packages.el
+#+begin_src emacs-lisp :tangle modules/hostconfig/skynet/packages.el
 (package! i3wm-config-mode :recipe (:host github :repo "Alexander-Miller/i3wm-Config-Mode"))
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle modules/hostconfig/skynet/config.el
 (use-package! i3wm-config-mode
   :defer t)
 #+end_src
@@ -1092,16 +1111,16 @@ from conf-space-mode.
 
 Basic integration of emacs with i3 window manager.
 
-#+begin_src emacs-lisp :tangle packages.el
+#+begin_src emacs-lisp :tangle modules/hostconfig/skynet/packages.el
 (package! transpose-frame)
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle modules/hostconfig/skynet/config.el
 (use-package! transpose-frame
   :commands (transpose-frame))
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle modules/hostconfig/skynet/config.el
 (defun elk/emacs-i3-windmove (dir)
   (let ((other-window (windmove-find-other-window dir)))
     (if (or (null other-window) (window-minibuffer-p other-window))
@@ -1837,7 +1856,7 @@ Changing the default template used by =ink-make-figure= and =ink-edit-figure=.
 
 #+begin_src emacs-lisp
 (defvar ink-flags-png (list "--export-area-drawing"
-                            "--export-dpi 100"
+                            "--export-dpi 256"
                             "--export-type=png"
                             "--export-background-opacity 1.0"
                             "--export-overwrite")
@@ -2062,16 +2081,23 @@ Creating beautiful resume in Org mode.
 
 #+begin_src emacs-lisp
 (use-package! org-appear
-  :after org
-  :hook (org-mode . (lambda ()
-                      (org-appear-mode t)
-                      (add-hook 'evil-insert-state-entry-hook #'org-appear-manual-start nil t)
-                      (add-hook 'evil-insert-state-exit-hook #'org-appear-manual-stop nil t)))
+  :after (org org-roam)
+  :init
   :config
   (setq org-appear-autoemphasis t
         org-appear-autosubmarkers t
-        org-appear-autolinks nil
-        org-appear-trigger 'manual)
+        org-appear-autolinks nil)
+  (setq org-appear-trigger 'manual)
+  (add-hook 'org-mode-hook (lambda ()
+                             (add-hook 'evil-insert-state-entry-hook
+                                       #'org-appear-manual-start
+                                       nil
+                                       t)
+                             (add-hook 'evil-insert-state-exit-hook
+                                       #'org-appear-manual-stop
+                                       nil
+                                       t)))
+
   ;; for proper first-time setup, `org-appear--set-elements'
   ;; needs to be run after other hooks have acted.
   (run-at-time nil nil #'org-appear--set-elements))

@@ -1,30 +1,31 @@
 #!/bin/sh
 run() {
-    if ! pgrep "$1" > /dev/null ;
-    then
-        "$@"&
+    if ! pgrep "$1" >/dev/null; then
+        "$@" &
     fi
 }
 
-# /usr/bin/prime-offload
-# multi-monitor
-xrdb -merge ~/.config/x11/Xresources & xrdbpid=$!
-# run autorandr --change
-# run safeeyes -e &
-run kmonad-refresh &
-run /usr/bin/emacs --daemon &
-#run syncthing-gtk --minimized &
-run /usr/bin/pipewire &
-run pacmac-tray &
-run sxhkd &
-run dm-wacom &
-run picom -b &
-run clipmenud &
-run redshift &
-run lxsession &
-run mpd &
-run dunst-reload &
-run "$HOME"/.fehbg &
+xrdb -merge ~/.config/x11/Xresources &
+xrdbpid=$!
 
-xsetroot -cursor_name left_ptr
+eval "$(gnome-keyring-daemon --start)"
+export SSH_AUTH_SOCK
+
+if [ "$(uname -a)" = "skynet" ]; then
+    run kmonad-refresh &
+    run /usr/bin/emacs --daemon &
+    run /usr/bin/pipewire &
+    run pacmac-tray &
+    run sxhkd &
+    run dm-wacom &
+    run picom -b &
+    run clipmenud &
+    run redshift &
+    run lxsession &
+    run mpd &
+    run dunst-reload &
+    run "$HOME"/.fehbg &
+    xsetroot -cursor_name left_ptr
+fi
+
 [ -n "$xrdbpid" ] && wait "$xrdbpid"
