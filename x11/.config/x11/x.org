@@ -37,7 +37,7 @@ xrdbpid=$!
 eval "$(gnome-keyring-daemon --start)"
 export SSH_AUTH_SOCK
 
-if [ "$(uname -a)" = "skynet" ]; then
+if [ "$(uname -n)" = "skynet" ]; then
     run kmonad-refresh &
     run /usr/bin/emacs --daemon &
     run /usr/bin/pipewire &
