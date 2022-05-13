@@ -98,7 +98,7 @@
 ;; Silence compiler warnings as they can be pretty disruptive
 (setq native-comp-async-report-warnings-errors nil)
 
-(setq doom-font (font-spec :family "monospace" :size 20)
+(setq doom-font (font-spec :family "JetBrains Mono Nerd Font" :size 20)
       doom-variable-pitch-font (font-spec :family "sans" :size 20)
       doom-unicode-font (font-spec :family "JoyPixels" :size 20)
       doom-big-font (font-spec :family "monospace" :size 34))
@@ -109,7 +109,7 @@
   '(font-lock-comment-face :slant italic)
   '(font-lock-keyword-face :slant italic))
 
-(setq doom-theme 'doom-vibrant)
+(setq doom-theme 'doom-dark+)
 (set-frame-parameter (selected-frame) 'alpha '(95 . 95))
 (add-to-list 'default-frame-alist '(alpha . (95 . 95)))
 
@@ -206,7 +206,7 @@
 
 (after! org
   (plist-put org-format-latex-options :scale 4) ;; Make latex equations preview larger
-  (setq org-directory "~/org/"
+  (setq org-directory (file-truename "~/org")
         org-agenda-files '("~/org/agenda.org")
         org-default-notes-file (expand-file-name "notes.org" org-directory)
         org-ellipsis " ▼ "
@@ -300,39 +300,35 @@
         org-journal-file-format "%Y-%m-%d.org"))
 
 (after! org-roam
-  (setq org-roam-directory "~/org/roam"
+  (setq org-roam-directory (file-truename "~/org/roam")
         org-roam-completion-everywhere t
         org-roam-capture-templates
         '(("d" "default" plain "%?"
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: < Inbox\n\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: miscs Inbox\n\n")
            :unnarrowed t)
           ("a" "articles" plain (file "~/org/templates/articles.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: + %^{Tag}\n\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: articles %^{Tag}\n\n")
            :unnarrowed t)
           ("b" "book notes" plain (file "~/org/templates/book.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: { %^{Tag}\n\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: books %^{Tag}\n\n")
            :unnarrowed t)
           ("c" "podcasts" plain (file "~/org/templates/podcasts.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: @ %^{Tag}\n\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: podcasts %^{Tag}\n\n")
            :unnarrowed t)
           ("e" "latex" plain (file "~/org/templates/reportex.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: < %^{Unit Code}\n\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: miscs %^{Unit Code}\n\n")
            :unnarrowed t)
           ("i" "ideas" plain (file "~/org/templates/ideas.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: > %^{Tag}\n\n")
-           :unnarrowed t)
-          ("l" "programming language" plain
-           "* Characteristics\n\n- Family: %?\n- Inspired by: \n\n* Reference:\n\n"
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: - %^{Tag}\n\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: ideas %^{Tag}\n\n")
            :unnarrowed t)
           ("p" "project" plain (file "~/org/templates/project.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: = %^{Tag}\n\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: projects %^{Tag}\n\n")
            :unnarrowed t)
           ("P" "presentation" plain (file "~/org/templates/presentation.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "\n:reveal_properties:\n#+reveal_root: https://cdn.jsdelivr.net/npm/reveal.js\n:end:\n\n#+title: ${title}\n#+date: %U\n#+author: %^{Author}\n#+filetags: < Presentation\n\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "\n:reveal_properties:\n#+reveal_root: https://cdn.jsdelivr.net/npm/reveal.js\n:end:\n\n#+title: ${title}\n#+date: %U\n#+author: %^{Author}\n#+filetags: presentations \n\n")
            :unnarrowed t)
           ("r" "research paper" plain (file "~/org/templates/research.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: ; %^{Tag}\n\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: papers %^{Tag}\n\n")
            :unnarrowed t)
           ("t" "tag" plain "%?"
            :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Tag\n\n")
@@ -376,7 +372,7 @@
 
 (defun elk/org-roam-refresh-agenda-list ()
   (interactive)
-  (setq org-agenda-files (elk/org-roam-list-notes-by-tag "=")))
+  (setq org-agenda-files (elk/org-roam-list-notes-by-tag "projects")))
 
 ;; Build the agenda list the first time for the session
 (after! org-roam
