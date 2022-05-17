@@ -94,10 +94,10 @@ st.alpha: 0.95
 ** Colorscheme
 
 #+begin_src conf-xdefaults :tangle Xresources
-#include "./Xresources.d/dark-plus.xresources"
+! #include "./Xresources.d/dark-plus.xresources"
 ! #include "./Xresources.d/tokyonight.xresources"
 ! #include "./Xresources.d/doom-one.xresources"
 ! #include "./Xresources.d/git.xresources"
 ! #include "./Xresources.d/gitdark.xresources"
-! #include "./Xresources.d/dracula.xresources"
+#include "./Xresources.d/dracula.xresources"
 #+end_src

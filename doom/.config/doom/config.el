@@ -106,10 +106,11 @@
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t))
 (custom-set-faces!
+  '(doom-modeline-buffer-modified :foreground "orange")
   '(font-lock-comment-face :slant italic)
   '(font-lock-keyword-face :slant italic))
 
-(setq doom-theme 'doom-dark+)
+(setq doom-theme 'doom-dracula)
 (set-frame-parameter (selected-frame) 'alpha '(95 . 95))
 (add-to-list 'default-frame-alist '(alpha . (95 . 95)))
 
@@ -340,25 +341,30 @@
         '(("d" "default" entry "* %<%I:%M %p>: %?"
            :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n")))))
 
-(defun elk/org-roam-rename-to-new-title ()
-  "Change the file name after changing the title."
-  (when-let*
-      ((old-file (buffer-file-name))
-       (is-roam-file (org-roam-file-p old-file))
-       (is-roam-buffer (org-roam-buffer-p))
-       (file-node (save-excursion
-                    (goto-char 1)
-                    (org-roam-node-at-point)))
-       (slug (org-roam-node-slug file-node))
-       (new-file (expand-file-name (replace-regexp-in-string "-.*\\.org" (format "-%s.org" slug) old-file)))
-       (different-name? (not (string-equal old-file new-file))))
-    (rename-buffer (file-name-nondirectory new-file))
-    (rename-file old-file new-file 1)
-    (set-visited-file-name new-file)
-    (set-buffer-modified-p nil)))
+(defun elk/org-roam-copy-todo-to-today ()
+  (interactive)
+  (let ((org-refile-keep t) ;; Set this to nil to delete the original!
+        (org-roam-dailies-capture-templates
+         '(("t" "tasks" entry "%?"
+            :if-new (file+head+olp "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n" ("Tasks")))))
+        (org-after-refile-insert-hook #'save-buffer)
+        today-file
+        pos)
+    (save-window-excursion
+      (org-roam-dailies--capture (current-time) t)
+      (setq today-file (buffer-file-name))
+      (setq pos (point)))
 
-(after! org-roam
-  (add-hook! 'after-save-hook #'elk/org-roam-rename-to-new-title))
+    ;; Only refile if the target file is different than the current file
+    (unless (equal (file-truename today-file)
+                   (file-truename (buffer-file-name)))
+      (org-refile nil nil (list "Tasks" today-file nil pos)))))
+
+(after! org
+  (add-to-list 'org-after-todo-state-change-hook
+               (lambda ()
+                 (when (equal org-state "DONE")
+                   (elk/org-roam-copy-todo-to-today)))))
 
 (defun elk/org-roam-filter-by-tag (tag-name)
   (lambda (node)
@@ -854,6 +860,12 @@ sorttasks plan.start.up
 (elk/add-file-keybinding "d" (expand-file-name "config.org" doom-private-dir) "Doom config.org")
 (elk/add-file-keybinding "X" "~/.config/xmonad/xmonad.hs" "Xmonad xmonad.hs")
 (elk/add-file-keybinding "x" "~/.config/x11/x.org" "X11 x.org")
+(map! :leader
+      (:prefix ("-" . "Open File")
+       (:prefix ("j" . "Open journals")
+        :desc "Open today's journal" "t" #'org-roam-dailies-goto-today
+        :desc "Open yesterday's journal" "y" #'org-roam-dailies-goto-yesterday
+        :desc "Open next day's journal" "n" #' org-roam-dailies-goto-tomorrow)))
 
 (elk/add-project-keybinding "d" "~/.config/doom/" "Doom")
 (elk/add-project-keybinding "s" "~/.config/shell/" "Shell")
