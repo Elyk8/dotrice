@@ -55,6 +55,8 @@ bindsym $mod+e exec --no-startup-id emacs-i3-integration layout toggle split
 bindsym $mod+Shift+f floating toggle
 bindsym $mod+z focus mode_toggle
 
+bindsym $mod+F1 exec --no-startup-id $TERMINAL
+
 bindsym $mod++Shift+w move workspace to output right
 bindsym $mod+w focus output right
 
@@ -232,7 +234,7 @@ bindsym $mod+m mode "move" focus floating
 # Startup
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec_always --no-startup-id $HOME/.fehbg
-exec_always --no-startup-id autorandr --change --force
+#exec_always --no-startup-id autorandr --change --force
 
 # Colors
 set_from_resource $bg-color            background

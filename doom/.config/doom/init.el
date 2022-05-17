@@ -188,6 +188,6 @@
        literate
        (default +bindings +smartparens)
 
-       :hostconfig
-       (:if (string= "skynet" (string-trim (shell-command-to-string "uname -n")))
-        skynet))
+       :wmintegration
+       (:if (string= "skynet" (string-trim (shell-command-to-string "uname -n"))) i3)
+       )

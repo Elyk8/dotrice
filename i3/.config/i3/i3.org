@@ -119,6 +119,8 @@ bindsym $mod+e exec --no-startup-id emacs-i3-integration layout toggle split
 #+begin_src i3wm-config
 bindsym $mod+Shift+f floating toggle
 bindsym $mod+z focus mode_toggle
+
+bindsym $mod+F1 exec --no-startup-id $TERMINAL
 #+end_src
 
 ** Switching outputs
@@ -342,7 +344,7 @@ bindsym $mod+m mode "move" focus floating
 # Startup
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec_always --no-startup-id $HOME/.fehbg
-exec_always --no-startup-id autorandr --change --force
+#exec_always --no-startup-id autorandr --change --force
 #+end_src
 
 * Colors

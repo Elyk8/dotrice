@@ -256,5 +256,10 @@ ricemamba() {
 
 riceros() {
     ricemamba
-    mamba activate robostackenv
+    mamba activate ros
+    export ROS_MASTER_URI=http://192.168.43.102:11311
+    export ROS_HOSTNAME=192.168.43.102
+    export TURTLEBOT3_MODEL=burger # waffle, waffle_pi
+    alias teleop="roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch"
+    alias slam="roslaunch turtlebot3_slam turtlebot3_slam.launch"
 }
