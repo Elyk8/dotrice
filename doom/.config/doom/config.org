@@ -42,6 +42,7 @@
   - [[#polybar][Polybar]]
   - [[#exwm-configuration][EXWM Configuration]]
 - [[#third-party-packages][Third-party packages]]
+  - [[#beacon][Beacon]]
   - [[#el-easydraw][El-easydraw]]
   - [[#kmonad][KMonad]]
   - [[#dmenu][Dmenu]]
@@ -196,7 +197,7 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
        (ligatures +extras)        ; ligatures and symbols to make your code pretty again
        ;;minimap           ; show a map of the code on the side
        modeline          ; snazzy, Atom-inspired modeline, plus API
-       nav-flash         ; blink cursor line after big motions
+       ;;nav-flash         ; blink cursor line after big motions
        ;;neotree           ; a project drawer, like NERDTree for vim
        ophints           ; highlight the region an operation acts on
        (popup +all +defaults)   ; tame sudden yet inevitable temporary windows
@@ -543,6 +544,7 @@ Settings related to fonts within Doom Emacs:
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t))
 (custom-set-faces!
+  '(doom-modeline-buffer-modified :foreground "orange")
   '(font-lock-comment-face :slant italic)
   '(font-lock-keyword-face :slant italic))
 #+end_src
@@ -552,7 +554,7 @@ counsel-load-theme with 'SPC h t'. It is hear that you can also set the
 transparency of each emacs frame.
 
 #+begin_src emacs-lisp
-(setq doom-theme 'doom-dark+)
+(setq doom-theme 'doom-dracula)
 (set-frame-parameter (selected-frame) 'alpha '(95 . 95))
 (add-to-list 'default-frame-alist '(alpha . (95 . 95)))
 #+end_src
@@ -939,9 +941,9 @@ Obviously the better way for org journalling.
            :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n")))))
 #+end_src
 
-We want to change the file name when the title of the note changes.
+This interferes with =org-roam-capture-templates=. Deactivated till I find a fix
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (defun elk/org-roam-rename-to-new-title ()
   "Change the file name after changing the title."
   (when-let*
@@ -961,6 +963,41 @@ We want to change the file name when the title of the note changes.
 
 (after! org-roam
   (add-hook! 'after-save-hook #'elk/org-roam-rename-to-new-title))
+#+end_src
+
+*** Automatically copy (or move) completed
+
+One interesting use for daily files is to keep a log of tasks that were completed on that particular day. What if we could automatically copy completed tasks in any Org Mode file to today's daily file?
+
+We can do this by adding some custom code!
+
+The following snippet sets up a hook for all Org task state changes and then copies the completed (=DONE=) entry to today's note file:
+
+#+begin_src emacs-lisp
+(defun elk/org-roam-copy-todo-to-today ()
+  (interactive)
+  (let ((org-refile-keep t) ;; Set this to nil to delete the original!
+        (org-roam-dailies-capture-templates
+         '(("t" "tasks" entry "%?"
+            :if-new (file+head+olp "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n" ("Tasks")))))
+        (org-after-refile-insert-hook #'save-buffer)
+        today-file
+        pos)
+    (save-window-excursion
+      (org-roam-dailies--capture (current-time) t)
+      (setq today-file (buffer-file-name))
+      (setq pos (point)))
+
+    ;; Only refile if the target file is different than the current file
+    (unless (equal (file-truename today-file)
+                   (file-truename (buffer-file-name)))
+      (org-refile nil nil (list "Tasks" today-file nil pos)))))
+
+(after! org
+  (add-to-list 'org-after-todo-state-change-hook
+               (lambda ()
+                 (when (equal org-state "DONE")
+                   (elk/org-roam-copy-todo-to-today)))))
 #+end_src
 
 *** Org roam agenda
@@ -1800,6 +1837,18 @@ the right side
 
 * Third-party packages
 
+** Beacon
+
+Never lose your cursor. When you scroll, your cursor will shine! This is a global minor-mode. Turn it on everywhere with:
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! beacon)
+#+end_src
+
+#+begin_src emacs-lisp
+(beacon-mode 1)
+#+end_src
+
 ** El-easydraw
 
 #+begin_src emacs-lisp :tangle packages.el
@@ -2474,6 +2523,12 @@ use =SPC + == for projects and =SPC + -= for files.
 (elk/add-file-keybinding "d" (expand-file-name "config.org" doom-private-dir) "Doom config.org")
 (elk/add-file-keybinding "X" "~/.config/xmonad/xmonad.hs" "Xmonad xmonad.hs")
 (elk/add-file-keybinding "x" "~/.config/x11/x.org" "X11 x.org")
+(map! :leader
+      (:prefix ("-" . "Open File")
+       (:prefix ("j" . "Open journals")
+        :desc "Open today's journal" "t" #'org-roam-dailies-goto-today
+        :desc "Open yesterday's journal" "y" #'org-roam-dailies-goto-yesterday
+        :desc "Open next day's journal" "n" #' org-roam-dailies-goto-tomorrow)))
 
 (elk/add-project-keybinding "d" "~/.config/doom/" "Doom")
 (elk/add-project-keybinding "s" "~/.config/shell/" "Shell")
