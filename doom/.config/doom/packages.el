@@ -9,6 +9,8 @@
 (package! dired-open)
 (package! dired-subtree)
 
+(package! beacon)
+
 (package! edraw-org :recipe (:host github :repo "misohena/el-easydraw"))
 
 (package! kbd-mode

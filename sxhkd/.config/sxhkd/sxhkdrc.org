@@ -39,15 +39,26 @@ These are keybindings which one uses the most. Thus we want as fewer key-presses
 # Open desktop applications
 super + space ; space
       dm-j4dmenu-desktop
-      #emacsclient -e '(app-launcher-run-app)'
 
 # Dmenu run executables
 super + space ; d
       dmenu_run -bw 0
 
 # Open an emacs frame
-super + space ; e
+super + space ; e ; e
       emacsclient -c -n
+
+# Open emacs org daily capture
+super + space ; e ; t
+      emacsclient --create-frame --no-wait --eval "(org-roam-dailies-capture-today)"
+
+# Open today's journal
+super + space ; e ; j
+      emacsclient --create-frame --no-wait --eval "(org-roam-dailies-goto-today)"
+
+# Open org agenda
+super + space ; e ; a
+      emacsclient --create-frame --no-wait --eval "(find-file \"~/org/agenda.org\")"
 
 # Open terminal emulator
 super + space ; t
