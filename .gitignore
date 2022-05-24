@@ -21,3 +21,6 @@ xmonad/.config/xmonad/xmonad-x86_64-linux
 xmonad/.config/xmonad/xmonad.errors
 xmonad/.config/xmonad/xmonad.hi
 xmonad/.config/xmonad/xmonad.o
+
+# Applications
+applications/.local/share/applications/discord*

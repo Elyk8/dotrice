@@ -1,4 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=Neomutt
-Exec=/usr/local/bin/st -e neomutt %U

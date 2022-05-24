@@ -31,7 +31,7 @@ cmd open ${{
       mpv "$f" -quiet >/dev/null 2>&1
       ;;
     *.odt | *.ods | *.odp | *.sxw | *.doc | *.docx | *.ppt | *.pptx | *.rtf)
-      setsid -f libreoffice "$f" >/dev/null 2>&1
+      setsid -f onlyoffice-desktopeditors "$f" >/dev/null 2>&1
       ;;
     *.xls | *.xlsx | *.csv)
       sc-im "$f"

@@ -101,7 +101,7 @@
 (setq doom-font (font-spec :family "JetBrains Mono Nerd Font" :size 20)
       doom-variable-pitch-font (font-spec :family "sans" :size 20)
       doom-unicode-font (font-spec :family "JoyPixels" :size 20)
-      doom-big-font (font-spec :family "monospace" :size 34))
+      doom-big-font (font-spec :family "JetBrains Mono Nerd Font" :size 34))
 (after! doom-themes
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t))

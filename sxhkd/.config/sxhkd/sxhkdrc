@@ -64,9 +64,13 @@ super + space ; m
 super + space ; o ; d
       which prime-run && prime-run discord || discord
 
-# Open FTB Launcher
-super + space ; o ; f
-      /media/FTBA/FTBApp
+# Open AT Launcher
+super + space ; o ; a
+      atlauncher
+
+# Open logseq PKM
+super + space ; o ; l
+      logseq
 
 # Open VSCodium
 super + space ; o ; v
