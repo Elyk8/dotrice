@@ -4,6 +4,68 @@
 super + slash
         sxhkd-help
 
+# BSPWM: Focus the node in the given direction
+super + {_,shift + }{h,j,k,l}
+      emacs-bspwm-integration node -{f,s} {west,south,north,east}
+
+# preselect the direction
+super + ctrl + {h,j,k,l}
+      emacs-bspwm-integration node -p {west,south,north,east}
+
+super + alt + control + {h,j,k,l} ; {0-9}
+      bspc node @{west,south,north,east} -r 0.{0-9}
+
+super + alt + p
+      bspc config focus_follows_pointer {true,false}
+
+# Smart resize, will grow or shrink depending on location. Will always grow for floating nodes.
+super + ctrl + alt + {Left,Down,Up,Right}
+  n=10; \
+  { d1=left;   d2=right;  dx=-$n; dy=0;   \
+  , d1=bottom; d2=top;    dx=0;   dy=$n;  \
+  , d1=top;    d2=bottom; dx=0;   dy=-$n; \
+  , d1=right;  d2=left;   dx=$n;  dy=0;   \
+  } \
+  bspc node --resize $d1 $dx $dy || bspc node --resize $d2 $dx $dy
+
+# focus or send to the given desktop
+super + {_,shift + }{1-9}
+      bspc {desktop -f,node -d} '^{1-9}'
+
+super + {Left,Down,Up,Right}
+      bspc node -v {-20 0,0 20,0 -20,20 0}
+
+# Force window to tiled/pseudo_tiled
+super + {t,shift + t}
+      bspc node -t {tiled,pseudo_tiled}
+
+# Toggle floating
+super + g
+      bspc node focused.floating -t tiled || bspc node focused.!floating -t floating
+
+# Toggle fullscreen
+super + f
+      bspc node focused.fullscreen -t tiled || bspc node focused.!fullscreen -t fullscreen
+
+# close and kill
+super + {_,shift + }q
+      emacs-bspwm-integration node -{c,k}
+
+# quit/restart bspwm
+super + alt + {q,r}
+      bspc {quit,wm -r}
+
+~button1
+    bspc node -f pointed
+
+# Emacs splitting (TODO: Integrate with bspwm)
+super + {s,v}
+      [ "$(xdotool getactivewindow getwindowclassname)" = "Emacs" ] && emacsclient -e "(evil-window-{_,v}split)" || exit 1
+
+# Swapping focus among monitors
+super + {w,e}
+      bspc monitor -f {prev,next}
+
 # Open desktop applications
 super + space ; space
       dm-j4dmenu-desktop
@@ -11,26 +73,6 @@ super + space ; space
 # Dmenu run executables
 super + space ; d
       dmenu_run -bw 0
-
-# Open an emacs frame
-super + space ; e ; e
-      emacsclient -c -n
-
-# Open emacs org daily capture
-super + space ; e ; t
-      emacsclient --create-frame --no-wait --eval "(org-roam-dailies-capture-today)"
-
-# Open today's journal
-super + space ; e ; j
-      emacsclient --create-frame --no-wait --eval "(org-roam-dailies-goto-today)"
-
-# Open org agenda
-super + space ; e ; a
-      emacsclient --create-frame --no-wait --eval "(find-file \"~/org/agenda.org\")"
-
-# Open magit git client
-super + space ; e ; m
-      emacsclient --create-frame --no-wait --eval "(magit)"
 
 # Open terminal emulator
 super + space ; t
@@ -60,184 +102,206 @@ super + space ; c
 super + space ; m
       microphone toggle
 
-# Open Discord
+# :Emacs - Open an emacs frame
+super + space ; e ; e
+      emacsclient -c -n
+
+# :Emacs - Open emacs org daily capture
+super + space ; e ; t
+      emacsclient --create-frame --no-wait --eval "(org-roam-dailies-capture-today)"
+
+# :Emacs - Open today's journal
+super + space ; e ; j
+      emacsclient --create-frame --no-wait --eval "(org-roam-dailies-goto-today)"
+
+# :Emacs - Open org agenda
+super + space ; e ; a
+      emacsclient --create-frame --no-wait --eval "(find-file \"~/org/agenda.org\")"
+
+# :Emacs - Open magit git client
+super + space ; e ; m
+      emacsclient --create-frame --no-wait --eval "(magit)"
+
+# :Emacs - Open elfeed
+super + space ; e ; f
+      emacsclient --create-frame --no-wait --eval "(elfeed)"
+
+# :Openers - Discord
 super + space ; o ; d
       which prime-run && prime-run discord || discord
 
-# Open AT Launcher
+# :Openers - AT Launcher
 super + space ; o ; a
       atlauncher
 
-# Open logseq PKM
+# :Openers - logseq PKM
 super + space ; o ; l
       logseq
 
-# Open VSCodium
+# :Openers - VSCodium
 super + space ; o ; v
       which prime-run && prime-run vscodium || vscodium
 
-# Open zotero
+# :Openers - zotero
 super + space ; o ; t
       pidof zotero >/dev/null && wmctrl -lx | awk '$3 ~ "Zotero" {print $1}' | head -1 | xargs -r xdotool windowactivate || zotero
 
-# Open Zoom
+# :Openers - Zoom
 super + space ; o ; z
       zoom
 
-# Dmenu Man pages
+# :Dmenu - Man pages
 super + space ; p ; a
       dm-man
 
-# Dmenu Clipmenu clipboard manager
+# :Dmenu - Clipmenu clipboard manager
 super + space ; p ; c
       clipmenu
 
-# Dmenu Open terminal in directory
+# :Dmenu - Open terminal in directory
 super + space ; p ; d
       dm-directory
 
-# Dmenu Change colorscheme
+# :Dmenu - Change colorscheme
 super + space ; p ; shift + c
       dm-colorscheme
 
-# Dmenu Emoji selector to clipboard
+# :Dmenu - Emoji selector to clipboard
 super + space ; p ; e
       dm-emoji
 
-# Dmenu kill application
+# :Dmenu - kill application
 super + space ; p ; k
       dm-kill
 
-# Dmenu Buku bookmark manager opener
-super + space ; p ; m
-      dm-buku
-
-# Dmenu Mount drives
+# :Dmenu - Mount drives
 super + space ; p ; o
       dm-mount
 
-# Dmenu Passmenu passwords to clipboard
+# :Dmenu - Passmenu passwords to clipboard
 super + space ; p ; p
       dm-passmenu
 
-# Dmenu Radio fm
+# :Dmenu - Radio fm
 super + space ; p ; b
       dm-beats
 
-# Dmenu Open scripts in $EDITOR
+# :Dmenu - Open scripts in $EDITOR
 super + space ; p ; s
       dm-scripts
 
-# Dmenu Unmount drives
+# :Dmenu - Unmount drives
 super + space ; p ; u
       dm-umount
 
-# Dmenu Wttr weather forecast
+# :Dmenu - Wttr weather forecast
 super + space ; p ; w
       weatherforecast
 
-# Setwallpaper Randomly from "a2n" collection
+# :Sys - Setwallpaper Randomly from "a2n" collection
 super + space ; semicolon ; a
       setwallpaper a2n
 
-# Setwallpaper Randomly from "dt" collection
+# :Sys - Setwallpaper Randomly from "dt" collection
 super + space ; semicolon ; d
       setwallpaper dt
 
-# Setwallpaper Randomly from personal collection
+# :Sys - Setwallpaper Randomly from personal collection
 super + space ; semicolon ; e
       setwallpaper elyk
 
-# Open pulsemixer volume manager
+# :Sys - Open pulsemixer volume manager
 super + space ; semicolon ; v
       dropdown "scratch-pulsemixer" "$TERMINAL -e pulsemixer" "1000" "700"
 
-# Interactively setwallpaper using nsxiv
+# :Sys - Interactively setwallpaper using nsxiv
 super + space ; semicolon ; w
       nsxiv -rqto $XDG_PICTURES_DIR/wallpapers/*
 
-# Dmenu system activity
+# :Sys - System activity
 super + Escape
       sysact
 
-# {Increase,Decrease} brightness
+# :xf86 - {Increase,Decrease} brightness
 XF86MonBrightness{Up,Down}
       brightness {up,down}
 
-# {Increase,Decrease} volume
+# :xf86 - {Increase,Decrease} volume
 XF86Audio{Raise,Lower}Volume
       volume {up,down}
 
-# Mute/Unmute volume
+# :xf86 - Mute/Unmute volume
 XF86AudioMute
       volume mute
 
-# Mute/Unmute microphone
+# :xf86 - Mute/Unmute microphone
 XF86AudioMicMute
       mic-toggle
 
+# :xf86 - Previous/Next/Play-pause player
 XF86Audio{Prev,Next,Play}
     playerctl {previous,next,play-pause}
 
-# Take screenshot of selection
+# :Print - Take screenshot of selection
 Print ; s
       maimpick 'Selected'
 
-# Take screenshot of current screen
+# :Print - Take screenshot of current screen
 Print ; c
       maimpick 'Current'
 
-# Take screenshot of whole desktop
+# :Print - Take screenshot of whole desktop
 Print ; f
       maimpick 'Fullscreen'
 
-# Take screenshot of selection into clipboard
+# :Print - Take screenshot of selection into clipboard
 Print ; shift + s
       maimpick 'Selected (copy)'
 
-# Take screenshot of current screen into clipboard
+# :Print - Take screenshot of current screen into clipboard
 Print ; shift + c
       maimpick 'Current (copy)'
 
-# Take screenshot of whole desktop into clipboard
+# :Print - Take screenshot of whole desktop into clipboard
 Print ; shift + f
       maimpick 'Fullscreen (copy)'
 
-# MPC Previous song
+# :mpc -  Previous song
 super + bracketleft
       mpc prev
 
-# MPC Next song
+# :mpc -  Next song
 super + bracketright
       mpc next
 
-# MPC Restart song
+# :mpc -  Restart song
 super + shift + bracketleft
       mpc seek 0%
 
-# MPC {Increase,Decrease} volume by 2
+# :mpc -  {Increase,Decrease} volume by 2
 super + {equal,minus}
       mpc volume {+,-}2 && mpc-volume
 
-# MPC Play/pause song
+# :mpc -  Play/pause song
 super + p
       mpc toggle
 
-# Lock the screen
+# :function - Lock the screen
 super + F1
       slock -i $(fd -atf --base-directory $HOME/pix/wallpapers/dt -0 | shuf -z -n 1)
 
-# Toggle Buckle spring keyboard sound effect
+# :function - Toggle Buckle spring keyboard sound effect
 super + F2
       buckle-spring
 
-# Refresh doom configuration and restart the emacs daemon
+# :function - Refresh doom configuration and restart the emacs daemon
 super + F3
       restart-emacs
 
-# Refresh kmonad configuration
+# :function - Refresh kmonad configuration
 super + F4
       notify-send "Refreshing KMonad in 2 secs"; kmonad-refresh; notify-send "Success!"
 
+# :function - Adjust brightness
 super + {F11, F12}
       brightness {down,up}

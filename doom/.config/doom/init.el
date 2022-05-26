@@ -189,5 +189,6 @@
        (default +bindings +smartparens)
 
        :wmintegration
-       (:if (string= "skynet" (string-trim (shell-command-to-string "uname -n"))) i3)
+       ;(:if (string= "skynet" (string-trim (shell-command-to-string "uname -n"))) i3)
+       (:if (string= "skynet" (string-trim (shell-command-to-string "uname -n"))) bspwm)
        )

@@ -19,7 +19,7 @@ else
     . "$HOME/.xprofile"
 fi
 
-dbus-launch --exit-with-session ssh-agent i3
+dbus-launch --exit-with-session ssh-agent bspwm
 #+end_src
 
 * Xprofile
@@ -55,7 +55,7 @@ if [ "$(uname -n)" = "skynet" ]; then
     xsetroot -cursor_name left_ptr
 fi
 
-run syncthing-gtk --minimized &
+run syncthing-gtk --minimized
 
 [ -n "$xrdbpid" ] && wait "$xrdbpid"
 #+end_src

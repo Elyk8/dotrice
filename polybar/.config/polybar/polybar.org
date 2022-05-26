@@ -9,7 +9,10 @@
   - [[#exwm][EXWM]]
   - [[#i3---monitor-primary][i3 - Monitor primary]]
   - [[#i3---monitor-hdmi-1-0][i3 - Monitor HDMI-1-0]]
+  - [[#bspwm---primary][Bspwm - Primary]]
+  - [[#bspwm---hdmi-1-0][Bspwm - HDMI-1-0]]
 - [[#modules][Modules]]
+  - [[#bspwm-workspace][bspwm workspace]]
   - [[#i3-workspace][i3 workspace]]
   - [[#exwm-workspace-display][EXWM Workspace display]]
   - [[#mpd][MPD]]
@@ -36,8 +39,8 @@ while pgrep -u $UID -x polybar > /dev/null; do sleep 1; done
 
 # Launch bar1 and bar2
 echo "---" | tee -a /tmp/polybar1.log /tmp/polybar2.log
-polybar i3monitor1 2>&1 | tee -a /tmp/polybar1.log & disown
-polybar i3monitor2 2>&1 | tee -a /tmp/polybar2.log & disown
+polybar bspmonitor1 2>&1 | tee -a /tmp/polybar1.log & disown
+polybar bspmonitor2 2>&1 | tee -a /tmp/polybar2.log & disown
 
 echo "Bars launched..."
 #+end_src
@@ -207,7 +210,140 @@ cursor-scroll = ns-resize
 override-redirect = false
 #+end_src
 
+
+** Bspwm - Primary
+
+#+begin_src conf
+[bar/bspmonitor1]
+width = 100%
+height = 27
+offset-x = 0
+offset-y = 0
+fixed-center = true
+enable-ipc = true
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 2
+line-color = #f00
+
+border-size = 0
+border-color = #00000000
+
+padding-top = 5
+padding-left = 1
+padding-right = 1
+
+module-margin = 1
+
+font-0 = "pango:Sans:size=11:weight=bold;2"
+font-1 = "JoyPixels:scale=8;3"
+font-2 = "Font Awesome 6 Free Solid:size=13;3"
+font-3 = "Material Icons:size=15;5"
+font-4 = "monospace:size=17;4"
+font-5 = "Noto Sans Mono CJK JP:size=13:weight=bold;2"
+
+modules-left = bspwm
+modules-center = mpd
+modules-right = pomm battery pulseaudio microphone date
+
+tray-position = right
+tray-padding = 2
+tray-maxsize = 28
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+override-redirect = false
+wm-restack = bspwm
+#+end_src
+
+** Bspwm - HDMI-1-0
+
+#+begin_src conf
+[bar/bspmonitor2]
+monitor = ${env:MONITOR:HDMI-1-0}
+width = 100%
+height = 24
+offset-x = 0
+offset-y = 0
+fixed-center = true
+enable-ipc = true
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 2
+line-color = #f00
+
+border-size = 0
+border-color = #00000000
+
+padding-top = 5
+padding-left = 1
+padding-right = 1
+
+module-margin = 1
+
+font-0 = "Sans:size=10:weight=bold;2"
+font-1 = "JoyPixels:scale=10;2"
+font-2 = "Font Awesome 6 Free Solid:size=12;3"
+font-3 = "Material Icons:size=14;5"
+font-4 = "monospace:size=16;4"
+font-5 = "Noto Sans Mono CJK JP:size=10:weight=bold;1"
+
+modules-left = bspwm
+modules-center = date
+modules-right = network
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+override-redirect = false
+wm-restack = bspwm
+#+end_src
+
+
 * Modules
+
+** bspwm workspace
+
+#+begin_src conf
+[module/bspwm]
+type = internal/bspwm
+
+; Only show workspaces defined on the same output as the bar
+; NOTE: The bspwm and XRandR monitor names must match, which they do by default.
+; Default: true
+pin-workspaces = true
+
+; Output mode flags after focused state label
+; Default: false
+inline-mode = false
+
+; Create click handler used to focus workspace
+; Default: true
+enable-click = true
+
+; Create scroll handlers used to cycle workspaces
+; Default: true
+enable-scroll = true
+
+; Set the scroll cycle direction
+; Default: true
+reverse-scroll = false
+
+; Use fuzzy (partial) matching on labels when assigning
+; icons to workspaces
+; Example: code;♚ will apply the icon to all workspaces
+; containing 'code' in the label
+; Default: false
+fuzzy-match = true
+
+label-visible-underline = ${colors.underline-1}
+label-focused-underline = ${colors.underline-1}
+#+end_src
 
 ** i3 workspace
 

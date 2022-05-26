@@ -13,4 +13,4 @@ else
     . "$HOME/.xprofile"
 fi
 
-dbus-launch --exit-with-session ssh-agent i3
+dbus-launch --exit-with-session ssh-agent bspwm

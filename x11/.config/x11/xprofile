@@ -29,6 +29,6 @@ if [ "$(uname -n)" = "skynet" ]; then
     xsetroot -cursor_name left_ptr
 fi
 
-run syncthing-gtk --minimized &
+run syncthing-gtk --minimized
 
 [ -n "$xrdbpid" ] && wait "$xrdbpid"

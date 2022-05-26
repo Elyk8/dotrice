@@ -36,7 +36,8 @@
   - [[#which-key][Which-key]]
 - [[#i3-and-emacs][i3 and Emacs]]
   - [[#config-syntax-highlighting][Config syntax highlighting]]
-  - [[#integration][Integration]]
+  - [[#integration-i3][Integration i3]]
+  - [[#integration-bspwm][Integration bspwm]]
 - [[#exwm][EXWM]]
   - [[#initialisation][Initialisation]]
   - [[#run-or-raise][Run or Raise]]
@@ -363,7 +364,8 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
        (default +bindings +smartparens)
 
        :wmintegration
-       (:if (string= "skynet" (string-trim (shell-command-to-string "uname -n"))) i3)
+       ;(:if (string= "skynet" (string-trim (shell-command-to-string "uname -n"))) i3)
+       (:if (string= "skynet" (string-trim (shell-command-to-string "uname -n"))) bspwm)
        )
 #+end_src
 
@@ -373,6 +375,8 @@ With the day I will manage the same configuration on several different machines,
 I would like to have specific parts of the configuration enabled for only
 specific machines.
 
+*** i3
+
 #+begin_src emacs-lisp :tangle "modules/wmintegration/i3/packages.el"
 ;; -*- no-byte-compile: t; -*-
 ;;; wmintegration/i3/packages.el
@@ -380,6 +384,17 @@ specific machines.
 
 #+begin_src emacs-lisp :tangle "modules/wmintegration/i3/config.el"
 ;;; wmintegration/i3/config.el -*- lexical-binding: t; -*-
+#+end_src
+
+*** bspwm
+
+#+begin_src emacs-lisp :tangle "modules/wmintegration/bspwm/packages.el"
+;; -*- no-byte-compile: t; -*-
+;;; wmintegration/bspwm/packages.el
+#+end_src
+
+#+begin_src emacs-lisp :tangle "modules/wmintegration/bspwm/config.el"
+;;; wmintegration/bspwm/config.el -*- lexical-binding: t; -*-
 #+end_src
 
 ** Packages
@@ -1217,7 +1232,7 @@ from conf-space-mode.
 #+end_src
 
 
-** Integration
+** Integration i3
 
 Basic integration of emacs with i3 window manager.
 
@@ -1297,6 +1312,18 @@ Basic integration of emacs with i3 window manager.
     ("split h" (evil-window-vsplit))
     ("kill" (evil-quit))
     (- (error command))))
+#+end_src
+
+
+** Integration bspwm
+
+#+begin_src emacs-lisp :tangle modules/wmintegration/bspwm/packages.el
+(package! emacs-bspwm-integration
+  :recipe (:host github :repo "lcvdkmp/emacs-bspwm-integration" :build (:not compile)))
+#+end_src
+
+#+begin_src emacs-lisp :tangle modules/wmintegration/bspwm/config.el
+(use-package! emacs-bspwm-integration)
 #+end_src
 
 * EXWM
