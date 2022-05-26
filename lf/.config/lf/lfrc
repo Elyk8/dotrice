@@ -159,6 +159,11 @@ cmd dragon-individual %setsid -f dragon-drop $fx
 cmd cpdragon %setsid -f cpdragon
 cmd mvdragon %setsid -f mvdragon
 
+cmd setwallpaper ${{
+    walls="$(printf "%s\n" "$fx")"
+    feh --bg-fill $walls
+}}
+
 cmd trash ${{
   files=$(printf "$fx" | tr '\n' ';')
   while [ "$files" ]; do

@@ -43,6 +43,8 @@
 
 (package! org-super-agenda)
 
+(package! org-logseq :recipe (:host github :repo "llcc/org-logseq"))
+
 (package! pomm)
 
 (package! company-english-helper :recipe (:host github :repo "manateelazycat/company-english-helper"))

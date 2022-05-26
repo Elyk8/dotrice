@@ -158,6 +158,78 @@
       ediff-split-window-function 'split-window-horizontally
       ediff-window-setup-function 'ediff-setup-windows-plain)
 
+(setq rmh-elfeed-org-files '("~/.config/doom/elfeed.org"))
+(add-hook! 'elfeed-search-mode-hook 'elfeed-update)
+
+(defun elfeed-v-mpv (url)
+  "Watch a video from URL in MPV"
+  (async-shell-command (format "mpv --really-quiet \"%s\"" url)))
+
+(defun elfeed-view-mpv (&optional use-generic-p)
+  "Youtube-feed link"
+  (interactive "P")
+  (let ((entries (elfeed-search-selected)))
+    (cl-loop for entry in entries
+             do (elfeed-untag entry 'unread)
+             when (elfeed-entry-link entry)
+             do (elfeed-v-mpv it))
+    (mapc #'elfeed-search-update-entry entries)
+    (unless (use-region-p) (forward-line))))
+
+(defun elfeed-eww-open (&optional use-generic-p)
+  "open with eww"
+  (interactive "P")
+  (let ((entries (elfeed-search-selected)))
+    (cl-loop for entry in entries
+             do (elfeed-untag entry 'unread)
+             when (elfeed-entry-link entry)
+             do (eww-browse-url it))
+    (mapc #'elfeed-search-update-entry entries)
+    (unless (use-region-p) (forward-line))))
+
+(defun elfeed-firefox-open (&optional use-generic-p)
+  "open with firefox"
+  (interactive "P")
+  (let ((entries (elfeed-search-selected)))
+    (cl-loop for entry in entries
+             do (elfeed-untag entry 'unread)
+             when (elfeed-entry-link entry)
+             do (browse-url-firefox it))
+    (mapc #'elfeed-search-update-entry entries)
+    (unless (use-region-p) (forward-line))))
+
+(defun elfeed-chromium-open (&optional use-generic-p)
+  "open with firefox"
+  (interactive "P")
+  (let ((entries (elfeed-search-selected)))
+    (cl-loop for entry in entries
+             do (elfeed-untag entry 'unread)
+             when (elfeed-entry-link entry)
+             do (browse-url-chromium it))
+    (mapc #'elfeed-search-update-entry entries)
+    (unless (use-region-p) (forward-line))))
+
+(defun elfeed-w3m-open (&optional use-generic-p)
+  "open with w3m"
+  (interactive "P")
+  (let ((entries (elfeed-search-selected)))
+    (cl-loop for entry in entries
+             do (elfeed-untag entry 'unread)
+             when (elfeed-entry-link entry)
+             do (ffap-w3m-other-window it))
+    (mapc #'elfeed-search-update-entry entries)
+    (unless (use-region-p) (forward-line))))
+
+(after! elfeed
+  (map! :map elfeed-search-mode-map
+          :n "v" nil
+          :n "v" #'elfeed-view-mpv
+          :n "t" #'elfeed-w3m-open
+          :n "w" #'elfeed-eww-open
+          :n "f" nil
+          :n "f" #'elfeed-firefox-open
+          :n "c" #'elfeed-chromium-open))
+
 (after! evil
   (setq evil-ex-substitute-global t     ; I like my s/../.. to by global by default
         ;;evil-move-cursor-back nil       ; Don't move the block cursor when toggling insert mode
@@ -662,7 +734,7 @@ sorttasks plan.start.up
   :hook (org-mode . org-auto-tangle-mode))
 
 (use-package! org-super-agenda
-  :after org-agenda
+  :after org
   :config
   (setq org-super-agenda-groups '((:auto-dir-name t)))
   (setq org-agenda-skip-scheduled-if-done t
@@ -673,6 +745,11 @@ sorttasks plan.start.up
         org-agenda-compact-blocks t
         org-agenda-start-with-log-mode t)
   (org-super-agenda-mode))
+
+(use-package! org-logseq
+  :hook (org-mode . org-logseq-mode)
+  :custom
+  (org-logseq-dir "/media/logseq"))
 
 (use-package! pomm
   :commands (pomm)
@@ -851,6 +928,7 @@ sorttasks plan.start.up
            #'(lambda () (interactive) (doom-project-find-file file))))))
 
 (elk/add-file-keybinding "a" "~/org/agenda.org" "Agenda agenda.org")
+(elk/add-file-keybinding "e" "~/.config/doom/elfeed.org" "Elfeed Feeds elfeed.org")
 (elk/add-file-keybinding "f" "~/.config/fontconfig/fonts.conf" "Fonts config fonts.conf")
 (elk/add-file-keybinding "i" "~/.config/i3/i3.org" "i3 i3.org")
 (elk/add-file-keybinding "l" "~/dox/budget.ledger")

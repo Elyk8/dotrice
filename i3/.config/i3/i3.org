@@ -327,8 +327,6 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 mode "move" {
-    bindsym $mod+Tab focus right
-
     bindsym Left  move left
     bindsym Down  move down
     bindsym Up    move up
