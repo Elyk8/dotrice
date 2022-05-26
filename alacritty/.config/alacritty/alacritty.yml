@@ -196,6 +196,8 @@ window:
 
   opacity: 0.9
 
+  gtk_theme_variant: dark
+
 # Allow terminal applications to change Alacritty's window title.
   dynamic_title: true
 
