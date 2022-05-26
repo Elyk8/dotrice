@@ -194,7 +194,7 @@ window:
   #   # scrollback is enabled (history > 0).
   #   multiplier: 10
 
-  opacity: 0.9
+  opacity: 0.95
 
   gtk_theme_variant: dark
 

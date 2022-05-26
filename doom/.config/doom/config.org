@@ -22,6 +22,7 @@
   - [[#dired][Dired]]
   - [[#dictionary][Dictionary]]
   - [[#ediff][Ediff]]
+  - [[#elfeed][Elfeed]]
   - [[#evil][Evil]]
   - [[#icalendar][iCalendar]]
   - [[#modeline][Modeline]]
@@ -54,6 +55,7 @@
   - [[#org-archive][Org Archive]]
   - [[#org-auto-tangle][Org Auto Tangle]]
   - [[#org-super-agenda][Org Super Agenda]]
+  - [[#org-logseq][Org-logseq]]
   - [[#pomodoro][Pomodoro]]
   - [[#thesaurus][Thesaurus]]
 - [[#keybindings-evil-etc][Keybindings, Evil, etc...]]
@@ -538,7 +540,7 @@ Settings related to fonts within Doom Emacs:
 (setq doom-font (font-spec :family "JetBrains Mono Nerd Font" :size 20)
       doom-variable-pitch-font (font-spec :family "sans" :size 20)
       doom-unicode-font (font-spec :family "JoyPixels" :size 20)
-      doom-big-font (font-spec :family "monospace" :size 34))
+      doom-big-font (font-spec :family "JetBrains Mono Nerd Font" :size 34))
 (after! doom-themes
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t))
@@ -668,6 +670,82 @@ way to keep mine in check.
 (setq ediff-diff-options "-w"
       ediff-split-window-function 'split-window-horizontally
       ediff-window-setup-function 'ediff-setup-windows-plain)
+#+end_src
+
+** Elfeed
+
+#+begin_src emacs-lisp
+(setq rmh-elfeed-org-files '("~/.config/doom/elfeed.org"))
+(add-hook! 'elfeed-search-mode-hook 'elfeed-update)
+
+(defun elfeed-v-mpv (url)
+  "Watch a video from URL in MPV"
+  (async-shell-command (format "mpv --really-quiet \"%s\"" url)))
+
+(defun elfeed-view-mpv (&optional use-generic-p)
+  "Youtube-feed link"
+  (interactive "P")
+  (let ((entries (elfeed-search-selected)))
+    (cl-loop for entry in entries
+             do (elfeed-untag entry 'unread)
+             when (elfeed-entry-link entry)
+             do (elfeed-v-mpv it))
+    (mapc #'elfeed-search-update-entry entries)
+    (unless (use-region-p) (forward-line))))
+
+(defun elfeed-eww-open (&optional use-generic-p)
+  "open with eww"
+  (interactive "P")
+  (let ((entries (elfeed-search-selected)))
+    (cl-loop for entry in entries
+             do (elfeed-untag entry 'unread)
+             when (elfeed-entry-link entry)
+             do (eww-browse-url it))
+    (mapc #'elfeed-search-update-entry entries)
+    (unless (use-region-p) (forward-line))))
+
+(defun elfeed-firefox-open (&optional use-generic-p)
+  "open with firefox"
+  (interactive "P")
+  (let ((entries (elfeed-search-selected)))
+    (cl-loop for entry in entries
+             do (elfeed-untag entry 'unread)
+             when (elfeed-entry-link entry)
+             do (browse-url-firefox it))
+    (mapc #'elfeed-search-update-entry entries)
+    (unless (use-region-p) (forward-line))))
+
+(defun elfeed-chromium-open (&optional use-generic-p)
+  "open with firefox"
+  (interactive "P")
+  (let ((entries (elfeed-search-selected)))
+    (cl-loop for entry in entries
+             do (elfeed-untag entry 'unread)
+             when (elfeed-entry-link entry)
+             do (browse-url-chromium it))
+    (mapc #'elfeed-search-update-entry entries)
+    (unless (use-region-p) (forward-line))))
+
+(defun elfeed-w3m-open (&optional use-generic-p)
+  "open with w3m"
+  (interactive "P")
+  (let ((entries (elfeed-search-selected)))
+    (cl-loop for entry in entries
+             do (elfeed-untag entry 'unread)
+             when (elfeed-entry-link entry)
+             do (ffap-w3m-other-window it))
+    (mapc #'elfeed-search-update-entry entries)
+    (unless (use-region-p) (forward-line))))
+
+(after! elfeed
+  (map! :map elfeed-search-mode-map
+          :n "v" nil
+          :n "v" #'elfeed-view-mpv
+          :n "t" #'elfeed-w3m-open
+          :n "w" #'elfeed-eww-open
+          :n "f" nil
+          :n "f" #'elfeed-firefox-open
+          :n "c" #'elfeed-chromium-open))
 #+end_src
 
 ** Evil
@@ -2173,7 +2251,7 @@ selectively for each Org file where it is desired.
 
 #+begin_src emacs-lisp
 (use-package! org-super-agenda
-  :after org-agenda
+  :after org
   :config
   (setq org-super-agenda-groups '((:auto-dir-name t)))
   (setq org-agenda-skip-scheduled-if-done t
@@ -2184,6 +2262,23 @@ selectively for each Org file where it is desired.
         org-agenda-compact-blocks t
         org-agenda-start-with-log-mode t)
   (org-super-agenda-mode))
+#+end_src
+
+** Org-logseq
+
+Org-logseq supports to open logseq-style link (page or block reference),
+transclusion of referred and embedded blocks using overlays, along with
+Org-Mode.
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! org-logseq :recipe (:host github :repo "llcc/org-logseq"))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package! org-logseq
+  :hook (org-mode . org-logseq-mode)
+  :custom
+  (org-logseq-dir "/media/logseq"))
 #+end_src
 
 ** Pomodoro
@@ -2501,6 +2596,7 @@ use =SPC + == for projects and =SPC + -= for files.
            #'(lambda () (interactive) (doom-project-find-file file))))))
 
 (elk/add-file-keybinding "a" "~/org/agenda.org" "Agenda agenda.org")
+(elk/add-file-keybinding "e" "~/.config/doom/elfeed.org" "Elfeed Feeds elfeed.org")
 (elk/add-file-keybinding "f" "~/.config/fontconfig/fonts.conf" "Fonts config fonts.conf")
 (elk/add-file-keybinding "i" "~/.config/i3/i3.org" "i3 i3.org")
 (elk/add-file-keybinding "l" "~/dox/budget.ledger")

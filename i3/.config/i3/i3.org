@@ -160,6 +160,10 @@ set $w2 "2:二."
 set $w3 "3:三."
 set $w4 "4:四."
 set $w5 "5:五."
+set $w6 "6:六."
+set $w7 "7:七."
+set $w8 "8:八."
+set $w9 "9:九."
 #set $w7 "7 🛰️"
 #set $w8 "8 📝"
 #set $w9 "9 🎵"
@@ -173,16 +177,20 @@ workspace $w2 output $secondary
 workspace $w3 output $secondary
 workspace $w4 output $primary
 workspace $w5 output $primary
+#workspace $w6 output $primary
+#workspace $w7 output $primary
+#workspace $w8 output $primary
+#workspace $w9 output $primary
 
 bindsym $mod+1 workspace $w1
 bindsym $mod+2 workspace $w2
 bindsym $mod+3 workspace $w3
 bindsym $mod+4 workspace $w4
 bindsym $mod+5 workspace $w5
-#bindsym $mod+6 workspace 6
-#bindsym $mod+7 workspace $w7
-#bindsym $mod+8 workspace $w8
-#bindsym $mod+9 workspace $w9
+bindsym $mod+6 workspace $w6
+bindsym $mod+7 workspace $w7
+bindsym $mod+8 workspace $w8
+bindsym $mod+9 workspace $w9
 #bindsym $mod+0 workspace $w10
 
 # move focused container to workspace
@@ -191,10 +199,10 @@ bindsym $mod+Shift+2 move container to workspace $w2
 bindsym $mod+Shift+3 move container to workspace $w3
 bindsym $mod+Shift+4 move container to workspace $w4
 bindsym $mod+Shift+5 move container to workspace $w5
-#bindsym $mod+Shift+6 move container to workspace 6
-#bindsym $mod+Shift+7 move container to workspace $w7
-#bindsym $mod+Shift+8 move container to workspace $w8
-#bindsym $mod+Shift+9 move container to workspace $w9
+bindsym $mod+Shift+6 move container to workspace $w6
+bindsym $mod+Shift+7 move container to workspace $w7
+bindsym $mod+Shift+8 move container to workspace $w8
+bindsym $mod+Shift+9 move container to workspace $w9
 #bindsym $mod+Shift+0 move container to workspace $w10
 
 bindsym $mod+d exec --no-startup-id i3-display-swap
@@ -209,6 +217,7 @@ assign [class="discord"] $w3
 assign [class="zoom"] $w3
 assign [class="Chromium"] $w4
 assign [class="Virt-manager"] $w5
+assign [class="Thunderbird"] $w9
 
 for_window [title="VirtScreen"] floating enable
 for_window [class="cinnamon-settings*"] floating enable
@@ -318,8 +327,6 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 mode "move" {
-    bindsym $mod+Tab focus right
-
     bindsym Left  move left
     bindsym Down  move down
     bindsym Up    move up
@@ -342,6 +349,7 @@ bindsym $mod+m mode "move" focus floating
 
 #+begin_src i3wm-config
 # Startup
+exec_always --no-startup-id autotiling-rs
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec_always --no-startup-id $HOME/.fehbg
 #exec_always --no-startup-id autorandr --change --force
