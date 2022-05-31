@@ -39,8 +39,8 @@ while pgrep -u $UID -x polybar > /dev/null; do sleep 1; done
 
 # Launch bar1 and bar2
 echo "---" | tee -a /tmp/polybar1.log /tmp/polybar2.log
-polybar bspmonitor1 2>&1 | tee -a /tmp/polybar1.log & disown
-polybar bspmonitor2 2>&1 | tee -a /tmp/polybar2.log & disown
+polybar i3monitor1 2>&1 | tee -a /tmp/polybar1.log & disown
+polybar i3monitor2 2>&1 | tee -a /tmp/polybar2.log & disown
 
 echo "Bars launched..."
 #+end_src
@@ -154,7 +154,7 @@ font-5 = "Noto Sans Mono CJK JP:size=13:weight=bold;2"
 
 modules-left = i3
 modules-center = mpd
-modules-right = pomm battery pulseaudio microphone date
+modules-right = battery pulseaudio microphone date
 
 tray-position = right
 tray-padding = 2
@@ -246,7 +246,7 @@ font-5 = "Noto Sans Mono CJK JP:size=13:weight=bold;2"
 
 modules-left = bspwm
 modules-center = mpd
-modules-right = pomm battery pulseaudio microphone date
+modules-right = battery pulseaudio microphone date
 
 tray-position = right
 tray-padding = 2
@@ -343,6 +343,23 @@ fuzzy-match = true
 
 label-visible-underline = ${colors.underline-1}
 label-focused-underline = ${colors.underline-1}
+
+format = <label-state> <label-mode>
+
+label-focused = %icon%
+label-occupied = %icon%
+label-urgent = %icon%
+label-empty =
+
+ws-icon-0 = 1; 一.
+ws-icon-1 = 2; 二.
+ws-icon-2 = 3; 三.
+ws-icon-3 = 4; 四.
+ws-icon-4 = 5; 五.
+ws-icon-5 = 6; 六.
+ws-icon-6 = 7; 七.
+ws-icon-7 = 8; 八.
+ws-icon-8 = 9; 九.
 #+end_src
 
 ** i3 workspace

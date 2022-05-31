@@ -26,11 +26,11 @@ alias ....='cd ../../..'
 
 # vim and emacs
 alias em="emacs-edit -ui"
-alias doom="~/.emacs.d/bin/doom"
-alias doomsync="~/.emacs.d/bin/doom sync"
-alias doomdoctor="~/.emacs.d/bin/doom doctor"
-alias doomupgrade="~/.emacs.d/bin/doom upgrade"
-alias doompurge="~/.emacs.d/bin/doom purge"
+alias doom="/media/emacs/doom/bin/doom"
+alias doomsync="/media/emacs/doom/bin/doom sync"
+alias doomdoctor="/media/emacs/doom/bin/doom doctor"
+alias doomupgrade="/media/emacs/doom/bin/doom upgrade"
+alias doompurge="/media/emacs/doom/bin/doom purge"
 
 # z.lua useful aliases
 alias j='z -I'  # use fzf to select in multiple matches

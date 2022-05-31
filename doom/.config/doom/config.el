@@ -57,6 +57,50 @@
     (signal 'quit nil)))
 (add-hook! 'kill-emacs-hook #'+literate-tangle-check-finished)
 
+(defun find-in-dotfiles ()
+  "Open a file somewhere in ~/dotrice via a fuzzy filename search."
+  (interactive)
+  (doom-project-find-file (expand-file-name "~/.dotrice")))
+
+(defun find-in-configs ()
+  "Open a file somewhere in ~/.config via a fuzzy filename search."
+  (interactive)
+  (doom-project-find-file (expand-file-name "~/.config/")))
+
+(defun browse-dotfiles ()
+  "Browse the files in ~/dotrice."
+  (interactive)
+  (doom-project-browse (expand-file-name "~/.dotrice/")))
+
+(defun find-in-scripts ()
+  "Open a file somewhere in scripts directory, ~/script via a fuzzy filename search."
+  (interactive)
+  (doom-project-find-file (expand-file-name "~/.scripts")))
+
+(defun find-in-suckless ()
+  "Open a file somewhere in the suckless directory, ~/.local/src via a fuzzy filename search."
+  (interactive)
+  (doom-project-find-file (expand-file-name "~/.local/src/")))
+
+(defun org-syntax-convert-keyword-case-to-lower ()
+  "Convert all #+KEYWORDS to #+keywords."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (let ((count 0)
+          (case-fold-search nil))
+      (while (re-search-forward "^[ \t]*#\\+[A-Z_]+" nil t)
+        (unless (s-matches-p "RESULTS" (match-string 0))
+          (replace-match (downcase (match-string 0)) t)
+          (setq count (1+ count))))
+      (message "Replaced %d occurances" count))))
+
+(defun locally-defer-font-lock ()
+  "Set jit-lock defer and stealth, when buffer is over a certain size."
+  (when (> (buffer-size) 50000)
+    (setq-local jit-lock-defer-time 0.05
+                jit-lock-stealth-time 1)))
+
 (setq-default
  delete-by-moving-to-trash t                    ; Delete files to trash
  window-combination-resize t                    ; take new window space from all other windows (not just current)
@@ -95,9 +139,6 @@
            (unless (string= "-" project-name)
              (format (if (buffer-modified-p)  " ◉ %s" " ● %s") project-name))))))
 
-;; Silence compiler warnings as they can be pretty disruptive
-(setq native-comp-async-report-warnings-errors nil)
-
 (setq doom-font (font-spec :family "JetBrains Mono Nerd Font" :size 20)
       doom-variable-pitch-font (font-spec :family "sans" :size 20)
       doom-unicode-font (font-spec :family "JoyPixels" :size 20)
@@ -115,6 +156,16 @@
 (add-to-list 'default-frame-alist '(alpha . (95 . 95)))
 
 (remove-hook 'text-mode-hook #'auto-fill-mode) ;; Prevent lines from auto breaking
+
+(global-auto-revert-mode 1)
+(setq global-auto-revert-non-file-buffers t)
+
+(defun split-horizontally-for-temp-buffers ()
+  "Split the window horizontally for temp buffers."
+  (when (and (one-window-p t)
+             (not (active-minibuffer-window)))
+    (split-window-horizontally)))
+(add-hook 'temp-buffer-setup-hook 'split-horizontally-for-temp-buffers)
 
 (setq! citar-bibliography '("~/dox/bibliography/references.bib" "~/dox/bibliography/Capstone Project.bib")
        citar-library-paths '("~/dox/bibliography/")
@@ -751,22 +802,39 @@ sorttasks plan.start.up
   :custom
   (org-logseq-dir "/media/logseq"))
 
-(use-package! pomm
-  :commands (pomm)
-  :config
-  (setq alert-default-style 'libnotify
-        pomm-audio-enabled t
-        pomm-audio-player-executable "pomodoro-play"
-        pomm-audio-files '((work . "/home/elyk/.dotrice/applications/.local/share/sounds/work.wav" )
-                           (tick . "/home/elyk/.emacs.d/.local/straight/build-28.1/pomm/resources/tick.wav")
-                           (short-break . "/home/elyk/.dotrice/applications/.local/share/sounds/break.wav")
-                           (long-break . "home/elyk/.dotrice/applications/.local/share/sounds/break.wav")
-                           (stop . "/home/elyk/.emacs.d/.local/straight/build-28.1/pomm/resources/tick.wav")))
-  (add-hook 'pomm-on-tick-hook 'pomm-update-mode-line-string)
-  (add-hook 'pomm-on-status-changed-hook 'pomm-update-mode-line-string))
-(map! (:leader
-       :prefix ("t")
-       :desc "Pomodoro" :n "t" #'pomm))
+(use-package! scroll-on-jump
+  :commands (scroll-on-jump-advice-add scroll-on-jump-with-scroll-advice-add scroll-on-jump-interactive)
+  :custom
+  (scroll-on-jump-duration 0.4)
+  (scroll-on-jump-smooth nil)
+  (scroll-on-jump-use-curve t))
+
+(after! evil
+  (scroll-on-jump-advice-add evil-undo)
+  (scroll-on-jump-advice-add evil-redo)
+  (scroll-on-jump-advice-add evil-jump-item)
+  (scroll-on-jump-advice-add evil-jump-forward)
+  (scroll-on-jump-advice-add evil-jump-backward)
+  (scroll-on-jump-advice-add evil-ex-search-next)
+  (scroll-on-jump-advice-add evil-ex-search-previous)
+  (scroll-on-jump-advice-add evil-forward-paragraph)
+  (scroll-on-jump-advice-add evil-backward-paragraph)
+  (scroll-on-jump-advice-add evil-goto-mark)
+
+  ;; Actions that themselves scroll.
+  (scroll-on-jump-with-scroll-advice-add evil-goto-line)
+  (scroll-on-jump-with-scroll-advice-add evil-scroll-down)
+  (scroll-on-jump-with-scroll-advice-add evil-scroll-up)
+  (scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-center)
+  (scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-top)
+  (scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-bottom))
+
+(after! goto-chg
+  (scroll-on-jump-advice-add goto-last-change)
+  (scroll-on-jump-advice-add goto-last-change-reverse))
+
+(global-set-key (kbd "<C-M-next>") (scroll-on-jump-interactive 'diff-hl-next-hunk))
+(global-set-key (kbd "<C-M-prior>") (scroll-on-jump-interactive 'diff-hl-previous-hunk))
 
 (use-package! emacs-powerthesaurus
   :after-call (powerthesaurus-lookup-synonyms-dwim

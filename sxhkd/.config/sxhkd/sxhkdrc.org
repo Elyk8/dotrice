@@ -10,7 +10,7 @@
 - [[#sxhkd][Sxhkd]]
 - [[#bspwm][Bspwm]]
 - [[#frequent-bindings][Frequent Bindings]]
-- [[#emacsa][Emacsa]]
+- [[#emacs][Emacs]]
 - [[#super--space-followed-by-o-opening][=Super + space= followed by =O=, opening.]]
 - [[#super--space-followed-by-p-dmenu-scripts][=Super + space= followed by =p=, dmenu scripts.]]
 - [[#super--space-followed-by--system-bindings][=Super + space= followed by =;=, system bindings]]
@@ -37,7 +37,7 @@ super + slash
 
 If ever we are using bspwm
 
-#+begin_src conf
+#+begin_src conf :tangle no
 # BSPWM: Focus the node in the given direction
 super + {_,shift + }{h,j,k,l}
       emacs-bspwm-integration node -{f,s} {west,south,north,east}
@@ -63,8 +63,9 @@ super + ctrl + alt + {Left,Down,Up,Right}
   bspc node --resize $d1 $dx $dy || bspc node --resize $d2 $dx $dy
 
 # focus or send to the given desktop
-super + {_,shift + }{1-9}
-      bspc {desktop -f,node -d} '^{1-9}'
+super + {1-5,8,9,0}
+      d='{1-5,8,9,10}'; \
+      bspc desktop -f "$d.local" || bspc desktop -s "$d"
 
 super + {Left,Down,Up,Right}
       bspc node -v {-20 0,0 20,0 -20,20 0}
@@ -75,11 +76,11 @@ super + {t,shift + t}
 
 # Toggle floating
 super + g
-      bspc node focused.floating -t tiled || bspc node focused.!floating -t floating
+      bspc node -t "~"{floating,tiled}
 
 # Toggle fullscreen
 super + f
-      bspc node focused.fullscreen -t tiled || bspc node focused.!fullscreen -t fullscreen
+      bspc node -t "~"fullscreen
 
 # close and kill
 super + {_,shift + }q
@@ -93,12 +94,15 @@ super + alt + {q,r}
     bspc node -f pointed
 
 # Emacs splitting (TODO: Integrate with bspwm)
-super + {s,v}
-      [ "$(xdotool getactivewindow getwindowclassname)" = "Emacs" ] && emacsclient -e "(evil-window-{_,v}split)" || exit 1
+super + {s,v,c}
+      emacs-bspwm-integration node -p {south,east,cancel}
+
+super + shift + {s,v}
+      emacs-bspwm-integration node -p {north,west,cancel}
 
 # Swapping focus among monitors
-super + {w,e}
-      bspc monitor -f {prev,next}
+super + {_,shift} {w,e}
+      bspc {monitor -f,desktop focused -m} {prev,next}
 #+end_src
 
 * Frequent Bindings
@@ -143,7 +147,7 @@ super + space ; m
       microphone toggle
 #+end_src
 
-* Emacsa
+* Emacs
 
 #+begin_src conf
 # :Emacs - Open an emacs frame
@@ -386,4 +390,3 @@ super + F4
 super + {F11, F12}
       brightness {down,up}
 #+end_src
-

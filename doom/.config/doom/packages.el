@@ -45,7 +45,7 @@
 
 (package! org-logseq :recipe (:host github :repo "llcc/org-logseq"))
 
-(package! pomm)
+(package! scroll-on-jump)
 
 (package! company-english-helper :recipe (:host github :repo "manateelazycat/company-english-helper"))
 (package! emacs-powerthesaurus :recipe (:host github :repo "SavchenkoValeriy/emacs-powerthesaurus"))
