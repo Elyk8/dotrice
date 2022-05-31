@@ -1,82 +1,7 @@
-#+deproperty: header-args :elisp :exports code
+#+property: header-args :elisp :exports code
 #+property: header-args :emacs-lisp :tangle yes
 
-* Table of Contents :toc:
-- [[#lexical-keybinds][Lexical Keybinds]]
-- [[#doom-configuration][DOOM Configuration]]
-  - [[#async-config-tangling][Async config tangling]]
-  - [[#modules][Modules]]
-  - [[#hostname-based-configuration][Hostname based configuration]]
-  - [[#packages][Packages]]
-- [[#simple-settings][Simple Settings]]
-  - [[#autoload][Autoload]]
-  - [[#changing-defaults][Changing Defaults]]
-  - [[#window-title][Window title]]
-  - [[#native-compilation][Native Compilation]]
-  - [[#fonts-and-appearance][Fonts and Appearance]]
-  - [[#hooks][Hooks]]
-- [[#built-in-packages-configurations][Built-in packages configurations]]
-  - [[#citar][Citar]]
-  - [[#company][Company]]
-  - [[#dashboard][Dashboard]]
-  - [[#dired][Dired]]
-  - [[#dictionary][Dictionary]]
-  - [[#ediff][Ediff]]
-  - [[#elfeed][Elfeed]]
-  - [[#evil][Evil]]
-  - [[#icalendar][iCalendar]]
-  - [[#modeline][Modeline]]
-  - [[#org][Org]]
-  - [[#org-journal][Org-journal]]
-  - [[#org-roam][Org roam]]
-  - [[#shells][Shells]]
-  - [[#task-juggler][Task juggler]]
-  - [[#tramp][Tramp]]
-  - [[#vterm][VTerm]]
-  - [[#which-key][Which-key]]
-- [[#i3-and-emacs][i3 and Emacs]]
-  - [[#config-syntax-highlighting][Config syntax highlighting]]
-  - [[#integration-i3][Integration i3]]
-  - [[#integration-bspwm][Integration bspwm]]
-- [[#exwm][EXWM]]
-  - [[#initialisation][Initialisation]]
-  - [[#run-or-raise][Run or Raise]]
-  - [[#polybar][Polybar]]
-  - [[#exwm-configuration][EXWM Configuration]]
-- [[#third-party-packages][Third-party packages]]
-  - [[#el-easydraw][El-easydraw]]
-  - [[#kmonad][KMonad]]
-  - [[#dmenu][Dmenu]]
-  - [[#inkscape][Inkscape]]
-  - [[#org-cv][Org CV]]
-  - [[#org-download][Org Download]]
-  - [[#org-roam-bibtex][Org Roam Bibtex]]
-  - [[#org-roam-graph][Org Roam Graph]]
-  - [[#org-appear][Org Appear]]
-  - [[#org-archive][Org Archive]]
-  - [[#org-auto-tangle][Org Auto Tangle]]
-  - [[#org-super-agenda][Org Super Agenda]]
-  - [[#org-logseq][Org-logseq]]
-  - [[#pomodoro][Pomodoro]]
-  - [[#thesaurus][Thesaurus]]
-- [[#keybindings-evil-etc][Keybindings, Evil, etc...]]
-  - [[#bookmarks][Bookmarks]]
-  - [[#buffers][Buffers]]
-  - [[#ibuffer-mode][ibuffer mode]]
-  - [[#dashboard-1][Dashboard]]
-  - [[#dired-1][Dired]]
-  - [[#evil-1][Evil]]
-  - [[#line-settings][Line settings]]
-  - [[#org-1][Org]]
-  - [[#open-specific-filesprojects][Open Specific Files/Projects]]
-- [[#language][Language]]
-  - [[#latex][Latex]]
-  - [[#lua][Lua]]
-  - [[#haskell][Haskell]]
-  - [[#python][Python]]
-
 * Lexical Keybinds
-
 #+begin_quote
 Until Emacs 24.1 (June 2012), Elisp only had dynamically scoped variables,
 a feature, mostly by accident, common to old lisp dialects. While dynamic
@@ -88,14 +13,14 @@ variables, and virtually no other languages have adopted it.
 ;;; config.el -*- lexical-binding: t; -*-
 #+end_src
 
+* Warning and workarounds
+- [ ] Disabled org-fancy-priorities since it messes up with main config.org file
+
 * DOOM Configuration
-
 ** Async config tangling
-
 Doom adds an org-mode hook +literate-enable-recompile-h. This is a nice idea,
 but it’s too blocking for my taste. Since I trust my tangling to be fairly
 straightforward, I’ll just redefine it to a simpler, async, function.
-
 #+begin_src emacs-lisp
 (defvar +literate-tangle--proc nil)
 (defvar +literate-tangle--proc-start-time nil)
@@ -155,9 +80,7 @@ straightforward, I’ll just redefine it to a simpler, async, function.
 (add-hook! 'kill-emacs-hook #'+literate-tangle-check-finished)
 #+end_src
 
-
 ** Modules
-
 This file controls what Doom modules are enabled and what order they load
 in. Remember to run 'doom sync' after modifying it!
 
@@ -171,7 +94,6 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
 
      Alternatively, press 'gd' (or 'C-c c d') on a module to browse its
      directory (for easy access to its source code).
-
 #+begin_src emacs-lisp :tangle "init.el"
 ;;; init.el -*- lexical-binding: t; -*-
 (doom! :input
@@ -204,7 +126,7 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
        ophints           ; highlight the region an operation acts on
        (popup +all +defaults)   ; tame sudden yet inevitable temporary windows
        ;;tabs              ; a tab bar for Emacs
-       treemacs          ; a project drawer, like neotree but cooler
+       ;;treemacs          ; a project drawer, like neotree but cooler
        ;;unicode           ; extended unicode support for various languages
        vc-gutter         ; vcs diff in the fringe
        ;;vi-tilde-fringe   ; fringe tildes to mark beyond EOB
@@ -364,8 +286,7 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
        (default +bindings +smartparens)
 
        :wmintegration
-       ;(:if (string= "skynet" (string-trim (shell-command-to-string "uname -n"))) i3)
-       (:if (string= "skynet" (string-trim (shell-command-to-string "uname -n"))) bspwm)
+       (:if (string= "skynet" (string-trim (shell-command-to-string "uname -n"))) i3)
        )
 #+end_src
 
@@ -386,21 +307,8 @@ specific machines.
 ;;; wmintegration/i3/config.el -*- lexical-binding: t; -*-
 #+end_src
 
-*** bspwm
-
-#+begin_src emacs-lisp :tangle "modules/wmintegration/bspwm/packages.el"
-;; -*- no-byte-compile: t; -*-
-;;; wmintegration/bspwm/packages.el
-#+end_src
-
-#+begin_src emacs-lisp :tangle "modules/wmintegration/bspwm/config.el"
-;;; wmintegration/bspwm/config.el -*- lexical-binding: t; -*-
-#+end_src
-
 ** Packages
-
 Some of the built-in packages, which I don't use, are listed here.
-
 #+begin_src emacs-lisp :tangle "packages.el"
 ;; -*- no-byte-compile: t; -*-
 
@@ -416,14 +324,9 @@ Some of the built-in packages, which I don't use, are listed here.
 
 ** Autoload
 
-These are just personal functions which I have added to doom emacs. I want them
-autoloaded when I start DOOM and, thus, they are defined in an =.el= file in the
-autoload directory.
+These are just personal functions which I have added to doom emacs.
 
-#+begin_src emacs-lisp :tangle "autoload/elyk.el"
-;;; ~/.config/doom/autoload/elyk.el -*- lexical-binding: t; -*-
-
-;;;###autoload
+#+begin_src emacs-lisp
 (defun find-in-dotfiles ()
   "Open a file somewhere in ~/dotrice via a fuzzy filename search."
   (interactive)
@@ -434,25 +337,21 @@ autoload directory.
   (interactive)
   (doom-project-find-file (expand-file-name "~/.config/")))
 
-;;;###autoload
 (defun browse-dotfiles ()
   "Browse the files in ~/dotrice."
   (interactive)
   (doom-project-browse (expand-file-name "~/.dotrice/")))
 
-;;;###autoload
 (defun find-in-scripts ()
   "Open a file somewhere in scripts directory, ~/script via a fuzzy filename search."
   (interactive)
   (doom-project-find-file (expand-file-name "~/.scripts")))
 
-;;;###autoload
 (defun find-in-suckless ()
   "Open a file somewhere in the suckless directory, ~/.local/src via a fuzzy filename search."
   (interactive)
   (doom-project-find-file (expand-file-name "~/.local/src/")))
 
-;;;###autoload
 (defun org-syntax-convert-keyword-case-to-lower ()
   "Convert all #+KEYWORDS to #+keywords."
   (interactive)
@@ -466,7 +365,6 @@ autoload directory.
           (setq count (1+ count))))
       (message "Replaced %d occurances" count))))
 
-;;;###autoload
 (defun locally-defer-font-lock ()
   "Set jit-lock defer and stealth, when buffer is over a certain size."
   (when (> (buffer-size) 50000)
@@ -532,16 +430,6 @@ to display the file name, the project name and the save state of the file.
 #+end_src
 
 
-** Native Compilation
-
-I have been using native compilation for improved performance. We just want less
-verbose in our verbose.
-
-#+begin_src emacs-lisp
-;; Silence compiler warnings as they can be pretty disruptive
-(setq native-comp-async-report-warnings-errors nil)
-#+end_src
-
 ** Fonts and Appearance
 
 Settings related to fonts within Doom Emacs:
@@ -585,7 +473,37 @@ Here, we specify stuff that we want to run on startup
 (remove-hook 'text-mode-hook #'auto-fill-mode) ;; Prevent lines from auto breaking
 #+end_src
 
+** Allow babel execution in CLI actions
 
+#+begin_src emacs-lisp :tangle cli.el
+;;; cli.el -*- lexical-binding: t; -*-
+(setq org-confirm-babel-evaluate nil)
+
+(defun doom-shut-up-a (orig-fn &rest args)
+  (quiet! (apply orig-fn args)))
+
+(advice-add 'org-babel-execute-src-block :around #'doom-shut-up-a)
+#+end_src
+
+** Global Auto Revert
+
+A buffer can get out of sync with respect to its visited file on disk if that file is changed by another program. To keep it up to date, you can enable Auto Revert mode by typing M-x auto-revert-mode, or you can set it to be turned on globally with ‘global-auto-revert-mode’.  I have also turned on Global Auto Revert on non-file buffers, which is especially useful for ‘dired’ buffers.
+
+#+begin_src emacs-lisp
+(global-auto-revert-mode 1)
+(setq global-auto-revert-non-file-buffers t)
+#+end_src
+
+** Splits
+
+#+begin_src emacs-lisp
+(defun split-horizontally-for-temp-buffers ()
+  "Split the window horizontally for temp buffers."
+  (when (and (one-window-p t)
+             (not (active-minibuffer-window)))
+    (split-window-horizontally)))
+(add-hook 'temp-buffer-setup-hook 'split-horizontally-for-temp-buffers)
+#+end_src
 
 * Built-in packages configurations
 
@@ -1312,18 +1230,6 @@ Basic integration of emacs with i3 window manager.
     ("split h" (evil-window-vsplit))
     ("kill" (evil-quit))
     (- (error command))))
-#+end_src
-
-
-** Integration bspwm
-
-#+begin_src emacs-lisp :tangle modules/wmintegration/bspwm/packages.el
-(package! emacs-bspwm-integration
-  :recipe (:host github :repo "lcvdkmp/emacs-bspwm-integration" :build (:not compile)))
-#+end_src
-
-#+begin_src emacs-lisp :tangle modules/wmintegration/bspwm/config.el
-(use-package! emacs-bspwm-integration)
 #+end_src
 
 * EXWM
@@ -2308,29 +2214,51 @@ Org-Mode.
   (org-logseq-dir "/media/logseq"))
 #+end_src
 
-** Pomodoro
+** Scroll on jump
+
+This package allows you to control the scrolling on any operation that jumps to a new location.
+
+- Re-centers vertical scrolling.
+- Optionally animate the scroll using a fixed time limit.
 
 #+begin_src emacs-lisp :tangle packages.el
-(package! pomm)
+(package! scroll-on-jump)
 #+end_src
 
 #+begin_src emacs-lisp
-(use-package! pomm
-  :commands (pomm)
-  :config
-  (setq alert-default-style 'libnotify
-        pomm-audio-enabled t
-        pomm-audio-player-executable "pomodoro-play"
-        pomm-audio-files '((work . "/home/elyk/.dotrice/applications/.local/share/sounds/work.wav" )
-                           (tick . "/home/elyk/.emacs.d/.local/straight/build-28.1/pomm/resources/tick.wav")
-                           (short-break . "/home/elyk/.dotrice/applications/.local/share/sounds/break.wav")
-                           (long-break . "home/elyk/.dotrice/applications/.local/share/sounds/break.wav")
-                           (stop . "/home/elyk/.emacs.d/.local/straight/build-28.1/pomm/resources/tick.wav")))
-  (add-hook 'pomm-on-tick-hook 'pomm-update-mode-line-string)
-  (add-hook 'pomm-on-status-changed-hook 'pomm-update-mode-line-string))
-(map! (:leader
-       :prefix ("t")
-       :desc "Pomodoro" :n "t" #'pomm))
+(use-package! scroll-on-jump
+  :commands (scroll-on-jump-advice-add scroll-on-jump-with-scroll-advice-add scroll-on-jump-interactive)
+  :custom
+  (scroll-on-jump-duration 0.4)
+  (scroll-on-jump-smooth nil)
+  (scroll-on-jump-use-curve t))
+
+(after! evil
+  (scroll-on-jump-advice-add evil-undo)
+  (scroll-on-jump-advice-add evil-redo)
+  (scroll-on-jump-advice-add evil-jump-item)
+  (scroll-on-jump-advice-add evil-jump-forward)
+  (scroll-on-jump-advice-add evil-jump-backward)
+  (scroll-on-jump-advice-add evil-ex-search-next)
+  (scroll-on-jump-advice-add evil-ex-search-previous)
+  (scroll-on-jump-advice-add evil-forward-paragraph)
+  (scroll-on-jump-advice-add evil-backward-paragraph)
+  (scroll-on-jump-advice-add evil-goto-mark)
+
+  ;; Actions that themselves scroll.
+  (scroll-on-jump-with-scroll-advice-add evil-goto-line)
+  (scroll-on-jump-with-scroll-advice-add evil-scroll-down)
+  (scroll-on-jump-with-scroll-advice-add evil-scroll-up)
+  (scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-center)
+  (scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-top)
+  (scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-bottom))
+
+(after! goto-chg
+  (scroll-on-jump-advice-add goto-last-change)
+  (scroll-on-jump-advice-add goto-last-change-reverse))
+
+(global-set-key (kbd "<C-M-next>") (scroll-on-jump-interactive 'diff-hl-next-hunk))
+(global-set-key (kbd "<C-M-prior>") (scroll-on-jump-interactive 'diff-hl-previous-hunk))
 #+end_src
 
 ** Thesaurus

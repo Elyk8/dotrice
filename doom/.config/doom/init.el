@@ -29,7 +29,7 @@
        ophints           ; highlight the region an operation acts on
        (popup +all +defaults)   ; tame sudden yet inevitable temporary windows
        ;;tabs              ; a tab bar for Emacs
-       treemacs          ; a project drawer, like neotree but cooler
+       ;;treemacs          ; a project drawer, like neotree but cooler
        ;;unicode           ; extended unicode support for various languages
        vc-gutter         ; vcs diff in the fringe
        ;;vi-tilde-fringe   ; fringe tildes to mark beyond EOB
@@ -189,6 +189,5 @@
        (default +bindings +smartparens)
 
        :wmintegration
-       ;(:if (string= "skynet" (string-trim (shell-command-to-string "uname -n"))) i3)
-       (:if (string= "skynet" (string-trim (shell-command-to-string "uname -n"))) bspwm)
+       (:if (string= "skynet" (string-trim (shell-command-to-string "uname -n"))) i3)
        )

@@ -4,68 +4,6 @@
 super + slash
         sxhkd-help
 
-# BSPWM: Focus the node in the given direction
-super + {_,shift + }{h,j,k,l}
-      emacs-bspwm-integration node -{f,s} {west,south,north,east}
-
-# preselect the direction
-super + ctrl + {h,j,k,l}
-      emacs-bspwm-integration node -p {west,south,north,east}
-
-super + alt + control + {h,j,k,l} ; {0-9}
-      bspc node @{west,south,north,east} -r 0.{0-9}
-
-super + alt + p
-      bspc config focus_follows_pointer {true,false}
-
-# Smart resize, will grow or shrink depending on location. Will always grow for floating nodes.
-super + ctrl + alt + {Left,Down,Up,Right}
-  n=10; \
-  { d1=left;   d2=right;  dx=-$n; dy=0;   \
-  , d1=bottom; d2=top;    dx=0;   dy=$n;  \
-  , d1=top;    d2=bottom; dx=0;   dy=-$n; \
-  , d1=right;  d2=left;   dx=$n;  dy=0;   \
-  } \
-  bspc node --resize $d1 $dx $dy || bspc node --resize $d2 $dx $dy
-
-# focus or send to the given desktop
-super + {_,shift + }{1-9}
-      bspc {desktop -f,node -d} '^{1-9}'
-
-super + {Left,Down,Up,Right}
-      bspc node -v {-20 0,0 20,0 -20,20 0}
-
-# Force window to tiled/pseudo_tiled
-super + {t,shift + t}
-      bspc node -t {tiled,pseudo_tiled}
-
-# Toggle floating
-super + g
-      bspc node focused.floating -t tiled || bspc node focused.!floating -t floating
-
-# Toggle fullscreen
-super + f
-      bspc node focused.fullscreen -t tiled || bspc node focused.!fullscreen -t fullscreen
-
-# close and kill
-super + {_,shift + }q
-      emacs-bspwm-integration node -{c,k}
-
-# quit/restart bspwm
-super + alt + {q,r}
-      bspc {quit,wm -r}
-
-~button1
-    bspc node -f pointed
-
-# Emacs splitting (TODO: Integrate with bspwm)
-super + {s,v}
-      [ "$(xdotool getactivewindow getwindowclassname)" = "Emacs" ] && emacsclient -e "(evil-window-{_,v}split)" || exit 1
-
-# Swapping focus among monitors
-super + {w,e}
-      bspc monitor -f {prev,next}
-
 # Open desktop applications
 super + space ; space
       dm-j4dmenu-desktop
