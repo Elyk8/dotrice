@@ -1078,15 +1078,7 @@ columns bsi, name, start, end, effort, effortdone, effortleft, chart { width 100
 loadunit shortauto
 hideresource 1
 }
-# A graph showing resource allocation. It identifies whether each
-# resource is under- or over-allocated for.
-resourcereport resourceGraph \"\" {
-headline \"Resource Allocation Graph\"
-columns no, name, effort, weekly { width 1000 }
-loadunit shortauto
-hidetask ~(isleaf() & isleaf_())
-sorttasks plan.start.up
-}")
+")
         )
   (setq org-taskjuggler-default-project-duration 999))
 #+end_src
@@ -1768,43 +1760,48 @@ the right side
   (setq exwm-input-global-keys
         `(
           ;; Reset to line-mode (C-c C-k switches to char-mode via exwm-input-release-keyboard)
-          ([?\s-r] . exwm-reset)
+          ([?\s-r] . exwm-  (use-package centered-cursor-mode
+    :diminish centered-cursor-mode)
 
-          ;; Splits
-          ([?\s-v] . evil-window-vsplit)
-          ([?\s-z] . evil-window-split)
+  (defun elk/pulse-area (&rest _)
+    "Pulse +-5 chars of point."
+    (pulse-momentary-highlight-region (- (point) 5) (+ 5 (point))))
 
-          ;; Switch workspace
-          ([?\s-w] . (lambda () (interactive) (elk/exwm-switch-to-other-monitor)))
-          ([?\s-W] . (lambda () (interactive) (elk/exwm-workspace-switch-monitor)))
-          ([?\s-`] . (lambda () (interactive) (exwm-workspace-switch-create 0)))
+  (dolist (command '(org-forward-sentence org-backward-sentence))
+    (advice-add command :after #'pulse-area))
 
-          ;; Change layouts
-          ([?\s-b] . (lambda () (interactive) (rotate-layout)))
+  ;; WIP STUFF
 
-          ;; Killing buffers and windows
-          ([?\s-c] . kill-current-buffer)
-          ([?\s-q] . +workspace/close-window-or-workspace)
+  ;;; Highlight Cursor Line with Pulse
+  ;; From https://karthinks.com/software/batteries-included-with-emacs/
+  ;; Replace external package with internal command
 
-          ;; Change focus between windows
-          ([?\s-h] . (lambda () (interactive) (elk/exwm-windmove 'left)))
-          ([?\s-l] . (lambda () (interactive) (elk/exwm-windmove 'right)))
-          ([?\s-k] . evil-window-prev)
-          ([?\s-j] . evil-window-next)
+  ;; (defun pulse-line (&rest _)
+  ;;   "Pulse the current line."
+  ;;   (interactive)
+  ;;   (pulse-momentary-highlight-one-line (point)))
 
-          ;; Move windows around
-          ([?\s-H] . (lambda () (interactive) (elk/exwm-move-window 'left)))
-          ([?\s-L] . (lambda () (interactive) (elk/exwm-move-window 'right)))
-          ([?\s-K] . (lambda () (interactive) (elk/exwm-move-window 'up)))
-          ([?\s-J] . (lambda () (interactive) (elk/exwm-move-window 'down)))
+  ;; (dolist (command '(scroll-up-command scroll-down-command
+  ;;                                      recenter-top-bottom other-window select-window-by-number))
+  ;;   (advice-add command :after #'pulse-line))
+  ;; (defadvice other-window (after other-window-pulse activate) (pulse-line))
+  ;; (defadvice delete-window (after delete-window-pulse activate) (pulse-line))
+  ;; (defadvice recenter-top-bottom (after recenter-top-bottom-pulse activate))
 
-          ([?\s-\C-h] . (lambda () (interactive) (elk/exwm-resize-window 'width 'shrink)))
-          ([?\s-\C-j] . (lambda () (interactive) (elk/exwm-resize-window 'height 'grow)))
-          ([?\s-\C-k] . (lambda () (interactive) (elk/exwm-resize-window 'height 'shrink)))
-          ([?\s-\C-l] . (lambda () (interactive) (elk/exwm-resize-window 'width 'grow)))
-          ([?\s-\C-=] . balance-windows)
+  ;; (defun pulse-line (&rest _)
+  ;;       "Pulse the current line."
+  ;;       (pulse-momentary-highlight-one-line (point)))
+  ;; (pulse-momentary-highlight
 
-          ([?\s-g] . exwm-floating-toggle-floating)
+  ;; (dolist (command '(scroll-up-command scroll-down-command
+  ;;                    recenter-top-bottom other-window evil-window-next))
+  ;;   (advice-add command :after #'pulse-line))
+
+(custom-set-faces
+  '(font-lock-comment-face ((t (:inherit font-lock-comment-face :italic t))))
+  '(font-lock-doc-face ((t (:inherit font-lock-doc-face :italic t))))
+  '(font-lock-string-face ((t (:inherit font-lock-string-face :italic t)))))
+ating)
           ([?\s-f] . exwm-layout-toggle-fullscreen)
           ([?\s-m] . exwm-layout-toggle-mode-line)
           ([?\s-i] . exwm-input-toggle-keyboard) ;; Toggle between "line-mode" and "char-mode" in an EXWM window
