@@ -543,15 +543,7 @@ columns bsi, name, start, end, effort, effortdone, effortleft, chart { width 100
 loadunit shortauto
 hideresource 1
 }
-# A graph showing resource allocation. It identifies whether each
-# resource is under- or over-allocated for.
-resourcereport resourceGraph \"\" {
-headline \"Resource Allocation Graph\"
-columns no, name, effort, weekly { width 1000 }
-loadunit shortauto
-hidetask ~(isleaf() & isleaf_())
-sorttasks plan.start.up
-}")
+")
         )
   (setq org-taskjuggler-default-project-duration 999))
 

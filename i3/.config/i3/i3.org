@@ -222,6 +222,7 @@ assign [class="Thunderbird"] $w9
 for_window [title="VirtScreen"] floating enable
 for_window [class="cinnamon-settings*"] floating enable
 for_window [title="Picture-in-Picture"] sticky enable
+for_window [class="Dragon-drop"] sticky enable
 for_window [window_role="GtkFileChooserDialog"] resize set width 1000 px height 800 px
 for_window [window_role="GtkFileChooserDialog"] move position center
 #+end_src
