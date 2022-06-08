@@ -1,5 +1,6 @@
 #+property: header-args :elisp :exports code
 #+property: header-args :emacs-lisp :tangle yes
+#+startup: fold
 
 * Table :toc:
 - [[#lexical-keybinds][Lexical Keybinds]]
@@ -87,9 +88,6 @@ variables, and virtually no other languages have adopted it.
 #+begin_src emacs-lisp
 ;;; config.el -*- lexical-binding: t; -*-
 #+end_src
-
-* Warning and workarounds
-- [ ] Disabled org-fancy-priorities since it messes up with main config.org file
 
 * DOOM Configuration
 ** Async config tangling
@@ -392,7 +390,6 @@ Some of the built-in packages, which I don't use, are listed here.
  rtags
  solaire-mode)
 #+end_src
-
 
 * Simple Settings
 
@@ -1190,7 +1187,6 @@ I hate when which-key takes too long to show up. Make it faster!!!
   (setq which-key-idle-delay 0.2))
 #+end_src
 
-
 * i3 and Emacs
 
 ** Config syntax highlighting
@@ -1915,7 +1911,6 @@ ating)
   (exwm-enable))
 #+end_src
 
-
 * Third-party packages
 
 ** El-easydraw
@@ -2335,7 +2330,6 @@ This package allows you to control the scrolling on any operation that jumps to 
 #+end_src
 
 * Keybindings, Evil, etc...
-
 ** Bookmarks
 
 Bookmarks are somewhat like registers in that they record positions you can jump to.  Unlike registers, they have long names, and they persist automatically from one Emacs session to the next. The prototypical use of bookmarks is to record where you were reading in various files.
@@ -2576,7 +2570,6 @@ This is to allow navigating visual lines by using =gj= and =gk=.
       :leader
       :desc "Org babel tangle" "m TAB" #'org-babel-tangle)
 #+end_src
-
 
 ** Open Specific Files/Projects
 
