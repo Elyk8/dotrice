@@ -213,9 +213,9 @@ bindsym $mod+d exec --no-startup-id i3-display-swap
 #+begin_src i3wm-config
 assign [class="qutebrowser"] $w2
 assign [class="firefox"] $w2
+assign [class="Chromium"] $w2
 assign [class="discord"] $w3
 assign [class="zoom"] $w3
-assign [class="Chromium"] $w4
 assign [class="Virt-manager"] $w5
 assign [class="Thunderbird"] $w9
 
