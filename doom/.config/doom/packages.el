@@ -3,7 +3,6 @@
 (disable-packages!
  irony
  rtags
- evil-snipe
  solaire-mode)
 
 (package! dired-open)
@@ -42,8 +41,6 @@
 (package! org-auto-tangle)
 
 (package! org-super-agenda)
-
-(package! org-logseq :recipe (:host github :repo "llcc/org-logseq"))
 
 (package! scroll-on-jump)
 

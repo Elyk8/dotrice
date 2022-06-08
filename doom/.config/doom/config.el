@@ -789,11 +789,6 @@ hideresource 1
         org-agenda-start-with-log-mode t)
   (org-super-agenda-mode))
 
-(use-package! org-logseq
-  :hook (org-mode . org-logseq-mode)
-  :custom
-  (org-logseq-dir "/media/logseq"))
-
 (use-package! scroll-on-jump
   :commands (scroll-on-jump-advice-add scroll-on-jump-with-scroll-advice-add scroll-on-jump-interactive)
   :custom

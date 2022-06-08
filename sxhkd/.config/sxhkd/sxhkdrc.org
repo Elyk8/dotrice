@@ -6,18 +6,6 @@
 # -*- conf -*-
 #+end_src
 
-* Table of Contents :toc:
-- [[#sxhkd][Sxhkd]]
-- [[#bspwm][Bspwm]]
-- [[#frequent-bindings][Frequent Bindings]]
-- [[#emacs][Emacs]]
-- [[#super--space-followed-by-o-opening][=Super + space= followed by =O=, opening.]]
-- [[#super--space-followed-by-p-dmenu-scripts][=Super + space= followed by =p=, dmenu scripts.]]
-- [[#super--space-followed-by--system-bindings][=Super + space= followed by =;=, system bindings]]
-- [[#xf86-bindings][XF86 Bindings]]
-- [[#media-control][Media control]]
-- [[#super--function-keys][=super += function keys]]
-
 * Sxhkd
 
 My =sxhkd= bindings, mostly revolving around the =super + space= leader key. I find

@@ -2,6 +2,81 @@
 #+property: header-args :emacs-lisp :tangle yes
 #+startup: fold
 
+* Table :toc:
+- [[#lexical-keybinds][Lexical Keybinds]]
+- [[#warning-and-workarounds][Warning and workarounds]]
+- [[#doom-configuration][DOOM Configuration]]
+  - [[#async-config-tangling][Async config tangling]]
+  - [[#modules][Modules]]
+  - [[#hostname-based-configuration][Hostname based configuration]]
+  - [[#packages][Packages]]
+- [[#simple-settings][Simple Settings]]
+  - [[#autoload][Autoload]]
+  - [[#changing-defaults][Changing Defaults]]
+  - [[#window-title][Window title]]
+  - [[#fonts-and-appearance][Fonts and Appearance]]
+  - [[#hooks][Hooks]]
+  - [[#allow-babel-execution-in-cli-actions][Allow babel execution in CLI actions]]
+  - [[#global-auto-revert][Global Auto Revert]]
+  - [[#splits][Splits]]
+- [[#built-in-packages-configurations][Built-in packages configurations]]
+  - [[#citar][Citar]]
+  - [[#company][Company]]
+  - [[#dashboard][Dashboard]]
+  - [[#dired][Dired]]
+  - [[#dictionary][Dictionary]]
+  - [[#ediff][Ediff]]
+  - [[#elfeed][Elfeed]]
+  - [[#evil][Evil]]
+  - [[#icalendar][iCalendar]]
+  - [[#modeline][Modeline]]
+  - [[#org][Org]]
+  - [[#org-journal][Org-journal]]
+  - [[#org-roam][Org roam]]
+  - [[#shells][Shells]]
+  - [[#task-juggler][Task juggler]]
+  - [[#tramp][Tramp]]
+  - [[#vterm][VTerm]]
+  - [[#which-key][Which-key]]
+- [[#i3-and-emacs][i3 and Emacs]]
+  - [[#config-syntax-highlighting][Config syntax highlighting]]
+  - [[#integration-i3][Integration i3]]
+- [[#exwm][EXWM]]
+  - [[#initialisation][Initialisation]]
+  - [[#run-or-raise][Run or Raise]]
+  - [[#polybar][Polybar]]
+  - [[#exwm-configuration][EXWM Configuration]]
+- [[#third-party-packages][Third-party packages]]
+  - [[#el-easydraw][El-easydraw]]
+  - [[#kmonad][KMonad]]
+  - [[#dmenu][Dmenu]]
+  - [[#inkscape][Inkscape]]
+  - [[#org-cv][Org CV]]
+  - [[#org-download][Org Download]]
+  - [[#org-roam-bibtex][Org Roam Bibtex]]
+  - [[#org-roam-graph][Org Roam Graph]]
+  - [[#org-appear][Org Appear]]
+  - [[#org-archive][Org Archive]]
+  - [[#org-auto-tangle][Org Auto Tangle]]
+  - [[#org-super-agenda][Org Super Agenda]]
+  - [[#scroll-on-jump][Scroll on jump]]
+  - [[#thesaurus][Thesaurus]]
+- [[#keybindings-evil-etc][Keybindings, Evil, etc...]]
+  - [[#bookmarks][Bookmarks]]
+  - [[#buffers][Buffers]]
+  - [[#ibuffer-mode][ibuffer mode]]
+  - [[#dashboard-1][Dashboard]]
+  - [[#dired-1][Dired]]
+  - [[#evil-1][Evil]]
+  - [[#line-settings][Line settings]]
+  - [[#org-1][Org]]
+  - [[#open-specific-filesprojects][Open Specific Files/Projects]]
+- [[#language][Language]]
+  - [[#latex][Latex]]
+  - [[#lua][Lua]]
+  - [[#haskell][Haskell]]
+  - [[#python][Python]]
+
 * Lexical Keybinds
 #+begin_quote
 Until Emacs 24.1 (June 2012), Elisp only had dynamically scoped variables,
@@ -313,7 +388,6 @@ Some of the built-in packages, which I don't use, are listed here.
 (disable-packages!
  irony
  rtags
- evil-snipe
  solaire-mode)
 #+end_src
 
@@ -2187,23 +2261,6 @@ selectively for each Org file where it is desired.
         org-agenda-compact-blocks t
         org-agenda-start-with-log-mode t)
   (org-super-agenda-mode))
-#+end_src
-
-** Org-logseq
-
-Org-logseq supports to open logseq-style link (page or block reference),
-transclusion of referred and embedded blocks using overlays, along with
-Org-Mode.
-
-#+begin_src emacs-lisp :tangle packages.el
-(package! org-logseq :recipe (:host github :repo "llcc/org-logseq"))
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package! org-logseq
-  :hook (org-mode . org-logseq-mode)
-  :custom
-  (org-logseq-dir "/media/logseq"))
 #+end_src
 
 ** Scroll on jump
