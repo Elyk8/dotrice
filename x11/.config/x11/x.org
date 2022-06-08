@@ -38,25 +38,29 @@ xrdbpid=$!
 eval "$(gnome-keyring-daemon --start)"
 export SSH_AUTH_SOCK
 
-if [ "$(uname -n)" = "skynet" ]; then
-    run multi-monitor
-    run kmonad-refresh &
-    run /usr/bin/emacs --daemon &
-    run /usr/bin/pipewire &
-    run pacmac-tray &
-    run sxhkd &
-    run dm-wacom &
-    run picom -b &
-    run clipmenud &
-    run redshift &
-    run lxsession &
-    run mpd &
-    run dunst-reload &
-    run "$HOME"/.fehbg &
-    xsetroot -cursor_name left_ptr
-fi
+run multi-monitor
+run kmonad-refresh &
+run /usr/bin/emacs --daemon &
+run /usr/bin/pipewire &
+run pacmac-tray &
+run sxhkd &
+run dm-wacom &
+run picom -b &
+run clipmenud &
+run redshift &
+run lxsession &
+run mpd &
+run dunst-reload &
+run "$HOME"/.fehbg &
+xsetroot -cursor_name left_ptr
 
 run syncthing-gtk --minimized
+
+if [ "$(uname -n)" = "gpdskynet" ]; then
+   xinput set-prop "pointer:Goodix Capacitive TouchScreen" --type=float "Coordinate Transformation Matrix" 0 1 0 -1 0 1 0 0 1
+   xrandr -o right
+   run unclutter --hide-on-touch
+fi
 
 [ -n "$xrdbpid" ] && wait "$xrdbpid"
 #+end_src
