@@ -1,4 +1,4 @@
 [Desktop Entry]
 Type=Application
 Name=Text editor
-Exec=/usr/bin/emacsclient %u
+Exec=/usr/bin/emacsclient -c -n %u

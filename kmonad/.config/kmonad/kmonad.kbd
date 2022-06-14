@@ -13,14 +13,13 @@
   caps          (tap-hold-next 300 esc lctl)
   f4            (tap-hold-next 300 f4 caps)
   spc           (tap-hold-next-release 200 spc (layer-toggle vim))
-  tab           (tap-hold-next 300 tab lmet)
+  tab           (tap-hold-next-release 300 tab lmet)
   undo C-z
   redo C-y
   find C-f
   mid (cmd-button "xdotool mousedown 2"
                   "xdotool mouseup 2")
 )
-
 
 ;; Toggle between layers
 (defalias
