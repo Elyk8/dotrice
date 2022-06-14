@@ -17,8 +17,6 @@
   undo C-z
   redo C-y
   find C-f
-  mid (cmd-button "xdotool mousedown 2"
-                  "xdotool mouseup 2")
 )
 
 ;; Toggle between layers
