@@ -5,6 +5,14 @@ run() {
     fi
 }
 
+if [ "$(uname -n)" = "gpdskynet" ]; then
+   xrandr -o right
+   xinput set-prop "pointer:Goodix Capacitive TouchScreen" --type=float "Coordinate Transformation Matrix" 0 1 0 -1 0 1 0 0 1
+   run unclutter --hide-on-touch
+elif [ "$(uname -n)" = "skynet" ]; then
+   multi-monitor
+fi
+
 xrdb -merge ~/.config/x11/Xresources &
 xrdbpid=$!
 
@@ -27,13 +35,5 @@ run "$HOME"/.fehbg &
 xsetroot -cursor_name left_ptr
 
 run syncthing-gtk --minimized
-
-if [ "$(uname -n)" = "gpdskynet" ]; then
-   xinput set-prop "pointer:Goodix Capacitive TouchScreen" --type=float "Coordinate Transformation Matrix" 0 1 0 -1 0 1 0 0 1
-   xrandr -o right
-   run unclutter --hide-on-touch
-else
-    run multi-monitor
-fi
 
 [ -n "$xrdbpid" ] && wait "$xrdbpid"
