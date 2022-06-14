@@ -160,7 +160,7 @@ super + space ; e ; m
 
 # :Emacs - Open elfeed
 super + space ; e ; f
-      emacsclient --create-frame --no-wait --eval "(elfeed)"
+      emacsclient --create-frame --no-wait --eval "(elfeed-summary)"
 #+end_src
 
 * =Super + space= followed by =O=, opening.

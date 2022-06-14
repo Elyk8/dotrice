@@ -1,4 +1,4 @@
-#+title: X
++title: X
 #+property: header-args :tangle no
 #+auto_tangle: t
 
@@ -55,6 +55,7 @@ run /usr/bin/emacs --daemon &
 run /usr/bin/pipewire &
 run pacmac-tray &
 run sxhkd &
+run nm-applet &
 run dm-wacom &
 run picom -b &
 run clipmenud &
