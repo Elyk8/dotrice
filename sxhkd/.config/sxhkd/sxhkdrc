@@ -30,11 +30,11 @@ super + space ; b
 
 # Open Firefox
 super + space ; w
-      prime-run firefox
+      firefox
 
 # Open Chromium
 super + space ; c
-      prime-run chromium
+      chromium
 
 # Toggle mute microphone
 super + space ; m
