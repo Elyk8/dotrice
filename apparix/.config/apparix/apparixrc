@@ -3,7 +3,7 @@ j,cap,/home/elyk/vic/y4/capstone
 j,cf,/home/elyk/.config
 j,dl,/home/elyk/dl
 j,dm,/home/elyk/.local/bin/dmenu
-j,dox,/home/elyk/dox
+j,dox,/home/elyk/Documents
 j,dusk,/home/elyk/.local/src/dusk
 j,int,/home/elyk/.local/src/interception-k2k
 j,lvc,/home/elyk/.config/lvim
@@ -20,7 +20,7 @@ j,z,/home/elyk/.config/zsh
 j,pix,/home/elyk/pix
 j,ala,/home/elyk/.config/alacritty
 j,nee3104,/home/elyk/vic/y3/NEE3104
-j,pod,/home/elyk/dox/podcasts
+j,pod,/home/elyk/Documents/podcasts
 j,red,/home/elyk/.config/redshift
 j,cheovim,/media/nvim-frameworks
 j,emacs,/media/emacs-frameworks
@@ -45,6 +45,6 @@ j,awesome,/home/elyk/.config/awesome
 j,nee4001,/home/elyk/vic/y4/NEE4001
 j,bin,/home/elyk/.local/bin
 j,dmenu,/home/elyk/.local/src/dmenu
-j,work,/home/elyk/dox/work
+j,work,/home/elyk/Documents/work
 j,sx,/home/elyk/.config/sxhkd
 j,nv,/home/elyk/.config/nvim

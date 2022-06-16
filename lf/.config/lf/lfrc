@@ -1,4 +1,4 @@
-# -*- conf -*-
+# -*- conf-unix -*-
 # Basic vars
 set shell zsh
 set shellopts '-euy'
@@ -8,15 +8,16 @@ set scrolloff 10
 set icons
 set period 1
 set preview true
-set hidden true
+# set hidden true
 set drawbox true
 set ignorecase true
 set hiddenfiles ".*:*.aux:*.log:*.bbl:*.bcf:*.blg:*.run.xml"
 
 # setup file previewer
-set previewer stpv
-set cleaner stpvimgclr
-&stpvimg --listen $id
+set previewer ctpv
+set cleaner ctpvclear
+&ctpv -s $id
+cmd on-quit $ctpv -e $id
 
 # opener
 cmd open ${{
