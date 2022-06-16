@@ -127,6 +127,7 @@ assign [class="Chromium"] $w2
 assign [class="discord"] $w3
 assign [class="zoom"] $w3
 assign [class="Virt-manager"] $w5
+assign [class="Ferdium"] $w8
 assign [class="Thunderbird"] $w9
 
 for_window [title="VirtScreen"] floating enable
@@ -154,7 +155,7 @@ set $default_outer 0
 gaps inner $default_inner
 gaps outer $default_outer
 
-smart_gaps on
+#smart_gaps on
 
 mode "inner gaps" {
     bindsym plus gaps inner current plus 5
@@ -207,7 +208,7 @@ mode "resize" {
     bindsym Up    exec --no-startup-id emacs-i3-integration resize shrink height 10 px or 10 ppt
     bindsym Right exec --no-startup-id emacs-i3-integration resize grow width 10 px or 10 ppt
 
-    bindsym Shift+Left  exec --no-startup-id emacs-i3-integration resize shrink width 100 px or 100 ppt
+    bindsym Shift+Left  exec --no-startup-id emacs-i3-integration resize shrink width 100 px or 100 pp  t
     bindsym Shift+Down  exec --no-startup-id emacs-i3-integration resize grow height 100 px or 100 ppt
     bindsym Shift+Up    exec --no-startup-id emacs-i3-integration resize shrink height 100 px or 100 ppt
     bindsym Shift+Right exec --no-startup-id emacs-i3-integration resize grow width 100 px or 100 ppt
