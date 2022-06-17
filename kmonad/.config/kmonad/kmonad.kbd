@@ -86,7 +86,7 @@ This will be the default layout when I will be comfortable using the default lay
   @tab    q       w       e       r       t       y       u       i       o      p       [       ]       @\
   @caps   a       s       d       f       g       h       j       k       l      ;       '       ret
   lsft    z       x       c       v       b       n       m       ,       .      /       rsft
-  -               lmet    lalt    spc                             ralt    prnt   rctrl   pgup    up      pgdn
+  lctrl           lmet    lalt    spc                             ralt    prnt   rctrl   pgup    up      pgdn
                                                                                          lft     down    rght
 )
 
