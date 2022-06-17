@@ -1,4 +1,4 @@
-;;; config.el -*- lexical-binding: t; -*-
+;; -*- lexical-binding: t; -*-
 
 (defvar +literate-tangle--proc nil)
 (defvar +literate-tangle--proc-start-time nil)
@@ -57,92 +57,68 @@
     (signal 'quit nil)))
 (add-hook! 'kill-emacs-hook #'+literate-tangle-check-finished)
 
-(defun find-in-dotfiles ()
-  "Open a file somewhere in ~/dotrice via a fuzzy filename search."
-  (interactive)
-  (doom-project-find-file (expand-file-name "~/.dotrice")))
+(setq org-directory (file-truename "~/Documents/org"))
+(setq org-roam-directory org-directory)
+(setq doom-localleader-key ",")
 
-(defun find-in-configs ()
-  "Open a file somewhere in ~/.config via a fuzzy filename search."
-  (interactive)
-  (doom-project-find-file (expand-file-name "~/.config/")))
-
-(defun browse-dotfiles ()
-  "Browse the files in ~/dotrice."
-  (interactive)
-  (doom-project-browse (expand-file-name "~/.dotrice/")))
-
-(defun find-in-scripts ()
-  "Open a file somewhere in scripts directory, ~/script via a fuzzy filename search."
-  (interactive)
-  (doom-project-find-file (expand-file-name "~/.scripts")))
-
-(defun find-in-suckless ()
-  "Open a file somewhere in the suckless directory, ~/.local/src via a fuzzy filename search."
-  (interactive)
-  (doom-project-find-file (expand-file-name "~/.local/src/")))
-
-(defun org-syntax-convert-keyword-case-to-lower ()
-  "Convert all #+KEYWORDS to #+keywords."
-  (interactive)
-  (save-excursion
-    (goto-char (point-min))
-    (let ((count 0)
-          (case-fold-search nil))
-      (while (re-search-forward "^[ \t]*#\\+[A-Z_]+" nil t)
-        (unless (s-matches-p "RESULTS" (match-string 0))
-          (replace-match (downcase (match-string 0)) t)
-          (setq count (1+ count))))
-      (message "Replaced %d occurances" count))))
-
+;; Make writing and scrolling faster
 (defun locally-defer-font-lock ()
   "Set jit-lock defer and stealth, when buffer is over a certain size."
-  (when (> (buffer-size) 50000)
+  (when (> (buffer-size) 30000)
     (setq-local jit-lock-defer-time 0.05
                 jit-lock-stealth-time 1)))
 
 (setq-default
- delete-by-moving-to-trash t                    ; Delete files to trash
- window-combination-resize t                    ; take new window space from all other windows (not just current)
- x-stretch-cursor t)                            ; Stretch cursor to the glyph width
+ ;; evil-cross-lines t                             ;; Make horizontal movement cross lines
+ delete-by-moving-to-trash t                    ;; Delete files to trash
+ window-combination-resize t                    ;; take new window space from all other windows (not just current)
+ x-stretch-cursor t)                            ;; Stretch cursor to the glyph width
 
-(setq undo-limit 80000000                       ; Raise undo-limit to 80Mb
-      display-line-numbers-type nil             ; By disabling line number, we improve performance significantly
-      evil-want-fine-undo t                     ; By default while in insert all changes are one big blob. Be more granular
-      truncate-string-ellipsis "…"              ; Unicode ellispis are nicer than "...", and also save /precious/ space
-      password-cache-expiry nil                 ; I can trust my computers ... can't I?
-      scroll-margin 2                           ; It's nice to maintain a little margin
-      confirm-kill-emacs nil                    ; Disable exit confirmation
+(setq undo-limit 80000000                       ;; Raise undo-limit to 80Mb
+      display-line-numbers-type nil             ;; By disabling line number, we improve performance significantly
+      ;; evil-want-fine-undo t                     ;; By default while in insert all changes are one big blob. Be more granular
+      truncate-string-ellipsis "\u2026"         ;; Unicode ellispis are nicer than "...", and also save /precious/ space
+      password-cache-expiry nil                 ;; I can trust my computers ... can't I?
+      confirm-kill-emacs nil                    ;; Disable exit confirmation
       )
+
+;; Make evil more like vim behaviour
+(setq evil-vsplit-window-right t
+      evil-split-window-below t)
 
 ;; (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;; Prevents some cases of Emacs flickering.
 
 ;; Improve scrolling
-(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))      ; one line at a time
-      mouse-wheel-progressive-speed nil                 ; don't accelerate scrolling
-      mouse-wheel-follow-mouse 't                       ; scroll window under mouse
-      scroll-preserve-screen-position 'always           ; Don't have `point' jump around
-      scroll-step 1)                                    ; keyboard scroll one line at a time
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))      ;; one line at a time
+      mouse-wheel-progressive-speed nil                 ;; don't accelerate scrolling
+      mouse-wheel-follow-mouse 't                       ;; scroll window under mouse
+      scroll-preserve-screen-position 'always           ;; Don't have `point' jump around
+      scroll-step 1)                                    ;; keyboard scroll one line at a time
 
+;; When I bring up Doom's scratch buffer with SPC x, it's often to play with elisp or note something down (that isn't worth an entry in my notes). I can do both in `lisp-interaction-mode'.
 (setq doom-scratch-initial-major-mode 'lisp-interaction-mode)
 
-(setq frame-title-format
-      '(""
-        (:eval
-         (if (s-contains-p org-roam-directory (or buffer-file-name ""))
-             (replace-regexp-in-string
-              ".*/[0-9]*-?" "☰ "
-              (subst-char-in-string ?_ ?  buffer-file-name))
-           "%b"))
-        (:eval
-         (let ((project-name (projectile-project-name)))
-           (unless (string= "-" project-name)
-             (format (if (buffer-modified-p)  " ◉ %s" " ● %s") project-name))))))
+;; Prevent lines from auto breaking
+(remove-hook 'text-mode-hook #'auto-fill-mode)
 
-(setq doom-font (font-spec :family "JetBrains Mono Nerd Font" :size 20)
-      doom-variable-pitch-font (font-spec :family "sans" :size 20)
-      doom-unicode-font (font-spec :family "JoyPixels" :size 20)
-      doom-big-font (font-spec :family "JetBrains Mono Nerd Font" :size 34))
+;; Revert buffers when the underlying file has changed
+(global-auto-revert-mode 1)
+;; Automatically revert buffers for changed files
+(setq global-auto-revert-non-file-buffers t)
+
+(after! gcmh
+  (setq gcmh-idle-delay 5)
+  (setq gcmh-high-cons-threshold (* 255 1024 1024)))
+
+(setq inhibit-compacting-font-caches nil)
+
+;;; Fonts
+(setq doom-font (font-spec :family "JetBrains Mono" :size 22)
+      doom-variable-pitch-font (font-spec :family "Iosevka Aile" :size 22)
+      doom-unicode-font (font-spec :family "Noto Color Emoji" :size 22)
+      doom-big-font (font-spec :family "JetBrains Mono" :size 34))
+
+;; Themes
 (after! doom-themes
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t))
@@ -151,731 +127,47 @@
   '(font-lock-comment-face :slant italic)
   '(font-lock-keyword-face :slant italic))
 
-(setq doom-theme 'doom-dracula)
+(setq doom-theme 'doom-dark+)
 (set-frame-parameter (selected-frame) 'alpha '(95 . 95))
 (add-to-list 'default-frame-alist '(alpha . (95 . 95)))
 
-(remove-hook 'text-mode-hook #'auto-fill-mode) ;; Prevent lines from auto breaking
+;; Make fill-paragraph (M-q) 100 characters long
+;;(setq-default fill-column 100)
 
-(global-auto-revert-mode 1)
-(setq global-auto-revert-non-file-buffers t)
-
-(defun split-horizontally-for-temp-buffers ()
-  "Split the window horizontally for temp buffers."
-  (when (and (one-window-p t)
-             (not (active-minibuffer-window)))
-    (split-window-horizontally)))
-(add-hook 'temp-buffer-setup-hook 'split-horizontally-for-temp-buffers)
-
-(setq! citar-bibliography '("~/dox/bibliography/references.bib" "~/dox/bibliography/Capstone Project.bib")
-       citar-library-paths '("~/dox/bibliography/")
-       citar-notes-paths '("~/dox/notes/"))
-
-(use-package! company
-  :after-call (company-mode global-company-mode company-complete
-                            company-complete-common company-manual-begin company-grab-line)
-  :config
-  (setq company-idle-delay nil
-        company-tooltip-limit 10))
-
-(advice-add #'doom-modeline-segment--modals :override #'ignore)
-
-(setq doom-fallback-buffer-name "► Doom"
-      +doom-dashboard-name "► Doom")
-
-(setq +doom-dashboard-menu-sections (cl-subseq +doom-dashboard-menu-sections 0 2))
-;; (remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
-;; (add-hook! '+doom-dashboard-mode-hook (hide-mode-line-mode 1) (hl-line-mode -1))
-;; (setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
-
-(map! :leader :desc "Dashboard" "e" #'+doom-dashboard/open)
-;; (add-transient-hook! #'+doom-dashboard-mode (+doom-dashboard-setup-modified-keymap))
-;; (add-transient-hook! #'+doom-dashboard-mode :append (+doom-dashboard-setup-modified-keymap))
-;; (add-hook! 'doom-init-ui-hook :append (+doom-dashboard-setup-modified-keymap))
-
-(add-hook! 'dired-mode-hook 'all-the-icons-dired-mode)
-(add-hook! 'dired-mode 'dired-async-mode)
-
-(setq dired-open-extensions '(("gif" . "open")
-                              ("jpg" . "open")
-                              ("png" . "open")
-                              ("mkv" . "open")
-                              ("mp4" . "open")))
-
-(setq ispell-dictionary "en-custom"
-      ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
-
-(setq ediff-diff-options "-w"
-      ediff-split-window-function 'split-window-horizontally
-      ediff-window-setup-function 'ediff-setup-windows-plain)
-
-(setq rmh-elfeed-org-files '("~/.config/doom/elfeed.org"))
-(add-hook! 'elfeed-search-mode-hook 'elfeed-update)
-
-(defun elfeed-v-mpv (url)
-  "Watch a video from URL in MPV"
-  (async-shell-command (format "mpv --really-quiet \"%s\"" url)))
-
-(defun elfeed-view-mpv (&optional use-generic-p)
-  "Youtube-feed link"
-  (interactive "P")
-  (let ((entries (elfeed-search-selected)))
-    (cl-loop for entry in entries
-             do (elfeed-untag entry 'unread)
-             when (elfeed-entry-link entry)
-             do (elfeed-v-mpv it))
-    (mapc #'elfeed-search-update-entry entries)
-    (unless (use-region-p) (forward-line))))
-
-(defun elfeed-eww-open (&optional use-generic-p)
-  "open with eww"
-  (interactive "P")
-  (let ((entries (elfeed-search-selected)))
-    (cl-loop for entry in entries
-             do (elfeed-untag entry 'unread)
-             when (elfeed-entry-link entry)
-             do (eww-browse-url it))
-    (mapc #'elfeed-search-update-entry entries)
-    (unless (use-region-p) (forward-line))))
-
-(defun elfeed-firefox-open (&optional use-generic-p)
-  "open with firefox"
-  (interactive "P")
-  (let ((entries (elfeed-search-selected)))
-    (cl-loop for entry in entries
-             do (elfeed-untag entry 'unread)
-             when (elfeed-entry-link entry)
-             do (browse-url-firefox it))
-    (mapc #'elfeed-search-update-entry entries)
-    (unless (use-region-p) (forward-line))))
-
-(defun elfeed-chromium-open (&optional use-generic-p)
-  "open with firefox"
-  (interactive "P")
-  (let ((entries (elfeed-search-selected)))
-    (cl-loop for entry in entries
-             do (elfeed-untag entry 'unread)
-             when (elfeed-entry-link entry)
-             do (browse-url-chromium it))
-    (mapc #'elfeed-search-update-entry entries)
-    (unless (use-region-p) (forward-line))))
-
-(defun elfeed-w3m-open (&optional use-generic-p)
-  "open with w3m"
-  (interactive "P")
-  (let ((entries (elfeed-search-selected)))
-    (cl-loop for entry in entries
-             do (elfeed-untag entry 'unread)
-             when (elfeed-entry-link entry)
-             do (ffap-w3m-other-window it))
-    (mapc #'elfeed-search-update-entry entries)
-    (unless (use-region-p) (forward-line))))
-
-(after! elfeed
-  (map! :map elfeed-search-mode-map
-          :n "v" nil
-          :n "v" #'elfeed-view-mpv
-          :n "t" #'elfeed-w3m-open
-          :n "w" #'elfeed-eww-open
-          :n "f" nil
-          :n "f" #'elfeed-firefox-open
-          :n "c" #'elfeed-chromium-open))
-
-(after! evil
-  (setq evil-ex-substitute-global t     ; I like my s/../.. to by global by default
-        ;;evil-move-cursor-back nil       ; Don't move the block cursor when toggling insert mode
-        evil-kill-on-visual-paste nil) ; Don't put overwritten text in the kill ring
-  ;; Focus new window after splitting
-  (setq evil-split-window-below t
-        evil-vsplit-window-right t))
-
-(defun calendar-helper () ;; doesn't have to be interactive
-  (cfw:open-calendar-buffer
-   :contents-sources
-   (list
-    (cfw:org-create-source "Purple")
-    (cfw:ical-create-source "Victoria University" "https://outlook.office365.com/owa/calendar/14853855dd6541eebbce1f2d68f50dcf@live.vu.edu.au/f754347027b54d97a148bdb20e6a947814803601956198516593/calendar.ics" "Green"))))
-(defun calendar-init ()
-  ;; switch to existing calendar buffer if applicable
-  (if-let (win (cl-find-if (lambda (b) (string-match-p "^\\*cfw:" (buffer-name b)))
-                           (doom-visible-windows)
-                           :key #'window-buffer))
-      (select-window win)
-    (calendar-helper)))
-
-(defun =my-calendar ()
-  "Activate (or switch to) *my* `calendar' in its workspace."
-  (interactive)
-  (if (featurep! :ui workspaces) ;; create workspace (if enabled)
-      (progn
-        (+workspace-switch "Calendar" t)
-        (doom/switch-to-scratch-buffer)
-        (calendar-init)
-        (+workspace/display))
-    (setq +calendar--wconf (current-window-configuration))
-    (delete-other-windows)
-    (switch-to-buffer (doom-fallback-buffer))
-    (calendar-init)))
-
-(after! doom-modeline
-  (setq doom-modeline-buffer-file-name-style 'auto
-        all-the-icons-scale-factor 1.1
-        ;;doom-modeline-enable-word-count t         ; Show word count in modeline
-        inhibit-compacting-font-caches t          ; Don’t compact font caches during GC.
-        find-file-visit-truename t))              ; Display true name instead of relative name
-
-(custom-set-faces!
-  '(mode-line :height 1.0)
-  '(mode-line-inactive :height 1.0))
-
-(after! org
-  (plist-put org-format-latex-options :scale 4) ;; Make latex equations preview larger
-  (setq org-directory (file-truename "~/org")
-        org-agenda-files '("~/org/agenda.org")
-        org-default-notes-file (expand-file-name "notes.org" org-directory)
-        org-ellipsis " ▼ "
-        org-log-done 'time
-        org-hide-emphasis-markers t
-        org-insert-heading-respect-content nil ;; Insert org headings at point
-        ;; ex. of org-link-abbrev-alist in action
-        ;; [[arch-wiki:Name_of_Page][Description]]
-        org-link-abbrev-alist    ; This overwrites the default Doom org-link-abbrev-list
-        '(("google" . "http://www.google.com/search?q=")
-          ("arch-wiki" . "https://wiki.archlinux.org/index.php/")
-          ("ddg" . "https://duckduckgo.com/?q=")
-          ("wiki" . "https://en.wikipedia.org/wiki/"))
-        org-todo-keywords
-        '((sequence
-           "TODO(t)"  ; A task that needs doing & is ready to do
-           "PROJ(p)"  ; An ongoing project that cannot be completed in one step
-           "INPROCESS(s)"  ; A task that is in progress
-           "⚑ WAITING(w)"  ; Something is holding up this task; or it is paused
-           "|"
-           "☟ NEXT(n)"
-           "✰ IMPORTANT(i)"
-           "DONE(d)"  ; Task successfully completed
-           "✘ CANCELED(c@)") ; Task was cancelled, aborted or is no longer applicable
-          (sequence
-           "✍ NOTE(N)"
-           "FIXME(f)"
-           "☕ BREAK(b)"
-           "❤ LOVE(l)"
-           "REVIEW(r)"
-           )) ; Task was completed
-        org-todo-keyword-faces
-        '(
-          ("TODO" . (:foreground "#ff39a3" :weight bold))
-          ("INPROCESS"  . "orangered")
-          ("✘ CANCELED" . (:foreground "white" :background "#4d4d4d" :weight bold))
-          ("⚑ WAITING" . "pink")
-          ("☕ BREAK" . "gray")
-          ("❤ LOVE" . (:foreground "VioletRed4"
-                       ;; :background "#7A586A"
-                       :weight bold))
-          ("☟ NEXT" . (:foreground "DeepSkyBlue"
-                       ;; :background "#7A586A"
-                       :weight bold))
-          ("✰ IMPORTANT" . (:foreground "greenyellow"
-                            ;; :background "#7A586A"
-                            :weight bold))
-          ("DONE" . "#008080")
-          ("FIXME" . "IndianRed")))) ; Task has been cancelled
-
-(after! org-superstar
-  (setq org-superstar-headline-bullets-list '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
-  ;; (setq org-superstar-headline-bullets-list '("一" "二" "三" "四" "五" "六" "七" "八")
-        org-superstar-item-bullet-alist '((?+ . ?➤) (?- . ?✦)) ; changes +/- symbols in item lists
-        org-superstar-prettify-item-bullets t ))
-
-(after! org-fancy-priorities
-  (setq org-fancy-priorities-list '("⚡" "⬆" "⬇" "☕")))
-
-(custom-set-faces
-  '(org-level-1 ((t (:inherit outline-1 :height 1.4))))
-  '(org-level-2 ((t (:inherit outline-2 :height 1.3))))
-  '(org-level-3 ((t (:inherit outline-3 :height 1.2))))
-  '(org-level-4 ((t (:inherit outline-4 :height 1.1))))
-  '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
-)
-
-(after! org
-  (add-hook 'org-mode-hook #'locally-defer-font-lock))
-
-(setq org-odt-preferred-output-format "docx")
-
-(with-eval-after-load 'ox-latex
-  (add-to-list 'org-latex-classes
-               '("org-plain-latex"
-                 "\\documentclass{article}
-           [NO-DEFAULT-PACKAGES]
-           [PACKAGES]
-           [EXTRA]"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
-
-(after! org-journal
-  (setq org-journal-dir (concat org-directory "journal")
-        org-journal-date-prefix "* "
-        org-journal-time-prefix "** "
-        org-journal-date-format "%B %d, %Y (%A) "
-        org-journal-file-format "%Y-%m-%d.org"))
-
-(after! org-roam
-  (setq org-roam-directory (file-truename "~/org/roam")
-        org-roam-completion-everywhere t
-        org-roam-capture-templates
-        '(("d" "default" plain "%?"
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: miscs Inbox\n\n")
-           :unnarrowed t)
-          ("a" "articles" plain (file "~/org/templates/articles.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: articles %^{Tag}\n\n")
-           :unnarrowed t)
-          ("b" "book notes" plain (file "~/org/templates/book.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: books %^{Tag}\n\n")
-           :unnarrowed t)
-          ("c" "podcasts" plain (file "~/org/templates/podcasts.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: podcasts %^{Tag}\n\n")
-           :unnarrowed t)
-          ("e" "latex" plain (file "~/org/templates/reportex.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: miscs %^{Unit Code}\n\n")
-           :unnarrowed t)
-          ("i" "ideas" plain (file "~/org/templates/ideas.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: ideas %^{Tag}\n\n")
-           :unnarrowed t)
-          ("p" "project" plain (file "~/org/templates/project.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: projects %^{Tag}\n\n")
-           :unnarrowed t)
-          ("P" "presentation" plain (file "~/org/templates/presentation.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "\n:reveal_properties:\n#+reveal_root: https://cdn.jsdelivr.net/npm/reveal.js\n:end:\n\n#+title: ${title}\n#+date: %U\n#+author: %^{Author}\n#+filetags: presentations \n\n")
-           :unnarrowed t)
-          ("r" "research paper" plain (file "~/org/templates/research.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: papers %^{Tag}\n\n")
-           :unnarrowed t)
-          ("t" "tag" plain "%?"
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Tag\n\n")
-           :unnarrowed t)
-          )))
-
-(after! org-roam
-  (setq org-roam-dailies-capture-templates
-        '(("d" "default" entry "* %<%I:%M %p>: %?"
-           :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n")))))
-
-(defun elk/org-roam-copy-todo-to-today ()
-  (interactive)
-  (let ((org-refile-keep t) ;; Set this to nil to delete the original!
-        (org-roam-dailies-capture-templates
-         '(("t" "tasks" entry "%?"
-            :if-new (file+head+olp "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n" ("Tasks")))))
-        (org-after-refile-insert-hook #'save-buffer)
-        today-file
-        pos)
-    (save-window-excursion
-      (org-roam-dailies--capture (current-time) t)
-      (setq today-file (buffer-file-name))
-      (setq pos (point)))
-
-    ;; Only refile if the target file is different than the current file
-    (unless (equal (file-truename today-file)
-                   (file-truename (buffer-file-name)))
-      (org-refile nil nil (list "Tasks" today-file nil pos)))))
-
-(after! org
-  (add-to-list 'org-after-todo-state-change-hook
-               (lambda ()
-                 (when (equal org-state "DONE")
-                   (elk/org-roam-copy-todo-to-today)))))
-
-(defun elk/org-roam-filter-by-tag (tag-name)
-  (lambda (node)
-    (member tag-name (org-roam-node-tags node))))
-
-(defun elk/org-roam-list-notes-by-tag (tag-name)
-  (mapcar #'org-roam-node-file
-          (seq-filter
-           (elk/org-roam-filter-by-tag tag-name)
-           (org-roam-node-list))))
-
-(defun elk/org-roam-refresh-agenda-list ()
-  (interactive)
-  (setq org-agenda-files (elk/org-roam-list-notes-by-tag "projects")))
-
-;; Build the agenda list the first time for the session
-(after! org-roam
-  (add-hook! 'org-roam-mode-hook #'elk/org-roam-refresh-agenda-list))
-
-(setq shell-file-name "/bin/zsh"
-      vterm-max-scrollback 5000)
-
-(after! eshell
-  (setq eshell-rc-script "~/.config/doom/eshell/profile"
-        eshell-aliases-file "~/.config/doom/eshell/aliasrc"
-        eshell-history-size 5000
-        eshell-buffer-maximum-lines 5000
-        eshell-hist-ignoredups t
-        eshell-scroll-to-bottom-on-input t
-        eshell-destroy-buffer-when-process-dies t
-        eshell-visual-commands'("bash" "xsh" "htop" "ssh" "top" "fish")))
-
-(after! org
-  (require 'ox-taskjuggler)
-  (setq org-taskjuggler-default-reports
-        '("textreport report \"Plan\" {
-formats html
-header '== %title =='
-center -8<-
-[#Plan Plan] | [#Resource_Allocation Resource Allocation]
-----
-=== Plan ===
-<[report id=\"plan\"]>
-----
-=== Resource Allocation ===
-<[report id=\"resourceGraph\"]>
-->8-
-}
-# A traditional Gantt chart with a project overview.
-taskreport plan \"\" {
-headline \"Project Plan\"
-columns bsi, name, start, end, effort, effortdone, effortleft, chart { width 1000 }
-loadunit shortauto
-hideresource 1
-}
-")
-        )
-  (setq org-taskjuggler-default-project-duration 999))
-
-(setenv "SHELL" "/bin/zsh")
-(after! tramp
-  (setq tramp-shell-prompt-pattern "\\(?:^\\|
-\\)[^]#$%>\n]*#?[]#$%>] *\\(�\\[[0-9;]*[a-zA-Z] *\\)*")) ;; default + 
-
-(after! vterm
-  (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=Off"))
+(setq visual-fill-column-width 100
+      visual-fill-column-center-text t)
 
 (after! which-key
-  (setq which-key-allow-imprecise-window-fit t) ; Comment this if experiencing crashes
-  ;; Add an extra line to work around bug in which-key imprecise
-  ;; (defun add-which-key-line (f &rest r) (progn (apply f (list (cons (+ 1 (car (car r))) (cdr (car r)))))))
-  ;; (advice-add 'which-key--show-popup :around #'add-which-key-line)
-  (setq which-key-idle-delay 0.2))
+  (setq which-key-idle-delay 0.2
+        ;; Comment this if experiencing crashes
+        which-key-allow-imprecise-window-fit t))
 
-(use-package! edraw-org
-  :after org
-  :config
-  (edraw-org-setup-default))
+(map! :i
+      "C-SPC" #'completion-at-point)
 
-(use-package! kbd-mode
-  :defer t)
-
-(use-package! dmenu
-  :commands (dmenu dmenu-save-to-file))
-
-(defvar ink-flags-png (list "--export-area-drawing"
-                            "--export-dpi 256"
-                            "--export-type=png"
-                            "--export-background-opacity 1.0"
-                            "--export-overwrite")
-  "List of flags to produce a png file with inkspace.")
-
-(defvar ink-default-file
-  "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>
-<svg
-   width=\"297mm\"
-   height=\"210mm\"
-   viewBox=\"0 0 297 210\"
-   version=\"1.1\"
-   id=\"svg8\"
-   inkscape:version=\"1.1.2 (0a00cf5339, 2022-02-04, custom)\"
-   sodipodi:docname=\"default.svg\"
-   xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\"
-   xmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\"
-   xmlns=\"http://www.w3.org/2000/svg\"
-   xmlns:svg=\"http://www.w3.org/2000/svg\"
-   xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"
-   xmlns:cc=\"http://creativecommons.org/ns#\"
-   xmlns:dc=\"http://purl.org/dc/elements/1.1/\">
-  <defs
-     id=\"defs2\">
-    <rect
-       x=\"160\"
-       y=\"60\"
-       width=\"40\"
-       height=\"10\"
-       id=\"rect121\" />
-    <rect
-       x=\"150\"
-       y=\"70\"
-       width=\"50\"
-       height=\"10\"
-       id=\"rect115\" />
-    <rect
-       x=\"140\"
-       y=\"50\"
-       width=\"90\"
-       height=\"30\"
-       id=\"rect109\" />
-    <rect
-       x=\"170\"
-       y=\"70\"
-       width=\"70\"
-       height=\"50\"
-       id=\"rect97\" />
-    <rect
-       x=\"129.26784\"
-       y=\"79.883835\"
-       width=\"85.494354\"
-       height=\"60.623272\"
-       id=\"rect47\" />
-  </defs>
-  <sodipodi:namedview
-     id=\"base\"
-     pagecolor=\"#ffffff\"
-     bordercolor=\"#666666\"
-     borderopacity=\"1.0\"
-     inkscape:pageopacity=\"1\"
-     inkscape:pageshadow=\"2\"
-     inkscape:zoom=\"0.93616069\"
-     inkscape:cx=\"515.93707\"
-     inkscape:cy=\"205.093\"
-     inkscape:document-units=\"mm\"
-     inkscape:current-layer=\"g75\"
-     showgrid=\"true\"
-     showborder=\"true\"
-     width=\"1e-05mm\"
-     showguides=\"true\"
-     inkscape:guide-bbox=\"true\"
-     inkscape:window-width=\"1882\"
-     inkscape:window-height=\"1012\"
-     inkscape:window-x=\"1382\"
-     inkscape:window-y=\"46\"
-     inkscape:window-maximized=\"0\"
-     inkscape:document-rotation=\"0\"
-     inkscape:pagecheckerboard=\"0\"
-     units=\"mm\">
-    <inkscape:grid
-       type=\"xygrid\"
-       id=\"grid815\"
-       units=\"mm\"
-       spacingx=\"10\"
-       spacingy=\"10\"
-       empspacing=\"4\"
-       dotted=\"false\" />
-  </sodipodi:namedview>
-  <metadata
-     id=\"metadata5\">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about=\"\">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource=\"http://purl.org/dc/dcmitype/StillImage\" />
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <g
-     inkscape:label=\"Layer 1\"
-     inkscape:groupmode=\"layer\"
-     id=\"layer1\"
-     transform=\"translate(0,-177)\" />
-  <g
-     inkscape:label=\"Capacitor\"
-     transform=\"rotate(-90,90,60)\"
-     id=\"g27\">
-    <text
-       xml:space=\"preserve\"
-       id=\"text45\"
-       style=\"font-size:20;line-height:1.25;font-family:Sans;-inkscape-font-specification:'Sans, Normal';letter-spacing:0px;white-space:pre;shape-inside:url(#rect47)\" />
-  </g>
-  <g
-     inkscape:label=\"Capacitor\"
-     id=\"g75\">
-    <text
-       xml:space=\"preserve\"
-       id=\"text95\"
-       style=\"font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;white-space:pre;shape-inside:url(#rect97);fill:none;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4, 8;paint-order:fill markers stroke\" />
-  </g>
-</svg>"
-  "Default file template.")
-
-(use-package! ox-moderncv
-  :after org)
-
-(defun elk/org-download-paste-clipboard (&optional use-default-filename)
-  (interactive "P")
-  (require 'org-download)
-  (let ((file
-         (if (not use-default-filename)
-             (read-string (format "Filename [%s]: "
-                                  org-download-screenshot-basename)
-                          nil nil org-download-screenshot-basename)
-           nil)))
-    (org-download-clipboard file)))
-
-(use-package! org-download
-  :after org
-  :config
-  (setq org-download-method 'directory)
-  (setq org-download-image-dir "images")
-  (setq org-download-heading-lvl nil)
-  (setq org-download-timestamp "%Y%m%d-%H%M%S_")
-  (setq org-image-actual-width 300)
-  (map! :map org-mode-map
-        :leader
-        (:prefix ("m a")
-        "p" #'elk/org-download-paste-clipboard)))
-
-(use-package! org-roam-bibtex
-  :after org-roam
-  :hook (org-roam-mode . org-roam-bibtex-mode))
-
-(use-package! websocket
-  :after org-roam)
-
-(use-package! org-roam-ui
-  :after org-roam
-  :config
-  (setq org-roam-ui-sync-theme t
-        org-roam-ui-follow t
-        org-roam-ui-update-on-save t)
-  ;; Add a new keybinding to open webview
-  (map! :leader (:prefix ("n" . notes)
-                 (:prefix ("r" . roam)
-                  :desc "Open Web Graph" "w" #'org-roam-ui-mode))))
-
-(use-package! org-appear
-  :after (org org-roam)
-  :init
-  :config
-  (setq org-appear-autoemphasis t
-        org-appear-autosubmarkers t
-        org-appear-autolinks nil)
-  (setq org-appear-trigger 'manual)
-  (add-hook 'org-mode-hook (lambda ()
-                             (add-hook 'evil-insert-state-entry-hook
-                                       #'org-appear-manual-start
-                                       nil
-                                       t)
-                             (add-hook 'evil-insert-state-exit-hook
-                                       #'org-appear-manual-stop
-                                       nil
-                                       t)))
-
-  ;; for proper first-time setup, `org-appear--set-elements'
-  ;; needs to be run after other hooks have acted.
-  (run-at-time nil nil #'org-appear--set-elements))
-
-(use-package! org-archive
-  :after org
-  :config
-  (setq org-archive-location "archive.org::datetree/"))
-
-(use-package! org-auto-tangle
-  :defer t
-  :hook (org-mode . org-auto-tangle-mode))
-
-(use-package! org-super-agenda
-  :after org
-  :config
-  (setq org-super-agenda-groups '((:auto-dir-name t)))
-  (setq org-agenda-skip-scheduled-if-done t
-        org-agenda-skip-deadline-if-done t
-        org-agenda-include-deadlines t
-        org-agenda-include-diary nil
-        org-agenda-block-separator nil
-        org-agenda-compact-blocks t
-        org-agenda-start-with-log-mode t)
-  (org-super-agenda-mode))
-
-(use-package! scroll-on-jump
-  :commands (scroll-on-jump-advice-add scroll-on-jump-with-scroll-advice-add scroll-on-jump-interactive)
-  :custom
-  (scroll-on-jump-duration 0.4)
-  (scroll-on-jump-smooth nil)
-  (scroll-on-jump-use-curve t))
-
-(after! evil
-  (scroll-on-jump-advice-add evil-undo)
-  (scroll-on-jump-advice-add evil-redo)
-  (scroll-on-jump-advice-add evil-jump-item)
-  (scroll-on-jump-advice-add evil-jump-forward)
-  (scroll-on-jump-advice-add evil-jump-backward)
-  (scroll-on-jump-advice-add evil-ex-search-next)
-  (scroll-on-jump-advice-add evil-ex-search-previous)
-  (scroll-on-jump-advice-add evil-forward-paragraph)
-  (scroll-on-jump-advice-add evil-backward-paragraph)
-  (scroll-on-jump-advice-add evil-goto-mark)
-
-  ;; Actions that themselves scroll.
-  (scroll-on-jump-with-scroll-advice-add evil-goto-line)
-  (scroll-on-jump-with-scroll-advice-add evil-scroll-down)
-  (scroll-on-jump-with-scroll-advice-add evil-scroll-up)
-  (scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-center)
-  (scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-top)
-  (scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-bottom))
-
-(after! goto-chg
-  (scroll-on-jump-advice-add goto-last-change)
-  (scroll-on-jump-advice-add goto-last-change-reverse))
-
-(global-set-key (kbd "<C-M-next>") (scroll-on-jump-interactive 'diff-hl-next-hunk))
-(global-set-key (kbd "<C-M-prior>") (scroll-on-jump-interactive 'diff-hl-previous-hunk))
-
-(use-package! emacs-powerthesaurus
-  :after-call (powerthesaurus-lookup-synonyms-dwim
-               powerthesaurus-lookup-antonyms-dwim powerthesaurus-lookup-related-dwim
-               powerthesaurus-lookup-definitions-dwim powerthesaurus-lookup-sentences-dwim ))
-
-(use-package! company-english-helper
-  :after company)
-
-(map! :leader
-      (:prefix ("b". "buffer")
-       :desc "List bookmarks" "L" #'list-bookmarks
-       :desc "Save current bookmarks to bookmark file" "w" #'bookmark-save))
-
-(map! :map ibuffer-mode-map
-      (:prefix "f"
-      :n "c" 'ibuffer-filter-by-content
-      :n "d" 'ibuffer-filter-by-directory
-      :n "f" 'ibuffer-filter-by-filename
-      :n "m" 'ibuffer-filter-by-mode
-      :n "n" 'ibuffer-filter-by-name
-      :n "x" 'ibuffer-filter-disable)
-
-      (:prefix "g"
-      :n "h" 'ibuffer-do-kill-lines
-      :n "H" 'ibuffer-update))
-
-(map! :mode +doom-dashboard-mode
-      :map +doom-dashboard-mode-map
-      :desc "Find file" :ne "f" #'find-file
-      :desc "Recent files" :ne "r" #'consult-recent-file
-      :desc "Open config.org" :ne "c" (cmd! (find-file (expand-file-name "config.org" doom-private-dir)))
-      :desc "Config dir" :ne "C" #'doom/open-private-config
-      :desc "Open dotfile" :ne "." #'find-in-dotfiles
-      :desc "Open configs" :ne ">" #'find-in-configs
-      :desc "Open suckless stuff" :ne "x" #'find-in-suckless
-      :desc "Open scripts" :ne "e" #'find-in-scripts
-      :desc "Notes (roam)" :ne "n" #'org-roam-node-find
-      :desc "Dired" :ne "d" #'dired
-      :desc "Switch buffer" :ne "b" #'+vertico/switch-workspace-buffer
-      :desc "Switch buffers (all)" :ne "B" #'consult-buffer
-      :desc "IBuffer" :ne "i" #'ibuffer
-      :desc "Browse in project" :ne "p" #'doom/browse-in-other-project
-      :desc "Set theme" :ne "t" #'consult-theme
-      :desc "Quit" :ne "Q" #'save-buffers-kill-terminal)
+(map! :map visual-line-mode-map
+      :nv "j" 'evil-next-visual-line
+      :nv "k" 'evil-previous-visual-line)
+(map! (:after evil-org
+       :map evil-org-mode-map
+       :nv "j" 'evil-next-visual-line
+       :nv "k" 'evil-previous-visual-line
+       :nv "gk" (cmd! (if (org-on-heading-p)
+                          (org-backward-element)
+                        (evil-previous-visual-line)))
+       :nv "gj" (cmd! (if (org-on-heading-p)
+                          (org-forward-element)
+                        (evil-next-visual-line))))
+      :o "o" #'evil-inner-symbol)
 
 (map! :leader
       (:prefix ("d" . "dired")
-       :desc "Open dired" "d" #'dired
+       :desc "Open dired"            "d" #'dired
        :desc "Dired jump to current" "j" #'dired-jump)
       (:after dired
        (:map dired-mode-map
-        :desc "Peep-dired image previews" "d p" #'peep-dired
-        :desc "Dired view file" "d v" #'dired-view-file)))
+        "d p" #'peep-dired :desc "Peep-dired image previews"
+        "d v" #'dired-view-file :desc "Dired view file")))
 (evil-define-key 'normal dired-mode-map
   (kbd "M-RET") 'dired-display-file
   (kbd "h") 'dired-up-directory
@@ -899,118 +191,314 @@ hideresource 1
   (kbd "; d") 'epa-dired-do-decrypt
   (kbd "; e") 'epa-dired-o-encrypt)
 
-(evil-define-key 'normal peep-dired-mode-map
-  (kbd "j") 'peep-dired-next-file
-  (kbd "k") 'peep-dired-prev-file)
-(add-hook 'peep-dired-hook 'evil-normalize-keymaps)
-
-(after! evil
-  (map! :nv "Q" #'evil-fill-and-move))
-
-(after! evil
-  (defun elk/ex-kill-buffer-and-close ()
-    (interactive)
-    (unless (char-equal (elt (buffer-name) 0) ?*)
-      (kill-this-buffer)))
-
-  (defun elk/ex-save-kill-buffer-and-close ()
-    (interactive)
-    (save-buffer)
-    (kill-this-buffer))
-
-  (evil-ex-define-cmd "q[uit]" 'elk/ex-kill-buffer-and-close )
-  (evil-ex-define-cmd "wq" 'elk/ex-save-kill-buffer-and-close))
-
-(map! :map evil-window-map
-      "SPC" #'rotate-layout
-      ;; Navigation
-      "<left>"     #'evil-window-left
-      "<down>"     #'evil-window-down
-      "<up>"       #'evil-window-up
-      "<right>"    #'evil-window-right
-      ;; Swapping windows
-      "C-<left>"       #'+evil/window-move-left
-      "C-<down>"       #'+evil/window-move-down
-      "C-<up>"         #'+evil/window-move-up
-      "C-<right>"      #'+evil/window-move-right)
+(defun elk/open-file (file)
+  (interactive)
+  (find-file file))
 
 (map! :leader
-    (:prefix ("t" . "toggle")
-     :desc "Comment or uncomment lines" "/" #'comment-line
-     :desc "Toggle line numbers" "l" #'doom/toggle-line-numbers
-     :desc "Toggle line highlight in frame" "h" #'hl-line-mode
-     :desc "Toggle line highlight globally" "H" #'global-hl-line-mode))
+      :prefix-map ("e" . "Elyk")
+      :desc "Open agenda.org"  "a" '(elk/open-file (concat org-directory "/agenda.org"))
+      :desc "Open elfeed.org"  "e" '(elk/open-file (concat org-directory "/elfeed.org"))
+      :desc "Open fonts.conf"  "f" '(elk/open-file "~/.config/fontconfig/fonts.conf")
+      :desc "Open i3.org"      "i" '(elk/open-file "~/.config/i3/i3.org")
+      :desc "Open polybar.org" "p" '(elk/open-file "~/.config/polybar/polybar.org")
+      :desc "Open sxhkd.org"   "s" '(elk/open-file "~/.config/sxhkd/sxhkdrc.org")
+      :desc "Open x.org"       "x" '(elk/open-file "~/.config/x11/x.org")
+      )
 
-(map! (:after evil-org
-       :map evil-org-mode-map
-       :n "gk" (cmd! (if (org-on-heading-p)
-                         (org-backward-element)
-                       (evil-previous-visual-line)))
-       :n "gj" (cmd! (if (org-on-heading-p)
-                         (org-forward-element)
-                       (evil-next-visual-line))))
-      :o "o" #'evil-inner-symbol
-      :leader
-      "h L" #'global-keycast-mode
-      (:prefix "f"
-       "t" #'find-in-dotfiles
-       "T" #'browse-dotfiles)
-      (:prefix "n"
-       "L" #'org-latex-preview))
-
-(map! :map org-mode-map
-      :leader
-      :desc "Org babel tangle" "m TAB" #'org-babel-tangle)
-
-(defun elk/add-file-keybinding (key file &optional desc)
-  (let ((key key)
-        (file file)
-        (desc desc))
-    (map! :leader
-          (:prefix ("-" . "Open File")
-           :desc (or desc file)
-           key
-           #'(lambda () (interactive) (find-file file))))))
-
-(defun elk/add-project-keybinding (key file &optional desc)
-  (let ((key key)
-        (file file)
-        (desc desc))
-    (map! :leader
-          (:prefix ("=" . "Open Project")
-           :desc (or desc file)
-           key
-           #'(lambda () (interactive) (doom-project-find-file file))))))
-
-(elk/add-file-keybinding "a" "~/org/agenda.org" "Agenda agenda.org")
-(elk/add-file-keybinding "e" "~/.config/doom/elfeed.org" "Elfeed Feeds elfeed.org")
-(elk/add-file-keybinding "f" "~/.config/fontconfig/fonts.conf" "Fonts config fonts.conf")
-(elk/add-file-keybinding "i" "~/.config/i3/i3.org" "i3 i3.org")
-(elk/add-file-keybinding "l" "~/dox/budget.ledger")
-(elk/add-file-keybinding "p" "~/.config/polybar/polybar.org" "Polybar polybar.org")
-(elk/add-file-keybinding "s" "~/.config/sxhkd/sxhkdrc.org" "Sxhkdrc sxhkdrc.org")
-(elk/add-file-keybinding "k" "~/.config/kmonad/kmonad.kbd" "Kmonad kmonad.kbd")
-(elk/add-file-keybinding "d" (expand-file-name "config.org" doom-private-dir) "Doom config.org")
-(elk/add-file-keybinding "X" "~/.config/xmonad/xmonad.hs" "Xmonad xmonad.hs")
-(elk/add-file-keybinding "x" "~/.config/x11/x.org" "X11 x.org")
 (map! :leader
-      (:prefix ("-" . "Open File")
-       (:prefix ("j" . "Open journals")
-        :desc "Open today's journal" "t" #'org-roam-dailies-goto-today
-        :desc "Open yesterday's journal" "y" #'org-roam-dailies-goto-yesterday
-        :desc "Open next day's journal" "n" #' org-roam-dailies-goto-tomorrow)))
+      (:prefix ("t" . "toggle")
+       ;; Line toggles
+       :desc "Comment or uncomment lines"     "/" #'comment-line
+       :desc "Toggle line numbers"            "l" #'doom/toggle-line-numbers
+       :desc "Toggle line highlight in frame" "h" #'hl-line-mode
+       :desc "Toggle line highlight globally" "H" #'global-hl-line-mode
+       ;; Room toggles
+       :desc "Mixed pitch"                    "a" #'mixed-pitch-mode
+       :desc "Visual fill column"             "v" #'visual-fill-column-mode
+       ))
 
-(elk/add-project-keybinding "d" "~/.config/doom/" "Doom")
-(elk/add-project-keybinding "s" "~/.config/shell/" "Shell")
-(elk/add-project-keybinding "x" "~/.config/xmonad/" "Xmonad")
-(elk/add-project-keybinding "z" "~/.config/zsh/" "Zsh")
+(map! :localleader
+      :map org-mode-map
+      :desc "Org babel tangle" "TAB" #'org-babel-tangle)
+
+(map! :leader
+       :prefix ("n" . "notes")
+       :desc "Dump brain"         "b" #'elk/org-roam-capture-inbox
+       :desc "Find node"          "f" #'org-roam-node-find
+       :desc "Insert node"        "i" #'org-roam-node-insert-immediate
+       :desc "Insert node cap."   "I" #'org-roam-node-insert
+       :desc "Capture to node"    "n" #'org-roam-capture
+       :desc "Paste attach"       "p" #'elk/org-download-paste-clipboard
+       :desc "Toggle roam buffer" "r" #'org-roam-buffer-toggle
+       :desc "Task to prog."      "t" #'elk/org-roam-capture-task
+       :desc "Web graph"          "w" #'org-roam-ui-mode
+       (:prefix-map ("d" . "dailies")
+       "-" #'org-roam-dailies-find-directory
+       "d" #'org-roam-dailies-goto-date
+       "y" #'org-roam-dailies-goto-yesterday
+       "m" #'org-roam-dailies-goto-tomorrow
+       "n" #'org-roam-dailies-goto-today
+
+       "D" #'org-roam-dailies-capture-date
+       "Y" #'org-roam-dailies-capture-yesterday
+       "M" #'org-roam-dailies-capture-tomorrow
+       "t" #'org-roam-dailies-capture-today
+       ))
+
+(after! deft
+  (setq deft-directory org-directory
+        deft-strip-summary-regexp ":PROPERTIES:\n\\(.+\n\\)+:END:\n"
+        deft-use-filename-as-title t
+        deft-recursive t
+        deft-extensions '("md" "org")))
+
+;; stop copying each visual state move to the clipboard:
+;; https://github.com/emacs-evil/evil/issues/336
+;; grokked from:
+;; http://stackoverflow.com/questions/15873346/elisp-rename-macro
+(advice-add #'evil-visual-update-x-selection :override #'ignore)
+
+(defun elk/org-initial-setup ()
+  (locally-defer-font-lock)
+  (visual-fill-column-mode +1))
+
+(add-hook! 'org-mode-hook 'elk/org-initial-setup)
+
+(custom-theme-set-faces
+ 'user
+ '(org-level-1 ((t (:inherit outline-1 :height 1.4))))
+ '(org-level-2 ((t (:inherit outline-2 :height 1.3))))
+ '(org-level-3 ((t (:inherit outline-3 :height 1.2))))
+ '(org-level-4 ((t (:inherit outline-4 :height 1.1))))
+ '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
+ '(org-block ((t (:foreground nil))))
+ '(org-tag ((t (:inherit org-tag :italic t))))
+ '(org-ellipsis ((t (:inherit shadow :height 0.8))))
+ '(org-link ((t (:foreground "royal blue" :underline t)))))
+
+(after! org
+  (setq org-ellipsis " ⬎ ") ;; ▼
+  (setq org-highlight-latex-and-related '(native))) ;; Highlight inline LaTeX
+
+(after! org
+  (setq org-src-ask-before-returning-to-edit-buffer nil)
+
+  ;; I want docx document for MS Word compatibility
+  (setq org-odt-preferred-output-format "docx"))
+
+(use-package! org-appear
+    :commands (org-appear-mode)
+    :hook (org-mode . org-appear-mode)
+    :init
+    (setq org-hide-emphasis-markers t) ;; A default setting that needs to be t for org-appear
+    (setq org-appear-autoemphasis t)  ;; Enable org-appear on emphasis (bold, italics, etc)
+    (setq org-appear-autolinks nil) ;; Enable on links
+    (setq org-appear-autosubmarkers t)) ;; Enable on subscript and superscript
+
+(use-package! org-modern
+  :custom
+  (org-modern-hide-stars nil) ; adds extra indentation
+  :hook
+  (org-mode . org-modern-mode)
+  (org-agenda-finalize . org-modern-agenda))
+
+(use-package! org-modern-indent
+  :hook
+  (org-mode . org-modern-indent-mode))
+
+(use-package! org-super-agenda
+  :commands org-super-agenda-mode
+  :config
+  (setq org-super-agenda-header-map nil)
+  (setq org-super-agenda-header-prefix " ◦ "))
+
+(after! org-agenda
+  (org-super-agenda-mode))
+
+(setq org-agenda-skip-scheduled-if-done t
+      org-agenda-skip-deadline-if-done t
+      org-agenda-include-deadlines t
+      org-agenda-block-separator nil
+      org-agenda-tags-column 100 ;; from testing this seems to be a good value
+      org-agenda-compact-blocks t)
+
+(require 'org-tempo)
+(add-to-list 'org-structure-template-alist '("sh" . "src sh"))
+(add-to-list 'org-structure-template-alist '("n" . "notes"))
+(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+(add-to-list 'org-structure-template-alist '("li" . "src lisp"))
+(add-to-list 'org-structure-template-alist '("sc" . "src scheme"))
+(add-to-list 'org-structure-template-alist '("ts" . "src typescript"))
+(add-to-list 'org-structure-template-alist '("py" . "src python"))
+(add-to-list 'org-structure-template-alist '("go" . "src go"))
+(add-to-list 'org-structure-template-alist '("yaml" . "src yaml"))
+(add-to-list 'org-structure-template-alist '("json" . "src json"))
+
+(use-package! org-roam
+  :init
+  (setq org-roam-db-gc-threshold most-positive-fixnum)
+  (setq org-roam-v2-ack t)
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n i" . org-roam-node-insert)
+         :map org-mode-map
+         ("C-M-i"    . completion-at-point))
+  :config
+  (setq org-roam-completion-everywhere t)
+  (setq org-roam-list-files-commands '(fd fdfind rg find))
+
+(defun org-roam-node-insert-immediate (arg &rest args)
+  (interactive "P")
+  (let ((args (cons arg args))
+        (org-roam-capture-templates (list (append (car org-roam-capture-templates)
+                                                  '(:immediate-finish t)))))
+    (apply #'org-roam-node-insert args)))
+
+(defun elk/org-roam-capture-inbox ()
+  (interactive)
+  (org-roam-capture- :node (org-roam-node-create)
+                     :templates '(("i" "inbox" plain "* %?"
+                                  :if-new (file+head "braindump/inbox.org" "#+title: Inbox\n")))))
+
+(defun elk/org-roam-filter-by-tag (tag-name)
+  (lambda (node)
+    (member tag-name (org-roam-node-tags node))))
+
+(defun elk/org-roam-list-notes-by-tag (tag-name)
+  (mapcar #'org-roam-node-file
+          (seq-filter
+           (elk/org-roam-filter-by-tag tag-name)
+           (org-roam-node-list))))
+
+(defun elk/org-roam-refresh-agenda-list ()
+  (interactive)
+  (setq org-agenda-files (elk/org-roam-list-notes-by-tag "Project")))
+
+(cl-defmethod org-roam-node-type ((node org-roam-node))
+  "Return the TYPE of NODE."
+  (condition-case nil
+      (file-name-nondirectory
+       (directory-file-name
+        (file-name-directory
+         (file-relative-name (org-roam-node-file node) org-roam-directory))))
+    (error "")))
+
+(setq org-roam-node-display-template
+      (concat (propertize "${type:10}" 'face 'org-tag) "${title:*} " (propertize "${tags:10}" 'face 'font-lock-comment-face)))
+
+(setq org-roam-capture-templates
+      '(("b" "brain" plain "\n%?"
+         :if-new (file+head "brain/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n")
+         :immediate-finish t
+         :unnarrowed t)
+        ("r" "reference" plain "\n%?"
+         :if-new (file+head "reference/${slug}.org" "#+title: ${title}\n#+date: %U\n")
+         :immediate-finish t
+         :unnarrowed t)
+        ("a" "article" plain "\n%?"
+         :if-new (file+head "article/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: Seedling\n")
+         :immediate-finish t
+         :unnarrowed t)
+        ("s" "school" plain "\n%?"
+         :if-new (file+head "school/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n")
+         :immediate-finish t
+         :unnarrowed t)
+        ("p" "project" plain "\n* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
+         :if-new (file+head "project/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+category: ${title}\n#+date: %U\n#+filetags: Project\n\n")
+         :immediate-finish t
+         :unnarrowed t)
+        ("t" "tag" plain "%?"
+         :if-new (file+head "tag/${slug}.org" "#+title: ${title}\n\n")
+         :immediate-finish t
+         :unnarrowed t)
+        ))
+
+(setq org-roam-dailies-capture-templates
+      '(("d" "default" entry "* %?"
+         :if-new (file+head "journal/%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d> Journal\n\n")
+         :unnarrowed t)))
+
+(defun elk/org-roam-project-finalize-hook ()
+  "Adds the captured project file to `org-agenda-files' if the
+capture was not aborted."
+  ;; Remove the hook since it was added temporarily
+  (remove-hook 'org-capture-after-finalize-hook #'elk/org-roam-project-finalize-hook)
+
+  ;; Add project file to the agenda list if the capture was confirmed
+  (unless org-note-abort
+    (with-current-buffer (org-capture-get :buffer)
+      (add-to-list 'org-agenda-files (buffer-file-name)))))
+
+(defun elk/org-roam-capture-task ()
+  (interactive)
+  ;; Add the project file to the agenda after capture is finished
+  (add-hook 'org-capture-after-finalize-hook #'elk/org-roam-project-finalize-hook)
+
+  ;; Capture the new task, creating the project file if necessary
+  (org-roam-capture- :node (org-roam-node-read
+                            nil
+                            (elk/org-roam-filter-by-tag "Project"))
+                     :templates '(("p" "project" plain "** TODO %?"
+                                   :if-new (file+head "project/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+category: ${title}\n#+date: %U\n#+filetags: Project\n\n"("Tasks"))
+                                   ))))
+
+(defun elk/org-roam-filter-by-tag (tag-name)
+  (lambda (node)
+    (member tag-name (org-roam-node-tags node))))
+
+(defun elk/org-roam-list-notes-by-tag (tag-name)
+  (mapcar #'org-roam-node-file
+          (seq-filter
+           (elk/org-roam-filter-by-tag tag-name)
+           (org-roam-node-list))))
+
+(defun elk/org-roam-refresh-agenda-list ()
+  (interactive)
+  (setq org-agenda-files (elk/org-roam-list-notes-by-tag "projects")))
+
+(org-roam-db-autosync-mode)
+(elk/org-roam-refresh-agenda-list) ;; Build the agenda list the first time for the session
+) ;; End of org-roam block
+
+(use-package! websocket
+  :after org-roam)
+
+(use-package! org-roam-ui
+  :after org-roam
+  :config
+  (setq org-roam-ui-sync-theme t
+        org-roam-ui-follow t
+        org-roam-ui-update-on-save t))
+
+(use-package! org-roam-bibtex
+  :after org-roam
+  :hook (org-roam-mode . org-roam-bibtex-mode))
+
+(use-package! kbd-mode
+  :mode ("\\.kbd\\'" . kbd-mode))
+
+(use-package! centered-cursor-mode
+  :defer 0
+  :diminish centered-cursor-mode
+  :config
+  (global-centered-cursor-mode))
 
 (setq +format-with-lsp nil)
 
-(setq-default TeX-engine 'luatex)
-
+;; Lua
 (set-formatter! 'stylua "stylua -" :modes '(lua-mode))
-
+;; Haskell
 (set-formatter! 'brittany "brittany" :modes '(haskell-mode))
-
+;; Python
 (set-formatter! 'autopep8 "autopep8 -" :modes '(python-mode))
+
+(set-eglot-client! 'cc-mode '("ccls" "--init={\"index\": {\"threads\": 3}}"))
+
+(use-package! platformio-mode
+  :config
+  ;; Enable ccls for all c++ files, and platformio-mode only
+  ;; when needed (platformio.ini present in project root).
+  (add-hook 'c++-mode-hook (lambda ()
+                             (lsp-deferred)
+                             (platformio-conditionally-enable))))

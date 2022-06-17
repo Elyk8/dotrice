@@ -1,99 +1,13 @@
-#+property: header-args :elisp :exports code
-#+property: header-args :emacs-lisp :tangle yes
-#+startup: fold
+#+title: My DOOM Configuration
 
-* Table :toc:
-- [[#lexical-keybinds][Lexical Keybinds]]
-- [[#warning-and-workarounds][Warning and workarounds]]
-- [[#doom-configuration][DOOM Configuration]]
-  - [[#async-config-tangling][Async config tangling]]
-  - [[#modules][Modules]]
-  - [[#hostname-based-configuration][Hostname based configuration]]
-  - [[#packages][Packages]]
-- [[#simple-settings][Simple Settings]]
-  - [[#autoload][Autoload]]
-  - [[#changing-defaults][Changing Defaults]]
-  - [[#window-title][Window title]]
-  - [[#fonts-and-appearance][Fonts and Appearance]]
-  - [[#hooks][Hooks]]
-  - [[#allow-babel-execution-in-cli-actions][Allow babel execution in CLI actions]]
-  - [[#global-auto-revert][Global Auto Revert]]
-  - [[#splits][Splits]]
-- [[#built-in-packages-configurations][Built-in packages configurations]]
-  - [[#citar][Citar]]
-  - [[#company][Company]]
-  - [[#dashboard][Dashboard]]
-  - [[#dired][Dired]]
-  - [[#dictionary][Dictionary]]
-  - [[#ediff][Ediff]]
-  - [[#elfeed][Elfeed]]
-  - [[#evil][Evil]]
-  - [[#icalendar][iCalendar]]
-  - [[#modeline][Modeline]]
-  - [[#org][Org]]
-  - [[#org-journal][Org-journal]]
-  - [[#org-roam][Org roam]]
-  - [[#shells][Shells]]
-  - [[#task-juggler][Task juggler]]
-  - [[#tramp][Tramp]]
-  - [[#vterm][VTerm]]
-  - [[#which-key][Which-key]]
-- [[#i3-and-emacs][i3 and Emacs]]
-  - [[#config-syntax-highlighting][Config syntax highlighting]]
-  - [[#integration-i3][Integration i3]]
-- [[#exwm][EXWM]]
-  - [[#initialisation][Initialisation]]
-  - [[#run-or-raise][Run or Raise]]
-  - [[#polybar][Polybar]]
-  - [[#exwm-configuration][EXWM Configuration]]
-- [[#third-party-packages][Third-party packages]]
-  - [[#el-easydraw][El-easydraw]]
-  - [[#kmonad][KMonad]]
-  - [[#dmenu][Dmenu]]
-  - [[#inkscape][Inkscape]]
-  - [[#org-cv][Org CV]]
-  - [[#org-download][Org Download]]
-  - [[#org-roam-bibtex][Org Roam Bibtex]]
-  - [[#org-roam-graph][Org Roam Graph]]
-  - [[#org-appear][Org Appear]]
-  - [[#org-archive][Org Archive]]
-  - [[#org-auto-tangle][Org Auto Tangle]]
-  - [[#org-super-agenda][Org Super Agenda]]
-  - [[#scroll-on-jump][Scroll on jump]]
-  - [[#thesaurus][Thesaurus]]
-- [[#keybindings-evil-etc][Keybindings, Evil, etc...]]
-  - [[#bookmarks][Bookmarks]]
-  - [[#buffers][Buffers]]
-  - [[#ibuffer-mode][ibuffer mode]]
-  - [[#dashboard-1][Dashboard]]
-  - [[#dired-1][Dired]]
-  - [[#evil-1][Evil]]
-  - [[#line-settings][Line settings]]
-  - [[#org-1][Org]]
-  - [[#open-specific-filesprojects][Open Specific Files/Projects]]
-- [[#language][Language]]
-  - [[#latex][Latex]]
-  - [[#lua][Lua]]
-  - [[#haskell][Haskell]]
-  - [[#python][Python]]
-
-* Lexical Keybinds
-#+begin_quote
-Until Emacs 24.1 (June 2012), Elisp only had dynamically scoped variables,
-a feature, mostly by accident, common to old lisp dialects. While dynamic
-scope has some selective uses, it’s widely regarded as a mistake for local
-variables, and virtually no other languages have adopted it.
-#+end_quote
-
+* Lexical Bindings
+Until Emacs 24.1 (June 2012), Elisp only had dynamically scoped variables, a feature, mostly by accident, common to old lisp dialects. While dynamic scope has some selective uses, it’s widely regarded as a mistake for local variables, and virtually no other languages have adopted it.
 #+begin_src emacs-lisp
-;;; config.el -*- lexical-binding: t; -*-
+;; -*- lexical-binding: t; -*-
 #+end_src
-
-* DOOM Configuration
-** Async config tangling
-Doom adds an org-mode hook +literate-enable-recompile-h. This is a nice idea,
-but it’s too blocking for my taste. Since I trust my tangling to be fairly
-straightforward, I’ll just redefine it to a simpler, async, function.
+* DOOM Config
+** Async Config tangling
+Doom adds an org-mode hook +literate-enable-recompile-h. This is a nice idea, but it's too blocking for my taste. Since I trust my tangling to be fairly straightforward, I'll just redefine it to a simpler, async, function.
 #+begin_src emacs-lisp
 (defvar +literate-tangle--proc nil)
 (defvar +literate-tangle--proc-start-time nil)
@@ -152,124 +66,130 @@ straightforward, I’ll just redefine it to a simpler, async, function.
     (signal 'quit nil)))
 (add-hook! 'kill-emacs-hook #'+literate-tangle-check-finished)
 #+end_src
-
 ** Modules
-This file controls what Doom modules are enabled and what order they load
-in. Remember to run 'doom sync' after modifying it!
-
-NOTE Press 'SPC h d h' (or 'C-h d h' for non-vim users) to access Doom's
-     documentation. There you'll find a link to Doom's Module Index where all
-     of our modules are listed, including what flags they support.
-
-NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
-     'C-c c k' for non-vim users) to view its documentation. This works on
-     flags as well (those symbols that start with a plus).
-
-     Alternatively, press 'gd' (or 'C-c c d') on a module to browse its
-     directory (for easy access to its source code).
-#+begin_src emacs-lisp :tangle "init.el"
+*** Input
+#+begin_src emacs-lisp :tangle init.el 
 ;;; init.el -*- lexical-binding: t; -*-
 (doom! :input
+       ;;bidi              ; (tfel ot) thgir etirw uoy gnipleh
        ;;chinese
        ;;japanese
        ;;layout            ; auie,ctsrnm is the superior home row
-
+       #+end_src
+*** Completion
+#+begin_src emacs-lisp :tangle init.el 
        :completion
-       (company            ; the ultimate code completion backend
-        +childframe)       ; ... when your children are better than you
+       ;;company           ; the ultimate code completion backend
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
-       ;;(ivy +fuzzy +icons)               ; a search engine for love and life
-       (vertico +icons)    ; the search engine of the future
-
+       ;;ivy               ; a search engine for love and life
+       (vertico            ; the search engine of the future
+        +icons)            ; ... with more icons
+#+end_src
+*** UI
+#+begin_src emacs-lisp :tangle init.el
        :ui
-       ;;deft              ; notational velocity for Emacs
-       doom              ; what makes DOOM look the way it does
-       doom-dashboard    ; a nifty splash screen for Emacs
+       deft                ; notational velocity for Emacs
+       doom                ; what makes DOOM look the way it does
+       ;;doom-dashboard    ; a nifty splash screen for Emacs
        ;;doom-quit         ; DOOM quit-message prompts when you quit Emacs
-       (emoji +unicode)  ; 🙂
-       hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
-       ;;hydra
+       (emoji +unicode)    ; 🙂
+       hl-todo             ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
+       hydra
        ;;indent-guides     ; highlighted indent columns
-       (ligatures +extras)        ; ligatures and symbols to make your code pretty again
+       ;;ligatures         ; ligatures and symbols to make your code pretty again
        ;;minimap           ; show a map of the code on the side
-       modeline          ; snazzy, Atom-inspired modeline, plus API
-       nav-flash         ; blink cursor line after big motions
+       modeline            ; snazzy, Atom-inspired modeline, plus API
+       nav-flash           ; blink cursor line after big motions
        ;;neotree           ; a project drawer, like NERDTree for vim
-       ophints           ; highlight the region an operation acts on
-       (popup +all +defaults)   ; tame sudden yet inevitable temporary windows
+       ;;ophints           ; highlight the region an operation acts on
+       (popup +defaults)   ; tame sudden yet inevitable temporary windows
        ;;tabs              ; a tab bar for Emacs
        ;;treemacs          ; a project drawer, like neotree but cooler
        ;;unicode           ; extended unicode support for various languages
        vc-gutter         ; vcs diff in the fringe
-       ;;vi-tilde-fringe   ; fringe tildes to mark beyond EOB
+       vi-tilde-fringe   ; fringe tildes to mark beyond EOB
        ;;window-select     ; visually switch windows
        workspaces        ; tab emulation, persistence & separate workspaces
        zen               ; distraction-free coding or writing
-
+#+end_src
+*** Editor
+#+begin_src emacs-lisp :tangle init.el
        :editor
-       (evil +everywhere); come to the dark side, we have cookies
-       file-templates    ; auto-snippets for empty files
-       fold              ; (nigh) universal code folding
-       format            ; automated prettiness
+       (evil +everywhere)  ; come to the dark side, we have cookies
+       file-templates      ; auto-snippets for empty files
+       fold                ; (nigh) universal code folding
+       format              ; automated prettiness
        ;;god               ; run Emacs commands without modifier keys
        ;;lispy             ; vim for lisp, for people who don't like vim
-       multiple-cursors  ; editing in many places at once
+       multiple-cursors    ; editing in many places at once
        ;;objed             ; text object editing for the innocent
        ;;parinfer          ; turn lisp into python, sort of
        ;;rotate-text       ; cycle region at point between text candidates
-       snippets          ; my elves. They type so I don't have to
-       ;;word-wrap         ; soft wrapping with language-aware indent
-
+       snippets            ; my elves. They type so I don't have to
+       word-wrap           ; soft wrapping with language-aware indent
+#+end_src
+*** Emacs
+#+begin_src emacs-lisp :tangle init.el
        :emacs
        (dired +icons)    ; making dired pretty [functional]
        electric          ; smarter, keyword-based electric-indent
-       (ibuffer +icons)           ; interactive buffer management
-       (undo +tree)              ; persistent, smarter undo for your inevitable mistakes
+       ;;ibuffer         ; interactive buffer management
+       undo              ; persistent, smarter undo for your inevitable mistakes
        vc                ; version-control and Emacs, sitting in a tree
-
+#+end_src
+*** Term
+#+begin_src emacs-lisp :tangle init.el
        :term
-       eshell            ; the elisp shell that works everywhere
+       ;;eshell            ; the elisp shell that works everywhere
        ;;shell             ; simple shell REPL for Emacs
        ;;term              ; basic terminal emulator for Emacs
-       vterm             ; the best terminal emulation in Ema
-
+       vterm               ; the best terminal emulation in Emacs
+#+end_src
+*** Checkers
+#+begin_src emacs-lisp :tangle init.el
        :checkers
        syntax              ; tasing you for every semicolon you forget
-       (spell +aspell) ; tasing you for misspelling mispelling
-       grammar           ; tasing grammar mistake every you make
-
+       (spell +flyspell)   ; tasing you for misspelling mispelling
+       ;;grammar           ; tasing grammar mistake every you make
+#+end_src
+*** Tools
+#+begin_src emacs-lisp :tangle init.el
        :tools
        ;;ansible
-       biblio            ; Writes a PhD for you (citation needed)
+       biblio              ; Writes a PhD for you (citation needed)
        ;;debugger          ; FIXME stepping through code, to help you add bugs
        ;;direnv
        ;;docker
-       editorconfig      ; let someone else argue about tabs vs spaces
+       ;;editorconfig      ; let someone else argue about tabs vs spaces
        ;;ein               ; tame Jupyter notebooks with emacs
        (eval +overlay)     ; run code, run (also, repls)
        ;;gist              ; interacting with github gists
        lookup              ; navigate your code and its documentation
        (lsp +eglot)        ; M-x vscode
        magit             ; a git porcelain for Emacs
-       make              ; run make tasks from Emacs
+       ;;make              ; run make tasks from Emacs
        ;;pass              ; password manager for nerds
-       pdf               ; pdf enhancements
+       ;;pdf               ; pdf enhancements
        ;;prodigy           ; FIXME managing external services & code builders
-       rgb               ; creating color strings
+       ;;rgb               ; creating color strings
        ;;taskrunner        ; taskrunner for all your projects
        ;;terraform         ; infrastructure as code
-       tmux              ; an API for interacting with tmux
+       ;;tmux              ; an API for interacting with tmux
        ;;upload            ; map local to remote projects via ssh/ftp
-
+#+end_src
+*** OS
+#+begin_src emacs-lisp :tangle init.el
        :os
-       ;;(:if IS-MAC macos)  ; improve compatibility with macOS
-       tty               ; improve the terminal Emacs experience
-
+       (:if IS-MAC macos)  ; improve compatibility with macOS
+       tty                 ; improve the terminal Emacs experience
+#+end_src
+*** Lang
+#+begin_src emacs-lisp :tangle init.el
        :lang
        ;;agda              ; types of types of types of types...
        ;;beancount         ; mind the GAAP
-       (cc +lsp)         ; C > C++ == 1
+       (cc +lsp)           ; C > C++ == 1
        ;;clojure           ; java with a lisp
        ;;common-lisp       ; if you've seen one lisp, you've seen them all
        ;;coq               ; proofs-as-programs
@@ -280,7 +200,7 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
        ;;dhall
        ;;elixir            ; erlang done right
        ;;elm               ; care for a cup of TEA?
-       emacs-lisp       ; drown in parentheses
+       emacs-lisp        ; drown in parentheses
        ;;erlang            ; an elegant language for a more civilized age
        ;;ess               ; emacs speaks statistics
        ;;factor
@@ -290,7 +210,8 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
        ;;fstar             ; (dependent) types and (monadic) effects and Z3
        ;;gdscript          ; the language you waited for
        ;;(go +lsp)         ; the hipster dialect
-       (haskell +lsp)    ; a language that's lazier than I am
+       ;;(graphql +lsp)    ; Give queries a REST
+       (haskell +lsp)      ; a language that's lazier than I am
        ;;hy                ; readability of scheme w/ speed of python
        ;;idris             ; a language you can depend on
        ;;json              ; At least it ain't XML
@@ -298,30 +219,23 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
        ;;javascript        ; all(hope(abandon(ye(who(enter(here))))))
        ;;julia             ; a better, faster MATLAB
        ;;kotlin            ; a better, slicker Java(Script)
-       (latex                       ; writing papers in Emacs has never been so fun
-        +latexmk                    ; what else would you use?
-        +cdlatex                    ; quick maths symbols
-        +lsp                        ; we need dez completions
-        +fold)                      ; fold the clutter away nicities
+       (latex              ; writing papers in Emacs has never been so fun
+        +cdlatex
+        +latexmk
+        +lsp
+        +fold)
        ;;lean              ; for folks with too much to prove
-       ledger            ; be audit you can be
-       (lua +lsp)               ; one-based indices? one-based indices
+       ;;ledger            ; be audit you can be
+       (lua +lsp)          ; one-based indices? one-based indices
        markdown          ; writing docs for people to ignore
        ;;nim               ; python + lisp at the speed of c
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
-       (org
-        +gnuplot
-        +present
-        +journal             ; enable org journal
-        +pretty              ; replace asterisks with pretty org bullets
-        +publish             ; create static websites with org
-        ;;+dragndrop           ; drag & drop files/images into org buffers
-        +roam2)              ; org roam v2
+       org               ; organize your plain life in plain text
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
-       (python +lsp +conda)           ; beautiful is better than ugly
+       (python +lsp)       ; beautiful is better than ugly
        ;;qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
        ;;raku              ; the artist formerly known as perl6
@@ -331,58 +245,44 @@ NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
        ;;rust              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
        ;;scala             ; java, but good
        ;;(scheme +guile)   ; a fully conniving family of lisps
-       (sh +lsp)                ; she sells {ba,z,fi}sh shells on the C xor
+       (sh +lsp)           ; she sells {ba,z,fi}sh shells on the C xor
        ;;sml
        ;;solidity          ; do you need a blockchain? No.
        ;;swift             ; who asked for emoji variables?
        ;;terra             ; Earth and Moon in alignment for performance.
        ;;web               ; the tubes
-       yaml              ; JSON, but readable
+       ;;yaml              ; JSON, but readable
        ;;zig               ; C, but simpler
-
-
+#+end_src
+*** Email & Apps
+#+begin_src emacs-lisp :tangle init.el
        :email
-       ;; (:if (executable-find "mu") (mu4e +org +gmail))
+       ;;(mu4e +org +gmail)
        ;;notmuch
        ;;(wanderlust +gmail)
 
        :app
-       calendar
+       ;;calendar
        ;;emms
        ;;everywhere        ; *leave* Emacs!? You must be joking
        ;;irc               ; how neckbeards socialize
        (rss +org)        ; emacs as an RSS reader
        ;;twitter           ; twitter client https://twitter.com/vnought
-
+#+end_src
+*** I3 & Emacs integration
+#+begin_src emacs-lisp :tangle init.el
+       :wmintegration
+       i3
+#+end_src
+*** Config & Appendix
+#+begin_src emacs-lisp :tangle init.el
        :config
        literate
-       (default +bindings +smartparens)
-
-       :wmintegration
-       (:if (string= "skynet" (string-trim (shell-command-to-string "uname -n"))) i3)
-       )
+       (default +bindings +smartparens))
 #+end_src
-
-** Hostname based configuration
-
-With the day I will manage the same configuration on several different machines,
-I would like to have specific parts of the configuration enabled for only
-specific machines.
-
-*** i3
-
-#+begin_src emacs-lisp :tangle "modules/wmintegration/i3/packages.el"
-;; -*- no-byte-compile: t; -*-
-;;; wmintegration/i3/packages.el
-#+end_src
-
-#+begin_src emacs-lisp :tangle "modules/wmintegration/i3/config.el"
-;;; wmintegration/i3/config.el -*- lexical-binding: t; -*-
-#+end_src
-
-** Packages
-Some of the built-in packages, which I don't use, are listed here.
-#+begin_src emacs-lisp :tangle "packages.el"
+** Packages preamble
+Some of the packages that I don't use are disabled here.
+#+begin_src emacs-lisp :tangle packages.el
 ;; -*- no-byte-compile: t; -*-
 
 (disable-packages!
@@ -390,131 +290,81 @@ Some of the built-in packages, which I don't use, are listed here.
  rtags
  solaire-mode)
 #+end_src
-
-* Simple Settings
-
-** Autoload
-
-These are just personal functions which I have added to doom emacs.
-
+* Functions & Variables
+** Variables
 #+begin_src emacs-lisp
-(defun find-in-dotfiles ()
-  "Open a file somewhere in ~/dotrice via a fuzzy filename search."
-  (interactive)
-  (doom-project-find-file (expand-file-name "~/.dotrice")))
-
-(defun find-in-configs ()
-  "Open a file somewhere in ~/.config via a fuzzy filename search."
-  (interactive)
-  (doom-project-find-file (expand-file-name "~/.config/")))
-
-(defun browse-dotfiles ()
-  "Browse the files in ~/dotrice."
-  (interactive)
-  (doom-project-browse (expand-file-name "~/.dotrice/")))
-
-(defun find-in-scripts ()
-  "Open a file somewhere in scripts directory, ~/script via a fuzzy filename search."
-  (interactive)
-  (doom-project-find-file (expand-file-name "~/.scripts")))
-
-(defun find-in-suckless ()
-  "Open a file somewhere in the suckless directory, ~/.local/src via a fuzzy filename search."
-  (interactive)
-  (doom-project-find-file (expand-file-name "~/.local/src/")))
-
-(defun org-syntax-convert-keyword-case-to-lower ()
-  "Convert all #+KEYWORDS to #+keywords."
-  (interactive)
-  (save-excursion
-    (goto-char (point-min))
-    (let ((count 0)
-          (case-fold-search nil))
-      (while (re-search-forward "^[ \t]*#\\+[A-Z_]+" nil t)
-        (unless (s-matches-p "RESULTS" (match-string 0))
-          (replace-match (downcase (match-string 0)) t)
-          (setq count (1+ count))))
-      (message "Replaced %d occurances" count))))
-
+(setq org-directory (file-truename "~/Documents/org"))
+(setq org-roam-directory org-directory)
+(setq doom-localleader-key ",")
+#+end_src
+** Functions
+#+begin_src emacs-lisp
+;; Make writing and scrolling faster
 (defun locally-defer-font-lock ()
   "Set jit-lock defer and stealth, when buffer is over a certain size."
-  (when (> (buffer-size) 50000)
+  (when (> (buffer-size) 30000)
     (setq-local jit-lock-defer-time 0.05
                 jit-lock-stealth-time 1)))
 #+end_src
-
+* General Configuration
 ** Changing Defaults
-
-These are better defaults (or preferences for me) which I would want to be on always.
-
 #+begin_src emacs-lisp
 (setq-default
- delete-by-moving-to-trash t                    ; Delete files to trash
- window-combination-resize t                    ; take new window space from all other windows (not just current)
- x-stretch-cursor t)                            ; Stretch cursor to the glyph width
+ ;; evil-cross-lines t                             ;; Make horizontal movement cross lines
+ delete-by-moving-to-trash t                    ;; Delete files to trash
+ window-combination-resize t                    ;; take new window space from all other windows (not just current)
+ x-stretch-cursor t)                            ;; Stretch cursor to the glyph width
 
-(setq undo-limit 80000000                       ; Raise undo-limit to 80Mb
-      display-line-numbers-type nil             ; By disabling line number, we improve performance significantly
-      evil-want-fine-undo t                     ; By default while in insert all changes are one big blob. Be more granular
-      truncate-string-ellipsis "…"              ; Unicode ellispis are nicer than "...", and also save /precious/ space
-      password-cache-expiry nil                 ; I can trust my computers ... can't I?
-      scroll-margin 2                           ; It's nice to maintain a little margin
-      confirm-kill-emacs nil                    ; Disable exit confirmation
+(setq undo-limit 80000000                       ;; Raise undo-limit to 80Mb
+      display-line-numbers-type nil             ;; By disabling line number, we improve performance significantly
+      ;; evil-want-fine-undo t                     ;; By default while in insert all changes are one big blob. Be more granular
+      truncate-string-ellipsis "\u2026"         ;; Unicode ellispis are nicer than "...", and also save /precious/ space
+      password-cache-expiry nil                 ;; I can trust my computers ... can't I?
+      confirm-kill-emacs nil                    ;; Disable exit confirmation
       )
+
+;; Make evil more like vim behaviour
+(setq evil-vsplit-window-right t
+      evil-split-window-below t)
 
 ;; (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;; Prevents some cases of Emacs flickering.
 
 ;; Improve scrolling
-(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))      ; one line at a time
-      mouse-wheel-progressive-speed nil                 ; don't accelerate scrolling
-      mouse-wheel-follow-mouse 't                       ; scroll window under mouse
-      scroll-preserve-screen-position 'always           ; Don't have `point' jump around
-      scroll-step 1)                                    ; keyboard scroll one line at a time
-#+end_src
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))      ;; one line at a time
+      mouse-wheel-progressive-speed nil                 ;; don't accelerate scrolling
+      mouse-wheel-follow-mouse 't                       ;; scroll window under mouse
+      scroll-preserve-screen-position 'always           ;; Don't have `point' jump around
+      scroll-step 1)                                    ;; keyboard scroll one line at a time
 
-When I bring up Doom's scratch buffer with SPC x, it's often to play with elisp or note something down (that isn't worth an entry in my notes). I can do both in `lisp-interaction-mode'.
-
-#+begin_src emacs-lisp
+;; When I bring up Doom's scratch buffer with SPC x, it's often to play with elisp or note something down (that isn't worth an entry in my notes). I can do both in `lisp-interaction-mode'.
 (setq doom-scratch-initial-major-mode 'lisp-interaction-mode)
+
+;; Prevent lines from auto breaking
+(remove-hook 'text-mode-hook #'auto-fill-mode)
+
+;; Revert buffers when the underlying file has changed
+(global-auto-revert-mode 1)
+;; Automatically revert buffers for changed files
+(setq global-auto-revert-non-file-buffers t)
 #+end_src
-
-
-** Window title
-
-Sometimes, the window title shows something useless, such as the hostname or the
-username. We want to display something much more useful. These functions are set
-to display the file name, the project name and the save state of the file.
-
+** Performance
 #+begin_src emacs-lisp
-(setq frame-title-format
-      '(""
-        (:eval
-         (if (s-contains-p org-roam-directory (or buffer-file-name ""))
-             (replace-regexp-in-string
-              ".*/[0-9]*-?" "☰ "
-              (subst-char-in-string ?_ ?  buffer-file-name))
-           "%b"))
-        (:eval
-         (let ((project-name (projectile-project-name)))
-           (unless (string= "-" project-name)
-             (format (if (buffer-modified-p)  " ◉ %s" " ● %s") project-name))))))
+(after! gcmh
+  (setq gcmh-idle-delay 5)
+  (setq gcmh-high-cons-threshold (* 255 1024 1024)))
+
+(setq inhibit-compacting-font-caches nil)
 #+end_src
-
-
-** Fonts and Appearance
-
-Settings related to fonts within Doom Emacs:
-- 'doom-font' -- standard monospace font that is used for most things in Emacs.
-- 'doom-variable-pitch-font' -- variable font which is useful in some Emacs plugins.
-- 'doom-big-font' -- used in doom-big-font-mode; useful for presentations.
-- 'font-lock-comment-face' -- for comments.
-- 'font-lock-keyword-face' -- for keywords with special significance like 'setq' in elisp.
-
+** Visuals
+*** Themes & Fonts
 #+begin_src emacs-lisp
-(setq doom-font (font-spec :family "JetBrains Mono Nerd Font" :size 20)
-      doom-variable-pitch-font (font-spec :family "sans" :size 20)
-      doom-unicode-font (font-spec :family "JoyPixels" :size 20)
-      doom-big-font (font-spec :family "JetBrains Mono Nerd Font" :size 34))
+;;; Fonts
+(setq doom-font (font-spec :family "JetBrains Mono" :size 22)
+      doom-variable-pitch-font (font-spec :family "Iosevka Aile" :size 22)
+      doom-unicode-font (font-spec :family "Noto Color Emoji" :size 22)
+      doom-big-font (font-spec :family "JetBrains Mono" :size 34))
+
+;; Themes
 (after! doom-themes
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t))
@@ -522,1907 +372,58 @@ Settings related to fonts within Doom Emacs:
   '(doom-modeline-buffer-modified :foreground "orange")
   '(font-lock-comment-face :slant italic)
   '(font-lock-keyword-face :slant italic))
-#+end_src
 
-Set the theme of doom emacs here. To try out new themes, I set a keybinding for
-counsel-load-theme with 'SPC h t'. It is hear that you can also set the
-transparency of each emacs frame.
-
-#+begin_src emacs-lisp
-(setq doom-theme 'doom-dracula)
+(setq doom-theme 'doom-dark+)
 (set-frame-parameter (selected-frame) 'alpha '(95 . 95))
 (add-to-list 'default-frame-alist '(alpha . (95 . 95)))
 #+end_src
-
-
-** Hooks
-
-These are the functions/modes which are run/enabled when certain conditions are met.
-Here, we specify stuff that we want to run on startup
-
+*** Visual-Fill-Column
+Visual fill column centers the buffer and limits the width.
 #+begin_src emacs-lisp
-(remove-hook 'text-mode-hook #'auto-fill-mode) ;; Prevent lines from auto breaking
+;; Make fill-paragraph (M-q) 100 characters long
+;;(setq-default fill-column 100)
+
+(setq visual-fill-column-width 100
+      visual-fill-column-center-text t)
 #+end_src
-
-** Allow babel execution in CLI actions
-
-#+begin_src emacs-lisp :tangle cli.el
-;;; cli.el -*- lexical-binding: t; -*-
-(setq org-confirm-babel-evaluate nil)
-
-(defun doom-shut-up-a (orig-fn &rest args)
-  (quiet! (apply orig-fn args)))
-
-(advice-add 'org-babel-execute-src-block :around #'doom-shut-up-a)
-#+end_src
-
-** Global Auto Revert
-
-A buffer can get out of sync with respect to its visited file on disk if that file is changed by another program. To keep it up to date, you can enable Auto Revert mode by typing M-x auto-revert-mode, or you can set it to be turned on globally with ‘global-auto-revert-mode’.  I have also turned on Global Auto Revert on non-file buffers, which is especially useful for ‘dired’ buffers.
-
-#+begin_src emacs-lisp
-(global-auto-revert-mode 1)
-(setq global-auto-revert-non-file-buffers t)
-#+end_src
-
-** Splits
-
-#+begin_src emacs-lisp
-(defun split-horizontally-for-temp-buffers ()
-  "Split the window horizontally for temp buffers."
-  (when (and (one-window-p t)
-             (not (active-minibuffer-window)))
-    (split-window-horizontally)))
-(add-hook 'temp-buffer-setup-hook 'split-horizontally-for-temp-buffers)
-#+end_src
-
-* Built-in packages configurations
-
-** Citar
-
-Configuration may change depending on the completion system used. Since this
-config uses =vertico=, =citar= will be used.
-
-#+begin_src emacs-lisp
-(setq! citar-bibliography '("~/dox/bibliography/references.bib" "~/dox/bibliography/Capstone Project.bib")
-       citar-library-paths '("~/dox/bibliography/")
-       citar-notes-paths '("~/dox/notes/"))
-#+end_src
-
-
-** Company
-
-IMO, modern editors have trained a bad habit into us all: a burning need for
-completion ll the time -- as we type, as we breathe, as we pray to the
-ancient ones -- but how often do you *really* need that information? I say
-rarely. So opt for manual completion:
-
-#+begin_src emacs-lisp
-(use-package! company
-  :after-call (company-mode global-company-mode company-complete
-                            company-complete-common company-manual-begin company-grab-line)
-  :config
-  (setq company-idle-delay nil
-        company-tooltip-limit 10))
-#+end_src
-
-An evil mode indicator is redundant with cursor shape
-
-#+begin_src emacs-lisp
-(advice-add #'doom-modeline-segment--modals :override #'ignore)
-#+end_src
-
-** Dashboard
-
-The dashboard contains too many things to my taste. It must be something which
-you can use to display and use shortcuts.
-
-#+begin_src emacs-lisp
-(setq doom-fallback-buffer-name "► Doom"
-      +doom-dashboard-name "► Doom")
-
-(setq +doom-dashboard-menu-sections (cl-subseq +doom-dashboard-menu-sections 0 2))
-;; (remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
-;; (add-hook! '+doom-dashboard-mode-hook (hide-mode-line-mode 1) (hl-line-mode -1))
-;; (setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
-
-(map! :leader :desc "Dashboard" "e" #'+doom-dashboard/open)
-;; (add-transient-hook! #'+doom-dashboard-mode (+doom-dashboard-setup-modified-keymap))
-;; (add-transient-hook! #'+doom-dashboard-mode :append (+doom-dashboard-setup-modified-keymap))
-;; (add-hook! 'doom-init-ui-hook :append (+doom-dashboard-setup-modified-keymap))
-#+end_src
-
-** Dired
-
-#+begin_src emacs-lisp :tangle packages.el
-(package! dired-open)
-(package! dired-subtree)
-#+end_src
-
-Get file icons in dired
-
-#+begin_src emacs-lisp
-(add-hook! 'dired-mode-hook 'all-the-icons-dired-mode)
-(add-hook! 'dired-mode 'dired-async-mode)
-#+end_src
-
-With dired-open plugin, you can launch external programs for certain extensions
-For example, I set all .png files to open in =sxiv= and all .mp4 files to open in =mpv=
-
-#+begin_src emacs-lisp
-(setq dired-open-extensions '(("gif" . "open")
-                              ("jpg" . "open")
-                              ("png" . "open")
-                              ("mkv" . "open")
-                              ("mp4" . "open")))
-#+end_src
-
-** Dictionary
-
-This is to setup spell checking inside emacs. I want a custom dictionary and a
-way to keep mine in check.
-
-#+begin_src emacs-lisp
-(setq ispell-dictionary "en-custom"
-      ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
-#+end_src
-
-** Ediff
-
-;; Don't let ediff break EXWM, keep it in one frame
-#+begin_src emacs-lisp
-(setq ediff-diff-options "-w"
-      ediff-split-window-function 'split-window-horizontally
-      ediff-window-setup-function 'ediff-setup-windows-plain)
-#+end_src
-
-** Elfeed
-
-#+begin_src emacs-lisp
-(setq rmh-elfeed-org-files '("~/.config/doom/elfeed.org"))
-(add-hook! 'elfeed-search-mode-hook 'elfeed-update)
-
-(defun elfeed-v-mpv (url)
-  "Watch a video from URL in MPV"
-  (async-shell-command (format "mpv --really-quiet \"%s\"" url)))
-
-(defun elfeed-view-mpv (&optional use-generic-p)
-  "Youtube-feed link"
-  (interactive "P")
-  (let ((entries (elfeed-search-selected)))
-    (cl-loop for entry in entries
-             do (elfeed-untag entry 'unread)
-             when (elfeed-entry-link entry)
-             do (elfeed-v-mpv it))
-    (mapc #'elfeed-search-update-entry entries)
-    (unless (use-region-p) (forward-line))))
-
-(defun elfeed-eww-open (&optional use-generic-p)
-  "open with eww"
-  (interactive "P")
-  (let ((entries (elfeed-search-selected)))
-    (cl-loop for entry in entries
-             do (elfeed-untag entry 'unread)
-             when (elfeed-entry-link entry)
-             do (eww-browse-url it))
-    (mapc #'elfeed-search-update-entry entries)
-    (unless (use-region-p) (forward-line))))
-
-(defun elfeed-firefox-open (&optional use-generic-p)
-  "open with firefox"
-  (interactive "P")
-  (let ((entries (elfeed-search-selected)))
-    (cl-loop for entry in entries
-             do (elfeed-untag entry 'unread)
-             when (elfeed-entry-link entry)
-             do (browse-url-firefox it))
-    (mapc #'elfeed-search-update-entry entries)
-    (unless (use-region-p) (forward-line))))
-
-(defun elfeed-chromium-open (&optional use-generic-p)
-  "open with firefox"
-  (interactive "P")
-  (let ((entries (elfeed-search-selected)))
-    (cl-loop for entry in entries
-             do (elfeed-untag entry 'unread)
-             when (elfeed-entry-link entry)
-             do (browse-url-chromium it))
-    (mapc #'elfeed-search-update-entry entries)
-    (unless (use-region-p) (forward-line))))
-
-(defun elfeed-w3m-open (&optional use-generic-p)
-  "open with w3m"
-  (interactive "P")
-  (let ((entries (elfeed-search-selected)))
-    (cl-loop for entry in entries
-             do (elfeed-untag entry 'unread)
-             when (elfeed-entry-link entry)
-             do (ffap-w3m-other-window it))
-    (mapc #'elfeed-search-update-entry entries)
-    (unless (use-region-p) (forward-line))))
-
-(after! elfeed
-  (map! :map elfeed-search-mode-map
-          :n "v" nil
-          :n "v" #'elfeed-view-mpv
-          :n "t" #'elfeed-w3m-open
-          :n "w" #'elfeed-eww-open
-          :n "f" nil
-          :n "f" #'elfeed-firefox-open
-          :n "c" #'elfeed-chromium-open))
-#+end_src
-
-** Evil
-
-#+begin_src emacs-lisp
-(after! evil
-  (setq evil-ex-substitute-global t     ; I like my s/../.. to by global by default
-        ;;evil-move-cursor-back nil       ; Don't move the block cursor when toggling insert mode
-        evil-kill-on-visual-paste nil) ; Don't put overwritten text in the kill ring
-  ;; Focus new window after splitting
-  (setq evil-split-window-below t
-        evil-vsplit-window-right t))
-#+end_src
-
-** iCalendar
-
-Here I set up my calendar
-
-#+begin_src emacs-lisp
-(defun calendar-helper () ;; doesn't have to be interactive
-  (cfw:open-calendar-buffer
-   :contents-sources
-   (list
-    (cfw:org-create-source "Purple")
-    (cfw:ical-create-source "Victoria University" "https://outlook.office365.com/owa/calendar/14853855dd6541eebbce1f2d68f50dcf@live.vu.edu.au/f754347027b54d97a148bdb20e6a947814803601956198516593/calendar.ics" "Green"))))
-(defun calendar-init ()
-  ;; switch to existing calendar buffer if applicable
-  (if-let (win (cl-find-if (lambda (b) (string-match-p "^\\*cfw:" (buffer-name b)))
-                           (doom-visible-windows)
-                           :key #'window-buffer))
-      (select-window win)
-    (calendar-helper)))
-
-(defun =my-calendar ()
-  "Activate (or switch to) *my* `calendar' in its workspace."
-  (interactive)
-  (if (featurep! :ui workspaces) ;; create workspace (if enabled)
-      (progn
-        (+workspace-switch "Calendar" t)
-        (doom/switch-to-scratch-buffer)
-        (calendar-init)
-        (+workspace/display))
-    (setq +calendar--wconf (current-window-configuration))
-    (delete-other-windows)
-    (switch-to-buffer (doom-fallback-buffer))
-    (calendar-init)))
-#+end_src
-
-
-** Modeline
-
-#+begin_src emacs-lisp
-(after! doom-modeline
-  (setq doom-modeline-buffer-file-name-style 'auto
-        all-the-icons-scale-factor 1.1
-        ;;doom-modeline-enable-word-count t         ; Show word count in modeline
-        inhibit-compacting-font-caches t          ; Don’t compact font caches during GC.
-        find-file-visit-truename t))              ; Display true name instead of relative name
-
-(custom-set-faces!
-  '(mode-line :height 1.0)
-  '(mode-line-inactive :height 1.0))
-#+end_src
-
-** Org
-
-*** Org base
-
-#+begin_src emacs-lisp
-(after! org
-  (plist-put org-format-latex-options :scale 4) ;; Make latex equations preview larger
-  (setq org-directory (file-truename "~/org")
-        org-agenda-files '("~/org/agenda.org")
-        org-default-notes-file (expand-file-name "notes.org" org-directory)
-        org-ellipsis " ▼ "
-        org-log-done 'time
-        org-hide-emphasis-markers t
-        org-insert-heading-respect-content nil ;; Insert org headings at point
-        ;; ex. of org-link-abbrev-alist in action
-        ;; [[arch-wiki:Name_of_Page][Description]]
-        org-link-abbrev-alist    ; This overwrites the default Doom org-link-abbrev-list
-        '(("google" . "http://www.google.com/search?q=")
-          ("arch-wiki" . "https://wiki.archlinux.org/index.php/")
-          ("ddg" . "https://duckduckgo.com/?q=")
-          ("wiki" . "https://en.wikipedia.org/wiki/"))
-        org-todo-keywords
-        '((sequence
-           "TODO(t)"  ; A task that needs doing & is ready to do
-           "PROJ(p)"  ; An ongoing project that cannot be completed in one step
-           "INPROCESS(s)"  ; A task that is in progress
-           "⚑ WAITING(w)"  ; Something is holding up this task; or it is paused
-           "|"
-           "☟ NEXT(n)"
-           "✰ IMPORTANT(i)"
-           "DONE(d)"  ; Task successfully completed
-           "✘ CANCELED(c@)") ; Task was cancelled, aborted or is no longer applicable
-          (sequence
-           "✍ NOTE(N)"
-           "FIXME(f)"
-           "☕ BREAK(b)"
-           "❤ LOVE(l)"
-           "REVIEW(r)"
-           )) ; Task was completed
-        org-todo-keyword-faces
-        '(
-          ("TODO" . (:foreground "#ff39a3" :weight bold))
-          ("INPROCESS"  . "orangered")
-          ("✘ CANCELED" . (:foreground "white" :background "#4d4d4d" :weight bold))
-          ("⚑ WAITING" . "pink")
-          ("☕ BREAK" . "gray")
-          ("❤ LOVE" . (:foreground "VioletRed4"
-                       ;; :background "#7A586A"
-                       :weight bold))
-          ("☟ NEXT" . (:foreground "DeepSkyBlue"
-                       ;; :background "#7A586A"
-                       :weight bold))
-          ("✰ IMPORTANT" . (:foreground "greenyellow"
-                            ;; :background "#7A586A"
-                            :weight bold))
-          ("DONE" . "#008080")
-          ("FIXME" . "IndianRed")))) ; Task has been cancelled
-#+end_src
-
-*** Org superstar
-
-#+begin_src emacs-lisp
-(after! org-superstar
-  (setq org-superstar-headline-bullets-list '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
-  ;; (setq org-superstar-headline-bullets-list '("一" "二" "三" "四" "五" "六" "七" "八")
-        org-superstar-item-bullet-alist '((?+ . ?➤) (?- . ?✦)) ; changes +/- symbols in item lists
-        org-superstar-prettify-item-bullets t ))
-#+end_src
-
-*** Org fancy priorities
-
-#+begin_src emacs-lisp
-(after! org-fancy-priorities
-  (setq org-fancy-priorities-list '("⚡" "⬆" "⬇" "☕")))
-#+end_src
-
-*** Set font sizes for each header level in Org
-
-You can set the Org heading levels to be different font sizes.  So I choose to
-have level 1 headings to be 140% in height, level 2 to be 130%, etc.  Other
-interesting things you could play with include adding :foreground color and/or
-:background color if you want to override the theme colors.
-
-#+begin_src emacs-lisp
-(custom-set-faces
-  '(org-level-1 ((t (:inherit outline-1 :height 1.4))))
-  '(org-level-2 ((t (:inherit outline-2 :height 1.3))))
-  '(org-level-3 ((t (:inherit outline-3 :height 1.2))))
-  '(org-level-4 ((t (:inherit outline-4 :height 1.1))))
-  '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
-)
-#+end_src
-
-*** Make navigation less clunky
-
-Org files can be rather nice to look at, particularly with some of the
-customisations here. This comes at a cost however, expensive font-lock. Feeling
-like you’re typing through molasses in large files is no fun, but there is a way
-I can defer font-locking when typing to make the experience more responsive.
-
-#+begin_src emacs-lisp
-(after! org
-  (add-hook 'org-mode-hook #'locally-defer-font-lock))
-#+end_src
-
-*** Org export
-
-**** ODT to DOCX
-
-When I tell Org-Mode to export to ODT at my day job, I actually want DOCX.
-
-#+begin_src emacs-lisp
-(setq org-odt-preferred-output-format "docx")
-#+end_src
-
-
-**** Latex export
-
-Sometimes, I always want custom templates for my reports.
-
-#+begin_src emacs-lisp
-(with-eval-after-load 'ox-latex
-  (add-to-list 'org-latex-classes
-               '("org-plain-latex"
-                 "\\documentclass{article}
-           [NO-DEFAULT-PACKAGES]
-           [PACKAGES]
-           [EXTRA]"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
-#+end_src
-
-** Org-journal
-
-#+begin_src emacs-lisp
-(after! org-journal
-  (setq org-journal-dir (concat org-directory "journal")
-        org-journal-date-prefix "* "
-        org-journal-time-prefix "** "
-        org-journal-date-format "%B %d, %Y (%A) "
-        org-journal-file-format "%Y-%m-%d.org"))
-#+end_src
-
-** Org roam
-
-*** Org roam base
-
-| COMMAND                         | DESCRIPTION                     | KEYBINDING  |
-|---------------------------------+---------------------------------+-------------|
-| org-roam-find-file              | org roam find file              | SPC n r f   |
-| org-roam-insert                 | org roam insert                 | SPC n r i   |
-| org-roam-dailies-find-date      | org roam dailies find date      | SPC n r d d |
-| org-roam-dailies-find-today     | org roam dailies find today     | SPC n r d t |
-| org-roam-dailies-find-tomorrow  | org roam dailies find tomorrow  | SPC n r d m |
-| org-roam-dailies-find-yesterday | org roam dailies find yesterday | SPC n r d y |
-
-#+begin_src emacs-lisp
-(after! org-roam
-  (setq org-roam-directory (file-truename "~/org/roam")
-        org-roam-completion-everywhere t
-        org-roam-capture-templates
-        '(("d" "default" plain "%?"
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: miscs Inbox\n\n")
-           :unnarrowed t)
-          ("a" "articles" plain (file "~/org/templates/articles.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: articles %^{Tag}\n\n")
-           :unnarrowed t)
-          ("b" "book notes" plain (file "~/org/templates/book.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: books %^{Tag}\n\n")
-           :unnarrowed t)
-          ("c" "podcasts" plain (file "~/org/templates/podcasts.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: podcasts %^{Tag}\n\n")
-           :unnarrowed t)
-          ("e" "latex" plain (file "~/org/templates/reportex.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: miscs %^{Unit Code}\n\n")
-           :unnarrowed t)
-          ("i" "ideas" plain (file "~/org/templates/ideas.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: ideas %^{Tag}\n\n")
-           :unnarrowed t)
-          ("p" "project" plain (file "~/org/templates/project.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: projects %^{Tag}\n\n")
-           :unnarrowed t)
-          ("P" "presentation" plain (file "~/org/templates/presentation.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "\n:reveal_properties:\n#+reveal_root: https://cdn.jsdelivr.net/npm/reveal.js\n:end:\n\n#+title: ${title}\n#+date: %U\n#+author: %^{Author}\n#+filetags: presentations \n\n")
-           :unnarrowed t)
-          ("r" "research paper" plain (file "~/org/templates/research.org")
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: papers %^{Tag}\n\n")
-           :unnarrowed t)
-          ("t" "tag" plain "%?"
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: Tag\n\n")
-           :unnarrowed t)
-          )))
-#+end_src
-
-*** Org roam journal
-
-Obviously the better way for org journalling.
-
-#+begin_src emacs-lisp
-(after! org-roam
-  (setq org-roam-dailies-capture-templates
-        '(("d" "default" entry "* %<%I:%M %p>: %?"
-           :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n")))))
-#+end_src
-
-This interferes with =org-roam-capture-templates=. Deactivated till I find a fix
-
-#+begin_src emacs-lisp :tangle no
-(defun elk/org-roam-rename-to-new-title ()
-  "Change the file name after changing the title."
-  (when-let*
-      ((old-file (buffer-file-name))
-       (is-roam-file (org-roam-file-p old-file))
-       (is-roam-buffer (org-roam-buffer-p))
-       (file-node (save-excursion
-                    (goto-char 1)
-                    (org-roam-node-at-point)))
-       (slug (org-roam-node-slug file-node))
-       (new-file (expand-file-name (replace-regexp-in-string "-.*\\.org" (format "-%s.org" slug) old-file)))
-       (different-name? (not (string-equal old-file new-file))))
-    (rename-buffer (file-name-nondirectory new-file))
-    (rename-file old-file new-file 1)
-    (set-visited-file-name new-file)
-    (set-buffer-modified-p nil)))
-
-(after! org-roam
-  (add-hook! 'after-save-hook #'elk/org-roam-rename-to-new-title))
-#+end_src
-
-*** Automatically copy (or move) completed
-
-One interesting use for daily files is to keep a log of tasks that were completed on that particular day. What if we could automatically copy completed tasks in any Org Mode file to today's daily file?
-
-We can do this by adding some custom code!
-
-The following snippet sets up a hook for all Org task state changes and then copies the completed (=DONE=) entry to today's note file:
-
-#+begin_src emacs-lisp
-(defun elk/org-roam-copy-todo-to-today ()
-  (interactive)
-  (let ((org-refile-keep t) ;; Set this to nil to delete the original!
-        (org-roam-dailies-capture-templates
-         '(("t" "tasks" entry "%?"
-            :if-new (file+head+olp "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n" ("Tasks")))))
-        (org-after-refile-insert-hook #'save-buffer)
-        today-file
-        pos)
-    (save-window-excursion
-      (org-roam-dailies--capture (current-time) t)
-      (setq today-file (buffer-file-name))
-      (setq pos (point)))
-
-    ;; Only refile if the target file is different than the current file
-    (unless (equal (file-truename today-file)
-                   (file-truename (buffer-file-name)))
-      (org-refile nil nil (list "Tasks" today-file nil pos)))))
-
-(after! org
-  (add-to-list 'org-after-todo-state-change-hook
-               (lambda ()
-                 (when (equal org-state "DONE")
-                   (elk/org-roam-copy-todo-to-today)))))
-#+end_src
-
-*** Org roam agenda
-
-#+begin_src emacs-lisp
-(defun elk/org-roam-filter-by-tag (tag-name)
-  (lambda (node)
-    (member tag-name (org-roam-node-tags node))))
-
-(defun elk/org-roam-list-notes-by-tag (tag-name)
-  (mapcar #'org-roam-node-file
-          (seq-filter
-           (elk/org-roam-filter-by-tag tag-name)
-           (org-roam-node-list))))
-
-(defun elk/org-roam-refresh-agenda-list ()
-  (interactive)
-  (setq org-agenda-files (elk/org-roam-list-notes-by-tag "projects")))
-
-;; Build the agenda list the first time for the session
-(after! org-roam
-  (add-hook! 'org-roam-mode-hook #'elk/org-roam-refresh-agenda-list))
-#+end_src
-
-
-** Shells
-
-Configuration for ~eshell~.
-
-#+begin_src emacs-lisp
-(setq shell-file-name "/bin/zsh"
-      vterm-max-scrollback 5000)
-
-(after! eshell
-  (setq eshell-rc-script "~/.config/doom/eshell/profile"
-        eshell-aliases-file "~/.config/doom/eshell/aliasrc"
-        eshell-history-size 5000
-        eshell-buffer-maximum-lines 5000
-        eshell-hist-ignoredups t
-        eshell-scroll-to-bottom-on-input t
-        eshell-destroy-buffer-when-process-dies t
-        eshell-visual-commands'("bash" "xsh" "htop" "ssh" "top" "fish")))
-#+end_src
-
-** Task juggler
-
-#+begin_src emacs-lisp
-(after! org
-  (require 'ox-taskjuggler)
-  (setq org-taskjuggler-default-reports
-        '("textreport report \"Plan\" {
-formats html
-header '== %title =='
-center -8<-
-[#Plan Plan] | [#Resource_Allocation Resource Allocation]
-----
-=== Plan ===
-<[report id=\"plan\"]>
-----
-=== Resource Allocation ===
-<[report id=\"resourceGraph\"]>
-->8-
-}
-# A traditional Gantt chart with a project overview.
-taskreport plan \"\" {
-headline \"Project Plan\"
-columns bsi, name, start, end, effort, effortdone, effortleft, chart { width 1000 }
-loadunit shortauto
-hideresource 1
-}
-")
-        )
-  (setq org-taskjuggler-default-project-duration 999))
-#+end_src
-
-
-** Tramp
-
-#+begin_src emacs-lisp
-(setenv "SHELL" "/bin/zsh")
-(after! tramp
-  (setq tramp-shell-prompt-pattern "\\(?:^\\|
-\\)[^]#$%>\n]*#?[]#$%>] *\\(�\\[[0-9;]*[a-zA-Z] *\\)*")) ;; default + 
-#+end_src
-
-** VTerm
-
-Don't use system ~libvterm~. We don't want any crashes when using outdated
-libraries in the main repositories of our distribution.
-
-#+begin_src emacs-lisp
-(after! vterm
-  (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=Off"))
-#+end_src
-
 ** Which-key
-
-I hate when which-key takes too long to show up. Make it faster!!!
-
 #+begin_src emacs-lisp
 (after! which-key
-  (setq which-key-allow-imprecise-window-fit t) ; Comment this if experiencing crashes
-  ;; Add an extra line to work around bug in which-key imprecise
-  ;; (defun add-which-key-line (f &rest r) (progn (apply f (list (cons (+ 1 (car (car r))) (cdr (car r)))))))
-  ;; (advice-add 'which-key--show-popup :around #'add-which-key-line)
-  (setq which-key-idle-delay 0.2))
+  (setq which-key-idle-delay 0.2
+        ;; Comment this if experiencing crashes
+        which-key-allow-imprecise-window-fit t))
 #+end_src
-
-* i3 and Emacs
-
-** Config syntax highlighting
-
-This package builds on =conf-space-mode= (which is the major mode emacs assigns to
-i3wm’s config file by default) and expands its font-lock capabilities to provide
-proper syntax highlighting for the small language i3wm’s config uses.
-
-The new syntax highlighting faces do not define their own colours, but instead
-derive from Emacs’ own font-locking faces, making sure that they fit in with any
-theme.
-
-Features and settings outside font-locking are not touched and will be inherited
-from conf-space-mode.
-
-#+begin_src emacs-lisp :tangle modules/wmintegration/i3/packages.el
-(package! i3wm-config-mode :recipe (:host github :repo "Alexander-Miller/i3wm-Config-Mode"))
-#+end_src
-
-#+begin_src emacs-lisp :tangle modules/wmintegration/i3/config.el
-(use-package! i3wm-config-mode
-  :defer t)
-#+end_src
-
-
-** Integration i3
-
-Basic integration of emacs with i3 window manager.
-
-#+begin_src emacs-lisp :tangle modules/wmintegration/i3/packages.el
-(package! transpose-frame)
-#+end_src
-
-#+begin_src emacs-lisp :tangle modules/wmintegration/i3/config.el
-(use-package! transpose-frame
-  :commands (transpose-frame))
-#+end_src
-
-#+begin_src emacs-lisp :tangle modules/wmintegration/i3/config.el
-(defun elk/emacs-i3-windmove (dir)
-  (let ((other-window (windmove-find-other-window dir)))
-    (if (or (null other-window) (window-minibuffer-p other-window))
-        (- (error dir))
-      (windmove-do-window-select dir))))
-
-(defun elk/emacs-i3-direction-exists-p (dir)
-  (some (lambda (dir)
-          (let ((win (windmove-find-other-window dir)))
-            (and win (not (window-minibuffer-p win)))))
-        (pcase dir
-          ('width '(left right))
-          ('height '(up down)))))
-
-(defun elk/emacs-i3-move-window (dir)
-  (let ((other-window (windmove-find-other-window dir))
-        (other-direction (elk/emacs-i3-direction-exists-p
-                          (pcase dir
-                            ('up 'width)
-                            ('down 'width)
-                            ('left 'height)
-                            ('right 'height)))))
-    (cond
-     ((and other-window (not (window-minibuffer-p other-window)))
-      (window-swap-states (selected-window) other-window))
-     (other-direction
-      (evil-move-window dir))
-     (t (error dir)))))
-
-(defun elk/emacs-i3-resize-window (dir kind value)
-  (if (or (one-window-p)
-          (not (elk/emacs-i3-direction-exists-p dir)))
-      (- (error (concat (symbol-name kind) (symbol-name dir))))
-    (setq value (/ value 2))
-    (pcase kind
-      ('shrink
-       (pcase dir
-         ('width
-          (evil-window-decrease-width value))
-         ('height
-          (evil-window-decrease-height value))))
-      ('grow
-       (pcase dir
-         ('width
-          (evil-window-increase-width value))
-         ('height
-          (evil-window-increase-height value)))))))
-
-(defun elk/emacs-i3-integration (command)
-  (pcase command
-    ((rx bos "focus")
-     (elk/emacs-i3-windmove
-      (intern (elt (split-string command) 1))))
-    ((rx bos "move")
-     (elk/emacs-i3-move-window
-      (intern (elt (split-string command) 1))))
-    ((rx bos "resize")
-     (elk/emacs-i3-resize-window
-       (intern (elt (split-string command) 2))
-       (intern (elt (split-string command) 1))
-       (string-to-number (elt (split-string command) 3))))
-    ("layout toggle split" (transpose-frame))
-    ("split v" (evil-window-split))
-    ("split h" (evil-window-vsplit))
-    ("kill" (evil-quit))
-    (- (error command))))
-#+end_src
-
-* EXWM
-
-#+begin_src emacs-lisp :tangle packages.el :tangle no
-(package! exwm)
-#+end_src
-
-** Initialisation
-
-*** Autoload Functions
-
-#+begin_src emacs-lisp :tangle "autoload/elyk.el" :tangle no
-;;;###autoload
-(defun elk/exwm-update-global-keys ()
-  "Function to apply changes to `exwm-input-global-keys'"
-  (interactive)
-  (setq exwm-input--global-keys nil)
-  (dolist (i exwm-input-global-keys)
-    (exwm-input--set-key (car i) (cdr i)))
-  (when exwm--connection
-    (exwm-input--update-global-prefix-keys)))
-
-;;;###autoload
-(defun elk/exwm-floating-toggle-pinned (&optional id)
-  (interactive)
-  (when-let ((exwm--floating-frame)
-             (window-id (or id exwm--id)))
-    ;; This approach is more reliable for now even with the workspace snap-back
-    (setq exwm--desktop 0xffffffff)))
-    ;; (if (seq-contains dw/exwm--floating-pinned-windows window-id)
-    ;;   (setq dw/exwm--floating-pinned-windows (remq window-id dw/exwm--floating-pinned-windows))
-    ;;   (push window-id dw/exwm--floating-pinned-windows))))
-#+end_src
-
-*** EXWM Functions
-
-#+begin_src emacs-lisp :tangle no
-(defun elk/run-in-background (command)
-  (let ((command-parts (split-string command "[ ]+")))
-    (apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr command-parts)))))
-
-(defun elk/set-wallpaper ()
-  (interactive)
-  ;; NOTE: You will need to update this to a valid background path!
-  (start-process-shell-command
-   "feh" nil  "$HOME/.fehbg"))
-
-(defvar elk/exclude-buffer-modes '(helm-major-mode messages-buffer-mode special-mode))
-(defun elk-buffer-predicate (buf)
-  (with-current-buffer buf
-    (if (memq major-mode elk/exclude-buffer-modes)
-        nil
-      (exwm-layout--other-buffer-predicate buf))))
-
-(defun elk/exwm-init-hook ()
-  ;; Make workspace 1 be the one where we land at startup
-  (exwm-workspace-switch-create 1)
-  (lambda () (interactive) (modify-all-frames-parameters '((buffer-predicate . elk-buffer-predicate))))
-
-  ;; Start polybar
-  (elk/start-panel))
-
-(defun elk/exwm-update-class ()
-  (exwm-workspace-rename-buffer exwm-class-name))
-
-(defun elk/exwm-update-title ()
-  (pcase exwm-class-name
-    ("Firefox" (exwm-workspace-rename-buffer (format "Firefox: %s" exwm-title)))))
-
-(defun elk/configure-window-by-class ()
-  (interactive)
-  (pcase exwm-class-name
-    ("firefox" (exwm-workspace-move-window 2))
-    ("Chromium" (exwm-workspace-move-window 2))
-    ("discord" (exwm-workspace-move-window 3))
-    ("Virt-manager" (exwm-workspace-move-window 5))
-    ("mpv" (exwm-floating-toggle-floating)
-     (elk/exwm-floating-toggle-pinned))
-    ))
-
-;; This function should be used only after configuring autorandr!
-(defun elk/update-displays ()
-  (elk/run-in-background "autorandr --change --force")
-  (elk/set-wallpaper)
-  (message "Display config: %s"
-           (string-trim (shell-command-to-string "autorandr --current"))))
-
-(defun elk/fix-exwm-floating-windows ()
-  (setq-local exwm-workspace-warp-cursor nil
-              mouse-autoselect-window nil
-              focus-follows-mouse nil))
-
-(setq elk/exwm-last-workspaces '(1))
-
-(defun elk/exwm-store-last-workspace ()
-  "Save the last workspace to `elk/exwm-last-workspaces'."
-  (setq elk/exwm-last-workspaces
-        (seq-uniq (cons exwm-workspace-current-index
-                        elk/exwm-last-workspaces))))
-
-(defun elk/exwm-last-workspaces-clear ()
-  "Clean `elk/exwm-last-workspaces' from deleted workspaces."
-  (setq elk/exwm-last-workspaces
-        (seq-filter
-         (lambda (i) (nth i exwm-workspace--list))
-         elk/exwm-last-workspaces)))
-
-(setq elk/exwm-monitor-list '(nil "HDMI-1-0"))
-
-(defun elk/exwm-get-current-monitor ()
-  "Return the current monitor name or nil."
-  (plist-get exwm-randr-workspace-output-plist
-             (cl-position (selected-frame)
-                          exwm-workspace--list)))
-
-(defun elk/exwm-get-other-monitor (dir)
-  "Cycle the monitor list in the direction DIR.
-
-DIR is either 'left or 'right."
-  (nth
-   (%    (+ (cl-position
-             (elk/exwm-get-current-monitor)
-             elk/exwm-monitor-list
-             :test #'string-equal)
-            (length elk/exwm-monitor-list)
-            (pcase dir
-              ('right 1)
-              ('left -1)))
-         (length elk/exwm-monitor-list))
-   elk/exwm-monitor-list))
-
-(defun elk/exwm-switch-to-other-monitor (&optional dir)
-  "Switch to another monitor."
-  (interactive)
-  (elk/exwm-last-workspaces-clear)
-  (exwm-workspace-switch
-   (cl-loop with other-monitor = (elk/exwm-get-other-monitor (or dir 'right))
-            for i in (append elk/exwm-last-workspaces
-                             (cl-loop for i from 0
-                                      for _ in exwm-workspace--list
-                                      collect i))
-            if (if other-monitor
-                   (string-equal (plist-get exwm-randr-workspace-output-plist i)
-                                 other-monitor)
-                 (not (plist-get exwm-randr-workspace-output-plist i)))
-            return i)))
-
-(defun elk/exwm-workspace-switch-monitor ()
-  "Move the current workspace to another monitor."
-  (interactive)
-  (let ((new-monitor (elk/exwm-get-other-monitor 'right))
-        (current-monitor (elk/exwm-get-current-monitor)))
-    (when (and current-monitor
-               (>= 1
-                   (cl-loop for (key value) on exwm-randr-workspace-monitor-plist
-                            by 'cddr
-                            if (string-equal value current-monitor) sum 1)))
-      (error "Can't remove the last workspace on the monitor!"))
-    (setq exwm-randr-workspace-monitor-plist
-          (map-delete exwm-randr-workspace-monitor-plist exwm-workspace-current-index))
-    (when new-monitor
-      (setq exwm-randr-workspace-monitor-plist
-            (plist-put exwm-randr-workspace-monitor-plist
-                       exwm-workspace-current-index
-                       new-monitor))))
-  (exwm-randr-refresh))
-
-(defun elk/exwm-windmove (dir)
-  "Move to window or monitor in the direction DIR."
-  (if (or (eq dir 'down) (eq dir 'up))
-      (windmove-do-window-select dir)
-    (let ((other-window (windmove-find-other-window dir))
-          (other-monitor (elk/exwm-get-other-monitor dir))
-          (opposite-dir (pcase dir
-                          ('left 'right)
-                          ('right 'left))))
-      (if other-window
-          (windmove-do-window-select dir)
-        (elk/exwm-switch-to-other-monitor dir)
-        (cl-loop while (windmove-find-other-window opposite-dir)
-                 do (windmove-do-window-select opposite-dir))))))
-
-(defun elk/exwm-direction-exists-p (dir)
-  "Check if there is space in the direction DIR.
-
-Does not take the minibuffer into account."
-  (cl-some (lambda (dir)
-             (let ((win (windmove-find-other-window dir)))
-               (and win (not (window-minibuffer-p win)))))
-           (pcase dir
-             ('width '(left right))
-             ('height '(up down)))))
-
-(defun elk/exwm-move-window (dir)
-  "Move the current window in the direction DIR."
-  (let ((other-window (windmove-find-other-window dir))
-        (other-direction (elk/exwm-direction-exists-p
-                          (pcase dir
-                            ('up 'width)
-                            ('down 'width)
-                            ('left 'height)
-                            ('right 'height)))))
-    (cond
-     ((and other-window (not (window-minibuffer-p other-window)))
-      (window-swap-states (selected-window) other-window))
-     (other-direction
-      (evil-move-window dir)))))
-
-(defun elk/exwm-fill-other-window (&rest _)
-  "Open the most recently used buffer in the next window."
-  (interactive)
-  (when (and (eq major-mode 'exwm-mode) (not (eq (next-window) (get-buffer-window))))
-    (let ((other-exwm-buffer
-           (cl-loop with other-buffer = (persp-other-buffer)
-                    for buf in (sort (persp-current-buffers) (lambda (a _) (eq a other-buffer)))
-                    with current-buffer = (current-buffer)
-                    when (and (not (eq current-buffer buf))
-                              (buffer-live-p buf)
-                              (not (string-match-p (persp--make-ignore-buffer-rx) (buffer-name buf)))
-                              (not (get-buffer-window buf)))
-                    return buf)))
-      (when other-exwm-buffer
-        (with-selected-window (next-window)
-          (switch-to-buffer other-exwm-buffer))))))
-
-(setq elk/exwm-resize-value 5)
-(defun elk/exwm-resize-window (dir kind &optional value)
-  "Resize the current window in the direction DIR.
-
-DIR is either 'height or 'width, KIND is either 'shrink or
- 'grow.  VALUE is `elk/exwm-resize-value' by default.
-
-If the window is an EXWM floating window, execute the
-corresponding command from the exwm-layout group, execute the
-command from the evil-window group."
-  (unless value
-    (setq value elk/exwm-resize-value))
-  (let* ((is-exwm-floating
-          (and (derived-mode-p 'exwm-mode)
-               exwm--floating-frame))
-         (func (if is-exwm-floating
-                   (intern
-                    (concat
-                     "exwm-layout-"
-                     (pcase kind ('shrink "shrink") ('grow "enlarge"))
-                     "-window"
-                     (pcase dir ('height "") ('width "-horizontally"))))
-                 (intern
-                  (concat
-                   "evil-window"
-                   (pcase kind ('shrink "-decrease-") ('grow "-increase-"))
-                   (symbol-name dir))))))
-    (when is-exwm-floating
-      (setq value (* 5 value)))
-    (funcall func value)))
-#+end_src
-
-
-** Run or Raise
-
-Raise the specified app if it's already started, otherwise start it. This should
-ideally raise buffer the previous buffer, not the current one meaning: if I had
-chrome on the right side and I call this from the left side it should show up on
-the right side
-
-#+begin_src emacs-lisp :tangle no
-(defun elk/run-or-raise (buffer-prefix &optional cmd)
-  (let ((existing-buffer
-         (cl-dolist (buffer (buffer-list))
-           (if (string-prefix-p buffer-prefix (buffer-name buffer))
-               (    cl-return buffer)))))
-    (if existing-buffer
-        ;; it's currently displayed, go to it
-        (if (get-buffer-window existing-buffer)
-            (message (format "%s" (pop-to-buffer existing-buffer)))
-          (exwm-workspace-switch-to-buffer existing-buffer))
-      (start-process-shell-command buffer-prefix nil cmd))))
-
-(defun goto-wm-discord ()
-  "raise 'Discord' "
-  (interactive)
-  (elk/run-or-raise "discord" "/usr/bin/discord"))
-
-(defun goto-wm-firefox ()
-  "raise 'Firefox' or start it"
-  (interactive)
-  (elk/run-or-raise "firefox" "/usr/bin/firefox"))
-
-(defun goto-wm-chromium ()
-  "raise 'Chromium' or start it"
-  (interactive)
-  (elk/run-or-raise "Chromium" "/usr/bin/chromium"))
-
-(defun goto-wm-zotero ()
-  "raise 'Zotero' or start it"
-  (interactive)
-  (elk/run-or-raise "Zotero" "/usr/bin/zotero"))
-
-(defun goto-wm-zoom ()
-  "raise 'Zoom' or start it"
-  (interactive)
-  (elk/run-or-raise "Zoom" "/usr/bin/zoom"))
-#+end_src
-
-** Polybar
-
-#+begin_src emacs-lisp :tangle no
-(defvar elk/polybar-process nil
-  "Holds the process of the running Polybar instance, if any")
-
-(defun elk/kill-panel ()
-  (interactive)
-  (when elk/polybar-process
-    (ignore-errors
-      (kill-process elk/polybar-process)))
-  (setq elk/polybar-process nil))
-
-(defun elk/start-panel ()
-  (interactive)
-  (elk/kill-panel)
-  (setq elk/polybar-process (start-process-shell-command "polybar" nil "polybar exwm")))
-
-(defun elk/send-polybar-hook (module-name hook-index)
-  (start-process-shell-command "polybar-msg" nil (format "polybar-msg hook %s %s" module-name hook-index)))
-
-(defun elk/send-polybar-exwm-workspace ()
-  (elk/send-polybar-hook "exwm-workspace" 1))
-
-(defun elk/polybar-exwm-workspace ()
-  (pcase exwm-workspace-current-index
-    (0 "0")
-    (1 "1")
-    (2 "2")
-    (3 "3")
-    (4 "4")
-    (5 "5")))
-#+end_src
-
-** EXWM Configuration
-
-*** Mode Line
-
-#+begin_src emacs-lisp :tangle packages.el :tangle no
-(package! exwm-modeline)
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-(use-package! exwm-modeline
-  :after exwm
-  :config
-  (setq exwm-modeline-short nil
-        exwm-modeline-display-urgent nil)
-
-  (exwm-modeline-mode 1) ;; Set exwm modeline to display workspace
-  (display-battery-mode 1) ;; Show battery status in the mode line
-  ;; Show the time and date in modeline
-  (setq display-time-day-and-date t
-        display-time-format " [ %H:%M %d/%m/%y]"
-        display-time-default-load-average nil)
-  (display-time-mode 1))
-;; Also take a look at display-time-format and format-time-string
-#+end_src
-
-*** System tray
-
-#+begin_src emacs-lisp :tangle no
-(use-package! exwm-systemtray
-  :after exwm
-  :config
-  (setq exwm-systemtray-height 30)
-  (exwm-systemtray-enable))
-#+end_src
-
-*** Randr
-
-#+begin_src emacs-lisp :tangle no
-(use-package! exwm-randr
-  :after exwm
-  :config
-  ;; Set the screen resolution (update this to be the correct resolution for your screen!)
-  (exwm-randr-enable)
-  (start-process-shell-command "xrandr" nil "multi-hybrid-graphics")
-
-  ;; This will need to be updated to the name of a display!  You can find
-  ;; the names of your displays by looking at arandr or the output of xrandr
-  (setq exwm-randr-workspace-monitor-plist '(2 "HDMI-1-0" 3 "HDMI-1-0"))
-
-  ;; NOTE: Uncomment these lines after setting up autorandr!
-  ;; React to display connectivity changes, do initial display update
-  (add-hook 'exwm-randr-screen-change-hook #'elk/update-displays)
-  (elk/update-displays)
-
-  ;; Set the wallpaper after changing the resolution
-  (elk/set-wallpaper))
-#+end_src
-
-*** App Launcher
-
-#+begin_src emacs-lisp :tangle packages.el :tangle no
-(package! app-launcher :recipe (:host github :repo "SebastienWae/app-launcher"))
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-(use-package! app-launcher
-  :commands (app-launcher-run-app))
-#+end_src
-
-*** Desktop Environment
-
-#+begin_src emacs-lisp :tangle packages.el :tangle no
-(package! desktop-environment)
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-(use-package! desktop-environment
-  :after exwm
-  :diminish desktop-environment-mode
-  :config
-  (progn
-    (unbind-key "s-l" desktop-environment-mode-map)
-    (desktop-environment-mode))
-  :custom
-  (desktop-environment-volume-get-command "volume")
-  (desktop-environment-volume-get-regexp "^\\([0-9]+\\)")
-  (desktop-environment-volume-set-command "volume %s")
-  (desktop-environment-volume-normal-increment "up")
-  (desktop-environment-volume-normal-decrement "down")
-  (desktop-environment-volume-small-increment "sup")
-  (desktop-environment-volume-small-decrement "sdown")
-  (desktop-environment-volume-toggle-command "volume mute")
-  (desktop-environment-volume-toggle-microphone-command "mic-toggle")
-
-  (desktop-environment-brightness-get-command "brightness")
-  (desktop-environment-brightness-set-command "brightness %s")
-  (desktop-environment-brightness-get-regexp "^\\([0-9]+\\)")
-  (desktop-environment-brightness-normal-increment "up")
-  (desktop-environment-brightness-normal-decrement "down")
-  (desktop-environment-brightness-small-increment "sup")
-  (desktop-environment-brightness-small-decrement "sdown")
-
-  (desktop-environment-screenshot-command "flameshot gui")
-  (desktop-environment-screenshot-directory (concat (getenv "HOME") "/pix/screenshots")))
-#+end_src
-
-*** Main
-
-#+begin_src emacs-lisp :tangle no
-(use-package! exwm
-  :init
-  (setq exwm-workspace-warp-cursor t
-        mouse-autoselect-window t
-        focus-follows-mouse t)          ; Window focus should follow the mouse pointer
-  (server-start)                        ; Start the emacs server
-  (setq exwm-workspace-number 6)        ; Set the default number of workspaces
-
-  :config
-  (add-hook 'exwm-update-class-hook #'elk/exwm-update-class) ;; When window "class" updates, use it to set the buffer name
-  (add-hook 'exwm-update-title-hook #'elk/exwm-update-title) ;; When window title updates, use it to set the buffer name
-  (add-hook 'exwm-manage-finish-hook #'elk/configure-window-by-class) ;; Configure windows as they're created
-  (add-hook 'exwm-init-hook #'elk/exwm-init-hook) ;; When EXWM starts up, do some extra confifuration
-
-  ;; NOTE: Uncomment the following two options if you want window buffers
-  ;;       to be available on all workspaces!
-
-  ;; (setq exwm-layout-show-all-buffers t) ;; Automatically move EXWM buffer to current workspace when selected
-  ;; (setq exwm-workspace-show-all-buffers t) ;; Display all EXWM buffers in every workspace buffer list
-
-  ;; NOTE: Uncomment this option if you want to detach the minibuffer!
-  ;;(setq exwm-workspace-minibuffer-position 'top) ;; Detach the minibuffer (show it with exwm-workspace-toggle-minibuffer)
-
-  (add-hook 'exwm-mode-hook #'doom-mark-buffer-as-real-h) ;; Show `exwm' buffers in buffer switching prompts.
-  (add-hook 'exwm-workspace-switch-hook #'elk/exwm-store-last-workspace) ;; Swapping workspaces between monitors
-  (add-hook 'exwm-floating-setup-hook #'elk/fix-exwm-floating-windows) ;; For floating windows, this will break EXWM. So we disable the above for floating mode.
-  (add-hook 'exwm-workspace-switch-hook #'elk/send-polybar-exwm-workspace) ;; Update panel indicator when workspace changes
-
-  (add-hook 'exwm-manage-finish-hook #'(lambda () (interactive) (evil-insert-state))) ;; This allows the use of doom alternate leader key in x windows
-
-  ;; These keys should always pass through to Emacs
-  (setq exwm-input-prefix-keys
-        '(?\C-x
-          ?\C-u
-          ?\M-x
-          ?\M-`
-          ?\M-&
-          ?\M-:
-          ?\C-\M-j  ;; Buffer list
-          ?\M-\     ;; Alt+Space
-          ?\s-\ ))
-
-  ;; Ctrl+Q will enable the next key to be sent directly
-  (define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
-
-  ;; Find a better window for the split
-  (advice-add 'evil-window-split :after #'elk/exwm-fill-other-window)
-  (advice-add 'evil-window-vsplit :after #'elk/exwm-fill-other-window)
-
-  ;; Super + space prefix key for general keybindings
-  (map! (:prefix "s-SPC"
-         :desc "System activity" "q" #'(lambda() (interactive) (elk/run-in-background "sysact"))
-         "b" #'switch-to-buffer
-         "SPC" #'app-launcher-run-app
-         :desc "Launch Firefox" "w" #'goto-wm-firefox
-         :desc "Launch Chromium" "c" #'goto-wm-chromium
-         "d" #'dmenu
-         "e" #'+eshell/here
-         :desc "Launch alacritty terminal" "t" #'(lambda() (interactive) (elk/run-in-background (getenv "TERMINAL") ))
-         :desc "Terminal Launch lf" "r" #'(lambda() (interactive) (elk/run-in-background (concat (getenv "TERMINAL") " -e lf") ))
-         :desc "Terminal Launch ncmpcpp" "n" #'(lambda() (interactive) (elk/run-in-background (concat (getenv "TERMINAL") " -e ncmpcpp") ))
-         :desc "Mute/Unmute microphone" "m" #'(lambda() (interactive) (elk/run-in-background "mic-toggle"))
-         (:prefix ("o" . "Other Applications")
-          :desc "Launch Discord" "d" #'goto-wm-discord
-          :desc "Launch Thunderbird" "e" #'(lambda() (interactive) (elk/run-in-background "thunderbird"))
-          :desc "Launch FTB" "f" #'(lambda() (interactive) (elk/run-in-background "/media/FTBA/FTBApp"))
-          :desc "Launch Zotero" "t" #'goto-wm-zotero
-          :desc "Launch Zoom" "z" #'goto-wm-zoom)
-         (:prefix ("p" . "Dmenu Scripts")
-          :desc "Select man pages" "a" #'(lambda() (interactive) (elk/run-in-background "dm-man"))
-          :desc "Clipmenu" "c" #'(lambda() (interactive) (elk/run-in-background "clipmenu"))
-          :desc "Network Manager" "n" #'(lambda() (interactive) (elk/run-in-background "networkmanager_dmenu"))
-          :desc "Change colorscheme" "C" #'(lambda() (interactive) (elk/run-in-background "dm-colorscheme"))
-          :desc "Kill selected application" "k" #'(lambda() (interactive) (elk/run-in-background "dm-kill"))
-          :desc "Mount drives" "o" #'(lambda() (interactive) (elk/run-in-background "dm-mount"))
-          :desc "Unmount drives" "u" #'(lambda() (interactive) (elk/run-in-background "dm-umount"))
-          :desc "Passmenu" "p" #'(lambda() (interactive) (elk/run-in-background "dm-passmenu"))
-          :desc "FM Radio" "b" #'(lambda() (interactive) (elk/run-in-background "dm-beats"))
-          :desc "Weather forecast" "w" #'(lambda() (interactive) (elk/run-in-background "weatherforecast")))
-         (:prefix (";" . "System settings")
-          :desc "Set wallpaper from a2n gallery" "a" #'(lambda() (interactive) (elk/run-in-background "setwallpaper a2n"))
-          :desc "Set wallpaper from dt gallery" "d" #'(lambda() (interactive) (elk/run-in-background "setwallpaper dt"))
-          :desc "Set wallpaper from elyk gallery" "e" #'(lambda() (interactive) (elk/run-in-background "setwallpaper elyk"))
-          :desc "Open pulsemixer" "v" #'(lambda() (interactive) (elk/run-in-background (concat (getenv "TERMINAL") " -e pulsemixer") )))))
-
-  ;; Set global key bindings.  These always work, no matter the input state!
-  ;; Keep in mind that changing this list after EXWM initializes has no effect.
-  (setq exwm-input-global-keys
-        `(
-          ;; Reset to line-mode (C-c C-k switches to char-mode via exwm-input-release-keyboard)
-          ([?\s-r] . exwm-  (use-package centered-cursor-mode
-    :diminish centered-cursor-mode)
-
-  (defun elk/pulse-area (&rest _)
-    "Pulse +-5 chars of point."
-    (pulse-momentary-highlight-region (- (point) 5) (+ 5 (point))))
-
-  (dolist (command '(org-forward-sentence org-backward-sentence))
-    (advice-add command :after #'pulse-area))
-
-  ;; WIP STUFF
-
-  ;;; Highlight Cursor Line with Pulse
-  ;; From https://karthinks.com/software/batteries-included-with-emacs/
-  ;; Replace external package with internal command
-
-  ;; (defun pulse-line (&rest _)
-  ;;   "Pulse the current line."
-  ;;   (interactive)
-  ;;   (pulse-momentary-highlight-one-line (point)))
-
-  ;; (dolist (command '(scroll-up-command scroll-down-command
-  ;;                                      recenter-top-bottom other-window select-window-by-number))
-  ;;   (advice-add command :after #'pulse-line))
-  ;; (defadvice other-window (after other-window-pulse activate) (pulse-line))
-  ;; (defadvice delete-window (after delete-window-pulse activate) (pulse-line))
-  ;; (defadvice recenter-top-bottom (after recenter-top-bottom-pulse activate))
-
-  ;; (defun pulse-line (&rest _)
-  ;;       "Pulse the current line."
-  ;;       (pulse-momentary-highlight-one-line (point)))
-  ;; (pulse-momentary-highlight
-
-  ;; (dolist (command '(scroll-up-command scroll-down-command
-  ;;                    recenter-top-bottom other-window evil-window-next))
-  ;;   (advice-add command :after #'pulse-line))
-
-(custom-set-faces
-  '(font-lock-comment-face ((t (:inherit font-lock-comment-face :italic t))))
-  '(font-lock-doc-face ((t (:inherit font-lock-doc-face :italic t))))
-  '(font-lock-string-face ((t (:inherit font-lock-string-face :italic t)))))
-ating)
-          ([?\s-f] . exwm-layout-toggle-fullscreen)
-          ([?\s-m] . exwm-layout-toggle-mode-line)
-          ([?\s-i] . exwm-input-toggle-keyboard) ;; Toggle between "line-mode" and "char-mode" in an EXWM window
-
-          ;; Music control using mpc
-          ([?\s-p] . (lambda() (interactive) (elk/run-in-background "mpc toggle")) )
-          ([?\s-\]] . (lambda() (interactive) (elk/run-in-background "mpc next")) )
-          ([?\s-\[] . (lambda() (interactive) (elk/run-in-background "mpc prev")) )
-          ([?\s-=] . (lambda() (interactive) (elk/run-in-background "mpc volume +2 && mpc-volume")) )
-          ([?\s--] . (lambda() (interactive) (elk/run-in-background "mpc volume -2 && mpc-volume")) )
-
-          ;; Launch applications via shell command
-          ([?\s-&] . (lambda (command)
-                       (interactive (list (read-shell-command "$ ")))
-                       (start-process-shell-command command nil command)))
-
-          ;; 's-N': Switch to certain workspace with Super (Win) plus a number key (0 - 9)
-          ,@(mapcar (lambda (i)
-                      `(,(kbd (format "s-%d" i)) .
-                        (lambda ()
-                          (interactive)
-                          (exwm-workspace-switch-create ,i))))
-                    (number-sequence 0 9))
-
-          ,@(cl-mapcar (lambda (c n)
-                         `(,(kbd (format "s-%c" c)) .
-                           (lambda ()
-                             (interactive)
-                             (exwm-workspace-move-window ,n)
-                             (exwm-workspace-switch ,n))))
-                       '(?\) ?! ?@ ?# ?$ ?% ?^ ?& ?* ?\()
-                       ;; '(?\= ?! ?\" ?# ?¤ ?% ?& ?/ ?\( ?\))
-                       (number-sequence 0 9))))
-
-  (add-hook 'exwm-input--input-mode-change-hook 'force-mode-line-update)
-
-  (exwm-enable))
-#+end_src
-
-* Third-party packages
-
-** El-easydraw
-
-#+begin_src emacs-lisp :tangle packages.el
-(package! edraw-org :recipe (:host github :repo "misohena/el-easydraw"))
-#+end_src
-
+** Keybindings
+*** Global keymaps
 #+begin_src emacs-lisp
-(use-package! edraw-org
-  :after org
-  :config
-  (edraw-org-setup-default))
+(map! :i
+      "C-SPC" #'completion-at-point)
+
+(map! :map visual-line-mode-map
+      :nv "j" 'evil-next-visual-line
+      :nv "k" 'evil-previous-visual-line)
+(map! (:after evil-org
+       :map evil-org-mode-map
+       :nv "j" 'evil-next-visual-line
+       :nv "k" 'evil-previous-visual-line
+       :nv "gk" (cmd! (if (org-on-heading-p)
+                          (org-backward-element)
+                        (evil-previous-visual-line)))
+       :nv "gj" (cmd! (if (org-on-heading-p)
+                          (org-forward-element)
+                        (evil-next-visual-line))))
+      :o "o" #'evil-inner-symbol)
 #+end_src
-
-** KMonad
-
-Nothing to see here. Just some KMonad setup to enable syntax highlighting when
-editing the config file.
-
-#+begin_src emacs-lisp :tangle packages.el
-(package! kbd-mode
-  :recipe (:host github
-           :repo "kmonad/kbd-mode"))
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package! kbd-mode
-  :defer t)
-#+end_src
-
-** Dmenu
-
-Provide dmenu functionality in emacs.
-
-#+begin_src emacs-lisp :tangle packages.el
-(package! dmenu)
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package! dmenu
-  :commands (dmenu dmenu-save-to-file))
-#+end_src
-
-** Inkscape
-
-#+begin_src emacs-lisp :tangle packages.el
-(package! ink :recipe (:host github :repo "foxfriday/ink"))
-#+end_src
-
-Changing the default template used by =ink-make-figure= and =ink-edit-figure=.
-
-#+begin_src emacs-lisp
-(defvar ink-flags-png (list "--export-area-drawing"
-                            "--export-dpi 256"
-                            "--export-type=png"
-                            "--export-background-opacity 1.0"
-                            "--export-overwrite")
-  "List of flags to produce a png file with inkspace.")
-
-(defvar ink-default-file
-  "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>
-<svg
-   width=\"297mm\"
-   height=\"210mm\"
-   viewBox=\"0 0 297 210\"
-   version=\"1.1\"
-   id=\"svg8\"
-   inkscape:version=\"1.1.2 (0a00cf5339, 2022-02-04, custom)\"
-   sodipodi:docname=\"default.svg\"
-   xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\"
-   xmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\"
-   xmlns=\"http://www.w3.org/2000/svg\"
-   xmlns:svg=\"http://www.w3.org/2000/svg\"
-   xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"
-   xmlns:cc=\"http://creativecommons.org/ns#\"
-   xmlns:dc=\"http://purl.org/dc/elements/1.1/\">
-  <defs
-     id=\"defs2\">
-    <rect
-       x=\"160\"
-       y=\"60\"
-       width=\"40\"
-       height=\"10\"
-       id=\"rect121\" />
-    <rect
-       x=\"150\"
-       y=\"70\"
-       width=\"50\"
-       height=\"10\"
-       id=\"rect115\" />
-    <rect
-       x=\"140\"
-       y=\"50\"
-       width=\"90\"
-       height=\"30\"
-       id=\"rect109\" />
-    <rect
-       x=\"170\"
-       y=\"70\"
-       width=\"70\"
-       height=\"50\"
-       id=\"rect97\" />
-    <rect
-       x=\"129.26784\"
-       y=\"79.883835\"
-       width=\"85.494354\"
-       height=\"60.623272\"
-       id=\"rect47\" />
-  </defs>
-  <sodipodi:namedview
-     id=\"base\"
-     pagecolor=\"#ffffff\"
-     bordercolor=\"#666666\"
-     borderopacity=\"1.0\"
-     inkscape:pageopacity=\"1\"
-     inkscape:pageshadow=\"2\"
-     inkscape:zoom=\"0.93616069\"
-     inkscape:cx=\"515.93707\"
-     inkscape:cy=\"205.093\"
-     inkscape:document-units=\"mm\"
-     inkscape:current-layer=\"g75\"
-     showgrid=\"true\"
-     showborder=\"true\"
-     width=\"1e-05mm\"
-     showguides=\"true\"
-     inkscape:guide-bbox=\"true\"
-     inkscape:window-width=\"1882\"
-     inkscape:window-height=\"1012\"
-     inkscape:window-x=\"1382\"
-     inkscape:window-y=\"46\"
-     inkscape:window-maximized=\"0\"
-     inkscape:document-rotation=\"0\"
-     inkscape:pagecheckerboard=\"0\"
-     units=\"mm\">
-    <inkscape:grid
-       type=\"xygrid\"
-       id=\"grid815\"
-       units=\"mm\"
-       spacingx=\"10\"
-       spacingy=\"10\"
-       empspacing=\"4\"
-       dotted=\"false\" />
-  </sodipodi:namedview>
-  <metadata
-     id=\"metadata5\">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about=\"\">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource=\"http://purl.org/dc/dcmitype/StillImage\" />
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <g
-     inkscape:label=\"Layer 1\"
-     inkscape:groupmode=\"layer\"
-     id=\"layer1\"
-     transform=\"translate(0,-177)\" />
-  <g
-     inkscape:label=\"Capacitor\"
-     transform=\"rotate(-90,90,60)\"
-     id=\"g27\">
-    <text
-       xml:space=\"preserve\"
-       id=\"text45\"
-       style=\"font-size:20;line-height:1.25;font-family:Sans;-inkscape-font-specification:'Sans, Normal';letter-spacing:0px;white-space:pre;shape-inside:url(#rect47)\" />
-  </g>
-  <g
-     inkscape:label=\"Capacitor\"
-     id=\"g75\">
-    <text
-       xml:space=\"preserve\"
-       id=\"text95\"
-       style=\"font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;white-space:pre;shape-inside:url(#rect97);fill:none;stroke:#000000;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:4, 8;paint-order:fill markers stroke\" />
-  </g>
-</svg>"
-  "Default file template.")
-#+end_src
-
-
-** Org CV
-
-Creating beautiful resume in Org mode.
-
-#+begin_src emacs-lisp :tangle packages.el
-(package! org-cv
-  :recipe (:host gitlab
-           :repo "Titan-C/org-cv"))
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package! ox-moderncv
-  :after org)
-#+end_src
-
-** Org Download
-
-#+begin_src emacs-lisp :tangle packages.el
-(package! org-download)
-#+end_src
-
-#+begin_src emacs-lisp
-(defun elk/org-download-paste-clipboard (&optional use-default-filename)
-  (interactive "P")
-  (require 'org-download)
-  (let ((file
-         (if (not use-default-filename)
-             (read-string (format "Filename [%s]: "
-                                  org-download-screenshot-basename)
-                          nil nil org-download-screenshot-basename)
-           nil)))
-    (org-download-clipboard file)))
-
-(use-package! org-download
-  :after org
-  :config
-  (setq org-download-method 'directory)
-  (setq org-download-image-dir "images")
-  (setq org-download-heading-lvl nil)
-  (setq org-download-timestamp "%Y%m%d-%H%M%S_")
-  (setq org-image-actual-width 300)
-  (map! :map org-mode-map
-        :leader
-        (:prefix ("m a")
-        "p" #'elk/org-download-paste-clipboard)))
-#+end_src
-
-** Org Roam Bibtex
-
-#+begin_src emacs-lisp :tangle packages.el
-;; When using org-roam via the `+roam` flag
-;(unpin! org-roam)
-
-;; When using bibtex-completion via the `biblio` module
-;(unpin! bibtex-completion helm-bibtex ivy-bibtex)
-
-(package! org-roam-bibtex
-  :recipe (:host github :repo "org-roam/org-roam-bibtex"))
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package! org-roam-bibtex
-  :after org-roam
-  :hook (org-roam-mode . org-roam-bibtex-mode))
-#+end_src
-
-** Org Roam Graph
-
-#+begin_src emacs-lisp :tangle packages.el
-(package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")) :pin "c93f6b61a8d3d2edcf07eda6220278c418d1054b")
-(package! websocket :pin "fda4455333309545c0787a79d73c19ddbeb57980") ; dependency of `org-roam-ui'
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package! websocket
-  :after org-roam)
-
-(use-package! org-roam-ui
-  :after org-roam
-  :config
-  (setq org-roam-ui-sync-theme t
-        org-roam-ui-follow t
-        org-roam-ui-update-on-save t)
-  ;; Add a new keybinding to open webview
-  (map! :leader (:prefix ("n" . notes)
-                 (:prefix ("r" . roam)
-                  :desc "Open Web Graph" "w" #'org-roam-ui-mode))))
-#+end_src
-
-** Org Appear
-
-#+begin_src emacs-lisp :tangle packages.el
-(package! org-appear :recipe (:host github :repo "awth13/org-appear"))
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package! org-appear
-  :after (org org-roam)
-  :init
-  :config
-  (setq org-appear-autoemphasis t
-        org-appear-autosubmarkers t
-        org-appear-autolinks nil)
-  (setq org-appear-trigger 'manual)
-  (add-hook 'org-mode-hook (lambda ()
-                             (add-hook 'evil-insert-state-entry-hook
-                                       #'org-appear-manual-start
-                                       nil
-                                       t)
-                             (add-hook 'evil-insert-state-exit-hook
-                                       #'org-appear-manual-stop
-                                       nil
-                                       t)))
-
-  ;; for proper first-time setup, `org-appear--set-elements'
-  ;; needs to be run after other hooks have acted.
-  (run-at-time nil nil #'org-appear--set-elements))
-#+end_src
-
-** Org Archive
-
-#+begin_src emacs-lisp
-(use-package! org-archive
-  :after org
-  :config
-  (setq org-archive-location "archive.org::datetree/"))
-#+end_src
-
-** Org Auto Tangle
-
-Tangle-on-save has revolutionized my literate programming workflow. It
-automatically runs =org-babel-tangle= upon saving any org-mode buffer, which means
-the resulting files will be automatically kept up to date. For a while I did
-this by manually adding =org-babel-tangle= to the after-save hook in Org mode, but
-now I use the [[https://github.com/yilkalargaw/org-auto-tangle][org-auto-tangle]] package, which does this asynchronously and
-selectively for each Org file where it is desired.
-
-#+begin_src emacs-lisp :tangle packages.el
-(package! org-auto-tangle)
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package! org-auto-tangle
-  :defer t
-  :hook (org-mode . org-auto-tangle-mode))
-#+end_src
-
-** Org Super Agenda
-
-~org-super-agenda~ is a much better org-agenda.
-
-#+begin_src emacs-lisp :tangle packages.el
-(package! org-super-agenda)
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package! org-super-agenda
-  :after org
-  :config
-  (setq org-super-agenda-groups '((:auto-dir-name t)))
-  (setq org-agenda-skip-scheduled-if-done t
-        org-agenda-skip-deadline-if-done t
-        org-agenda-include-deadlines t
-        org-agenda-include-diary nil
-        org-agenda-block-separator nil
-        org-agenda-compact-blocks t
-        org-agenda-start-with-log-mode t)
-  (org-super-agenda-mode))
-#+end_src
-
-** Scroll on jump
-
-This package allows you to control the scrolling on any operation that jumps to a new location.
-
-- Re-centers vertical scrolling.
-- Optionally animate the scroll using a fixed time limit.
-
-#+begin_src emacs-lisp :tangle packages.el
-(package! scroll-on-jump)
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package! scroll-on-jump
-  :commands (scroll-on-jump-advice-add scroll-on-jump-with-scroll-advice-add scroll-on-jump-interactive)
-  :custom
-  (scroll-on-jump-duration 0.4)
-  (scroll-on-jump-smooth nil)
-  (scroll-on-jump-use-curve t))
-
-(after! evil
-  (scroll-on-jump-advice-add evil-undo)
-  (scroll-on-jump-advice-add evil-redo)
-  (scroll-on-jump-advice-add evil-jump-item)
-  (scroll-on-jump-advice-add evil-jump-forward)
-  (scroll-on-jump-advice-add evil-jump-backward)
-  (scroll-on-jump-advice-add evil-ex-search-next)
-  (scroll-on-jump-advice-add evil-ex-search-previous)
-  (scroll-on-jump-advice-add evil-forward-paragraph)
-  (scroll-on-jump-advice-add evil-backward-paragraph)
-  (scroll-on-jump-advice-add evil-goto-mark)
-
-  ;; Actions that themselves scroll.
-  (scroll-on-jump-with-scroll-advice-add evil-goto-line)
-  (scroll-on-jump-with-scroll-advice-add evil-scroll-down)
-  (scroll-on-jump-with-scroll-advice-add evil-scroll-up)
-  (scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-center)
-  (scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-top)
-  (scroll-on-jump-with-scroll-advice-add evil-scroll-line-to-bottom))
-
-(after! goto-chg
-  (scroll-on-jump-advice-add goto-last-change)
-  (scroll-on-jump-advice-add goto-last-change-reverse))
-
-(global-set-key (kbd "<C-M-next>") (scroll-on-jump-interactive 'diff-hl-next-hunk))
-(global-set-key (kbd "<C-M-prior>") (scroll-on-jump-interactive 'diff-hl-previous-hunk))
-#+end_src
-
-** Thesaurus
-
-#+begin_src emacs-lisp :tangle packages.el
-(package! company-english-helper :recipe (:host github :repo "manateelazycat/company-english-helper"))
-(package! emacs-powerthesaurus :recipe (:host github :repo "SavchenkoValeriy/emacs-powerthesaurus"))
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package! emacs-powerthesaurus
-  :after-call (powerthesaurus-lookup-synonyms-dwim
-               powerthesaurus-lookup-antonyms-dwim powerthesaurus-lookup-related-dwim
-               powerthesaurus-lookup-definitions-dwim powerthesaurus-lookup-sentences-dwim ))
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package! company-english-helper
-  :after company)
-#+end_src
-
-* Keybindings, Evil, etc...
-** Bookmarks
-
-Bookmarks are somewhat like registers in that they record positions you can jump to.  Unlike registers, they have long names, and they persist automatically from one Emacs session to the next. The prototypical use of bookmarks is to record where you were reading in various files.
-#+begin_src emacs-lisp
-(map! :leader
-      (:prefix ("b". "buffer")
-       :desc "List bookmarks" "L" #'list-bookmarks
-       :desc "Save current bookmarks to bookmark file" "w" #'bookmark-save))
-#+end_src
-
-** Buffers
-
-Regarding /buffers/, the text you are editing in Emacs resides in an object called a /buffer/. Each time you visit a file, a buffer is used to hold the file’s text. Each time you invoke Dired, a buffer is used to hold the directory listing.  /Ibuffer/ is a program that lists all of your Emacs /buffers/, allowing you to navigate between them and filter them.
-
-| COMMAND         | DESCRIPTION          | KEYBINDING |
-|-----------------+----------------------+------------|
-| ibuffer         | Launch ibuffer       | SPC b i    |
-| kill-buffer     | Kill current buffer  | SPC b k    |
-| next-buffer     | Goto next buffer     | SPC b n    |
-| previous-buffer | Goto previous buffer | SPC b p    |
-| save-buffer     | Save current buffer  | SPC b s    |
-
-** ibuffer mode
-
-Keybindings withing ibuffer mode only.
-
-| COMMAND                           | DESCRIPTION                            | KEYBINDING |
-|-----------------------------------+----------------------------------------+------------|
-| ibuffer-mark-forward              | Mark the buffer                        | m          |
-| ibuffer-unmark-forward            | Unmark the buffer                      | u          |
-| ibuffer-do-kill-on-deletion-marks | Kill the marked buffers                | x          |
-| ibuffer-filter-by-content         | Ibuffer filter by content              | f c        |
-| ibuffer-filter-by-directory       | Ibuffer filter by directory            | f d        |
-| ibuffer-filter-by-filename        | Ibuffer filter by filename (full path) | f f        |
-| ibuffer-filter-by-mode            | Ibuffer filter by mode                 | f m        |
-| ibuffer-filter-by-name            | Ibuffer filter by name                 | f n        |
-| ibuffer-filter-disable            | Disable ibuffer filter                 | f x        |
-| ibuffer-do-kill-lines             | Hide marked buffers                    | g h        |
-| ibuffer-update                    | Restore hidden buffers                 | g H        |
-
-#+begin_src emacs-lisp
-(map! :map ibuffer-mode-map
-      (:prefix "f"
-      :n "c" 'ibuffer-filter-by-content
-      :n "d" 'ibuffer-filter-by-directory
-      :n "f" 'ibuffer-filter-by-filename
-      :n "m" 'ibuffer-filter-by-mode
-      :n "n" 'ibuffer-filter-by-name
-      :n "x" 'ibuffer-filter-disable)
-
-      (:prefix "g"
-      :n "h" 'ibuffer-do-kill-lines
-      :n "H" 'ibuffer-update))
-#+end_src
-
-** Dashboard
-
-These are bindings which only works in the Doom dashboard.
-
-#+begin_src emacs-lisp
-(map! :mode +doom-dashboard-mode
-      :map +doom-dashboard-mode-map
-      :desc "Find file" :ne "f" #'find-file
-      :desc "Recent files" :ne "r" #'consult-recent-file
-      :desc "Open config.org" :ne "c" (cmd! (find-file (expand-file-name "config.org" doom-private-dir)))
-      :desc "Config dir" :ne "C" #'doom/open-private-config
-      :desc "Open dotfile" :ne "." #'find-in-dotfiles
-      :desc "Open configs" :ne ">" #'find-in-configs
-      :desc "Open suckless stuff" :ne "x" #'find-in-suckless
-      :desc "Open scripts" :ne "e" #'find-in-scripts
-      :desc "Notes (roam)" :ne "n" #'org-roam-node-find
-      :desc "Dired" :ne "d" #'dired
-      :desc "Switch buffer" :ne "b" #'+vertico/switch-workspace-buffer
-      :desc "Switch buffers (all)" :ne "B" #'consult-buffer
-      :desc "IBuffer" :ne "i" #'ibuffer
-      :desc "Browse in project" :ne "p" #'doom/browse-in-other-project
-      :desc "Set theme" :ne "t" #'consult-theme
-      :desc "Quit" :ne "Q" #'save-buffers-kill-terminal)
-#+end_src
-
-** Dired
-
-*** Basic dired commands
-
+*** Dired
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix ("d" . "dired")
-       :desc "Open dired" "d" #'dired
+       :desc "Open dired"            "d" #'dired
        :desc "Dired jump to current" "j" #'dired-jump)
       (:after dired
        (:map dired-mode-map
-        :desc "Peep-dired image previews" "d p" #'peep-dired
-        :desc "Dired view file" "d v" #'dired-view-file)))
+        "d p" #'peep-dired :desc "Peep-dired image previews"
+        "d v" #'dired-view-file :desc "Dired view file")))
 (evil-define-key 'normal dired-mode-map
   (kbd "M-RET") 'dired-display-file
   (kbd "h") 'dired-up-directory
@@ -2446,218 +447,398 @@ These are bindings which only works in the Doom dashboard.
   (kbd "; d") 'epa-dired-do-decrypt
   (kbd "; e") 'epa-dired-o-encrypt)
 #+end_src
-
-*** Keybindings Within Dired With Peep-Dired-Mode Enabled
-
-If peep-dired is enabled, you will get image previews as you go up/down with 'j' and 'k'.
-
-| COMMAND              | DESCRIPTION                                | KEYBINDING |
-|----------------------+--------------------------------------------+------------|
-| peep-dired           | /Toggle previews within dired/             | SPC d p    |
-| peep-dired-next-file | /Move to next file in peep-dired-mode/     | j          |
-| peep-dired-prev-file | /Move to previous file in peep-dired-mode/ | k          |
-
+*** Elyk
 #+begin_src emacs-lisp
-(evil-define-key 'normal peep-dired-mode-map
-  (kbd "j") 'peep-dired-next-file
-  (kbd "k") 'peep-dired-prev-file)
-(add-hook 'peep-dired-hook 'evil-normalize-keymaps)
-#+end_src
+(defun elk/open-file (file)
+  (interactive)
+  (find-file file))
 
+(map! :leader
+      :prefix-map ("e" . "Elyk")
+      :desc "Open agenda.org"  "a" '(elk/open-file (concat org-directory "/agenda.org"))
+      :desc "Open elfeed.org"  "e" '(elk/open-file (concat org-directory "/elfeed.org"))
+      :desc "Open fonts.conf"  "f" '(elk/open-file "~/.config/fontconfig/fonts.conf")
+      :desc "Open i3.org"      "i" '(elk/open-file "~/.config/i3/i3.org")
+      :desc "Open polybar.org" "p" '(elk/open-file "~/.config/polybar/polybar.org")
+      :desc "Open sxhkd.org"   "s" '(elk/open-file "~/.config/sxhkd/sxhkdrc.org")
+      :desc "Open x.org"       "x" '(elk/open-file "~/.config/x11/x.org")
+      )
+#+end_src
+*** Toggles
+#+begin_src emacs-lisp
+(map! :leader
+      (:prefix ("t" . "toggle")
+       ;; Line toggles
+       :desc "Comment or uncomment lines"     "/" #'comment-line
+       :desc "Toggle line numbers"            "l" #'doom/toggle-line-numbers
+       :desc "Toggle line highlight in frame" "h" #'hl-line-mode
+       :desc "Toggle line highlight globally" "H" #'global-hl-line-mode
+       ;; Room toggles
+       :desc "Mixed pitch"                    "a" #'mixed-pitch-mode
+       :desc "Visual fill column"             "v" #'visual-fill-column-mode
+       ))
+#+end_src
+*** Org
+#+begin_src emacs-lisp
+(map! :localleader
+      :map org-mode-map
+      :desc "Org babel tangle" "TAB" #'org-babel-tangle)
+#+end_src
+*** Org-roam
+#+begin_src emacs-lisp
+(map! :leader
+       :prefix ("n" . "notes")
+       :desc "Dump brain"         "b" #'elk/org-roam-capture-inbox
+       :desc "Find node"          "f" #'org-roam-node-find
+       :desc "Insert node"        "i" #'org-roam-node-insert-immediate
+       :desc "Insert node cap."   "I" #'org-roam-node-insert
+       :desc "Capture to node"    "n" #'org-roam-capture
+       :desc "Paste attach"       "p" #'elk/org-download-paste-clipboard
+       :desc "Toggle roam buffer" "r" #'org-roam-buffer-toggle
+       :desc "Task to prog."      "t" #'elk/org-roam-capture-task
+       :desc "Web graph"          "w" #'org-roam-ui-mode
+       (:prefix-map ("d" . "dailies")
+       "-" #'org-roam-dailies-find-directory
+       "d" #'org-roam-dailies-goto-date
+       "y" #'org-roam-dailies-goto-yesterday
+       "m" #'org-roam-dailies-goto-tomorrow
+       "n" #'org-roam-dailies-goto-today
+
+       "D" #'org-roam-dailies-capture-date
+       "Y" #'org-roam-dailies-capture-yesterday
+       "M" #'org-roam-dailies-capture-tomorrow
+       "t" #'org-roam-dailies-capture-today
+       ))
+#+end_src
+* Packages Configuration
+** Deft
+#+begin_src emacs-lisp
+(after! deft
+  (setq deft-directory org-directory
+        deft-strip-summary-regexp ":PROPERTIES:\n\\(.+\n\\)+:END:\n"
+        deft-use-filename-as-title t
+        deft-recursive t
+        deft-extensions '("md" "org")))
+#+end_src
 ** Evil
-
-*** Display line wrapping
-
 #+begin_src emacs-lisp
-(after! evil
-  (map! :nv "Q" #'evil-fill-and-move))
+;; stop copying each visual state move to the clipboard:
+;; https://github.com/emacs-evil/evil/issues/336
+;; grokked from:
+;; http://stackoverflow.com/questions/15873346/elisp-rename-macro
+(advice-add #'evil-visual-update-x-selection :override #'ignore)
 #+end_src
-
-*** With EXWM
-
-Change the default behaviour of =:wq= and =:q= as I don't want it to quit emacs, or close workspace.
-
-#+begin_src emacs-lisp
-(after! evil
-  (defun elk/ex-kill-buffer-and-close ()
-    (interactive)
-    (unless (char-equal (elt (buffer-name) 0) ?*)
-      (kill-this-buffer)))
-
-  (defun elk/ex-save-kill-buffer-and-close ()
-    (interactive)
-    (save-buffer)
-    (kill-this-buffer))
-
-  (evil-ex-define-cmd "q[uit]" 'elk/ex-kill-buffer-and-close )
-  (evil-ex-define-cmd "wq" 'elk/ex-save-kill-buffer-and-close))
-#+end_src
-
-*** Window management
-
-Window rotation is nice, and can be found under =SPC w r= and =SPC w R=. Layout
-rotation is also nice though. Let’s stash this under =SPC w SPC=, inspired by
-Tmux’s use of =C-b SPC= to rotate windows.
-
+** Org-mode
+*** Preamble & Packages
 #+begin_src emacs-lisp :tangle packages.el
-(package! rotate)
+(package! org-super-agenda)
+(package! org-appear)
+(package! org-modern)
+(package! org-modern-indent :recipe (:host github :repo "jdtsmith/org-modern-indent"))
 #+end_src
-
-We could also do with adding the missing arrow-key variants of the window
-navigation/swapping commands.
 
 #+begin_src emacs-lisp
-(map! :map evil-window-map
-      "SPC" #'rotate-layout
-      ;; Navigation
-      "<left>"     #'evil-window-left
-      "<down>"     #'evil-window-down
-      "<up>"       #'evil-window-up
-      "<right>"    #'evil-window-right
-      ;; Swapping windows
-      "C-<left>"       #'+evil/window-move-left
-      "C-<down>"       #'+evil/window-move-down
-      "C-<up>"         #'+evil/window-move-up
-      "C-<right>"      #'+evil/window-move-right)
+(defun elk/org-initial-setup ()
+  (locally-defer-font-lock)
+  (visual-fill-column-mode +1))
+
+(add-hook! 'org-mode-hook 'elk/org-initial-setup)
 #+end_src
+*** Visuals
+#+begin_src emacs-lisp
+(custom-theme-set-faces
+ 'user
+ '(org-level-1 ((t (:inherit outline-1 :height 1.4))))
+ '(org-level-2 ((t (:inherit outline-2 :height 1.3))))
+ '(org-level-3 ((t (:inherit outline-3 :height 1.2))))
+ '(org-level-4 ((t (:inherit outline-4 :height 1.1))))
+ '(org-level-5 ((t (:inherit outline-5 :height 1.0))))
+ '(org-block ((t (:foreground nil))))
+ '(org-tag ((t (:inherit org-tag :italic t))))
+ '(org-ellipsis ((t (:inherit shadow :height 0.8))))
+ '(org-link ((t (:foreground "royal blue" :underline t)))))
 
-** Line settings
+(after! org
+  (setq org-ellipsis " ⬎ ") ;; ▼
+  (setq org-highlight-latex-and-related '(native))) ;; Highlight inline LaTeX
+#+end_src
+*** Babel & Export
+#+begin_src emacs-lisp
+(after! org
+  (setq org-src-ask-before-returning-to-edit-buffer nil)
 
-The keybindings are for commands that toggle on/off various line-related
-settings.  Doom Emacs uses 'SPC t' for "toggle" commands, so I choose 'SPC t'
-plus 'key' for those bindings.
+  ;; I want docx document for MS Word compatibility
+  (setq org-odt-preferred-output-format "docx"))
+#+end_src
+*** Org-appear
+#+begin_src emacs-lisp
+(use-package! org-appear
+    :commands (org-appear-mode)
+    :hook (org-mode . org-appear-mode)
+    :init
+    (setq org-hide-emphasis-markers t) ;; A default setting that needs to be t for org-appear
+    (setq org-appear-autoemphasis t)  ;; Enable org-appear on emphasis (bold, italics, etc)
+    (setq org-appear-autolinks nil) ;; Enable on links
+    (setq org-appear-autosubmarkers t)) ;; Enable on subscript and superscript
+#+end_src
+*** Org-modern
+#+begin_src emacs-lisp
+(use-package! org-modern
+  :custom
+  (org-modern-hide-stars nil) ; adds extra indentation
+  :hook
+  (org-mode . org-modern-mode)
+  (org-agenda-finalize . org-modern-agenda))
 
+(use-package! org-modern-indent
+  :hook
+  (org-mode . org-modern-indent-mode))
+#+end_src
+*** Org-super-agenda
+#+begin_src emacs-lisp
+(use-package! org-super-agenda
+  :commands org-super-agenda-mode
+  :config
+  (setq org-super-agenda-header-map nil)
+  (setq org-super-agenda-header-prefix " ◦ "))
+
+(after! org-agenda
+  (org-super-agenda-mode))
+
+(setq org-agenda-skip-scheduled-if-done t
+      org-agenda-skip-deadline-if-done t
+      org-agenda-include-deadlines t
+      org-agenda-block-separator nil
+      org-agenda-tags-column 100 ;; from testing this seems to be a good value
+      org-agenda-compact-blocks t)
+#+end_src
+*** Block templates
+#+begin_src emacs-lisp
+(require 'org-tempo)
+(add-to-list 'org-structure-template-alist '("sh" . "src sh"))
+(add-to-list 'org-structure-template-alist '("n" . "notes"))
+(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+(add-to-list 'org-structure-template-alist '("li" . "src lisp"))
+(add-to-list 'org-structure-template-alist '("sc" . "src scheme"))
+(add-to-list 'org-structure-template-alist '("ts" . "src typescript"))
+(add-to-list 'org-structure-template-alist '("py" . "src python"))
+(add-to-list 'org-structure-template-alist '("go" . "src go"))
+(add-to-list 'org-structure-template-alist '("yaml" . "src yaml"))
+(add-to-list 'org-structure-template-alist '("json" . "src json"))
+#+end_src
+** Org-roam
+*** Preamble & Packages
+#+begin_src emacs-lisp :tangle packages.el
+(package! org-roam)
+(package! websocket)
+(package! org-roam-bibtex)
+(package! org-roam-ui)
+#+end_src
 
 #+begin_src emacs-lisp
-(map! :leader
-    (:prefix ("t" . "toggle")
-     :desc "Comment or uncomment lines" "/" #'comment-line
-     :desc "Toggle line numbers" "l" #'doom/toggle-line-numbers
-     :desc "Toggle line highlight in frame" "h" #'hl-line-mode
-     :desc "Toggle line highlight globally" "H" #'global-hl-line-mode))
+(use-package! org-roam
+  :init
+  (setq org-roam-db-gc-threshold most-positive-fixnum)
+  (setq org-roam-v2-ack t)
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n i" . org-roam-node-insert)
+         :map org-mode-map
+         ("C-M-i"    . completion-at-point))
+  :config
+  (setq org-roam-completion-everywhere t)
+  (setq org-roam-list-files-commands '(fd fdfind rg find))
 #+end_src
-
-** Org
-
-*** Movement
-
-This is to allow navigating visual lines by using =gj= and =gk=.
-
+*** Functions and Variables
 #+begin_src emacs-lisp
-(map! (:after evil-org
-       :map evil-org-mode-map
-       :n "gk" (cmd! (if (org-on-heading-p)
-                         (org-backward-element)
-                       (evil-previous-visual-line)))
-       :n "gj" (cmd! (if (org-on-heading-p)
-                         (org-forward-element)
-                       (evil-next-visual-line))))
-      :o "o" #'evil-inner-symbol
-      :leader
-      "h L" #'global-keycast-mode
-      (:prefix "f"
-       "t" #'find-in-dotfiles
-       "T" #'browse-dotfiles)
-      (:prefix "n"
-       "L" #'org-latex-preview))
+(defun org-roam-node-insert-immediate (arg &rest args)
+  (interactive "P")
+  (let ((args (cons arg args))
+        (org-roam-capture-templates (list (append (car org-roam-capture-templates)
+                                                  '(:immediate-finish t)))))
+    (apply #'org-roam-node-insert args)))
+
+(defun elk/org-roam-capture-inbox ()
+  (interactive)
+  (org-roam-capture- :node (org-roam-node-create)
+                     :templates '(("i" "inbox" plain "* %?"
+                                  :if-new (file+head "braindump/inbox.org" "#+title: Inbox\n")))))
+
+(defun elk/org-roam-filter-by-tag (tag-name)
+  (lambda (node)
+    (member tag-name (org-roam-node-tags node))))
+
+(defun elk/org-roam-list-notes-by-tag (tag-name)
+  (mapcar #'org-roam-node-file
+          (seq-filter
+           (elk/org-roam-filter-by-tag tag-name)
+           (org-roam-node-list))))
+
+(defun elk/org-roam-refresh-agenda-list ()
+  (interactive)
+  (setq org-agenda-files (elk/org-roam-list-notes-by-tag "Project")))
+
+(cl-defmethod org-roam-node-type ((node org-roam-node))
+  "Return the TYPE of NODE."
+  (condition-case nil
+      (file-name-nondirectory
+       (directory-file-name
+        (file-name-directory
+         (file-relative-name (org-roam-node-file node) org-roam-directory))))
+    (error "")))
 #+end_src
-
-
-*** Org babel
-
+*** Capture Templates
 #+begin_src emacs-lisp
-(map! :map org-mode-map
-      :leader
-      :desc "Org babel tangle" "m TAB" #'org-babel-tangle)
+(setq org-roam-node-display-template
+      (concat (propertize "${type:10}" 'face 'org-tag) "${title:*} " (propertize "${tags:10}" 'face 'font-lock-comment-face)))
+
+(setq org-roam-capture-templates
+      '(("b" "brain" plain "\n%?"
+         :if-new (file+head "brain/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n")
+         :immediate-finish t
+         :unnarrowed t)
+        ("r" "reference" plain "\n%?"
+         :if-new (file+head "reference/${slug}.org" "#+title: ${title}\n#+date: %U\n")
+         :immediate-finish t
+         :unnarrowed t)
+        ("a" "article" plain "\n%?"
+         :if-new (file+head "article/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n#+filetags: Seedling\n")
+         :immediate-finish t
+         :unnarrowed t)
+        ("s" "school" plain "\n%?"
+         :if-new (file+head "school/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+date: %U\n")
+         :immediate-finish t
+         :unnarrowed t)
+        ("p" "project" plain "\n* Goals\n\n%?\n\n* Tasks\n\n** TODO Add initial tasks\n\n* Dates\n\n"
+         :if-new (file+head "project/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+category: ${title}\n#+date: %U\n#+filetags: Project\n\n")
+         :immediate-finish t
+         :unnarrowed t)
+        ("t" "tag" plain "%?"
+         :if-new (file+head "tag/${slug}.org" "#+title: ${title}\n\n")
+         :immediate-finish t
+         :unnarrowed t)
+        ))
+
+(setq org-roam-dailies-capture-templates
+      '(("d" "default" entry "* %?"
+         :if-new (file+head "journal/%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d> Journal\n\n")
+         :unnarrowed t)))
 #+end_src
-
-** Open Specific Files/Projects
-
-I defined some special keybindings to open my frequently used files/projects. I
-use =SPC + == for projects and =SPC + -= for files.
-
+*** Capture a task directly into a specific project
+If you've set up project note files like we mentioned earlier, you can set up a capture template that allows you to quickly capture tasks for any project.
 #+begin_src emacs-lisp
-(defun elk/add-file-keybinding (key file &optional desc)
-  (let ((key key)
-        (file file)
-        (desc desc))
-    (map! :leader
-          (:prefix ("-" . "Open File")
-           :desc (or desc file)
-           key
-           #'(lambda () (interactive) (find-file file))))))
+(defun elk/org-roam-project-finalize-hook ()
+  "Adds the captured project file to `org-agenda-files' if the
+capture was not aborted."
+  ;; Remove the hook since it was added temporarily
+  (remove-hook 'org-capture-after-finalize-hook #'elk/org-roam-project-finalize-hook)
 
-(defun elk/add-project-keybinding (key file &optional desc)
-  (let ((key key)
-        (file file)
-        (desc desc))
-    (map! :leader
-          (:prefix ("=" . "Open Project")
-           :desc (or desc file)
-           key
-           #'(lambda () (interactive) (doom-project-find-file file))))))
+  ;; Add project file to the agenda list if the capture was confirmed
+  (unless org-note-abort
+    (with-current-buffer (org-capture-get :buffer)
+      (add-to-list 'org-agenda-files (buffer-file-name)))))
 
-(elk/add-file-keybinding "a" "~/org/agenda.org" "Agenda agenda.org")
-(elk/add-file-keybinding "e" "~/.config/doom/elfeed.org" "Elfeed Feeds elfeed.org")
-(elk/add-file-keybinding "f" "~/.config/fontconfig/fonts.conf" "Fonts config fonts.conf")
-(elk/add-file-keybinding "i" "~/.config/i3/i3.org" "i3 i3.org")
-(elk/add-file-keybinding "l" "~/dox/budget.ledger")
-(elk/add-file-keybinding "p" "~/.config/polybar/polybar.org" "Polybar polybar.org")
-(elk/add-file-keybinding "s" "~/.config/sxhkd/sxhkdrc.org" "Sxhkdrc sxhkdrc.org")
-(elk/add-file-keybinding "k" "~/.config/kmonad/kmonad.kbd" "Kmonad kmonad.kbd")
-(elk/add-file-keybinding "d" (expand-file-name "config.org" doom-private-dir) "Doom config.org")
-(elk/add-file-keybinding "X" "~/.config/xmonad/xmonad.hs" "Xmonad xmonad.hs")
-(elk/add-file-keybinding "x" "~/.config/x11/x.org" "X11 x.org")
-(map! :leader
-      (:prefix ("-" . "Open File")
-       (:prefix ("j" . "Open journals")
-        :desc "Open today's journal" "t" #'org-roam-dailies-goto-today
-        :desc "Open yesterday's journal" "y" #'org-roam-dailies-goto-yesterday
-        :desc "Open next day's journal" "n" #' org-roam-dailies-goto-tomorrow)))
+(defun elk/org-roam-capture-task ()
+  (interactive)
+  ;; Add the project file to the agenda after capture is finished
+  (add-hook 'org-capture-after-finalize-hook #'elk/org-roam-project-finalize-hook)
 
-(elk/add-project-keybinding "d" "~/.config/doom/" "Doom")
-(elk/add-project-keybinding "s" "~/.config/shell/" "Shell")
-(elk/add-project-keybinding "x" "~/.config/xmonad/" "Xmonad")
-(elk/add-project-keybinding "z" "~/.config/zsh/" "Zsh")
+  ;; Capture the new task, creating the project file if necessary
+  (org-roam-capture- :node (org-roam-node-read
+                            nil
+                            (elk/org-roam-filter-by-tag "Project"))
+                     :templates '(("p" "project" plain "** TODO %?"
+                                   :if-new (file+head "project/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+category: ${title}\n#+date: %U\n#+filetags: Project\n\n"("Tasks"))
+                                   ))))
 #+end_src
+*** Org-roam agenda
+#+begin_src emacs-lisp
+(defun elk/org-roam-filter-by-tag (tag-name)
+  (lambda (node)
+    (member tag-name (org-roam-node-tags node))))
 
+(defun elk/org-roam-list-notes-by-tag (tag-name)
+  (mapcar #'org-roam-node-file
+          (seq-filter
+           (elk/org-roam-filter-by-tag tag-name)
+           (org-roam-node-list))))
 
-* Language
+(defun elk/org-roam-refresh-agenda-list ()
+  (interactive)
+  (setq org-agenda-files (elk/org-roam-list-notes-by-tag "projects")))
+#+end_src
+*** Appendix
+#+begin_src emacs-lisp
+(org-roam-db-autosync-mode)
+(elk/org-roam-refresh-agenda-list) ;; Build the agenda list the first time for the session
+) ;; End of org-roam block
+#+end_src
+*** Org-roam graph
+#+begin_src emacs-lisp
+(use-package! websocket
+  :after org-roam)
 
-First of all, disable LSP formatting option
-
+(use-package! org-roam-ui
+  :after org-roam
+  :config
+  (setq org-roam-ui-sync-theme t
+        org-roam-ui-follow t
+        org-roam-ui-update-on-save t))
+#+end_src
+** Biblio
+#+begin_src emacs-lisp :tangle packages.el
+(package! org-roam-bibtex)
+#+end_src
+#+begin_src emacs-lisp
+(use-package! org-roam-bibtex
+  :after org-roam
+  :hook (org-roam-mode . org-roam-bibtex-mode))
+#+end_src
+* Mischellaneous packages
+#+begin_src emacs-lisp :tangle packages.el
+(package! kbd-mode
+  :recipe (:host github
+           :repo "kmonad/kbd-mode"))
+(package! centered-cursor-mode)
+(package! platformio-mode)
+#+end_src
+** Kmonad
+#+begin_src emacs-lisp
+(use-package! kbd-mode
+  :mode ("\\.kbd\\'" . kbd-mode))
+#+end_src
+** Centered Cursor
+#+begin_src emacs-lisp
+(use-package! centered-cursor-mode
+  :defer 0
+  :diminish centered-cursor-mode
+  :config
+  (global-centered-cursor-mode))
+#+end_src
+** Languages & LSP
+Disable the built-in lsp formatter in preference for user defined ones.
 #+begin_src emacs-lisp
 (setq +format-with-lsp nil)
-#+end_src
 
-** Latex
-
-Change the default Latex to lualatex as it provides access to nicer fonts!
-
-#+begin_src emacs-lisp
-(setq-default TeX-engine 'luatex)
-#+end_src
-
-** Lua
-
-Stylua as a formatter is much better overall
-
-#+begin_src emacs-lisp
+;; Lua
 (set-formatter! 'stylua "stylua -" :modes '(lua-mode))
-#+end_src
-
-** Haskell
-
-Change the default formatter for Haskell.
-
-#+begin_src emacs-lisp
+;; Haskell
 (set-formatter! 'brittany "brittany" :modes '(haskell-mode))
-#+end_src
-
-** Python
-
-Change the default formatter for python.
-
-#+begin_src emacs-lisp
+;; Python
 (set-formatter! 'autopep8 "autopep8 -" :modes '(python-mode))
+#+end_src
+*** C & C++
+Make sure eglot uses ~ccls~ instead of ~clangd~.
+#+begin_src emacs-lisp
+(set-eglot-client! 'cc-mode '("ccls" "--init={\"index\": {\"threads\": 3}}"))
+#+end_src
+*** Arduino
+#+begin_src emacs-lisp
+(use-package! platformio-mode
+  :config
+  ;; Enable ccls for all c++ files, and platformio-mode only
+  ;; when needed (platformio.ini present in project root).
+  (add-hook 'c++-mode-hook (lambda ()
+                             (lsp-deferred)
+                             (platformio-conditionally-enable))))
 #+end_src

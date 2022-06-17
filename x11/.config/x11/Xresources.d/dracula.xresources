@@ -20,8 +20,11 @@
 
 trayerColor:   0x282A36
 
-dmenu.selbackground:  #4D4D4D
-dmenu.selforeground:  #F8F8F2
+dmenu.normbgcolor:  #282A36
+dmenu.normfgcolor:  #F8F8F2
 
-dmenu.selhlbackground:  #005577
-dmenu.selhlforeground:  #F4F99D
+dmenu.selbgcolor:  #4D4D4D
+dmenu.selfgcolor:  #F8F8F2
+
+dmenu.selhlbgcolor:  #005577
+dmenu.selhlfgcolor:  #F4F99D

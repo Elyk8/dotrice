@@ -64,15 +64,9 @@ margin-top = 0
 margin-bottom = 0
 
 [colors]
-background = #f024252e
-background-alt = #576075
-foreground = #46D9FF
-foreground-alt = #555
-primary = #98BE65
-secondary = #DA8548
-alert = #FF6C6B
-underline-1 = #46D9FF
-;#98BE65
+bg = #f01E1E1E
+fg = #D8DEE9
+underline-1 = ${colors.fg}
 #+end_src
 
 * Bars
@@ -88,8 +82,8 @@ offset-y = 0
 fixed-center = true
 enable-ipc = true
 
-background = ${colors.background}
-foreground = ${colors.foreground}
+background = ${colors.bg}
+foreground = ${colors.fg}
 
 line-size = 2
 line-color = #f00
@@ -135,8 +129,8 @@ offset-y = 0
 fixed-center = true
 enable-ipc = true
 
-background = ${colors.background}
-foreground = ${colors.foreground}
+background = ${colors.bg}
+foreground = ${colors.fg}
 
 line-size = 2
 line-color = #f00
@@ -183,8 +177,8 @@ offset-y = 0
 fixed-center = true
 enable-ipc = true
 
-background = ${colors.background}
-foreground = ${colors.foreground}
+background = ${colors.bg}
+foreground = ${colors.fg}
 
 line-size = 2
 line-color = #f00
@@ -227,8 +221,8 @@ offset-y = 0
 fixed-center = true
 enable-ipc = true
 
-background = ${colors.background}
-foreground = ${colors.foreground}
+background = ${colors.bg}
+foreground = ${colors.fg}
 
 line-size = 2
 line-color = #f00
@@ -276,8 +270,8 @@ offset-y = 0
 fixed-center = true
 enable-ipc = true
 
-background = ${colors.background}
-foreground = ${colors.foreground}
+background = ${colors.bg}
+foreground = ${colors.fg}
 
 line-size = 2
 line-color = #f00
@@ -546,7 +540,7 @@ click-left = emacsclient -e "(proced)"
 label = %percentage:2%%
 ramp-coreload-spacing = 0
 ramp-coreload-0 = ▁
-ramp-coreload-0-foreground = ${colors.foreground-alt}
+ramp-coreload-0-foreground = ${colors.fg-alt}
 ramp-coreload-1 = ▂
 ramp-coreload-2 = ▃
 ramp-coreload-3 = ▄
@@ -583,7 +577,7 @@ date-alt = "%A %d %B %Y"
 time = %l:%M %p
 time-alt = %H:%M:%S
 
-format-prefix-foreground = ${colors.foreground-alt}
+format-prefix-foreground = ${colors.fg-alt}
 format-underline = ${colors.underline-1}
 
 label =  %date% %time%
@@ -720,11 +714,11 @@ format-packetloss = <animation-packetloss> <label-connected>
 
 ; Default: %ifname% %local_ip%
 label-connected = %essid% 🔻%downspeed%
-label-connected-foreground = ${colors.foreground}
+label-connected-foreground = ${colors.fg}
 
 ; Default: (none)
 label-disconnected = not connected
-label-disconnected-foreground = ${colors.foreground}
+label-disconnected-foreground = ${colors.fg}
 
 format-connected-underline = ${colors.underline-1}
 format-disconnected-underline = ${colors.underline-1}

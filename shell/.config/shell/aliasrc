@@ -4,7 +4,7 @@
 alias sudo="sudo "
 
 # matlab
-alias matlab="/media/matlab/bin/matlab -nodesktop -nosplash"
+alias matlab="~/.local/share/matlab/bin/matlab -nodesktop -nosplash"
 
 # pip aliases
 alias pip-upgrade="pip freeze --user | cut -d'=' -f1 | xargs -n1 pip install -U"
@@ -26,11 +26,11 @@ alias ....='cd ../../..'
 
 # vim and emacs
 alias em="emacs-edit -ui"
-alias doom="/media/emacs/doom/bin/doom"
-alias doomsync="/media/emacs/doom/bin/doom sync"
-alias doomdoctor="/media/emacs/doom/bin/doom doctor"
-alias doomupgrade="/media/emacs/doom/bin/doom upgrade"
-alias doompurge="/media/emacs/doom/bin/doom purge"
+alias doom="~/.local/share/emacs/doom/bin/doom"
+alias doomsync="~/.local/share/emacs/doom/bin/doom sync"
+alias doomdoctor="~/.local/share/emacs/doom/bin/doom doctor"
+alias doomupgrade="~/.local/share/emacs/doom/bin/doom upgrade"
+alias doompurge="~/.local/share/emacs/doom/bin/doom purge"
 
 # z.lua useful aliases
 alias j='z -I'  # use fzf to select in multiple matches
