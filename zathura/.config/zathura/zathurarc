@@ -1,69 +1,38 @@
-# Basic Settings
+  set scroll-page-aware "true"
+  # set smooth-scroll "true"
+  set scroll-full-overlap 0.01
+  set scroll-step 100
 
-#stop at page boundries
-set scroll-page-aware "true"
-set smooth-scroll "true"
-set scroll-full-overlap 0.01
-set scroll-step 100
+  set dbus-service true
+  set synctex true
+  set sandbox none
 
-set dbus-service true
-set synctex true
-set sandbox none
+  set statusbar-h-padding 0
+  set statusbar-v-padding 0
+  set page-padding 1
+  set selection-clipboard clipboard
+  set highlight-transparency .5
+  set zoom-center "true"
+  map <Space> toggle_index
+  map D toggle_page_mode
+  map r reload
+  map R rotate
+  map K zoom in
+  map J zoom out
+  map i recolor
+  map p print
+  map g goto top
 
-set statusbar-h-padding 0
-set statusbar-v-padding 0
-set page-padding 1
-set selection-clipboard clipboard
-set highlight-transparency .5
-set zoom-center "true"
-map <Space> toggle_index
-map D toggle_page_mode
-map r reload
-map R rotate
-map K zoom in
-map J zoom out
-map i recolor
-map p print
-map g goto top
+  set adjust-open width
+  set recolor true
+  set recolor-keephue             true      # keep original color
 
-# Startup options
-set adjust-open width
-set recolor true
-set recolor-keephue             true      # keep original color
+  set default-bg                  "#1E1E1E" # bg
+  set default-fg                  "#D8DEE9" # fg
+  set render-loading              true
+  set render-loading-bg           "#1E1E1E" # bg
+  set render-loading-fg           "#D8DEE9" # fg
 
-# theme
-# Tokyonight {{{
-# set default-bg                  "#1a1b26" # bg
-# set default-fg                  "#BBC2CF" # fg
-# set render-loading              true
-# set render-loading-bg           "#1a1b26" # bg
-# set render-loading-fg           "#BBC2CF" # fg
-
-# # Recolor book content's color
-# set recolor-lightcolor          "#1a1b26" # bg
-# set recolor-darkcolor           "#BBC2CF" # fg
-# }}}
-
-# Doom-one {{{
-set default-bg                  "#282C34" # bg
-set default-fg                  "#46D9FF" # fg
-set render-loading              true
-set render-loading-bg           "#282C34" # bg
-set render-loading-fg           "#46D9FF" # fg
-
-# Recolor book content's color
-set recolor-lightcolor          "#282C34" # bg
-set recolor-darkcolor           "#46D9FF" # fg
-# }}}
-
-# Darkplus {{{
-# set default-bg                  "#1E1E1E" # bg
-# set default-fg                  "#D8DEE9" # fg
-# set render-loading              true
-# set render-loading-bg           "#1E1E1E" # bg
-# set render-loading-fg           "#D8DEE9" # fg
-
-# # Recolor book content's color
-# set recolor-lightcolor          "#1E1E1E" # bg
-# set recolor-darkcolor           "#D8DEE9" # fg
-# }}}
+  # Recolor book content's color
+  set recolor-lightcolor          "#1E1E1E" # bg
+  set recolor-darkcolor           "#D8DEE9" # fg

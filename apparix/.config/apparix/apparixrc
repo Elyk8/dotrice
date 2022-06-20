@@ -1,5 +1,5 @@
 j,apparix,/home/elyk/.config/apparix
-j,cap,/home/elyk/vic/y4/capstone
+j,cap,/home/elyk/Documents/vu/y4/capstone
 j,cf,/home/elyk/.config
 j,dl,/home/elyk/dl
 j,dm,/home/elyk/.local/bin/dmenu
@@ -19,7 +19,7 @@ j,xm,/home/elyk/.config/xmonad
 j,z,/home/elyk/.config/zsh
 j,pix,/home/elyk/pix
 j,ala,/home/elyk/.config/alacritty
-j,nee3104,/home/elyk/vic/y3/NEE3104
+j,nee3104,/home/elyk/Documents/vu/y3/NEE3104
 j,pod,/home/elyk/Documents/podcasts
 j,red,/home/elyk/.config/redshift
 j,cheovim,/media/nvim-frameworks
@@ -42,9 +42,10 @@ j,sc,/home/elyk/scripts
 j,org,/home/elyk/org
 j,wall,/home/elyk/pix/wallpapers
 j,awesome,/home/elyk/.config/awesome
-j,nee4001,/home/elyk/vic/y4/NEE4001
+j,nee4001,/home/elyk/Documents/vu/y4/NEE4001
 j,bin,/home/elyk/.local/bin
 j,dmenu,/home/elyk/.local/src/dmenu
 j,work,/home/elyk/Documents/work
 j,sx,/home/elyk/.config/sxhkd
 j,nv,/home/elyk/.config/nvim
+j,font,/home/elyk/.config/fontconfig

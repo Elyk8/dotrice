@@ -75,12 +75,14 @@
  x-stretch-cursor t)                            ;; Stretch cursor to the glyph width
 
 (setq undo-limit 80000000                       ;; Raise undo-limit to 80Mb
-      display-line-numbers-type nil             ;; By disabling line number, we improve performance significantly
-      ;; evil-want-fine-undo t                     ;; By default while in insert all changes are one big blob. Be more granular
+      evil-want-fine-undo t                     ;; By default while in insert all changes are one big blob. Be more granular
       truncate-string-ellipsis "\u2026"         ;; Unicode ellispis are nicer than "...", and also save /precious/ space
       password-cache-expiry nil                 ;; I can trust my computers ... can't I?
       confirm-kill-emacs nil                    ;; Disable exit confirmation
       )
+
+;; Enable line numbers
+(setq display-line-numbers t)
 
 ;; Make evil more like vim behaviour
 (setq evil-vsplit-window-right t
@@ -98,25 +100,26 @@
 ;; When I bring up Doom's scratch buffer with SPC x, it's often to play with elisp or note something down (that isn't worth an entry in my notes). I can do both in `lisp-interaction-mode'.
 (setq doom-scratch-initial-major-mode 'lisp-interaction-mode)
 
-;; Prevent lines from auto breaking
-(remove-hook 'text-mode-hook #'auto-fill-mode)
-
 ;; Revert buffers when the underlying file has changed
 (global-auto-revert-mode 1)
 ;; Automatically revert buffers for changed files
 (setq global-auto-revert-non-file-buffers t)
 
+;; Disable visual navigation. Rather, break lines as we type    .
+(remove-hook 'text-mode-hook #'visual-line-mode)
+(add-hook 'text-mode-hook #'auto-fill-mode)
+
 (after! gcmh
   (setq gcmh-idle-delay 5)
-  (setq gcmh-high-cons-threshold (* 255 1024 1024)))
+  (setq gcmh-high-cons-threshold (* 32 1024 1024)))
 
 (setq inhibit-compacting-font-caches nil)
 
 ;;; Fonts
-(setq doom-font (font-spec :family "JetBrains Mono" :size 22)
+(setq doom-font (font-spec :family "Fira Code" :size 22)
       doom-variable-pitch-font (font-spec :family "Iosevka Aile" :size 22)
       doom-unicode-font (font-spec :family "Noto Color Emoji" :size 22)
-      doom-big-font (font-spec :family "JetBrains Mono" :size 34))
+      doom-big-font (font-spec :family "Fira Code" :size 34))
 
 ;; Themes
 (after! doom-themes
@@ -141,24 +144,6 @@
   (setq which-key-idle-delay 0.2
         ;; Comment this if experiencing crashes
         which-key-allow-imprecise-window-fit t))
-
-(map! :i
-      "C-SPC" #'completion-at-point)
-
-(map! :map visual-line-mode-map
-      :nv "j" 'evil-next-visual-line
-      :nv "k" 'evil-previous-visual-line)
-(map! (:after evil-org
-       :map evil-org-mode-map
-       :nv "j" 'evil-next-visual-line
-       :nv "k" 'evil-previous-visual-line
-       :nv "gk" (cmd! (if (org-on-heading-p)
-                          (org-backward-element)
-                        (evil-previous-visual-line)))
-       :nv "gj" (cmd! (if (org-on-heading-p)
-                          (org-forward-element)
-                        (evil-next-visual-line))))
-      :o "o" #'evil-inner-symbol)
 
 (map! :leader
       (:prefix ("d" . "dired")
@@ -191,19 +176,15 @@
   (kbd "; d") 'epa-dired-do-decrypt
   (kbd "; e") 'epa-dired-o-encrypt)
 
-(defun elk/open-file (file)
-  (interactive)
-  (find-file file))
-
 (map! :leader
-      :prefix-map ("e" . "Elyk")
-      :desc "Open agenda.org"  "a" '(elk/open-file (concat org-directory "/agenda.org"))
-      :desc "Open elfeed.org"  "e" '(elk/open-file (concat org-directory "/elfeed.org"))
-      :desc "Open fonts.conf"  "f" '(elk/open-file "~/.config/fontconfig/fonts.conf")
-      :desc "Open i3.org"      "i" '(elk/open-file "~/.config/i3/i3.org")
-      :desc "Open polybar.org" "p" '(elk/open-file "~/.config/polybar/polybar.org")
-      :desc "Open sxhkd.org"   "s" '(elk/open-file "~/.config/sxhkd/sxhkdrc.org")
-      :desc "Open x.org"       "x" '(elk/open-file "~/.config/x11/x.org")
+      :prefix ("e" . "Elyk")
+      :desc "Open agenda.org"  "a" (cmd! (find-file (concat org-directory "/agenda.org")))
+      :desc "Open elfeed.org"  "e" (cmd! (find-file (concat org-directory "/elfeed.org")))
+      :desc "Open fonts.conf"  "f" (cmd! (find-file "~/.config/fontconfig/fonts.conf"))
+      :desc "Open i3 conf."      "i" (cmd! (find-file "~/.config/i3/config"))
+      :desc "Open polybar conf." "p" (cmd! (find-file "~/.config/polybar/config.ini"))
+      :desc "Open sxhkdrc"   "s" (cmd! (find-file "~/.config/sxhkd/sxhkdrc"))
+      :desc "Open xinitrc"       "x" (cmd! (find-file "~/.config/x11/xinitrc"))
       )
 
 (map! :leader
@@ -216,6 +197,7 @@
        ;; Room toggles
        :desc "Mixed pitch"                    "a" #'mixed-pitch-mode
        :desc "Visual fill column"             "v" #'visual-fill-column-mode
+       :desc "Dired sidebar"                  "d" #'dired-sidebar-toggle-sidebar
        ))
 
 (map! :localleader
@@ -246,6 +228,10 @@
        "t" #'org-roam-dailies-capture-today
        ))
 
+;; Make completion to be manual
+(after! company
+  (setq company-idle-delay nil))
+
 (after! deft
   (setq deft-directory org-directory
         deft-strip-summary-regexp ":PROPERTIES:\n\\(.+\n\\)+:END:\n"
@@ -253,17 +239,29 @@
         deft-recursive t
         deft-extensions '("md" "org")))
 
-;; stop copying each visual state move to the clipboard:
-;; https://github.com/emacs-evil/evil/issues/336
-;; grokked from:
-;; http://stackoverflow.com/questions/15873346/elisp-rename-macro
-(advice-add #'evil-visual-update-x-selection :override #'ignore)
+(use-package! dired-sidebar
+  :after dired
+  :commands (dired-sidebar-toggle-sidebar)
+  :config
+  (defun elk/dired-sidebar-setup ()
+    (toggle-truncate-lines 1)
+    (display-line-numbers-mode -1)
+    (setq-local dired-subtree-use-backgrounds nil))
 
-(defun elk/org-initial-setup ()
-  (locally-defer-font-lock)
-  (visual-fill-column-mode +1))
+  (map! :map dired-sidebar-mode-map
+        :ne "<escape>" 'dired-sidebar-hide-sidebar
+        :ne "l" 'dired-sidebar-find-file
+        :ne "h" 'dired-sidebar-up-directory
+        :ne "=" 'dired-narrow)
+  (add-hook 'dired-sidebar-mode-hook #'elk/dired-sidebar-setup))
 
-(add-hook! 'org-mode-hook 'elk/org-initial-setup)
+(after! evil
+  (setq evil-ex-substitute-global t     ;; I like my s/../.. to by global by default
+        evil-kill-on-visual-paste nil)) ;; Don't put overwritten text in the kill ring
+
+(add-hook! 'org-mode-hook :append
+           #'locally-defer-font-lock
+           #'visual-fill-column-mode)
 
 (custom-theme-set-faces
  'user
@@ -287,6 +285,9 @@
   ;; I want docx document for MS Word compatibility
   (setq org-odt-preferred-output-format "docx"))
 
+(use-package! org-auto-tangle
+  :hook (org-mode . org-auto-tangle-mode))
+
 (use-package! org-appear
     :commands (org-appear-mode)
     :hook (org-mode . org-appear-mode)
@@ -297,8 +298,8 @@
     (setq org-appear-autosubmarkers t)) ;; Enable on subscript and superscript
 
 (use-package! org-modern
-  :custom
-  (org-modern-hide-stars nil) ; adds extra indentation
+  ;; :custom
+  ;; (org-modern-hide-stars nil) ; adds extra indentation
   :hook
   (org-mode . org-modern-mode)
   (org-agenda-finalize . org-modern-agenda))
@@ -492,6 +493,9 @@ capture was not aborted."
 (set-formatter! 'brittany "brittany" :modes '(haskell-mode))
 ;; Python
 (set-formatter! 'autopep8 "autopep8 -" :modes '(python-mode))
+
+(custom-set-faces!
+ '(eglot-highlight-symbol-face :bold t :underline t))
 
 (set-eglot-client! 'cc-mode '("ccls" "--init={\"index\": {\"threads\": 3}}"))
 

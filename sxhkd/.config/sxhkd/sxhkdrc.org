@@ -133,6 +133,10 @@ super + space ; c
 # Toggle mute microphone
 super + space ; m
       microphone toggle
+
+# Open neovide
+super + space ; v
+      neovide
 #+end_src
 
 * Emacs

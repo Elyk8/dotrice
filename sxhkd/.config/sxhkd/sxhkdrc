@@ -40,6 +40,10 @@ super + space ; c
 super + space ; m
       microphone toggle
 
+# Open neovide
+super + space ; v
+      neovide
+
 # :Emacs - Open an emacs frame
 super + space ; e ; e
       emacsclient -c -n

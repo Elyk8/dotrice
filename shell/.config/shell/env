@@ -88,7 +88,7 @@ export DOOMDIR=${XDG_CONFIG_HOME:="$HOME/.config"}/doom
 
 # Default programs:
 # export EDITOR="lvim"
-export VISUAL="emacs-edit"
+export VISUAL="neovide"
 export EDITOR=$VISUAL
 export READER="zathura"
 export TERMINAL="alacritty"
