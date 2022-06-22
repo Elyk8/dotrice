@@ -12,15 +12,15 @@ import           Data.Maybe                     ( fromJust
                                                 , isJust
                                                 )
 import           Data.Monoid
-import           Data.Ratio                                    -- Require for rational (%) operator
+import           Data.Ratio                                         -- Require for rational (%) operator
 import           Data.Semigroup
 import           Foreign.C                      ( CInt )
 import           System.Directory
 import           System.Exit                    ( exitSuccess )
 import           System.IO                      ( Handle
-                                                , hClose
-                                                , hFlush
                                                 , hPutStrLn
+                                                , hPutStr
+                                                , hClose
                                                 )
 
 -- Actions Imports
@@ -28,20 +28,13 @@ import           XMonad
 import           XMonad.Actions.CopyWindow
 import           XMonad.Actions.CycleWS
 import           XMonad.Actions.DwmPromote
-import           XMonad.Actions.EasyMotion      ( ChordKeys(PerScreenKeys)
-                                                , EasyMotionConfig(..)
-                                                , selectWindow
-                                                )
 import qualified XMonad.Actions.FlexibleResize as Flex
 import           XMonad.Actions.MouseResize
 import           XMonad.Actions.OnScreen
-
--- Layout Imports
 import           XMonad.Actions.PhysicalScreens ( onNextNeighbour )
 import           XMonad.Actions.RotSlaves       ( rotAllDown
                                                 , rotSlavesDown
                                                 )
-import           XMonad.Actions.Submap
 import           XMonad.Actions.SwapPromote
 import           XMonad.Actions.SwapWorkspaces
 import           XMonad.Actions.UpdatePointer
@@ -49,6 +42,8 @@ import           XMonad.Actions.WindowGo        ( runOrRaise )
 import           XMonad.Actions.WithAll         ( killAll
                                                 , sinkAll
                                                 )
+
+-- Hooks Imports
 import           XMonad.Hooks.EwmhDesktops
 import           XMonad.Hooks.InsertPosition
 import           XMonad.Hooks.ManageDocks       ( ToggleStruts(..)
@@ -77,6 +72,7 @@ import           XMonad.Hooks.RefocusLast       ( isFloat
                                                 , refocusingIsActive
                                                 )
 import           XMonad.Hooks.Rescreen
+import           XMonad.Hooks.ServerMode
 import           XMonad.Hooks.SetWMName         ( setWMName )
 import           XMonad.Hooks.StatusBar         ( StatusBarConfig
                                                 , dynamicEasySBs
@@ -90,6 +86,8 @@ import           XMonad.Hooks.TaffybarPagerHints
 import           XMonad.Hooks.UrgencyHook
 import           XMonad.Hooks.WindowSwallowing
 import           XMonad.Hooks.WorkspaceHistory
+
+-- Layout Imports
 import           XMonad.Layout.GridVariants     ( Grid(Grid) )
 import           XMonad.Layout.IndependentScreens
 import           XMonad.Layout.LayoutModifier
@@ -110,7 +108,6 @@ import qualified XMonad.Layout.MultiToggle     as MT
 import           XMonad.Layout.MultiToggle.Instances
                                                 ( StdTransformers(MIRROR, NBFULL, NOBORDERS) )
 import           XMonad.Layout.NoBorders
-import           XMonad.Layout.NoFrillsDecoration
 import           XMonad.Layout.Renamed
 import           XMonad.Layout.ResizableTile
 import           XMonad.Layout.ShowWName
@@ -137,7 +134,7 @@ import qualified XMonad.StackSet               as W
 -- Util Imports
 import           XMonad.Util.Cursor
 import           XMonad.Util.EZConfig
-import qualified XMonad.Util.ExtensibleState   as XS
+import           XMonad.Util.NamedActions
 import qualified XMonad.Util.Hacks             as Hacks
 import           XMonad.Util.Loggers
 import           XMonad.Util.NamedScratchpad    ( NamedScratchpad(..)
@@ -157,7 +154,6 @@ import           XMonad.Util.Scratchpad         ( scratchpadManageHook )
 import           XMonad.Util.SpawnOnce
 import           XMonad.Util.WindowProperties
 import           XMonad.Util.WorkspaceCompare
-
 -- }}}
 
 -- {{{ LOCAL VARIABLES
@@ -170,19 +166,19 @@ myModMask :: KeyMask
 myModMask = mod4Mask
 
 myTerminal :: String
-myTerminal = "st"
+myTerminal = "alacritty"
 
 myTerminalClass :: String
-myTerminalClass = "St"
+myTerminalClass = "Alacritty"
 
 myTerminalScratch :: String
-myTerminalScratch = "st -n " -- Set to open the terminal in the working directory
+myTerminalScratch = "alacritty --class " -- Set to open the terminal in the working directory
 
 myEmacs :: String
 myEmacs = "emacsclient -cne " -- Makes emacs keybindings easier to type
 
 myBorderWidth :: Dimension
-myBorderWidth = 0
+myBorderWidth = 3
 
 myNormalColor :: String
 myNormalColor = basebg
@@ -192,18 +188,6 @@ myFocusColor = base05
 
 myLeader :: String
 myLeader = "M-<Space>"
-
-ezmTheme :: EasyMotionConfig
-ezmTheme = def
-  { emFont = "xft: Monospace-40"
-  , sKeys = PerScreenKeys
-              $ M.fromList [(1, [xK_f, xK_d, xK_s, xK_a]), (0, [xK_h, xK_j, xK_k, xK_l])]
-  , txtCol = basefg
-  , bgCol = basebg
-  , borderCol = base08
-  , borderPx = 5
-  , cancelKey = xK_Escape
-  }
 
 windowCount :: X (Maybe String)
 windowCount =
@@ -217,7 +201,6 @@ mySpacing' i = spacingRaw True (Border i i i i) True (Border i i i i) True
 
 myGaps :: Integer
 myGaps = 8
-
 -- }}}
 
 -- {{{ STARTUP
@@ -225,39 +208,9 @@ myStartupHook :: X ()
 myStartupHook = do
   setDefaultCursor xC_left_ptr
   spawn "~/.config/xmonad/scripts/trayer-launch.sh"
-
 -- }}}
 
 -- {{{ MULTI-MONITOR
-multiScreenFocusHook :: Event -> X All
-multiScreenFocusHook MotionEvent { ev_x = x, ev_y = y } = do
-  ms <- getScreenForPos x y
-  case ms of
-    Just cursorScreen -> do
-      let cursorScreenID = W.screen cursorScreen
-      focussedScreenID <- gets (W.screen . W.current . windowset)
-      when (cursorScreenID /= focussedScreenID) (focusWS $ W.tag $ W.workspace cursorScreen)
-      return (All True)
-    _ -> return (All True)
- where
-  getScreenForPos
-    :: CInt -> CInt -> X (Maybe (W.Screen WorkspaceId (Layout Window) Window ScreenId ScreenDetail))
-  getScreenForPos x y = do
-    ws <- windowset <$> get
-    let screens = W.current ws : W.visible ws
-        inRects = map (inRect x y . screenRect . W.screenDetail) screens
-    return $ fst <$> find snd (zip screens inRects)
-  inRect :: CInt -> CInt -> Rectangle -> Bool
-  inRect x y rect =
-    let l = fromIntegral (rect_x rect)
-        r = l + fromIntegral (rect_width rect)
-        t = fromIntegral (rect_y rect)
-        b = t + fromIntegral (rect_height rect)
-    in  x >= l && x < r && y >= t && y < b
-  focusWS :: WorkspaceId -> X ()
-  focusWS ids = windows (W.view ids)
-multiScreenFocusHook _ = return (All True)
-
 rescreenCfg = def { afterRescreenHook = myAfterRescreenHook, randrChangeHook = myRandrChangeHook }
 
 myAfterRescreenHook :: X ()
@@ -295,17 +248,6 @@ myTabTheme = def { activeColor = base08
                  , fontName = myFont
                  , decoHeight = 30
                  }
-myTopBarTheme = def { fontName = myFont
-                    , inactiveBorderColor = base08
-                    , inactiveColor = base08
-                    , inactiveTextColor = base08
-                    , activeBorderColor = base04
-                    , activeColor = base04
-                    , activeTextColor = base04
-                    , urgentBorderColor = base02
-                    , urgentTextColor = base02
-                    , decoHeight = 5
-                    }
 
 myShowWNameTheme :: SWNConfig
 myShowWNameTheme =
@@ -334,7 +276,7 @@ myXmobarPP :: ScreenId -> PP
 myXmobarPP s = filterOutWsPP [scratchpadWorkspaceTag] $ def
   { ppSep = "<fc=" ++ base08 ++ "> <fn=1>|</fn> </fc>"
   , ppWsSep = ""
-  , ppCurrent = xmobarColor base05 "" . clickable wsIconFull
+  , ppCurrent = xmobarColor basefg "" . clickable wsIconFull
   , ppVisible = xmobarColor base05 "" . clickable wsIconHidden
   , ppVisibleNoWindows = Just (xmobarColor base05 "" . clickable wsIconEmpty)
   , ppHidden = xmobarColor basefg "" . clickable wsIconHidden
@@ -352,21 +294,20 @@ myXmobarPP s = filterOutWsPP [scratchpadWorkspaceTag] $ def
                ]
   }
  where
-  wsIconFull = "<fn=1>\61713 </fn>"
-  wsIconHidden = "<fn=1>\61842 </fn>"
-  wsIconEmpty = "<fn=1>\61708 </fn>"
+  wsIconFull = "<fn=2>\xf518 </fn>"
+  wsIconHidden = "<fn=2>\xf7e6 </fn>"
+  wsIconEmpty = "<fn=2>\xf02d </fn>"
   titleColorIsActive n l = do
     c <- withWindowSet $ return . W.screen . W.current
     if n == c then xmobarColorL base03 "" l else xmobarColorL base05 "" l
   layoutColorIsActive n l = do
     c <- withWindowSet $ return . W.screen . W.current
     if n == c then xmobarColorL base03 "" l else xmobarColorL base05 "" l
-
 -- }}}
 
 -- {{{ WORKSPACES
 myWorkspaces :: [[Char]]
-myWorkspaces = ["dev", "sys", "www", "dis", "msg"]
+myWorkspaces = ["ter", "work", "www", "dis", "msg"]
 
 myWorkspaceIndices :: M.Map [Char] Integer
 myWorkspaceIndices = M.fromList $ zip myWorkspaces [1 ..]
@@ -400,25 +341,23 @@ myFilter = filterOutWs [scratchpadWorkspaceTag]
 tall =
   renamed [Replace "tall"]
     $ smartBorders
-    $ addTopBar
     $ addTabs shrinkText myTabTheme
     $ subLayout [] (smartBorders Simplest)
     $ Mag.magnifierOff
     $ mkToggle (single MIRROR)
     $ limitWindows 5
-    $ mySpacing' myGaps
+    $ mySpacing myGaps
     $ ResizableTall 1 (3 / 100) (1 / 2) []
 
 wide =
   renamed [Replace "wide"]
     $ smartBorders
-    $ addTopBar
     $ addTabs shrinkText myTabTheme
     $ subLayout [] (smartBorders Simplest)
     $ Mag.magnifierOff
     $ Mirror
     $ limitWindows 5
-    $ mySpacing' myGaps
+    $ mySpacing myGaps
     $ ResizableTall 1 (3 / 100) (1 / 2) []
 
 -- monocle =
@@ -431,7 +370,6 @@ wide =
 grid =
   renamed [Replace "grid"]
     $ smartBorders
-    $ addTopBar
     $ addTabs shrinkText myTabTheme
     $ subLayout [] (smartBorders Simplest)
     $ limitWindows 12
@@ -443,34 +381,30 @@ grid =
 spirals =
   renamed [Replace "fibonacci"]
     $ smartBorders
-    $ addTopBar
     $ addTabs shrinkText myTabTheme
     $ subLayout [] (smartBorders Simplest)
     $ Mag.magnifierOff
     $ mkToggle (single MIRROR)
-    $ mySpacing' myGaps
+    $ mySpacing myGaps
     $ spiral (6 / 7)
 
 three =
   renamed [Replace "three"]
     $ smartBorders
-    $ addTopBar
     $ addTabs shrinkText myTabTheme
     $ subLayout [] (smartBorders Simplest)
     $ limitWindows 7
     $ Mag.magnifierOff
     $ mkToggle (single MIRROR)
-    $ mySpacing' myGaps
+    $ mySpacing myGaps
     $ ThreeColMid 1 (3 / 100) (1 / 2)
 
-floats = renamed [Replace "floats"] $ Mag.magnifierOff $ smartBorders $ addTopBar $ limitWindows
-  20
-  simplestFloat
+floats =
+  renamed [Replace "floats"] $ Mag.magnifierOff $ smartBorders $ limitWindows 20 simplestFloat
 
 deck =
   renamed [Replace "deck"]
     $ smartBorders
-    $ addTopBar
     $ Mag.magnifierOff
     $ mkToggle (single MIRROR)
     $ mySpacing myGaps
@@ -478,7 +412,6 @@ deck =
 
 tabs = renamed [Replace "tabs"] $ tabbed shrinkText myTabTheme
 
-addTopBar = noFrillsDeco shrinkText myTopBarTheme
 -- accordion = renamed [Replace "accordion"] $ mkToggle (single MIRROR) Accordion
 
 myLayoutHook =
@@ -509,6 +442,7 @@ myManageHook =
     . concat
     $ [ [ title =? t --> doIgnore | t <- myIgnores ]
       , [ className =? c --> doShift (head myWorkspaces) | c <- myW1C ]
+      , [ className =? c --> doShift (myWorkspaces !! 1) | c <- myW2C ]
       , [ className =? c --> doShift (myWorkspaces !! 2) | c <- myW3C ]
       , [ className =? c --> doShift (myWorkspaces !! 3) | c <- myW4C ]
       , [ className =? c --> doShift (myWorkspaces !! 4) | c <- myW5C ]
@@ -530,26 +464,22 @@ myManageHook =
   iconName = stringProperty "WM_ICON_NAME"
   myIgnores = ["SafeEyes-0", "SafeEyes-1"]
   myW1C = ["VSCodium"]
-  myW3C = ["Brave-browser", "qutebrowser", "librewolf", "firefox", "Chromium"]
+  myW2C = ["Chromium", "Zotero"]
+  myW3C = ["Brave-browser", "qutebrowser", "librewolf", "firefox"]
   myW4C = ["discord", "zoom"]
   myW5C = ["VirtualBox Manager", "VirtualBox Machine", "Thunderbird"]
   myFloatC = ["confirm", "file_progress", "dialog", "download", "error", "toolbar", "Gmrun"]
-  myFloatCC = ["notification", "Yad", "Xfce4-power-manager-settings", "Dragon-drag-and-drop"]
+  myFloatCC = ["notification", "Yad", "Xfce4-power-manager-settings", "Dragon-drop"]
   myFloatSN = ["Event Tester"]
   myFocusDC = ["Event Tester", "Notify-osd"]
 
 myHandleEventHook :: Event -> X All
 myHandleEventHook =
   swallowEventHook (className =? myTerminalClass) (return True)
-    <+> multiScreenFocusHook
     <+> refocusLastWhen isFloat
     <+> Hacks.trayerAboveXmobarEventHook
     <+> Hacks.windowedFullscreenFixEventHook
-
--- where
---   myPred = refocusingIsActive <||> isFloat
-
--- }}}
+    <+> serverModeEventHookCmd
 
 -- {{{ SCRATCHPADS
 myScratchPads :: [NamedScratchpad]
@@ -573,211 +503,108 @@ myScratchPads =
 -- }}}
 
 -- {{{ SUBMAPPINGS
-keyMapDoc :: String -> X Handle
-keyMapDoc name = do
-  -- focused screen location/size
-  r <- withWindowSet $ return . screenRect . W.screenDetail . W.current
-  spawnPipe $ unwords
-    [ "~/.config/xmonad/scripts/showHintForKeymap.sh"
-    , name
-    , show (rect_x r)
-    , show (rect_y r)
-    , show (rect_width r)
-    , show (rect_height r)
-    , "'" ++ base03 ++ "'" -- keys color
-    , "'" ++ base08 ++ "'" -- arrow color
-    , "'" ++ base06 ++ "'" -- description color
-    , "monospace" -- font
-    , "24"
-    ]
-
-toSubmap :: XConfig l -> String -> [(String, X ())] -> X ()
-toSubmap c name m = do
-  pipe <- keyMapDoc name
-  submap $ mkKeymap c m
-  io $ hClose pipe
-
---START_WHICHKEYS
-appsKeymap = -- Whichever Keys
-  [ ("<Space>", spawn "dm-j4dmenu-desktop") -- Dmenu launcher
-  , ("t", spawn myTerminal) -- Spawn terminal
-  , ("r", spawn "pcmanfm") -- Pcmanfm file manager
-  , ("[", spawn "xmonad-keys") -- Window Manager Mappings
-  , ("w", runOrRaise "firefox" (className =? "firefox")) -- Launch Firefox
-  , ("c", runOrRaise "chromium" (className =? "Chromium")) -- Launch chromium
-  -- , ("e", spawn (myEmacs ++ "--eval '(switch-to-buffer nil)'")) -- Emacs dashboard
-  , ("e", spawn myEmacs) -- Emacs dashboard
-  , ("f", spawn "$HOME/.emacs.d/bin/doom everywhere") -- Doom emacs everywhere
-  , ("b", spawn "dmenu-win") -- Dmenu find windows
-
-    -- Music and volume control
-  , ("n", namedScratchpadAction myScratchPads "ncmpcpp") -- Ncmpcpp Player
-  , ("m", spawn "mic-toggle") -- Toggle mute of microphone
-
-  -- Applications Launcher
-  , ("o d", runOrRaise "discord" (className =? "discord")) -- Launch Discord
-  , ("o f", spawn "/media/FTBA/FTBApp") -- Launch FTB Launcher
-  , ("o v", spawn "/usr/bin/vscodium") -- Launch VSCodium
-  , ("o z", runOrRaise "zoom" (className =? "zoom")) -- Launch Zoom
-
-  -- Dmenu scripts
-  , ("p a", spawn "dm-man") -- Man pages list
-  , ("p c", spawn "clipmenu") -- Clipmenu clipboard
-  , ("p d", spawn "dm-directory") -- Dmenu directories manager
-  , ("p S-c", spawn "dm-colorscheme") -- Choose a colorscheme
-  , ("p e", spawn "dm-emoji") -- Emoji keyboard
-  , ("p k", spawn "dm-kill") -- Terminate applications
-  , ("p m", spawn "dm-buku") -- Buku bookmarks manager
-  , ("p o", spawn "dm-mount") -- Mount drives
-  , ("p p", spawn "dm-passmenu") -- Password manager
-  , ("p b", spawn "dm-beats") -- Radio FM
-  , ("p s", spawn "dm-scripts") -- Find and edit scripts
-  , ("p u", spawn "dm-umount") -- Unmount any drive
-  , ("p w", spawn "weatherforecast") -- Display weather forecast
-  , ("; a", spawn "setwallpaper a2n") -- Change to "a2n" walls
-  , ("; d", spawn "setwallpaper dt") -- Change to "dt" walls
-  , ("; e", spawn "setwallpaper elyk") -- Change to "my" walls
-  , ("; v", namedScratchpadAction myScratchPads "pulsemixer")  -- Open volume control
-  , ("; w", spawn "nsxiv -rqto $XDG_PICTURES_DIR/wallpapers/*") -- Interactively setwallpaper
-  ]
-
-screenshotKeymap = -- Maim Screenshot
-  [ ("s", spawn "maimpick 'Selected' ") -- Capsture selected area
-  , ("c", spawn "maimpick 'Current'") -- Capture current window
-  , ("f", spawn "maimpick 'Fullscreen'") -- Capture whole screen
-  , ("S-s", spawn "maimpick 'Selected (copy)' ") -- Capsture selected area
-  , ("S-c", spawn "maimpick 'Current (copy)'") -- Capture current window
-  , ("S-f", spawn "maimpick 'Fullscreen (copy)'") -- Capture whole screen
-  ]
---END_WHICHKEYS
--- }}}
+showKeybindings :: [((KeyMask, KeySym), NamedAction)] -> NamedAction
+showKeybindings x = addName "Show Keybindings" $ io $ do
+    h <- spawnPipe $ "yad --text-info --fontname=\"monospace\" --width 800 --height 600 --center --title \"XMonad keybindings\""
+    hPutStr h (unlines $ showKm x)
+    hClose h
+    return ()
 
 -- {{{ KEYBINDINGS
-mainKeymap c = mkKeymap
-  c
-  [ --START_KEYS
-      -- Xmonad
-    ("M-C-r", spawn "xmonad --restart; killall xmobar")
-  , ("M-S-<Esc>", io exitSuccess)
+myKeys :: XConfig l0 -> [((KeyMask, KeySym), NamedAction)]
+myKeys c = (subtitle "Custom Keys":) $ mkNamedKeymap c $
+  [ 
+    -- Xmonad
+    ("M-C-r", addName "Restart XMonad" $ spawn "xmonad --restart; killall xmobar")
+  , ("M-S-<Esc>", addName "Quit XMonad" $ io exitSuccess)
 
-      -- Kill windows
-  , ("M-q", kill1) -- Kill selected client
-  , ("M-S-q", killAll) -- Kill all windows on current workspace
+    -- Kill windows
+  , ("M-q", addName "Kill Client" $ kill1) -- Kill selected client
+  , ("M-S-q", addName "Kill All on current Workspace" $ killAll) -- Kill all windows on current workspace
 
-      -- Useful programs to have a keybinding for launch
-  , ("M-<Esc>", spawn "sysact") -- Exit prompt using dmenu
+    -- Sticky Windows
+  , ("M-v", addName "Copy windows to all workspaces" $ windows copyToAll) -- Make focused window always visible in all workspaces
+  , ("M-S-v", addName "Kill all other copies" $ killAllOtherCopies) -- Toggle window state back
 
-      -- Sticky Windows
-  , ("M-v", windows copyToAll) -- Make focused window always visible in all workspaces
-  , ("M-S-v", killAllOtherCopies) -- Toggle window state back
+    -- Floating windows
+  , ("M-g", addName "Toggle Float layout" $ sendMessage (T.Toggle "floats")) -- Toggles my 'floats' layout
+  , ("M-t", addName "Toggle Tiling/Float" $ withFocused toggleFloat) -- Toggle focused window floating/tiled
+  , ("M-C-s", addName "For all floating windows to tile" $ sinkAll) -- Push ALL floating windows to tile
 
-      -- Floating windows
-  , ("M-g", sendMessage (T.Toggle "floats")) -- Toggles my 'floats' layout
-  , ("M-t", withFocused toggleFloat) -- Toggle focused window floating/tiled
-  , ("M-C-s", sinkAll) -- Push ALL floating windows to tile
+    -- Increase/decrease spacing (gaps)
+  , ("C-M1-j", addName "Decrease window spacing" $ decWindowSpacing 4) -- Decrease window spacing
+  , ("C-M1-k", addName "Increase window spacing" $ incWindowSpacing 4) -- Increase window spacing
+  , ("C-M1-h", addName "Decrease screen spacing" $ decScreenSpacing 4) -- Decrease screen spacing
+  , ("C-M1-l", addName "Increase screen spacing" $ incScreenSpacing 4) -- Increase screen spacing
+  , ("C-M1-m", addName "Toggle gaps" $ toggleWindowSpacingEnabled >> toggleScreenSpacingEnabled) -- Toggle gaps
 
-      -- Increase/decrease spacing (gaps)
-  , ("C-M1-j", decWindowSpacing 4) -- Decrease window spacing
-  , ("C-M1-k", incWindowSpacing 4) -- Increase window spacing
-  , ("C-M1-h", decScreenSpacing 4) -- Decrease screen spacing
-  , ("C-M1-l", incScreenSpacing 4) -- Increase screen spacing
-  , ("C-M1-m", toggleWindowSpacingEnabled >> toggleScreenSpacingEnabled) -- Toggle gaps
+    -- Windows navigation
+  , ("M-m", addName "Move focus to master" $ windows W.focusMaster) -- Move focus to the master window
+  , ("M-j", addName "Focus next" $ windows W.focusDown) -- Move focus to the next window
+  , ("M-k", addName "Focus prev" $ windows W.focusUp) -- Move focus to the prev window
+  , ("M-S-m", addName "Swap focused and master" $ windows W.swapMaster) -- Swap the focused window and the master window
+  , ("M-S-j", addName "Swap focused with next" $ windows W.swapDown) -- Swap focused window with next window
+  , ("M-S-k", addName "Swap focused with previous" $ windows W.swapUp) -- Swap focused window with prev window
+  , ("M-<Backspace>", addName "Dwm promote" $ whenX (swapHybrid True) dwmpromote) -- Swap master window and last swapped window or first window in stack
+  , ("M-S-<Tab>", addName "Rotate all windows in stack" $ rotSlavesDown) -- Rotate all windows except master and keep focus in place
+  , ("M-C-<Tab>", addName "Rotate all windows" $ rotAllDown) -- Rotate all the windows in the current stack
+  , ("M-`", addName "Swap view on monitors" $ onNextNeighbour def W.greedyView)
 
-      -- Windows navigation
-  , ("M-m", windows W.focusMaster) -- Move focus to the master window
-  , ("M-j", windows W.focusDown) -- Move focus to the next window
-  , ("M-k", windows W.focusUp) -- Move focus to the prev window
-  , ("M-S-m", windows W.swapMaster) -- Swap the focused window and the master window
-  , ("M-S-j", windows W.swapDown) -- Swap focused window with next window
-  , ("M-S-k", windows W.swapUp) -- Swap focused window with prev window
-  , ("M-<Backspace>", whenX (swapHybrid True) dwmpromote) -- Swap master window and last swapped window or first window in stack
-  , ("M-S-<Tab>", rotSlavesDown) -- Rotate all windows except master and keep focus in place
-  , ("M-C-<Tab>", rotAllDown) -- Rotate all the windows in the current stack
-  , ("M-\\", selectWindow ezmTheme >>= (`whenJust` windows . W.focusWindow))
-  , ("M-`", onNextNeighbour def W.greedyView)
+    -- Screen navigation
+  , ("M-w", addName "Change focussed monitor" $ onNextNeighbour def W.view)
 
-      -- Layouts
-  , ("M-b", sendMessage NextLayout) -- Switch to next layout
-  , ("M-f", sendMessage (MT.Toggle NBFULL) >> sendMessage ToggleStruts) -- Toggles noborder/full
-  , ("M-r", sendMessage Mag.Toggle) -- Zoom focused client
+    -- Layouts
+  , ("M-b", addName "Switch to next layout" $ sendMessage NextLayout) -- Switch to next layout
+  , ("M-f", addName "Toggles full layout" $ sendMessage (MT.Toggle NBFULL) >> sendMessage ToggleStruts) -- Toggles noborder/full
+  , ("M-r", addName "Zoom focused client" $ sendMessage Mag.Toggle) -- Zoom focused client
 
-      -- Increase/decrease windows in the master pane or the stack
-  , ("M-S-<Up>", sendMessage (IncMasterN 1)) -- Increase # of clients master pane
-  , ("M-S-<Down>", sendMessage (IncMasterN (-1))) -- Decrease # of clients master pane
-  , ("M-C-<Up>", increaseLimit) -- Increase # of windows
-  , ("M-C-<Down>", decreaseLimit) -- Decrease # of windows
+    -- Increase/decrease windows in the master pane or the stack
+  , ("M-S-<Up>", addName "Increase no. master" $ sendMessage (IncMasterN 1)) -- Increase # of clients master pane
+  , ("M-S-<Down>", addName "Decrease no. master" $ sendMessage (IncMasterN (-1))) -- Decrease # of clients master pane
+  , ("M-C-<Up>", addName "Increase windows limit" $ increaseLimit) -- Increase # of windows
+  , ("M-C-<Down>", addName "Decrease windows limit" $ decreaseLimit) -- Decrease # of windows
 
-      -- Window resizing
-  , ("M-h", sendMessage Shrink) -- Shrink horiz window width
-  , ("M-l", sendMessage Expand) -- Expand horiz window width
-  , ("M-M1-j", sendMessage MirrorShrink) -- Shrink vert window width
-  , ("M-M1-k", sendMessage MirrorExpand) -- Expand vert window width
+    -- Window resizing
+  , ("M-h", addName "Shrink horiz window width" $ sendMessage Shrink) -- Shrink horiz window width
+  , ("M-l", addName "Expand horiz window width" $ sendMessage Expand) -- Expand horiz window width
+  , ("M-M1-j", addName "Shrink vert window width" $ sendMessage MirrorShrink) -- Shrink vert window width
+  , ("M-M1-k", addName "Expand vert window width" $ sendMessage MirrorExpand) -- Expand vert window width
 
-      -- Sublayouts
-      -- This is used to push windows to tabbed sublayouts, or pull them out of it.
-  , ("M-C-h", sendMessage $ pullGroup L)
-  , ("M-C-l", sendMessage $ pullGroup R)
-  , ("M-C-k", sendMessage $ pullGroup U)
-  , ("M-C-j", sendMessage $ pullGroup D)
-  , ("M-C-m", withFocused (sendMessage . MergeAll))
-  , ("M-C-u", withFocused (sendMessage . UnMerge))
-  , ("M-C-/", withFocused (sendMessage . UnMergeAll))
-  , ("M-C-.", onGroup W.focusUp') -- Switch focus to next tab
-  , ("M-C-,", onGroup W.focusDown') -- Switch focus to prev tab
+    -- Sublayouts
+    -- This is used to push windows to tabbed sublayouts, or pull them out of it.
+  , ("M-C-h", addName "pullGroup L"           $ sendMessage $ pullGroup L)
+  , ("M-C-l", addName "pullGroup R"           $ sendMessage $ pullGroup R)
+  , ("M-C-k", addName "pullGroup U"           $ sendMessage $ pullGroup U)
+  , ("M-C-j", addName "pullGroup D"           $ sendMessage $ pullGroup D)
 
-      -- Music control
-  , ("M-,", spawn "mpc seek -10") -- Backward 10 secs
-  , ("M-.", spawn "mpc seek +10") -- Forward 10 secs
-  , ("M-[", spawn "mpc prev") -- Previous song
-  , ("M-]", spawn "mpc next") -- Next song
-  , ("M-S-[", spawn "mpc seek 0%") -- Restart song
-  , ("M--", spawn "mpc volume -2 && mpc-volume") -- Volume down -2
-  , ("M-=", spawn "mpc volume +2 && mpc-volume") -- Volume up +2
-  , ("M-p", spawn "mpc toggle") -- Pause/play
-  , ("M-s", spawn "mpc pause ; pauseallmpv") -- Stop
+  , ("M-C-m", addName "MergeAll"              $ withFocused (sendMessage . MergeAll))
+  , ("M-C-u", addName "UnMerge"               $ withFocused (sendMessage . UnMerge))
+  , ("M-C-/", addName "UnMergeAll"            $  withFocused (sendMessage . UnMergeAll))
+  , ("M-C-.", addName "Switch focus next tab" $  onGroup W.focusUp')    -- Switch focus to next tab
+  , ("M-C-,", addName "Switch focus prev tab" $  onGroup W.focusDown')  -- Switch focus to prev tab
 
-      -- Function keys
-  , ("M-<F1>", spawn "buckle-spring") -- Toggle the clicky sound from a buckle spring keyboard
-  , ("M-<F2>", spawn "restart-emacs") -- Restart the emacs daemon
-  , ( "M-<F3>"
-    , spawn "notify-send \"Refreshing KMonad in 2 secs\"; kmonad-refresh; notify-send \"Success!\""
-    ) -- Refresh kmonad
-
-      -- System
-  , ("<XF86Calculator>", spawn (myTerminal ++ " -e bc -l"))
-  , ("<XF86DOS>", spawn myTerminal)
-  , ("<XF86Launch1>", spawn "xset dpms force off")
-  , ("<XF86MonBrightnessDown>", spawn "brightness down")
-  , ("<XF86MonBrightnessUp>", spawn "brightness up")
-  , ("<XF86MyComputer>", spawn (myTerminal ++ " -e lf-run"))
-  , ("<XF86PowerOff>", spawn "dm-power")
-  , ("<XF86ScreenSaver>", spawn "slock & xset dpms force off; mpc pause; pauseallmpv")
-  , ("<XF86Sleep>", spawn "sudo -A zzz")
-  , ("<XF86TaskPane>", spawn (myTerminal ++ " -e btop"))
-  , ("<XF86TouchpadOff>", spawn "synclient TouchpadOff=1")
-  , ("<XF86TouchpadOn>", spawn "synclient TouchpadOff=0")
-  , ("<XF86TouchpadToggle>", spawn touchpadToggle)
-  , ("<XF86WWW>", spawn "$BROWSER")
-
-      -- Media controls
-  , ("<XF86AudioForward>", spawn "mpc seek +10")
-  , ("<XF86AudioLowerVolume>", spawn "volume down")
-  , ("<XF86AudioMedia>", spawn (myTerminal ++ " -e ncmpcpp"))
-  , ("<XF86AudioMicMute>", spawn "mic-toggle")
-  , ("<XF86AudioMute>", spawn "volume mute")
-  , ("<XF86AudioNext>", spawn "mpc next")
-  , ("<XF86AudioPause>", spawn "mpc pause")
-  , ("<XF86AudioPlay>", spawn "mpc play")
-  , ("<XF86AudioPrev>", spawn "mpc prev")
-  , ("<XF86AudioRaiseVolume>", spawn "volume up")
-  , ("<XF86AudioRewind>", spawn "mpc seek -10")
-  , ("<XF86AudioStop>", spawn "mpc stop")
-
-      -- Whichkeys keychords
-  , ("M-<Space>", toSubmap c "appsKeymap" appsKeymap)
-  , ("<Print>", toSubmap c "screenshotKeymap" screenshotKeymap)
+  -- Leader keys
+  , ("M-<Space> n", addName "Toggle ncmpcpp" $ namedScratchpadAction myScratchPads "ncmpcpp")
+  , ("M-<Space> t", addName "Spawn terminal" $ spawn myTerminal)
+  , ("M-<Space> <Space>",  spawn' "dm-j4dmenu-desktop")
       --END_KEYS
   ]
+  ^++^
+    [ (otherModMasks ++ "M-" ++ [key], windows $ action tag)
+      | (tag, key)  <- zip myWorkspaces "12345"
+      , (otherModMasks, action) <- [
+      ("", onlyOnScreen 0) ,
+      ("S-", W.shift) ,
+      ("M1-", W.greedyView) ,
+      ("C-", swapWithCurrent)]
+    ]
+    ^++^
+    [ (otherModMasks ++ "M-" ++ [key], windows $ action tag)
+      | (tag, key)  <- zip myWorkspaces "67890"
+      , (otherModMasks, action) <- [
+      ("", onlyOnScreen 1) ,
+      ("C-", swapWithCurrent)]
+    ]
  where
   touchpadToggle =
     "(synclient | grep 'TouchpadOff.*1' && synclient TouchpadOff=0) || synclient TouchpadOff=1"
@@ -786,28 +613,6 @@ mainKeymap c = mkKeymap
       then W.sink w s
       else W.float w (W.RationalRect (1 / 3) (1 / 4) (1 / 2) (4 / 5)) s
     )
-
-myKeys conf =
-  let modm = modMask conf
-  in  M.fromList
-        $ ((modm .|. shiftMask, xK_b), setLayout $ XMonad.layoutHook conf)
-        : [ ((m .|. modm, k), windows $ f i)
-          | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_5]
-          , (f, m) <-
-            [ (viewOnScreen 0, 0)
-            , (W.shift, shiftMask)
-            , (W.greedyView, mod1Mask)
-            , (swapWithCurrent, controlMask)
-            ]
-          ]
-        ++ [ ((m .|. modm, k), windows $ f i)
-           | (i, k) <- zip (XMonad.workspaces conf) ([xK_6 .. xK_9] ++ [xK_0])
-           , (f, m) <- [(viewOnScreen 1, 0), (swapWithCurrent, shiftMask)]
-           ]
-        ++ [ ((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
-           | (key, sc) <- zip [xK_e, xK_w] [0 ..]
-           , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
-           ]
 
 myMouseBindings :: XConfig Layout -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings XConfig { XMonad.modMask = modMask } = M.fromList
@@ -831,10 +636,11 @@ main =
       xmonad
     . addEwmhWorkspaceSort (pure myFilter)
     . setEwmhActivateHook doAskUrgent
+    . addDescrKeys' ((mod4Mask, xK_F1), showKeybindings) myKeys 
     . ewmh
     . docks
     . rescreenHook rescreenCfg
-    . dynamicSBs myStatusBarSpawner
+    . dynamicEasySBs myStatusBarSpawner
     $ def
         { manageHook = insertPosition Below Newer
                        <+> myManageHook
@@ -845,7 +651,6 @@ main =
         , modMask = myModMask
         , terminal = myTerminal
         , startupHook = myStartupHook
-        , keys = mainKeymap <+> myKeys
         , mouseBindings = myMouseBindings
         , handleEventHook = myHandleEventHook
         , layoutHook = showWName' myShowWNameTheme myLayoutHook
@@ -858,3 +663,4 @@ main =
                     <+> updatePointer (0.5, 0.5) (0.9, 0.9)
                     >> nsHideOnFocusLoss myScratchPads
         }
+

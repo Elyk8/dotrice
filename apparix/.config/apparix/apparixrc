@@ -49,3 +49,5 @@ j,work,/home/elyk/Documents/work
 j,sx,/home/elyk/.config/sxhkd
 j,nv,/home/elyk/.config/nvim
 j,font,/home/elyk/.config/fontconfig
+j,i3,/home/elyk/.config/i3
+j,aw,/home/elyk/.config/awesome

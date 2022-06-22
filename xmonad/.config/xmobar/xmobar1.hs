@@ -12,7 +12,7 @@ Config { font = "xft:Ubuntu:weight=bold:italic:pixelsize=16:antialias=true:hinti
        , textOffset       = -1
        , iconOffset       = -8
        , alpha            = 255
-       , position         = BottomSize L 100 30
+       , position         = TopSize L 100 30
        , lowerOnStart     = True
        , hideOnStart      = False
        , overrideRedirect = True

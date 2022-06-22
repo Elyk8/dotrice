@@ -14,33 +14,30 @@ bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 
-# exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+q kill
 
-bindsym $mod+q exec --no-startup-id emacs-i3-integration kill
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
 
-bindsym $mod+h exec --no-startup-id emacs-i3-integration focus left
-bindsym $mod+j exec --no-startup-id emacs-i3-integration focus down
-bindsym $mod+k exec --no-startup-id emacs-i3-integration focus up
-bindsym $mod+l exec --no-startup-id emacs-i3-integration focus right
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
 
-bindsym $mod+Left exec --no-startup-id emacs-i3-integration focus left
-bindsym $mod+Down exec --no-startup-id emacs-i3-integration focus down
-bindsym $mod+Up exec --no-startup-id emacs-i3-integration focus up
-bindsym $mod+Right exec --no-startup-id emacs-i3-integration focus right
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
 
-bindsym $mod+Shift+h exec --no-startup-id emacs-i3-integration move left
-bindsym $mod+Shift+j exec --no-startup-id emacs-i3-integration move down
-bindsym $mod+Shift+k exec --no-startup-id emacs-i3-integration move up
-bindsym $mod+Shift+l exec --no-startup-id emacs-i3-integration move right
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
 
-bindsym $mod+Shift+Left exec --no-startup-id emacs-i3-integration move left
-bindsym $mod+Shift+Down exec --no-startup-id emacs-i3-integration move down
-bindsym $mod+Shift+Up exec --no-startup-id emacs-i3-integration move up
-bindsym $mod+Shift+Right exec --no-startup-id emacs-i3-integration move right
-
-bindsym $mod+v exec --no-startup-id emacs-i3-integration split h
-bindsym $mod+s exec --no-startup-id emacs-i3-integration split v
+bindsym $mod+v split h
+bindsym $mod+s split v
 
 bindsym $mod+period exec i3-switch-tabs right
 bindsym $mod+comma exec i3-switch-tabs left
@@ -50,18 +47,15 @@ bindsym $mod+f fullscreen toggle
 
 bindsym $mod+c layout stacking
 bindsym $mod+t layout tabbed
-bindsym $mod+e exec --no-startup-id emacs-i3-integration layout toggle split
+bindsym $mod+e layout toggle split
 
-bindsym $mod+Shift+f floating toggle
+bindsym $mod+g floating toggle
 bindsym $mod+z focus mode_toggle
 
 bindsym $mod+F1 exec --no-startup-id $TERMINAL
 
-bindsym $mod++Shift+w move workspace to output right
+bindsym $mod+Shift+w move workspace to output right
 bindsym $mod+w focus output right
-
-bindsym $mod+a focus parent
-bindsym $mod+Shift+A focus child
 
 bindsym $mod+i sticky toggle
 
@@ -87,10 +81,10 @@ set $primary eDP1
 set $secondary HDMI-1-0
 
 workspace $w1 output $primary
-workspace $w2 output $secondary
-workspace $w3 output $secondary
-workspace $w4 output $primary
-workspace $w5 output $primary
+workspace $w2 output $primary
+workspace $w3 output $primary
+workspace $w4 output $secondary
+workspace $w5 output $secondary
 #workspace $w6 output $primary
 #workspace $w7 output $primary
 #workspace $w8 output $primary
@@ -124,15 +118,15 @@ bindsym $mod+d exec --no-startup-id i3-display-swap
 assign [class="qutebrowser"] $w2
 assign [class="firefox"] $w2
 assign [class="Chromium"] $w2
-assign [class="discord"] $w3
-assign [class="zoom"] $w3
+assign [class="discord"] $w4
+assign [class="zoom"] $w4
 assign [class="Virt-manager"] $w5
 assign [class="Ferdium"] $w8
 assign [class="Thunderbird"] $w9
 
 for_window [title="VirtScreen"] floating enable
 for_window [class="cinnamon-settings*"] floating enable
-for_window [title="Picture-in-Picture"] sticky enable
+for_window [title="Picture-in-Picture"] floating enable; sticky enable
 for_window [class="Dragon-drop"] sticky enable
 for_window [window_role="GtkFileChooserDialog"] resize set width 1000 px height 800 px
 for_window [window_role="GtkFileChooserDialog"] move position center
@@ -155,7 +149,7 @@ set $default_outer 0
 gaps inner $default_inner
 gaps outer $default_outer
 
-#smart_gaps on
+smart_gaps on
 
 mode "inner gaps" {
     bindsym plus gaps inner current plus 5
@@ -187,33 +181,33 @@ mode "outer gaps" {
     bindsym Escape mode "default"
 }
 
-bindsym $mod+g mode "inner gaps"
-bindsym $mod+Shift+g mode "outer gaps"
+bindsym $mod+Shift+g mode "inner gaps"
+bindsym $mod+Control+g mode "outer gaps"
 
 mode "resize" {
 
-    bindsym h exec --no-startup-id emacs-i3-integration resize shrink width 10 px or 10 ppt
-    bindsym j exec --no-startup-id emacs-i3-integration resize grow height 10 px or 10 ppt
-    bindsym k exec --no-startup-id emacs-i3-integration resize shrink height 10 px or 10 ppt
-    bindsym l exec --no-startup-id emacs-i3-integration resize grow width 10 px or 10 ppt
+    bindsym h resize shrink width 10 px or 10 ppt
+    bindsym j resize grow height 10 px or 10 ppt
+    bindsym k resize shrink height 10 px or 10 ppt
+    bindsym l resize grow width 10 px or 10 ppt
 
-    bindsym Shift+h exec --no-startup-id emacs-i3-integration resize shrink width 100 px or 100 ppt
-    bindsym Shift+j exec --no-startup-id emacs-i3-integration resize grow height 100 px or 100 ppt
-    bindsym Shift+k exec --no-startup-id emacs-i3-integration resize shrink height 100 px or 100 ppt
-    bindsym Shift+l exec --no-startup-id emacs-i3-integration resize grow width 100 px or 100 ppt
+    bindsym Shift+h resize shrink width 100 px or 100 ppt
+    bindsym Shift+j resize grow height 100 px or 100 ppt
+    bindsym Shift+k resize shrink height 100 px or 100 ppt
+    bindsym Shift+l resize grow width 100 px or 100 ppt
 
     # same bindings, but for the arrow keys
-    bindsym Left  exec --no-startup-id emacs-i3-integration resize shrink width 10 px or 10 ppt
-    bindsym Down  exec --no-startup-id emacs-i3-integration resize grow height 10 px or 10 ppt
-    bindsym Up    exec --no-startup-id emacs-i3-integration resize shrink height 10 px or 10 ppt
-    bindsym Right exec --no-startup-id emacs-i3-integration resize grow width 10 px or 10 ppt
+    bindsym Left  resize shrink width 10 px or 10 ppt
+    bindsym Down  resize grow height 10 px or 10 ppt
+    bindsym Up    resize shrink height 10 px or 10 ppt
+    bindsym Right resize grow width 10 px or 10 ppt
 
-    bindsym Shift+Left  exec --no-startup-id emacs-i3-integration resize shrink width 100 px or 100 pp  t
-    bindsym Shift+Down  exec --no-startup-id emacs-i3-integration resize grow height 100 px or 100 ppt
-    bindsym Shift+Up    exec --no-startup-id emacs-i3-integration resize shrink height 100 px or 100 ppt
-    bindsym Shift+Right exec --no-startup-id emacs-i3-integration resize grow width 100 px or 100 ppt
+    bindsym Shift+Left  resize shrink width 100 px or 100 pp  t
+    bindsym Shift+Down  resize grow height 100 px or 100 ppt
+    bindsym Shift+Up    resize shrink height 100 px or 100 ppt
+    bindsym Shift+Right resize grow width 100 px or 100 ppt
 
-    bindsym equal exec i3-emacs-balance-windows
+    # bindsym equal exec i3-emacs-balance-windows
 
     # back to normal: Enter or Escape
     bindsym Return mode "default"
