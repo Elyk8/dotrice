@@ -10,3 +10,12 @@
 [submodule "xmonad/.config/xmonad/xmonad"]
 	path = xmonad/.config/xmonad/xmonad
 	url = https://github.com/xmonad/xmonad
+[submodule "xmonad/.config/xmonad/xmonad-git"]
+	path = xmonad/.config/xmonad/xmonad-git
+	url = https://github.com/xmonad/xmonad
+[submodule "xmonad/.config/xmonad/xmonad-contrib-git"]
+	path = xmonad/.config/xmonad/xmonad-contrib-git
+	url = https://github.com/xmonad/xmonad-contrib
+[submodule "xmonad/.config/xmonad/xmobar-git"]
+	path = xmonad/.config/xmonad/xmobar-git
+	url = https://github.com/jaor/xmobar
