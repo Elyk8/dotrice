@@ -63,8 +63,8 @@ zsh_add_completion "esc/conda-zsh-completion" false
 [ -f "${XDG_CONFIG_HOME:-$HOME/.config}/shell/apparix" ] && source "${XDG_CONFIG_HOME:-$HOME/.config}/shell/apparix"
 
 # Key-bindings
-bindkey -s '^n' 'lvim $(fzf)^M'
-bindkey -s '^v' 'lvim\n'
+bindkey -s '^n' '$EDITOR $(fzf)^M'
+bindkey -s '^v' '$EDITOR\n'
 bindkey -s '^f' "tmux-sessionizer\n"
 bindkey -s '^z' 'zi^M'
 bindkey -s '^w' '!!^M'
@@ -83,6 +83,10 @@ bindkey -r "^d"
 [ -f /usr/share/doc/fzf/examples/key-bindings.zsh ] && source /usr/share/doc/fzf/examples/key-bindings.zsh
 [ -f $ZDOTDIR/completion/_fnm ] && fpath+="$ZDOTDIR/completion/"
 # export FZF_DEFAULT_COMMAND='rg --hidden -l ""'
+
+if [ -x "$(command -v tmux)" ] && [ -n "${DISPLAY}" ] && [ -z "${TMUX}" ]; then
+    tmux attach || tmux >/dev/null 2>&1
+fi
 
 # Edit line in vim with ctrl-e:
 autoload edit-command-line; zle -N edit-command-line >/dev/null
