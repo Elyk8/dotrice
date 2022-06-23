@@ -1,6 +1,6 @@
 # Key-bindings
-bindkey -s '^n' 'lvim $(fzf)^M'
-bindkey -s '^v' 'lvim\n'
+bindkey -s '^n' '$EDITOR $(fzf)^M'
+bindkey -s '^v' '$EDITOR\n'
 bindkey -s '^f' "tmux-sessionizer\n"
 bindkey -s '^z' 'zi^M'
 bindkey -s '^w' '!!^M'

@@ -65,6 +65,10 @@ zsh_add_completion "esc/conda-zsh-completion" false
 [ -f $ZDOTDIR/completion/_fnm ] && fpath+="$ZDOTDIR/completion/"
 # export FZF_DEFAULT_COMMAND='rg --hidden -l ""'
 
+if [ -x "$(command -v tmux)" ] && [ -n "${DISPLAY}" ] && [ -z "${TMUX}" ]; then
+    tmux attach || tmux >/dev/null 2>&1
+fi
+
 # Edit line in vim with ctrl-e:
 autoload edit-command-line; zle -N edit-command-line >/dev/null
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#4c4c4c,bold,underline"
