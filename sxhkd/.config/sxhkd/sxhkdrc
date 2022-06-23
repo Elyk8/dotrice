@@ -70,7 +70,7 @@ super + space ; e ; f
 
 # :Openers - Discord
 super + space ; o ; d
-      which prime-run && prime-run discord || discord
+      discord
 
 # :Openers - AT Launcher
 super + space ; o ; a
@@ -82,7 +82,7 @@ super + space ; o ; l
 
 # :Openers - VSCodium
 super + space ; o ; v
-      which prime-run && prime-run vscodium || vscodium
+      vscodium
 
 # :Openers - zotero
 super + space ; o ; t
