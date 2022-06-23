@@ -39,8 +39,8 @@ bindsym $mod+Shift+Right move right
 bindsym $mod+v split h
 bindsym $mod+s split v
 
-bindsym $mod+period exec i3-switch-tabs right
-bindsym $mod+comma exec i3-switch-tabs left
+# bindsym $mod+period exec i3-switch-tabs right
+# bindsym $mod+comma exec i3-switch-tabs left
 
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
@@ -52,12 +52,10 @@ bindsym $mod+e layout toggle split
 bindsym $mod+g floating toggle
 bindsym $mod+z focus mode_toggle
 
-bindsym $mod+F1 exec --no-startup-id $TERMINAL
-
-bindsym $mod+Shift+w move workspace to output right
 bindsym $mod+w focus output right
+bindsym $mod+Shift+w move workspace to output right
 
-bindsym $mod+i sticky toggle
+bindsym $mod+i floating toggle; sticky toggle
 
 bindsym $mod+x floating enable; sticky enable; move position 1220 0; resize set width 700 px
 
@@ -92,7 +90,7 @@ workspace $w5 output $secondary
 
 bindsym $mod+1 workspace $w1
 bindsym $mod+2 workspace $w2
-bindsym $mod+3 workspace $w3
+bindsym $mod+3 workspace $w3; layout stacking 
 bindsym $mod+4 workspace $w4
 bindsym $mod+5 workspace $w5
 bindsym $mod+6 workspace $w6
@@ -115,9 +113,11 @@ bindsym $mod+Shift+9 move container to workspace $w9
 
 bindsym $mod+d exec --no-startup-id i3-display-swap
 
-assign [class="qutebrowser"] $w2
-assign [class="firefox"] $w2
+assign [class="firefox"] $w1
+assign [class="qutebrowser"] $w1
 assign [class="Chromium"] $w2
+assign [class="Alacritty"] $w3
+assign [class="neovide"] $w3
 assign [class="discord"] $w4
 assign [class="zoom"] $w4
 assign [class="Virt-manager"] $w5
@@ -235,7 +235,7 @@ mode "move" {
 bindsym $mod+m mode "move" focus floating
 
 # Startup
-exec_always --no-startup-id autotiling-rs
+exec_always --no-startup-id autotiling-rs -w 1 -w 2 -w 4 -w 5 -w 6 -w 7 -w 8 -w 9
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec_always --no-startup-id $HOME/.fehbg
 #exec_always --no-startup-id autorandr --change --force
