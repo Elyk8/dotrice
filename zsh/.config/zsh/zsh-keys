@@ -7,9 +7,11 @@ bindkey -s '^w' '!!^M'
 bindkey '^[[P' delete-char
 bindkey "^p" up-line-or-beginning-search # Up
 bindkey "^n" down-line-or-beginning-search # Down
-bindkey "^k" up-line-or-beginning-search # Up
-# bindkey "^j" down-line-or-beginning-search # Down
+bindkey '^o' autosuggest-accept
 bindkey -r "^u"
 bindkey -r "^d"
 
-bindkey '^e' edit-command-line
+# Expand on Ctrl-Space
+my-expand() { zle _expand_alias || zle .expand-word || true; }
+zle -N my-expand
+bindkey '^e' my-expand

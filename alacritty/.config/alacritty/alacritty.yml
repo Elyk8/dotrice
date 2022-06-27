@@ -25,7 +25,7 @@ schemes:
       cyan:	"#46D9FF"
       white:	"#EFEFEF"
       # }}}
- 
+
 # {{{ Dracula ###
   dracula: &dracula
     primary:
@@ -81,7 +81,7 @@ schemes:
       cyan:    '#59dffc'
       white:   '#e6e6d1'
       # }}}
-      
+
 # {{{ Tokyo Night ###
   tokyonight: &tokyonight
     # Default colors
@@ -121,7 +121,7 @@ schemes:
 
     # Normal colors
     normal:
-      black:   '#3B4252'
+      black:   '#1E1E1E'
       red:     '#D54646'
       green:   '#23D18B'
       yellow:  '#D7BA7D'
@@ -194,7 +194,7 @@ window:
   #   # scrollback is enabled (history > 0).
   #   multiplier: 10
 
-  opacity: 0.95
+  opacity: 0.85
 
   gtk_theme_variant: dark
 
@@ -214,7 +214,7 @@ window:
     y: 2
 
   dynamic_padding: true
-  
+
   # # If `true`, bold text is drawn using the bright color variants.
   draw_bold_text_with_bright_colors: true
 

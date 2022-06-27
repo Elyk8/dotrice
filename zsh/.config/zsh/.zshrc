@@ -48,7 +48,6 @@ zsh_add_plugin "zsh-users/zsh-autosuggestions"
 zsh_add_plugin "zsh-users/zsh-syntax-highlighting"
 zsh_add_plugin "hlissner/zsh-autopair"
 zsh_add_plugin "skywind3000/z.lua"
-zsh_add_plugin "simnalamburt/zsh-expand-all"
 zsh_add_completion "esc/conda-zsh-completion" false
 # For more plugins: https://github.com/unixorn/awesome-zsh-plugins
 # More completions https://github.com/zsh-users/zsh-completions
@@ -65,8 +64,8 @@ zsh_add_completion "esc/conda-zsh-completion" false
 [ -f $ZDOTDIR/completion/_fnm ] && fpath+="$ZDOTDIR/completion/"
 # export FZF_DEFAULT_COMMAND='rg --hidden -l ""'
 
-if [ -x "$(command -v tmux)" ] && [ -n "${DISPLAY}" ] && [ -z "${TMUX}" ]; then
-    tmux attach || tmux >/dev/null 2>&1
+if [ -x "$(command -v tmux)" ] && [ -n "$PS1" ] && [ -z "${TMUX}" ]; then
+  tmux new-session -A -s main >/dev/null 2>&1
 fi
 
 # Edit line in vim with ctrl-e:

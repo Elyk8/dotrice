@@ -81,16 +81,16 @@ set $secondary HDMI-1-0
 workspace $w1 output $primary
 workspace $w2 output $primary
 workspace $w3 output $primary
-workspace $w4 output $secondary
+workspace $w4 output $primary
 workspace $w5 output $secondary
-#workspace $w6 output $primary
+workspace $w6 output $secondary
 #workspace $w7 output $primary
 #workspace $w8 output $primary
 #workspace $w9 output $primary
 
 bindsym $mod+1 workspace $w1
 bindsym $mod+2 workspace $w2
-bindsym $mod+3 workspace $w3; layout stacking 
+bindsym $mod+3 workspace $w3
 bindsym $mod+4 workspace $w4
 bindsym $mod+5 workspace $w5
 bindsym $mod+6 workspace $w6
@@ -118,9 +118,10 @@ assign [class="qutebrowser"] $w1
 assign [class="Chromium"] $w2
 assign [class="Alacritty"] $w3
 assign [class="neovide"] $w3
-assign [class="discord"] $w4
-assign [class="zoom"] $w4
-assign [class="Virt-manager"] $w5
+assign [class="obsidian"] $w4
+assign [class="discord"] $w5
+assign [class="zoom"] $w5
+assign [class="Virt-manager"] $w6
 assign [class="Ferdium"] $w8
 assign [class="Thunderbird"] $w9
 
@@ -235,7 +236,7 @@ mode "move" {
 bindsym $mod+m mode "move" focus floating
 
 # Startup
-exec_always --no-startup-id autotiling-rs -w 1 -w 2 -w 4 -w 5 -w 6 -w 7 -w 8 -w 9
+exec_always --no-startup-id autotiling-rs
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec_always --no-startup-id $HOME/.fehbg
 #exec_always --no-startup-id autorandr --change --force

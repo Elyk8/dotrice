@@ -7,7 +7,7 @@ trayerColor: 0x1E1E1E
 ! terminal padding color
 *borderColor: #1E1E1E
 
-*color0:    #3B4252
+*color0:    #1E1E1E
 *color1:    #D54646
 *color2:    #23D18B
 *color3:    #D7BA7D
