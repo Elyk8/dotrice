@@ -24,3 +24,6 @@ set -g renumber-windows on
 
 # Use titles in tabs
 set -g set-titles on
+
+# Aggresively resize
+setw -g aggressive-resize on

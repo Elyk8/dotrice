@@ -10,11 +10,11 @@ super + space ; space
 
 # Dropdown terminal
 super + space ; d
-      dropdown "scratch-term" "$TERMINAL --class Dropdown,Dropdown -e tmux new-session -s dropdown" "1000" "700"
+      dropdown "scratch-term" "$TERMINAL --class Dropdown,Dropdown" "1000" "700"
 
 # Open terminal emulator
 super + space ; t
-      run-or-raise 'class = "Alacritty"' $TERMINAL
+      $TERMINAL
 
 # Open lf file manager
 super + space ; r
@@ -45,32 +45,36 @@ super + space ; v
       neovide
 
 # :Emacs - Open an emacs frame
-super + space ; e ; e
-      emacsclient -c -n
+# super + space ; e ; e
+#       emacsclient -c -n
+#
+# # :Emacs - Open emacs org daily capture
+# super + space ; e ; t
+#       emacsclient --create-frame --no-wait --eval "(org-roam-dailies-capture-today)"
+#
+# # :Emacs - Open today's journal
+# super + space ; e ; j
+#       emacsclient --create-frame --no-wait --eval "(org-roam-dailies-goto-today)"
+#
+# # :Emacs - Open org agenda
+# super + space ; e ; a
+#       emacsclient --create-frame --no-wait --eval "(find-file \"~/org/agenda.org\")"
+#
+# # :Emacs - Open magit git client
+# super + space ; e ; m
+#       emacsclient --create-frame --no-wait --eval "(magit)"
+#
+# # :Emacs - Open elfeed
+# super + space ; e ; f
+#       emacsclient --create-frame --no-wait --eval "(elfeed-summary)"
 
-# :Emacs - Open emacs org daily capture
-super + space ; e ; t
-      emacsclient --create-frame --no-wait --eval "(org-roam-dailies-capture-today)"
-
-# :Emacs - Open today's journal
-super + space ; e ; j
-      emacsclient --create-frame --no-wait --eval "(org-roam-dailies-goto-today)"
-
-# :Emacs - Open org agenda
-super + space ; e ; a
-      emacsclient --create-frame --no-wait --eval "(find-file \"~/org/agenda.org\")"
-
-# :Emacs - Open magit git client
-super + space ; e ; m
-      emacsclient --create-frame --no-wait --eval "(magit)"
-
-# :Emacs - Open elfeed
-super + space ; e ; f
-      emacsclient --create-frame --no-wait --eval "(elfeed-summary)"
+# Neovim everywhere
+super + space ; e
+	nvim-everywhere
 
 # :Openers - Discord
 super + space ; o ; d
-      run-or-raise 'class = "discord"' discord
+      discord
 
 # :Openers - AT Launcher
 super + space ; o ; a
@@ -78,7 +82,7 @@ super + space ; o ; a
 
 # :Openers - Obsidian PKM
 super + space ; o ; o
-      run-or-raise 'class = "obsidian"' obsidian
+      run-or-raise 'class = "obsidian"' sh -c "cd / && exec /usr/bin/obsidian; cd -"
 
 # :Openers - VSCodium
 super + space ; o ; v

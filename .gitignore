@@ -1,4 +1,4 @@
-# zsh 
+# zsh
 zsh/.config/zsh/plugins/
 zsh/.config/zsh/.zcompdump*
 
@@ -24,3 +24,6 @@ xmonad/.config/xmonad/xmonad.o
 
 # Applications
 applications/.local/share/applications/discord*
+
+# Tmux
+tmux/.config/tmux/plugins/

@@ -64,9 +64,8 @@ zsh_add_completion "esc/conda-zsh-completion" false
 [ -f $ZDOTDIR/completion/_fnm ] && fpath+="$ZDOTDIR/completion/"
 # export FZF_DEFAULT_COMMAND='rg --hidden -l ""'
 
-if [ -x "$(command -v tmux)" ] && [ -n "$PS1" ] && [ -z "${TMUX}" ]; then
-  tmux new-session -A -s main >/dev/null 2>&1
-fi
+# Tmux
+tmx main > /dev/null 2>&1
 
 # Edit line in vim with ctrl-e:
 autoload edit-command-line; zle -N edit-command-line >/dev/null

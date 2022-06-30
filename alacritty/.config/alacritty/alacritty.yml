@@ -202,8 +202,8 @@ window:
   dynamic_title: true
 
   dimensions:
-    columns: 125
-    lines: 34
+    columns: 80
+    lines: 24
 
   #position:
   #  x: 0
@@ -224,14 +224,14 @@ window:
   live_config_reload: true
 
 key_bindings:
-  - { key: V, mods: Alt, action: Paste }
-  - { key: C, mods: Alt, action: Copy }
+  - { key: V, mods: Control|Shift, action: Paste }
+  - { key: C, mods: Control|Shift, action: Copy }
   - { key: Key0, mods: Control, action: ResetFontSize }
   - { key: Equals, mods: Control, action: IncreaseFontSize }
   - { key: Minus, mods: Control, action: DecreaseFontSize }
-  - { key: Return,   mods: Alt, action: SpawnNewInstance }
-  - { key: K,   mods: Alt, action: ScrollLineUp }
-  - { key: J,   mods: Alt, action: ScrollLineDown }
+  - { key: Return,   mods: Control|Shift, action: SpawnNewInstance }
+  # - { key: K,   mods: Alt, action: ScrollLineUp }
+  # - { key: J,   mods: Alt, action: ScrollLineDown }
   # - { key: Add, mods: Control, action: IncreaseFontSize }
   # - { key: Subtract, mods: Control, action: DecreaseFontSize }
   # - { key: N, mods: Control, action: SpawnNewInstance }

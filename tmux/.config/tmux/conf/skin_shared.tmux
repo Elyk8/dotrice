@@ -13,29 +13,29 @@ set -g @mode_indicator_empty_mode_style bg=$color_blue,fg=$color_fg
 set -g @cpu_percentage_format "%3.0f%%"
 
 # tmux-online-status
-set -g @route_to_ping "ns1.telstra.net"
-set -g @online_icon ""
-set -g @offline_icon "#[fg=$color_red]"
+# set -g @route_to_ping "ns1.telstra.net"
+# set -g @online_icon ""
+# set -g @offline_icon "#[fg=$color_red]"
 
 # tmux-pomodoro
 set -g @pomodoro_on " | #[fg=$color_fg] "
 set -g @pomodoro_complete " | #[fg=$color_green] "
 
 # tmux-battery
-set -g @batt_icon_charge_tier8 ""
-set -g @batt_icon_charge_tier7 ""
-set -g @batt_icon_charge_tier6 ""
-set -g @batt_icon_charge_tier5 ""
-set -g @batt_icon_charge_tier4 ""
-set -g @batt_icon_charge_tier3 ""
-set -g @batt_icon_charge_tier2 ""
-set -g @batt_icon_charge_tier1 ""
-
-set -g @batt_icon_status_charged " "
-set -g @batt_icon_status_charging "  "
-set -g @batt_icon_status_discharging " "
-set -g @batt_icon_status_attached " "
-set -g @batt_icon_status_unknown " "
+# set -g @batt_icon_charge_tier8 ""
+# set -g @batt_icon_charge_tier7 ""
+# set -g @batt_icon_charge_tier6 ""
+# set -g @batt_icon_charge_tier5 ""
+# set -g @batt_icon_charge_tier4 ""
+# set -g @batt_icon_charge_tier3 ""
+# set -g @batt_icon_charge_tier2 ""
+# set -g @batt_icon_charge_tier1 ""
+#
+# set -g @batt_icon_status_charged " "
+# set -g @batt_icon_status_charging "  "
+# set -g @batt_icon_status_discharging " "
+# set -g @batt_icon_status_attached " "
+# set -g @batt_icon_status_unknown " "
 
 set -g @batt_remain_short true
 
@@ -64,7 +64,9 @@ setw -g window-status-separator ""
 # setw -g pane-border-style fg=$color_gray
 # setw -g pane-active-border-style fg=$color_gray
 
-set -g status-left "#{tmux_mode_indicator} #[fg=$color_gray]#{online_status}  %R"
-set -g status-right "#[fg=$color_gray]#{battery_icon_charge}  #{battery_percentage}#{battery_icon_status}#{battery_remain} | CPU:#{cpu_percentage}#{pomodoro_status}"
+# set -g status-left "#{tmux_mode_indicator} #[fg=$color_gray]#{online_status}  %R"
+set -g status-left "#{tmux_mode_indicator} %R"
+# set -g status-right "#[fg=$color_gray]#{battery_icon_charge}  #{battery_percentage}#{battery_icon_status}#{battery_remain} | CPU:#{cpu_percentage}#{pomodoro_status}"
+set -g status-right "#[fg=$color_blue] CPU:#{cpu_percentage}#{pomodoro_status}"
 setw -g window-status-format "#[fg=$color_gray,nobold,nounderscore,noitalics] #[fg=$color_gray] #I #W  #[fg=$color_gray,nobold,nounderscore,noitalics]"
 setw -g window-status-current-format "#[fg=$color_gray,nobold,nounderscore,noitalics] #[fg=$color_purple] #I #W* #[fg=$color_gray,nobold,nounderscore,noitalics]"

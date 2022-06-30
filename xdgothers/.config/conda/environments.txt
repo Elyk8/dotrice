@@ -1,0 +1,2 @@
+/home/elyk/.miniconda
+/home/elyk/.miniconda/envs/robostackenv

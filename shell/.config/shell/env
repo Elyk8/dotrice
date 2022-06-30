@@ -10,8 +10,9 @@ unsetopt PROMPT_SP
 export XDG_DATA_HOME=${XDG_DATA_HOME:="$HOME/.local/share"}
 export XDG_CACHE_HOME=${XDG_CACHE_HOME:="$HOME/.cache"}
 export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:="$HOME/.config"}
+export XDG_STATE_HOME=${XDG_CONFIG_HOME:="$HOME/.local/state"}
 export XINITRC="${XDG_CONFIG_HOME:-$HOME/.config}/x11/xinitrc"
-# export XAUTHORITY="${XDG_DATA_HOME:-$HOME/.local/share}/Xauthority" # This line will break some DMs.
+#export XAUTHORITY="${XDG_DATA_HOME:-$HOME/.local/share}/Xauthority" # This line will break some DMs.
 export NOTMUCH_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/notmuch-config"
 #export GTK2_RC_FILES="${XDG_CONFIG_HOME:-$HOME/.config}/gtk-2.0/gtkrc-2.0"
 export LESSHISTFILE="-"
@@ -39,6 +40,8 @@ export MATLAB_LOG_DIR="/tmp"
 export MATLAB_SHELL="/bin/bash"
 export KDEHOME="${XDG_CONFIG_HOME:-$HOME/.config}/kde"
 export HISTORY_IGNORE="(ls|cd|pwd|exit|sudo reboot|history|cd -|cd ..)"
+export XAUTHORITY="$XDG_RUNTIME_DIR"/Xauthority
+export PLATFORMIO_CORE_DIR="${XDG_DATA_HOME:-$HOME/.local/share}"/platformio
 
 # XDG Directories
 export XDG_DOWNLOAD_DIR=${XDG_DOWNLOAD_DIR:="$HOME/Downloads"}
@@ -71,19 +74,30 @@ export LESSOPEN="| /usr/bin/highlight -O ansi %s 2>/dev/null"
 export _ZL_DATA="${XDG_DATA_HOME:-$HOME/.local/share}/z.lua"
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 export UNCRUSTIFY_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/uncrustify/uncrustify.cfg"
+export TEXMFHOME=$XDG_DATA_HOME/texmf
+export TEXMFVAR=$XDG_CACHE_HOME/texlive/texmf-var
+export TEXMFCONFIG=$XDG_CONFIG_HOME/texlive/texmf-config
+export CUDA_CACHE_PATH="$XDG_CACHE_HOME"/nv
+export NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/npmrc
+export ASPELL_CONF="per-conf $XDG_CONFIG_HOME/aspell/aspell.conf; personal $XDG_CONFIG_HOME/aspell/en.pws; repl $XDG_CONFIG_HOME/aspell/en.prepl"
 
 # Clipmenu
 export CM_DIR=${XDG_CACHE_HOME:-"$HOME/.cache"}
 
 # Xmonad
+export GHCUP_USE_XDG_DIRS=true
 export XMONAD_DATA_DIR="$HOME/.config/xmonad"
 export XMONAD_CONFIG_DIR="$HOME/.config/xmonad"
 export XMONAD_CACHE_DIR="$HOME/.config/xmonad"
+export STACK_ROOT="$XDG_DATA_HOME"/stack
+export CABAL_CONFIG="$XDG_CONFIG_HOME"/cabal/config
+export CABAL_DIR="$XDG_CACHE_HOME"/cabal
 
 # Doom emacs
 export DOOMDIR=${XDG_CONFIG_HOME:="$HOME/.config"}/doom
 
 # Conda
+export CONDARC="$XDG_CONFIG_HOME/conda/condarc"
 [ -f /opt/miniconda3/etc/profile.d/conda.sh ] && source "/opt/miniconda3/etc/profile.d/conda.sh"
 
 # Default programs:

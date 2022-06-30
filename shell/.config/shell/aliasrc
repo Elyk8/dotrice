@@ -50,7 +50,7 @@ alias rmpacmanlock="sudo rm /var/lib/pacman/db.lck"
 alias whichvga="/usr/local/bin/arcolinux-which-vga"
 
 # continue download
-alias wget="wget -c"
+alias wget="wget -c --hsts-file='\$XDG_CACHE_HOME/wget-hsts'"
 
 # userlist
 alias userlist="cut -d: -f1 /etc/passwd"
@@ -237,12 +237,12 @@ rosclear() {
 }
 
 ricemamba() {
-    __conda_setup="$('/home/elyk/.miniconda/bin/conda' 'shell.zsh' 'hook' 2>/dev/null)"
+    __conda_setup="$("$XDG_DATA_HOME/miniconda/bin/conda" 'shell.zsh' 'hook' 2>/dev/null)"
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
     else
-        if [ -f "/home/elyk/.miniconda/etc/profile.d/conda.sh" ]; then
-            . "/home/elyk/.miniconda/etc/profile.d/conda.sh"
+        if [ -f "$XDG_DATA_HOME/miniconda/etc/profile.d/conda.sh" ]; then
+            . "$XDG_DATA_HOME/miniconda/etc/profile.d/conda.sh"
         else
             export PATH="/home/elyk/.miniconda/bin:$PATH"
         fi

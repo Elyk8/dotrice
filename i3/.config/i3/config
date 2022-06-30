@@ -1,4 +1,5 @@
 set $mod Mod4
+set $autotiling autotiling-rs -w 1 -w 2 -w 3 -w 5 -w 6 -w 7 -w 8 -w 9
 font pango:monospace 11
 
 # Use Mouse+$mod to drag floating windows to their wanted position
@@ -7,7 +8,10 @@ floating_modifier $mod
 # Move cursor between monitors
 mouse_warping output
 
-# Most needed keybindigs
+# New applications are focused
+focus_on_window_activation urgent
+
+# Most needed keybindings
 # reload the configuration file
 bindsym $mod+Shift+c reload
 
@@ -45,9 +49,12 @@ bindsym $mod+s split v
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
 
+# toggle polybar
+bindsym $mod+b exec --no-startup-id polybar-msg cmd toggle
+
 bindsym $mod+c layout stacking
 bindsym $mod+t layout tabbed
-bindsym $mod+e layout toggle split
+bindsym $mod+n layout toggle split
 
 bindsym $mod+g floating toggle
 bindsym $mod+z focus mode_toggle
@@ -57,7 +64,7 @@ bindsym $mod+Shift+w move workspace to output right
 
 bindsym $mod+i floating toggle; sticky toggle
 
-bindsym $mod+x floating enable; sticky enable; move position 1220 0; resize set width 700 px
+bindsym $mod+x floating enable; sticky enable; move position 1220 30; resize set width 700 px
 
 workspace_auto_back_and_forth yes
 
@@ -91,7 +98,7 @@ workspace $w6 output $secondary
 bindsym $mod+1 workspace $w1
 bindsym $mod+2 workspace $w2
 bindsym $mod+3 workspace $w3
-bindsym $mod+4 workspace $w4
+bindsym $mod+4 workspace $w4; layout stacking
 bindsym $mod+5 workspace $w5
 bindsym $mod+6 workspace $w6
 bindsym $mod+7 workspace $w7
@@ -100,24 +107,24 @@ bindsym $mod+9 workspace $w9
 #bindsym $mod+0 workspace $w10
 
 # move focused container to workspace
-bindsym $mod+Shift+1 move container to workspace $w1
-bindsym $mod+Shift+2 move container to workspace $w2
-bindsym $mod+Shift+3 move container to workspace $w3
-bindsym $mod+Shift+4 move container to workspace $w4
-bindsym $mod+Shift+5 move container to workspace $w5
-bindsym $mod+Shift+6 move container to workspace $w6
-bindsym $mod+Shift+7 move container to workspace $w7
-bindsym $mod+Shift+8 move container to workspace $w8
-bindsym $mod+Shift+9 move container to workspace $w9
+bindsym $mod+Shift+1 move container to workspace $w1; workspace $w1
+bindsym $mod+Shift+2 move container to workspace $w2; workspace $w2
+bindsym $mod+Shift+3 move container to workspace $w3; workspace $w3
+bindsym $mod+Shift+4 move container to workspace $w4; workspace $w4
+bindsym $mod+Shift+5 move container to workspace $w5; workspace $w5
+bindsym $mod+Shift+6 move container to workspace $w6; workspace $w6
+bindsym $mod+Shift+7 move container to workspace $w7; workspace $w7
+bindsym $mod+Shift+8 move container to workspace $w8; workspace $w8
+bindsym $mod+Shift+9 move container to workspace $w9; workspace $w9
 #bindsym $mod+Shift+0 move container to workspace $w10
 
-bindsym $mod+d exec --no-startup-id i3-display-swap
+bindsym $mod+e exec --no-startup-id "i3-display-swap"
 
 assign [class="firefox"] $w1
 assign [class="qutebrowser"] $w1
 assign [class="Chromium"] $w2
 assign [class="Alacritty"] $w3
-assign [class="neovide"] $w3
+# assign [class="neovide"] $w3
 assign [class="obsidian"] $w4
 assign [class="discord"] $w5
 assign [class="zoom"] $w5
@@ -128,6 +135,7 @@ assign [class="Thunderbird"] $w9
 for_window [title="VirtScreen"] floating enable
 for_window [class="cinnamon-settings*"] floating enable
 for_window [title="Picture-in-Picture"] floating enable; sticky enable
+for_window [class="vim-everywhere"] floating enable; move position center
 for_window [class="Dragon-drop"] sticky enable
 for_window [window_role="GtkFileChooserDialog"] resize set width 1000 px height 800 px
 for_window [window_role="GtkFileChooserDialog"] move position center
@@ -236,10 +244,13 @@ mode "move" {
 bindsym $mod+m mode "move" focus floating
 
 # Startup
-exec_always --no-startup-id autotiling-rs
+exec_always --no-startup-id $autotiling
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec_always --no-startup-id $HOME/.fehbg
 #exec_always --no-startup-id autorandr --change --force
+
+# enable window icons for all windows with extra horizontal padding of 1px
+for_window [all] title_window_icon padding 1px
 
 # Colors
 set_from_resource $bg-color            background

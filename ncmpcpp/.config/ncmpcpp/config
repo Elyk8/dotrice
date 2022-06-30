@@ -1,7 +1,7 @@
 # vim: filetype=conf
 
 ncmpcpp_directory = ~/.config/ncmpcpp
-mpd_music_dir = ~/music
+mpd_music_dir = ~/Music
 
 autocenter_mode = "yes"
 follow_now_playing_lyrics = "yes"
