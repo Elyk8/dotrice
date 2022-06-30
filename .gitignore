@@ -26,4 +26,4 @@ xmonad/.config/xmonad/xmonad.o
 applications/.local/share/applications/discord*
 
 # Tmux
-tmux/.config/tmux/plugins/
+tmux/.config/tmux/plugins
