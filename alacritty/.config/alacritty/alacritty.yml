@@ -113,7 +113,7 @@ schemes:
       # }}}
 
 # {{{ Dark Plus ###
-  dark-plus: &dark-plus
+  darkplus: &darkplus
     # Default colors
     primary:
       background: '#1E1E1E'
@@ -144,8 +144,8 @@ schemes:
       # }}}
 # }}}
 
-# doom-one, dracula, tokyonight, dark-plus
-colors: *dark-plus
+# doom-one, dracula, tokyonight, darkplus
+colors: *darkplus
 
 env:
   TERM: xterm-256color
