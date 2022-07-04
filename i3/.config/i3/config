@@ -15,6 +15,9 @@ focus_on_window_activation urgent
 # reload the configuration file
 bindsym $mod+Shift+c reload
 
+# fallback open terminal
+bindsym $mod+F1 exec --no-startup-id alacritty
+
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 
@@ -136,6 +139,8 @@ assign [class="Thunderbird"] $w9
 # Gaming
 assign [class="ATLauncher"] $w7
 assign [class="Minecraft*"] $w7
+assign [class="RuneScape"] $w7
+assign [class="Runescape"] $w7
 
 for_window [title="VirtScreen"] floating enable
 for_window [class="cinnamon-settings*"] floating enable

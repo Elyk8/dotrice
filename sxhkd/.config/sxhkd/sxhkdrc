@@ -60,6 +60,10 @@ super + space ; o ; a
 super + space ; o ; f
       android-file-transfer
 
+# :Openers - Runescape
+super + space ; o ; r
+      command -v prime-run && prime-run runescape-launcher || runescape-launcher
+
 # :Openers - Obsidian PKM
 super + space ; o ; o
       run-or-raise 'class = "obsidian"' sh -c "cd / && exec /usr/bin/obsidian; cd -"
@@ -211,10 +215,6 @@ super + {equal,minus}
 # :mpc -  Play/pause song
 super + p
       mpc toggle
-
-# :function - Lock the screen
-super + F1
-      slock -i $(fd -atf --base-directory $HOME/pix/wallpapers/dt -0 | shuf -z -n 1)
 
 # :function - Toggle Buckle spring keyboard sound effect
 super + F2
