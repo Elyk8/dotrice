@@ -48,6 +48,7 @@ bindsym $mod+s split v
 
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
+bindsym $mod+Shift+f focus parent; fullscreen; focus child
 
 # toggle polybar
 bindsym $mod+b exec --no-startup-id polybar-msg cmd toggle
@@ -131,6 +132,10 @@ assign [class="zoom"] $w5
 assign [class="Virt-manager"] $w6
 assign [class="Ferdium"] $w8
 assign [class="Thunderbird"] $w9
+
+# Gaming
+assign [class="ATLauncher"] $w7
+assign [class="Minecraft*"] $w7
 
 for_window [title="VirtScreen"] floating enable
 for_window [class="cinnamon-settings*"] floating enable

@@ -54,7 +54,11 @@ super + space ; o ; d
 
 # :Openers - AT Launcher
 super + space ; o ; a
-      atlauncher
+      command -v prime-run && prime-run atlauncher || atlauncher
+
+# :Openers - Android file transfer
+super + space ; o ; f
+      android-file-transfer
 
 # :Openers - Obsidian PKM
 super + space ; o ; o
