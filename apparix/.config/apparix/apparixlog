@@ -2,3 +2,4 @@ j,font,/home/elyk/.config/fontconfig
 j,i3,/home/elyk/.config/i3
 j,aw,/home/elyk/.config/awesome
 j,tmux,/home/elyk/.config/tmux
+j,poly,/home/elyk/.config/polybar

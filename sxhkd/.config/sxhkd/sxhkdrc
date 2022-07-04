@@ -54,7 +54,15 @@ super + space ; o ; d
 
 # :Openers - AT Launcher
 super + space ; o ; a
-      atlauncher
+      command -v prime-run && prime-run atlauncher || atlauncher
+
+# :Openers - Android file transfer
+super + space ; o ; f
+      android-file-transfer
+
+# :Openers - Runescape
+super + space ; o ; r
+      command -v prime-run && prime-run runescape-launcher || runescape-launcher
 
 # :Openers - Obsidian PKM
 super + space ; o ; o
@@ -207,10 +215,6 @@ super + {equal,minus}
 # :mpc -  Play/pause song
 super + p
       mpc toggle
-
-# :function - Lock the screen
-super + F1
-      slock -i $(fd -atf --base-directory $HOME/pix/wallpapers/dt -0 | shuf -z -n 1)
 
 # :function - Toggle Buckle spring keyboard sound effect
 super + F2

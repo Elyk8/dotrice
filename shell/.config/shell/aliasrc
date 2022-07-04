@@ -219,9 +219,9 @@ alias e="\$EDITOR"
 alias br='bulk-rename'
 alias lf='lfcd'
 
-se() { fd -atf --base-directory ~/.config | fzf | xargs -r "$EDITOR"; }
-sr() { fd -atf --base-directory ~/.scripts | fzf | xargs -r "$EDITOR"; }
-sc() { fd -Hatf --base-directory ~/.dotrice | fzf | xargs -r "$EDITOR"; }
+se() { fd -atf --base-directory "$XDG_CONFIG_HOME" | fzf | xargs -r "$EDITOR"; }
+sr() { fd -atf --base-directory "$SCRIPTS" | fzf | xargs -r "$EDITOR"; }
+sc() { fd -Hatf --base-directory "$DOTS" | fzf | xargs -r "$EDITOR"; }
 xevv() { xev | awk -F'[ )]+' '/^KeyPress/ { a[NR+2] } NR in a { printf "%-3s %s\n", $5, $8 }'; }
 
 rosstart() {
