@@ -1,7 +1,11 @@
 #!/usr/bin/env zsh
 
+# XDG Directories
+export SCRIPTS=${SCRIPTS:="$HOME/.dotrice/scripts"}
+export DOTS=${DOTS:="$HOME/.dotrice"}
+
 # Adds `~/.local/bin` to $PATH
-PATH="$PATH:$HOME/.local/bin:$HOME/.ghcup/bin:$HOME/.cabal/bin:${$(find -L $HOME/.scripts -type d -printf %p:)%%:}"
+PATH="$PATH:$HOME/.local/bin:$HOME/.ghcup/bin:$HOME/.cabal/bin:${$(find -L $SCRIPTS -type d -printf %p:)%%:}"
 export PATH
 
 unsetopt PROMPT_SP
@@ -50,10 +54,6 @@ export TEXMFCONFIG=$XDG_CONFIG_HOME/texlive/texmf-config
 export CUDA_CACHE_PATH="$XDG_CACHE_HOME"/nv
 export NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/npmrc
 export ASPELL_CONF="per-conf $XDG_CONFIG_HOME/aspell/aspell.conf; personal $XDG_CONFIG_HOME/aspell/en.pws; repl $XDG_CONFIG_HOME/aspell/en.prepl"
-
-# XDG Directories
-export SCRIPTS=${SCRIPTS:="$HOME/.scripts"}
-export DOTS=${DOTS:="$HOME/.dotrice"}
 
 # Other program settings:
 export DICS="/usr/share/stardict/dic/"

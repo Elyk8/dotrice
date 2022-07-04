@@ -1,0 +1,32 @@
+#!/bin/sh
+
+defdisplay="HEAD-1"
+
+for i in $(seq 10); do
+    if xsetwacom list | grep -q GAOMON; then
+        break
+    fi
+    sleep 1
+done
+
+if ! which xsetwacom >/dev/null; then
+    notify-send "Please install the xf86-input-wacom drivers."
+    return 0
+fi
+
+if [ -z "$(xsetwacom list)" ]; then
+    notify-send "Please plugin you drawing tablet." \
+        "Or make sure you set up your tablet properly."
+fi
+
+if [ "$1" = "--interactive" ] || [ "$1" = "-i" ]; then
+    display=$(printf "%s\n" "HEAD-0" "HEAD-1" | dmenu -l 2 -p "Which display to map tablet to?")
+    xsetwacom set "GAOMON Gaomon Tablet stylus" MapToOutput "$display" >/dev/null
+else
+    xsetwacom --set 'GAOMON Gaomon Tablet Pad pad' Button 1 "key +ctrl c -ctrl"
+    xsetwacom --set 'GAOMON Gaomon Tablet Pad pad' Button 2 "key +ctrl v -ctrl"
+    xsetwacom --set 'GAOMON Gaomon Tablet Pad pad' Button 3 "key +ctrl - -ctrl"
+    xsetwacom --set 'GAOMON Gaomon Tablet Pad pad' Button 8 "key +ctrl + -ctrl"
+
+    xsetwacom set "GAOMON Gaomon Tablet stylus" MapToOutput "$defdisplay" >/dev/null
+fi

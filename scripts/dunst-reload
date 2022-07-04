@@ -1,0 +1,7 @@
+#!/bin/sh
+
+killall dunst
+sleep 0.2
+setsid -f dunst
+sleep 0.2
+setsid -f musnify-mpd

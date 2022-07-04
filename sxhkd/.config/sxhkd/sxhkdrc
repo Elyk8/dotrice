@@ -216,6 +216,10 @@ super + {equal,minus}
 super + p
       mpc toggle
 
+# :mpc -  Seek backward/forward
+super + {comma,period}
+      mpc seek {-,+}5
+
 # :function - Toggle Buckle spring keyboard sound effect
 super + F2
       buckle-spring

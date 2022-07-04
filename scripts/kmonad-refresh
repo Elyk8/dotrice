@@ -1,0 +1,24 @@
+#!/bin/sh
+
+config="$HOME/.config/kmonad/kmonad.kbd"
+keyb1="/dev/input/by-id/usb-Lenovo_ThinkPad_Compact_USB_Keyboard_with_TrackPoint-event-kbd"
+keyb2="/dev/input/by-id/usb-Razer_Razer_BlackWidow_Tournament_Edition-event-kbd"
+killall kmonad
+
+sleep 0.1
+
+setsid -f kmonad $config
+
+sleep 0.1
+
+for keyboard in $keyb1 $keyb2 $keyb3; do
+	if test -e $keyboard; then
+		dest="/tmp/kmonad-lenovo.kbd"
+		cp $config $dest
+		sed -i 's:/dev/input/by-path/platform-i8042-serio-0-event-kbd:'$keyboard':' $dest
+		setsid -f kmonad $dest
+	fi
+    sleep 0.1
+done
+
+notify-send "Kmonad successfully refreshed"

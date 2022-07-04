@@ -26,9 +26,9 @@ bind -n M-q \
   if-shell \
     '[ "$(tmux display-message -p "#{window_panes}")" -gt 1 ]' \
     'kill-pane; select-layout; select-layout -E' \
-    'kill-pane'
+    'detach'
 
-bind Escape copy-mode
+bind-key -r k copy-mode
 bind -T copy-mode-vi v send -X begin-selection
 bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "pbcopy"
 bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "pbcopy"
@@ -40,3 +40,4 @@ bind-key -r i run-shell "tmux neww tmux-cht.sh"
 bind-key -r p run-shell "tmux neww pomo"
 bind-key -r s run-shell "tmux neww \"fd -Hatf --base-directory $SCRIPTS | fzf | xargs -r $EDITOR\""
 bind-key -r c run-shell "tmux neww \"fd -Hatf --base-directory $DOTS | fzf | xargs -r $EDITOR\""
+bind-key -r n run-shell "tmux neww newsboat"

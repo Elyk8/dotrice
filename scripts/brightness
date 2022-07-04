@@ -1,0 +1,52 @@
+#!/bin/sh
+#
+# Set brightness with xbacklight, but never go below 1 (as that's "off").
+
+# Increment to use.
+cur=$(xbacklight -get)
+case "$1" in
+	"") echo "$cur" ;;
+	"up")
+		if [ "$cur" = 0 ]; then
+			xbacklight -set 1
+		else
+			xbacklight -inc 5
+		fi
+		;;
+	"down")
+		if [ "$cur" -le 5 ]; then
+			xbacklight -set 1
+		else
+			xbacklight -dec 5
+		fi
+		;;
+	"sup")
+		if [ "$cur" = 0 ]; then
+			xbacklight -set 1
+		else
+			xbacklight -inc 1
+		fi
+		;;
+	"sdown")
+		if [ "$cur" -le 5 ]; then
+			xbacklight -set 1
+		else
+			xbacklight -dec 1
+		fi
+		;;
+	*)
+		echo "Unsupported: \"$1\""
+		exit 1
+		;;
+esac
+
+cur=$(xbacklight -get)
+if [ "$cur" -le 30 ]; then
+	icon_path="/usr/share/icons/Papirus-Dark/symbolic/status/display-brightness-low-symbolic.svg"
+elif [ "$cur" -ge 70 ]; then
+	icon_path="/usr/share/icons/Papirus-Dark/symbolic/status/display-brightness-high-symbolic.svg"
+else
+	icon_path="/usr/share/icons/Papirus-Dark/symbolic/status/display-brightness-medium-symbolic.svg"
+fi
+
+dunstify "$cur %" -i "$icon_path" -t 2000 -h int:value:"$cur" --replace=555
