@@ -1,22 +1,24 @@
 #!/bin/sh
 
-if [ $# -ne 4 ]; then
-    echo "Usage: "${0}" <i3_mark> <launch_cmd>" "<x_dimension" "<y_dimension"
-    echo "Example: ${0} 'scratch-emacs' 'emacsclient -c -a emacs'" "1200" "800"
+if [ $# -lq 3 ]; then
+    echo "Usage: "${0}" <i3_mark> <launch_cmd>" "<width_%>" "<height_%>"
+    echo "Example: ${0} 'scratch-emacs' 'emacsclient -c -a emacs'" "70" "80"
     exit 1
 fi
 
 I3_MARK=${1}
 LAUNCH_CMD=${2}
-X_DIM=${3}
-Y_DIM=${4}
+WIDTH=${3}
+HEIGHT=${4}
 
 scratchpad_show() {
     i3-msg "[con_mark=${I3_MARK}]" floating enable
-    i3-msg "[con_mark=${I3_MARK}]" resize set ${X_DIM:=1200} ${Y_DIM:=800}
+    i3-msg "[con_mark=${I3_MARK}]" resize set ${WIDTH:=70} ppt ${HEIGHT:=80} ppt
     i3-msg "[con_mark=${I3_MARK}]" sticky enable
     i3-msg "[con_mark=${I3_MARK}]" scratchpad show
 }
+
+i3-msg fullscreen disable &
 
 # try showing the scratchpad window
 if ! scratchpad_show; then
@@ -24,7 +26,6 @@ if ! scratchpad_show; then
 
     # launch the application.
     eval "${LAUNCH_CMD}" &
-    sleep 0.1
 
     # Wait for the next window event.
     i3-msg -t subscribe  '[ "window" ]'

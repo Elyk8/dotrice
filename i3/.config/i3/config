@@ -148,7 +148,7 @@ for_window [title="Picture-in-Picture"] floating enable
 for_window [title="Picture-in-Picture"] sticky enable
 for_window [class="vim-everywhere"] floating enable; move position center
 for_window [class="Dragon-drop"] sticky enable
-for_window [window_role="GtkFileChooserDialog"] resize set width 1000 px height 800 px
+for_window [window_role="GtkFileChooserDialog"] resize set width 70 ppt height 80 ppt
 for_window [window_role="GtkFileChooserDialog"] move position center
 
 for_window [instance="dropdown_*"] floating enable
@@ -160,6 +160,7 @@ for_window [instance="dropdown_*"] move position center
 # Borders
 # for_window [class=".*"] border pixel 0
 default_border pixel 2
+default_floating_border pixel 3
 hide_edge_borders both
 
 # Gaps
@@ -261,7 +262,7 @@ exec_always --no-startup-id $HOME/.fehbg
 #exec_always --no-startup-id autorandr --change --force
 
 # enable window icons for all windows with extra horizontal padding of 1px
-for_window [all] title_window_icon padding 1px
+# for_window [all] title_window_icon padding 1px
 
 # Colors
 set_from_resource $bg-color            background

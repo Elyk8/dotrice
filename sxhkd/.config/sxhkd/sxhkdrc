@@ -10,7 +10,7 @@ super + space ; space
 
 # Dropdown terminal
 super + space ; d
-      dropdown "scratch-term" "$TERMINAL --class Dropdown,Dropdown" "1000" "700"
+      dropdown "scratch-term" "$TERMINAL --class Dropdown,Dropdown"
 
 # Open terminal emulator
 super + space ; t
@@ -22,7 +22,7 @@ super + space ; r
 
 # Open ncmpcpp music player
 super + space ; n
-      dropdown "scratch-ncmpcpp" "$TERMINAL --class Dropdown,Dropdown -e ncmpcpp" "1000" "700"
+      dropdown "scratch-ncmpcpp" "$TERMINAL --class Dropdown,Dropdown -e ncmpcpp"
 
 # Dmenu list opened windows
 super + space ; b
@@ -142,7 +142,7 @@ super + space ; semicolon ; e
 
 # :Sys - Open pulsemixer volume manager
 super + space ; semicolon ; v
-      dropdown "scratch-pulsemixer" "$TERMINAL --class Dropdown,Dropdown -e pulsemixer" "1000" "700"
+      dropdown "scratch-pulsemixer" "$TERMINAL --class Dropdown,Dropdown -e pulsemixer"
 
 # :Sys - Interactively setwallpaper using nsxiv
 super + space ; semicolon ; w
