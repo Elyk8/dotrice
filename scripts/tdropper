@@ -1,0 +1,2 @@
+#!/bin/sh
+tdrop --monitor-aware --auto-detect-wm -N "$@"

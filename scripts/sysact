@@ -21,7 +21,7 @@ esac
 
 case $(logout_menu | awk -F"." '{print $1}') in
 	"1") slock ;;
-	"2") pidof sxhkd && pkill -SIGUSR1 sxhkd || setsid -f sxhkd ;;
+	"2") pgrep sxhkd && pkill -SIGUSR1 sxhkd || setsid -f sh -c "sxhkd" ;;
 	"3") dm-wacom --interactive ;;
 	"4") pgrep $wm && pkill $wm ;;
 	"5") $ctl reboot -i ;;

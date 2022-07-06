@@ -61,7 +61,7 @@ bindsym $mod+t layout tabbed
 bindsym $mod+n layout toggle split
 
 bindsym $mod+g floating toggle
-bindsym $mod+o focus mode_toggle
+bindsym $mod+mod1+o focus mode_toggle
 
 bindsym $mod+w focus output right
 bindsym $mod+Shift+w move workspace to output right
@@ -122,7 +122,7 @@ bindsym $mod+Shift+8 move container to workspace $w8; workspace $w8
 bindsym $mod+Shift+9 move container to workspace $w9; workspace $w9
 #bindsym $mod+Shift+0 move container to workspace $w10
 
-bindsym $mod+e exec --no-startup-id "i3-display-swap"
+bindsym $mod+d exec --no-startup-id "i3-display-swap"
 
 assign [class="firefox"] $w1
 assign [class="qutebrowser"] $w1
@@ -146,7 +146,8 @@ for_window [title="VirtScreen"] floating enable
 for_window [class="cinnamon-settings*"] floating enable
 for_window [title="Picture-in-Picture"] floating enable
 for_window [title="Picture-in-Picture"] sticky enable
-for_window [class="vim-everywhere"] floating enable; move position center
+for_window [instance="Everywhere"] floating enable; move position center
+for_window [instance="Dropdown"] floating enable; move position center
 for_window [class="Dragon-drop"] sticky enable
 for_window [window_role="GtkFileChooserDialog"] resize set width 70 ppt height 80 ppt
 for_window [window_role="GtkFileChooserDialog"] move position center

@@ -10,11 +10,11 @@ super + space ; space
 
 # Dropdown terminal
 super + space ; d
-      dropdown "scratch-term" "$TERMINAL --class Dropdown,Dropdown"
+			tdropper -n term $TERMINAL --class Dropdown
 
 # Open terminal emulator
-super + space ; t
-      $TERMINAL
+super + Return
+      run-or-raise 'class = "Alacritty"' $TERMINAL
 
 # Open lf file manager
 super + space ; r
@@ -22,7 +22,7 @@ super + space ; r
 
 # Open ncmpcpp music player
 super + space ; n
-      dropdown "scratch-ncmpcpp" "$TERMINAL --class Dropdown,Dropdown -e ncmpcpp"
+			tdropper -n ncmpcpp $TERMINAL --class Dropdown -e ncmpcpp
 
 # Dmenu list opened windows
 super + space ; b
@@ -45,107 +45,107 @@ super + space ; v
       neovide
 
 # Neovim everywhere
-super + space ; e
-	nvim-everywhere
+super + e
+			nvim-everywhere
 
 # :Openers - Discord
-super + space ; o ; d
+super + o ; d
       discord
 
 # :Openers - AT Launcher
-super + space ; o ; a
+super + o ; a
       command -v prime-run && prime-run atlauncher || atlauncher
 
 # :Openers - Android file transfer
-super + space ; o ; f
+super + o ; f
       android-file-transfer
 
 # :Openers - Runescape
-super + space ; o ; r
+super + o ; r
       command -v prime-run && prime-run runescape-launcher || runescape-launcher
 
 # :Openers - Obsidian PKM
-super + space ; o ; o
+super + o ; o
       run-or-raise 'class = "obsidian"' sh -c "cd / && exec /usr/bin/obsidian; cd -"
 
 # :Openers - VSCodium
-super + space ; o ; v
+super + o ; v
       vscodium
 
 # :Openers - zotero
-super + space ; o ; t
+super + o ; t
       pidof zotero >/dev/null && wmctrl -lx | awk '$3 ~ "Zotero" {print $1}' | head -1 | xargs -r xdotool windowactivate || zotero
 
 # :Openers - Zoom
-super + space ; o ; z
+super + o ; z
       zoom
 
 # :Dmenu - Man pages
-super + space ; p ; a
+super + p ; a
       dm-man
 
 # :Dmenu - Clipmenu clipboard manager
-super + space ; p ; c
+super + p ; c
       clipmenu
 
 # :Dmenu - Open terminal in directory
-super + space ; p ; d
+super + p ; d
       dm-directory
 
 # :Dmenu - Change colorscheme
-super + space ; p ; shift + c
+super + p ; shift + c
       dm-colorscheme
 
 # :Dmenu - Emoji selector to clipboard
-super + space ; p ; e
+super + p ; e
       dm-emoji
 
 # :Dmenu - kill application
-super + space ; p ; k
+super + p ; k
       dm-kill
 
 # :Dmenu - Mount drives
-super + space ; p ; o
+super + p ; o
       dm-mount
 
 # :Dmenu - Passmenu passwords to clipboard
-super + space ; p ; p
+super + p ; p
       dm-passmenu
 
 # :Dmenu - Radio fm
-super + space ; p ; b
+super + p ; b
       dm-beats
 
 # :Dmenu - Open scripts in $EDITOR
-super + space ; p ; s
+super + p ; s
       dm-scripts
 
 # :Dmenu - Unmount drives
-super + space ; p ; u
+super + p ; u
       dm-umount
 
 # :Dmenu - Wttr weather forecast
-super + space ; p ; w
+super + p ; w
       weatherforecast
 
 # :Sys - Setwallpaper Randomly from "a2n" collection
-super + space ; semicolon ; a
+super + semicolon ; a
       setwallpaper a2n
 
 # :Sys - Setwallpaper Randomly from "dt" collection
-super + space ; semicolon ; d
+super + semicolon ; d
       setwallpaper dt
 
 # :Sys - Setwallpaper Randomly from personal collection
-super + space ; semicolon ; e
+super + semicolon ; e
       setwallpaper elyk
 
 # :Sys - Open pulsemixer volume manager
-super + space ; semicolon ; v
-      dropdown "scratch-pulsemixer" "$TERMINAL --class Dropdown,Dropdown -e pulsemixer"
+super + semicolon ; v
+			tdropper -n pulsemixer $TERMINAL --class Dropdown -e pulsemixer
 
 # :Sys - Interactively setwallpaper using nsxiv
-super + space ; semicolon ; w
+super + semicolon ; w
       nsxiv -rqto $XDG_PICTURES_DIR/wallpapers/*
 
 # :Sys - System activity
@@ -213,7 +213,7 @@ super + {equal,minus}
       mpc volume {+,-}2 && mpc-volume
 
 # :mpc -  Play/pause song
-super + p
+super + BackSpace
       mpc toggle
 
 # :mpc -  Seek backward/forward

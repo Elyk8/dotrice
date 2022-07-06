@@ -1,11 +1,5 @@
 #!/bin/sh
 
-if [ $# -lq 3 ]; then
-    echo "Usage: "${0}" <i3_mark> <launch_cmd>" "<width_%>" "<height_%>"
-    echo "Example: ${0} 'scratch-emacs' 'emacsclient -c -a emacs'" "70" "80"
-    exit 1
-fi
-
 I3_MARK=${1}
 LAUNCH_CMD=${2}
 WIDTH=${3}
@@ -31,7 +25,7 @@ if ! scratchpad_show; then
     i3-msg -t subscribe  '[ "window" ]'
 
     # Set a mark
-    i3-msg mark ${I3_MARK}
+    i3-msg mark "${I3_MARK}"
 
     # Move it to the scratchpad workspace
     i3-msg move scratchpad
