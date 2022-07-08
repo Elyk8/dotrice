@@ -127,7 +127,7 @@ bindsym $mod+d exec --no-startup-id "i3-display-swap"
 assign [class="firefox"] $w1
 assign [class="qutebrowser"] $w1
 assign [class="Chromium"] $w2
-assign [class="Alacritty"] $w3
+assign [instance="Alacritty"] $w3
 # assign [class="neovide"] $w3
 assign [class="obsidian"] $w4
 assign [class="discord"] $w5

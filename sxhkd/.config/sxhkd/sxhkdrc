@@ -14,7 +14,7 @@ super + space ; d
 
 # Open terminal emulator
 super + Return
-      run-or-raise 'class = "Alacritty"' $TERMINAL
+      $TERMINAL
 
 # Open lf file manager
 super + space ; r

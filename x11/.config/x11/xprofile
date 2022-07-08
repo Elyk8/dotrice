@@ -22,7 +22,7 @@ eval "$(gnome-keyring-daemon --start)"
 export SSH_AUTH_SOCK
 
 run kmonad-refresh &
-run /usr/bin/emacs --daemon &
+# run /usr/bin/emacs --daemon &
 run /usr/bin/pipewire &
 run pacmac-tray &
 run sxhkd &

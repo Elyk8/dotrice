@@ -1,6 +1,9 @@
 #!/bin/sh
 
-xrandr --output eDP1 --primary --mode 1920x1080 --pos 0x0 --rotate normal \
-  --output DP1 --off \
-  --output VIRTUAL1 --off \
-  --output HDMI-1-0 --mode 1920x1080 --pos 1920x0 --rotate normal --set "PRIME Synchronization" 1
+xrandr --output eDP1 --primary --auto \
+  --output HDMI-1-0 --auto --right-of eDP1 --set "PRIME Synchronization" 1
+
+# xrandr --dpi 141 --fb 3969x2232 \
+# 	--output eDP1 --primary --mode 1920x1080 \
+# 	--output HDMI-1-0 --set "PRIME Synchronization" 1 \
+# 	--scale 1.5x1.5 --pos 1920x0 --panning 2049x1152+1920+0

@@ -1,9 +1,9 @@
 Xft.autohint: true
 Xft.Hinting: 1
-Xft.RGBA: rgb
+Xft.rgba: rgb
 Xft.HintStyle: hintslight
 Xft.Antialias: 1
-Xft.lcdfilter: lcdfilter
+Xft.lcdfilter: lcddefault
 Xcursor.theme: Breeze-Blue
 
 XTerm*termName: xterm-256color
