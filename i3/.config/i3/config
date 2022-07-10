@@ -1,5 +1,5 @@
 set $mod Mod4
-set $autotiling autotiling-rs -w 1 -w 2 -w 3 -w 5 -w 6 -w 7 -w 8 -w 9
+set $autotiling autotiling-rs
 font pango:monospace 11
 
 # Use Mouse+$mod to drag floating windows to their wanted position
@@ -61,7 +61,7 @@ bindsym $mod+t layout tabbed
 bindsym $mod+n layout toggle split
 
 bindsym $mod+g floating toggle
-bindsym $mod+mod1+o focus mode_toggle
+bindsym $mod+mod1+Space focus mode_toggle
 
 bindsym $mod+w focus output right
 bindsym $mod+Shift+w move workspace to output right
@@ -102,7 +102,7 @@ workspace $w6 output $secondary
 bindsym $mod+1 workspace $w1
 bindsym $mod+2 workspace $w2
 bindsym $mod+3 workspace $w3
-bindsym $mod+4 workspace $w4; layout stacking
+bindsym $mod+4 workspace $w4
 bindsym $mod+5 workspace $w5
 bindsym $mod+6 workspace $w6
 bindsym $mod+7 workspace $w7

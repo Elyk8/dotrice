@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=RuneScape
+GenericName=RuneScape
+Comment=RuneScape - A Free MMORPG from Jagex Ltd.
+Icon=runescape
+Terminal=false
+Exec=prime-run /usr/bin/runescape-launcher %u
+Categories=Game;
+MimeType=x-scheme-handler/rs-launch;x-scheme-handler/rs-launchs
