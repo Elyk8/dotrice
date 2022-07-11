@@ -61,7 +61,7 @@ bindsym $mod+t layout tabbed
 bindsym $mod+n layout toggle split
 
 bindsym $mod+g floating toggle
-bindsym $mod+mod1+Space focus mode_toggle
+bindsym $mod+mod1+space focus mode_toggle
 
 bindsym $mod+w focus output right
 bindsym $mod+Shift+w move workspace to output right
@@ -146,7 +146,8 @@ for_window [title="VirtScreen"] floating enable
 for_window [class="cinnamon-settings*"] floating enable
 for_window [title="Picture-in-Picture"] floating enable
 for_window [title="Picture-in-Picture"] sticky enable
-for_window [instance="Everywhere"] floating enable; move position center
+for_window [instance="Everywhere"] floating enable; move position center; resize set width 65 ppt height 80 ppt
+for_window [instance="Capture"] floating enable; move position center; resize set width 65 ppt height 80 ppt
 for_window [instance="Dropdown"] floating enable; move position center
 for_window [class="Dragon-drop"] sticky enable
 for_window [window_role="GtkFileChooserDialog"] resize set width 70 ppt height 80 ppt

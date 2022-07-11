@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+
+# A better way to write fleeting notes using neovim.
+
+TMPFILE=/tmp/nvim-capture
+rm $TMPFILE
+
+ZK="$HOME/Documents/obsidian/Journal/Dailies/$(date -I).md"
+DATE="$(date +%R)"
+DATED=false
+
+if grep -o "## $DATE" "$ZK"; then
+  DATED=true
+fi
+
+# Linux
+#chmod o-r $TMPFILE # Make file only readable by you
+"$TERMINAL" --class Capture -e nvim +3 -c "set ft=markdown" "$TMPFILE"
+
+if ! $DATED; then
+  printf "\n\n## %s" "$DATE" >>"$ZK"
+fi
+printf "\n\n%s" "$(cat $TMPFILE)" >>"$ZK"
