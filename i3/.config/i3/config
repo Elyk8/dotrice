@@ -258,7 +258,7 @@ mode "move" {
 bindsym $mod+m mode "move" focus floating
 
 # Startup
-exec_always --no-startup-id $autotiling
+#exec_always --no-startup-id $autotiling
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec_always --no-startup-id $HOME/.fehbg
 #exec_always --no-startup-id autorandr --change --force

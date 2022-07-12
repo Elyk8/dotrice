@@ -3,7 +3,7 @@
 # A better way to write fleeting notes using neovim.
 
 TMPFILE=/tmp/nvim-capture
-rm $TMPFILE
+rm $TMPFILE > /dev/null 2>&1
 
 ZK="$HOME/Documents/obsidian/Journal/Dailies/$(date -I).md"
 DATE="$(date +%R)"
@@ -17,7 +17,11 @@ fi
 #chmod o-r $TMPFILE # Make file only readable by you
 "$TERMINAL" --class Capture -e nvim +3 -c "set ft=markdown" "$TMPFILE"
 
+if [ -z $TMPFILE]; then
+  exit 1
+fi
+
 if ! $DATED; then
   printf "\n\n## %s" "$DATE" >>"$ZK"
 fi
-printf "\n\n%s" "$(cat $TMPFILE)" >>"$ZK"
+printf "\n\n%s" "$(cat $TMPFILE 2>&1)" >>"$ZK"
