@@ -6,8 +6,8 @@ run() {
 }
 
 if [ "$(uname -n)" = "gpdskynet" ]; then
-	xrandr -o right
-	xinput set-prop "pointer:Goodix Capacitive TouchScreen" --type=float "Coordinate Transformation Matrix" 0 1 0 -1 0 1 0 0 1
+	# xrandr -o right
+	# xinput set-prop "pointer:Goodix Capacitive TouchScreen" --type=float "Coordinate Transformation Matrix" 0 1 0 -1 0 1 0 0 1
 	run unclutter --hide-on-touch
 	python3 /usr/share/slimbookintelcontroller/src/slimbookintelcontrollerindicator.py &
 	xrdb -merge ~/.config/x11/Xresources.d/gpdskynet.xresources
