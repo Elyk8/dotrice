@@ -224,9 +224,9 @@ super + {comma,period}
 super + F2
       buckle-spring
 
-# :function - Refresh doom configuration and restart the emacs daemon
+# :function - Reset monitor configuration
 super + F3
-      restart-emacs
+      autorandr --change --force
 
 # :function - Refresh kmonad configuration
 super + F4

@@ -39,4 +39,9 @@ xsetroot -cursor_name left_ptr
 
 run syncthing-gtk --minimized
 
+# Don't Randomly Turn off
+xset s off
+xset -dpms
+xset s noblank
+
 [ -n "$xrdbpid" ] && wait "$xrdbpid"

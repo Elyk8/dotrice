@@ -25,5 +25,5 @@ do
 done
 i3-msg -- workspace --no-auto-back-and-forth "${ACTIVE_WS}"
 
-sleep 0.5 && killall blocker &
+killall blocker &
 # rm $failsafe

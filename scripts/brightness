@@ -2,13 +2,19 @@
 #
 # Set brightness with xbacklight, but never go below 1 (as that's "off").
 
+if pidof -x blocker >/dev/null 2>&1; then
+  exit 1
+fi
+
+blocker >/dev/null 2>&1 &
+
 # Increment to use.
 cur=$(xbacklight -get)
 case "$1" in
 	"") echo "$cur" ;;
 	"up")
-		if [ "$cur" = 0 ]; then
-			xbacklight -set 1
+		if [ "$cur" = 1 ]; then
+			xbacklight -inc 4
 		else
 			xbacklight -inc 5
 		fi
@@ -50,3 +56,5 @@ else
 fi
 
 dunstify "$cur %" -i "$icon_path" -t 2000 -h int:value:"$cur" --replace=555
+
+killall blocker &
