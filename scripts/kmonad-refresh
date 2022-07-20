@@ -11,7 +11,7 @@ setsid -f kmonad $config
 
 sleep 0.1
 
-for keyboard in $keyb1 $keyb2 $keyb3; do
+for keyboard in $keyb1 $keyb2; do
 	if test -e $keyboard; then
 		dest="/tmp/kmonad-lenovo.kbd"
 		cp $config $dest
