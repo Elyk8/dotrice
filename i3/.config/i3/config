@@ -147,8 +147,12 @@ for_window [class="cinnamon-settings*"] floating enable
 for_window [title="Picture-in-Picture"] floating enable
 for_window [title="Picture-in-Picture"] sticky enable
 for_window [instance="Everywhere"] floating enable; move position center; resize set width 65 ppt height 80 ppt
-for_window [instance="Capture"] floating enable; move position center; resize set width 65 ppt height 80 ppt
-for_window [instance="Dropdown"] floating enable; move position center
+for_window [instance="Capture"] floating enable
+for_window [instance="Capture"] resize set width 65 ppt height 80 ppt
+for_window [instance="Capture"] move position center
+for_window [instance="Dropdown"] floating enable
+for_window [instance="Dropdown"] resize set width 65 ppt height 80 ppt
+for_window [instance="Dropdown"] move position center
 for_window [class="Dragon-drop"] sticky enable
 for_window [window_type="dialog"] resize set width 70 ppt height 80 ppt
 for_window [window_type="dialog"] move position center
@@ -260,10 +264,11 @@ mode "move" {
 bindsym $mod+m mode "move" focus floating
 
 # Startup
-#exec_always --no-startup-id $autotiling
+exec_always --no-startup-id $autotiling
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec_always --no-startup-id $HOME/.fehbg
 #exec_always --no-startup-id autorandr --change --force
+exec --no-startup-id  $HOME/.config/i3/i3-master-stack/i3_master
 
 # enable window icons for all windows with extra horizontal padding of 1px
 # for_window [all] title_window_icon padding 1px

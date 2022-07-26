@@ -45,7 +45,7 @@ for file; do
 	if cmp -s "$tmp" "$tmpcopy"; then
 		echo 'File unchanged, exiting...'
 	else
-		doas dd if="$tmp" of="$file"
+		doas dd if="$tmp" of="$file" > /dev/null 2>&1
 		echo 'Done, changes written'
 	fi
 
