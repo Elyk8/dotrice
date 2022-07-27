@@ -93,7 +93,10 @@ CONF
 
 neovim_colorconf="$HOME/.config/nvim/lua/configs/colorscheme.lua"
 neovim_change() {
-	sed -i "s/colorscheme = .*/colorscheme = \"$colorscheme\"/g" "$neovim_colorconf"
+	case "$colorscheme" in
+	"darkplus") theme="vscode" ;;
+	esac
+	sed -i "s/colorscheme = .*/colorscheme = \"$theme\"/g" "$neovim_colorconf"
 }
 
 appendix() {

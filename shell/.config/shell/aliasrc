@@ -202,6 +202,7 @@ alias fgrep='fgrep --color=auto'
 alias diff="diff --color=auto"
 
 # Others
+alias stow="stow --target \$HOME"
 alias ka="killall"
 alias re='source $ZDOTDIR/.zshrc'
 alias sumake='doas make clean install'
