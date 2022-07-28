@@ -59,9 +59,9 @@ set-window-option -g mode-style bg=colour08,fg=default
 #################################### FORMAT ####################################
 # padding above status line
 # setw -g pane-border-status bottom
-# setw -g pane-border-format "─"
-# setw -g pane-border-style fg=$color_gray
-# setw -g pane-active-border-style fg=$color_gray
+setw -g pane-border-format "─"
+setw -g pane-border-style fg=black
+setw -g pane-active-border-style fg=default
 
 # set -g status-left "#{tmux_mode_indicator} #[fg=$color_gray]#{online_status}  %R"
 set -g status-left "#{tmux_mode_indicator} %R"

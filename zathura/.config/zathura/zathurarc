@@ -27,12 +27,12 @@
   set recolor true
   set recolor-keephue             true      # keep original color
 
-  set default-bg                  "#282A36" # bg
-  set default-fg                  "#F8F8F2" # fg
+  set default-bg                  "#1E1E1E" # bg
+  set default-fg                  "#D8DEE9" # fg
   set render-loading              true
-  set render-loading-bg           "#282A36" # bg
-  set render-loading-fg           "#F8F8F2" # fg
+  set render-loading-bg           "#1E1E1E" # bg
+  set render-loading-fg           "#D8DEE9" # fg
 
   # Recolor book content's color
-  set recolor-lightcolor          "#282A36" # bg
-  set recolor-darkcolor           "#F8F8F2" # fg
+  set recolor-lightcolor          "#1E1E1E" # bg
+  set recolor-darkcolor           "#D8DEE9" # fg

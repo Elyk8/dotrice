@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Compress all png images into jpg for backups, especially on the cloud
+
+for i in *.png; do
+  j="$(basename -s .png "$i").jpg"
+  convert "$i" -quality 75% -resize x1080 "$j"
+done

@@ -23,10 +23,10 @@ dmenu.font: monospace:size=11:antialias=true:autohint=true
 ! general
 st.alpha: 0.95
 
-! #include "./Xresources.d/darkplus.xresources"
+#include "./Xresources.d/darkplus.xresources"
 ! #include "./Xresources.d/tokyonight.xresources"
 ! #include "./Xresources.d/doom-one.xresources"
 ! #include "./Xresources.d/git.xresources"
 ! #include "./Xresources.d/gitdark.xresources"
 ! #include "./Xresources.d/dracula.xresources"
-#include "./Xresources.d/onedarker.xresources"
+! #include "./Xresources.d/onedarker.xresources"
