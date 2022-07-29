@@ -140,12 +140,40 @@ schemes:
       magenta: '#C586C0'
       cyan:    '#29B8DB'
       white:   '#ECEFF4'
-
       # }}}
-# }}}
 
-# doom-one, dracula, tokyonight, darkplus
-colors: *darkplus
+# {{{ One dark ###
+  onedark: &onedark
+    # Default colors
+    primary:
+      background: '#1e2127'
+      foreground: '#abb2bf'
+
+    # Normal colors
+    normal:
+      black:   '#1e2127'
+      red:     '#e06c75'
+      green:   '#98c379'
+      yellow:  '#d19a66'
+      blue:    '#61afef'
+      magenta: '#c678dd'
+      cyan:    '#56b6c2'
+      white:   '#828791'
+
+    # Bright colors
+    bright:
+      black:   '#5c6370'
+      red:     '#e06c75'
+      green:   '#98c379'
+      yellow:  '#d19a66'
+      blue:    '#61afef'
+      magenta: '#c678dd'
+      cyan:    '#56b6c2'
+      white:   '#e6efff'
+      # }}}
+
+# doom-one, dracula, tokyonight, darkplus, onedark
+colors: *doom-vibrant
 
 env:
   TERM: xterm-256color

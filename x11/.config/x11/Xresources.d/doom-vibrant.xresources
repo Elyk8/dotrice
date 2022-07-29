@@ -1,0 +1,48 @@
+! Doom one theme
+! general
+*foreground:   #BBC2CF
+*background:   #242730
+*cursorColor:  #51afef
+
+trayerColor:   0X242730
+
+! black
+*color0: #2a2e38
+*color8: #484854
+
+! red
+*color1: #ff665c
+*color9: #ff665c
+
+! green
+*color2:  #7bc275
+*color10: #99bb66
+
+! yellow
+*color3:  #fcce7b
+*color11: #ecbe7b
+
+! blue
+*color4:  #51afef
+*color12: #51afef
+
+! magenta
+*color5:  #C57BDB
+*color13: #c678dd
+
+! cyan
+*color6:  #5cEfFF
+*color14: #46D9FF
+
+! white
+*color7:  #DFDFDF
+*color15: #bbc2cf
+
+dmenu.normbgcolor:  #282C34
+dmenu.normfgcolor:  #51afef
+
+dmenu.selbgcolor:  #3F444A
+dmenu.selfgcolor:  #BBC2CF
+
+dmenu.selhlbgcolor:  #005577
+dmenu.selhlfgcolor:  #ECBE7B
