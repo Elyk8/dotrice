@@ -65,7 +65,7 @@ zsh_add_completion "esc/conda-zsh-completion" false
 # export FZF_DEFAULT_COMMAND='rg --hidden -l ""'
 
 # Tmux
-tmx main > /dev/null 2>&1
+# tmx main > /dev/null 2>&1
 
 # Edit line in vim with ctrl-e:
 autoload edit-command-line; zle -N edit-command-line >/dev/null
