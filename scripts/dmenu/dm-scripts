@@ -1,3 +1,0 @@
-#!/usr/bin/env sh
-script=$(fd -atf --base-directory ~/.scripts | dmenu -p "Scripts:" -l 8)
-[ "$script" = "" ] || sh -c "$script"

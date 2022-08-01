@@ -232,6 +232,10 @@ super + F3
 super + F4
       notify-send "Refreshing KMonad in 2 secs"; kmonad-refresh; notify-send "Success!"
 
+# :function - Monitor things
+super + F10
+      dm-monitor
+
 # :function - Adjust brightness
 super + {F11, F12}
       brightness {down,up}

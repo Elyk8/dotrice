@@ -1,5 +1,5 @@
 set $mod Mod4
-set $autotiling autotiling-rs
+set $autotiling autotiling
 font pango:monospace 11
 
 # Use Mouse+$mod to drag floating windows to their wanted position
