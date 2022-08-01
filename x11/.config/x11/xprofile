@@ -27,7 +27,8 @@ run /usr/bin/pipewire &
 run pacmac-tray &
 run sxhkd &
 run nm-applet &
-run dm-wacom &
+# run dm-wacom &
+run otd &
 run picom -b &
 run clipmenud &
 run redshift &
