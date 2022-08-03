@@ -45,7 +45,7 @@ super + space ; v
       neovide
 
 # Neovim everywhere
-super + e
+super + space ; e
 			nvim-everywhere
 
 # :Openers - Discord
