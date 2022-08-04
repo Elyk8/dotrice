@@ -111,6 +111,12 @@ export OPENER="xdg-open"
 export PAGER="less -S"
 export MANPAGER="nvim -c 'set ft=man nonumber nolist ts=8 laststatus=1 showtabline=1' '+Man!' -"
 
+# Common directories
+export DOCUMENTS_DIR="$HOME/Documents"
+export DOWNLOADS_DIR="$HOME/Downloads"
+export VIDEOS_DIR="$HOME/Videos"
+export PICTURES_DIR="$HOME/Pictures"
+
 # Others
 export MOZ_USE_XINPUT2="1"                    # Mozilla smooth scrolling/touchpads.
 export AWT_TOOLKIT="MToolkit wmname LG3D"     # May have to install wmname

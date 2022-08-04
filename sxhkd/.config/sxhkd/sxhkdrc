@@ -14,7 +14,7 @@ super + space ; d
 
 # Open terminal emulator
 super + Return
-      $TERMINAL
+			run-or-raise 'class = "kitty"' kitty
 
 # Open lf file manager
 super + space ; r

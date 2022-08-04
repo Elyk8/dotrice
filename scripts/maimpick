@@ -4,7 +4,7 @@
 # choose the kind of screenshot to take, including copying the image or even
 # highlighting an area to copy. scrotcucks on suicidewatch right now.
 
-output=${XDG_PICTURES_DIR:="$HOME/pix"}/screenshots/"$(date +%s_%h%d_%H:%M:%S).png"
+output=${XDG_PICTURES_DIR:="$HOME/Pictures"}/screenshots/"$(date +%s_%h%d_%H:%M:%S).png"
 
 take_screenshot() {
 	case "$1" in
