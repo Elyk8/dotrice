@@ -8,8 +8,8 @@ set scrolloff 10
 set icons
 set period 1
 set preview true
-# set hidden true
-set drawbox true
+set hidden true
+# set drawbox true
 set ignorecase true
 set hiddenfiles ".*:*.aux:*.log:*.bbl:*.bcf:*.blg:*.run.xml"
 
@@ -259,11 +259,9 @@ map gE cd /etc
 map gU. cd /usr
 map gUs cd /usr/share
 
-map gd cd ~/documents
-map gD cd ~/dl
-map gv. cd ~/vids
-map gp. cd ~/pix
-
-map gm apparish_jump
+map gd cd ~/Documents
+map gD cd ~/Downloads
+map gv cd ~/Videos
+map gp cd ~/Pictures
 
 map \;j cd ~

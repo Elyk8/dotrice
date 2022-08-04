@@ -16,7 +16,7 @@ focus_on_window_activation urgent
 bindsym $mod+Shift+c reload
 
 # fallback open terminal
-bindsym $mod+F1 exec --no-startup-id alacritty
+bindsym $mod+F1 exec --no-startup-id kitty
 
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
@@ -125,10 +125,12 @@ bindsym $mod+Shift+9 move container to workspace $w9; workspace $w9
 
 bindsym $mod+d exec --no-startup-id "i3-display-swap"
 
+# General
 assign [class="firefox"] $w1
 assign [class="qutebrowser"] $w1
 assign [class="Chromium"] $w2
 assign [instance="Alacritty"] $w3
+assign [instance="kitty"] $w3
 # assign [class="neovide"] $w3
 assign [class="obsidian"] $w4
 assign [class="discord"] $w5
@@ -143,6 +145,7 @@ assign [class="Minecraft*"] $w7
 assign [class="RuneScape"] $w7
 assign [class="Runescape"] $w7
 
+# Rules
 for_window [title="VirtScreen"] floating enable
 for_window [class="cinnamon-settings*"] floating enable
 for_window [title="Picture-in-Picture"] floating enable
