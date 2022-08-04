@@ -22,6 +22,7 @@ xmonad/.config/xmonad/xmonad.errors
 xmonad/.config/xmonad/xmonad.hi
 xmonad/.config/xmonad/xmonad.o
 
+ncmpcpp/.config/ncmpcpp/*.log
 # Applications
 applications/.local/share/applications/discord*
 
