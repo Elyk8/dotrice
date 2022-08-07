@@ -212,6 +212,10 @@ super + shift + bracketleft
 super + {equal,minus}
       mpc volume {+,-}2 && mpc-volume
 
+# :mpc -  {Increase,Decrease} volume by 2
+super + shift + {equal,minus}
+      mpc volume {50,20} && mpc-volume
+
 # :mpc -  Play/pause song
 super + BackSpace
       mpc toggle
