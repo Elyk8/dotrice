@@ -20,14 +20,14 @@
 
 trayerColor:   0x282A36
 
-dmenu.normbgcolor:  #282A36
-dmenu.normfgcolor:  #F8F8F2
+dmenu.norm.bg.color:  #282A36
+dmenu.norm.fg.color:  #F8F8F2
 
-dmenu.selbgcolor:  #4D4D4D
-dmenu.selfgcolor:  #F8F8F2
+dmenu.sel.bg.color:  #4D4D4D
+dmenu.sel.fg.color:  #F8F8F2
 
-dmenu.selhlbgcolor:  #005577
-dmenu.selhlfgcolor:  #F4F99D
+dmenu.sel.hlbg.color:  #005577
+dmenu.sel.hlfg.color:  #F4F99D
 
 /* Dusk Theme */
 #define dracula0 #171929

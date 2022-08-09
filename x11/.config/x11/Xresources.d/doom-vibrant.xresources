@@ -38,11 +38,11 @@ trayerColor:   0X242730
 *color7:  #DFDFDF
 *color15: #bbc2cf
 
-dmenu.normbgcolor:  #282C34
-dmenu.normfgcolor:  #51afef
+dmenu.norm.bg.color:  #282C34
+dmenu.norm.fg.color:  #51afef
 
-dmenu.selbgcolor:  #3F444A
-dmenu.selfgcolor:  #BBC2CF
+dmenu.sel.bg.color:  #3F444A
+dmenu.sel.fg.color:  #BBC2CF
 
-dmenu.selhlbgcolor:  #005577
-dmenu.selhlfgcolor:  #ECBE7B
+dmenu.sel.hlbg.color:  #005577
+dmenu.sel.hlfg.color:  #ECBE7B

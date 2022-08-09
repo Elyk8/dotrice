@@ -6,7 +6,7 @@ super + slash
 
 # Open desktop applications
 super + space ; space
-      dm-j4dmenu-desktop
+      dmenu_desktop_run -l 8 -p Open:
 
 # Dropdown terminal
 super + space ; d
@@ -66,7 +66,7 @@ super + o ; r
 
 # :Openers - Obsidian PKM
 super + o ; o
-      run-or-raise 'class = "obsidian"' sh -c "cd / && command -v prime-run && exec prime-run /usr/bin/obsidian || exec /usr/bin/obsidian; cd -"
+      run-or-raise 'class = "obsidian"' sh -c "cd / && exec /usr/bin/obsidian; cd -"
 
 # :Openers - VSCodium
 super + o ; v
@@ -100,6 +100,10 @@ super + p ; shift + c
 super + p ; e
       dm-emoji
 
+# :Dmenu - Wttr weather forecast
+super + p ; f
+      weatherforecast
+
 # :Dmenu - kill application
 super + p ; k
       dm-kill
@@ -116,17 +120,13 @@ super + p ; p
 super + p ; b
       dm-beats
 
-# :Dmenu - Open scripts in $EDITOR
-super + p ; s
-      dm-scripts
-
 # :Dmenu - Unmount drives
 super + p ; u
       dm-umount
 
-# :Dmenu - Wttr weather forecast
+# :Dmenu - Search somethings using browser
 super + p ; w
-      weatherforecast
+      dm-websearch
 
 # :Sys - Setwallpaper Randomly from "a2n" collection
 super + semicolon ; a
