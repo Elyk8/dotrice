@@ -124,7 +124,7 @@ super + p ; b
 super + p ; u
       dm-umount
 
-# :Dmenu - Search somethings using browser
+# :Dmenu - Search something using browser
 super + p ; w
       dm-websearch
 
