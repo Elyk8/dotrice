@@ -66,7 +66,7 @@ super + o ; r
 
 # :Openers - Obsidian PKM
 super + o ; o
-      run-or-raise 'class = "obsidian"' sh -c "cd / && exec /usr/bin/obsidian; cd -"
+      run-or-raise 'class = "obsidian"' obsidian
 
 # :Openers - VSCodium
 super + o ; v
