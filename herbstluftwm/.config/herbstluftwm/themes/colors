@@ -1,0 +1,14 @@
+#!/bin/sh
+hc set frame_border_active_color '#222222'
+hc set frame_border_normal_color '#101010'
+hc set frame_bg_normal_color '#565656'
+hc set frame_bg_active_color '#BBC2CF'
+
+hc attr theme.active.color '#46D9FF'
+
+hc attr theme.normal.color '#242730'
+
+hc attr theme.urgent.color orange
+hc attr theme.inner_color '#ff00'
+
+hc attr theme.floating.outer_color '#C57BDB'

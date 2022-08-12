@@ -24,7 +24,7 @@ Mod=Mod4 # Use the super key as the main modifier
 #-----------------#
 hc keybind $Mod-Shift-c spawn kitty -T logout -e herbst-logout.sh
 hc keybind $Mod-Control-r reload
-hc keybind $Mod-q close
+hc keybind $Mod-q close_or_remove
 hc keybind $Mod-Return spawn "${TERMINAL:-kitty}" #
 
 # focusing client #
@@ -35,8 +35,8 @@ hc keybind $Mod-Up focus up
 hc keybind $Mod-Right focus right
 
 hc keybind $Mod-h focus left
-hc keybind $Mod-j focus down
-hc keybind $Mod-k focus up
+hc keybind $Mod-j cycle_all 1
+hc keybind $Mod-k cycle_all -1
 hc keybind $Mod-l focus right
 
 # moving clients in tiling and floating mode
@@ -72,17 +72,22 @@ hc keybind $Mod-Control-Right resize right +$resizestep
 
 # tags #
 #------#
-tag_names=({1..9})
+tag_names=(一 二 三 四 五 六 七 八 九)
 tag_keys=({1..9} 0)
 
 hc rename default "${tag_names[0]}" || true
 for i in "${!tag_names[@]}"; do
 	hc add "${tag_names[$i]}"
-	hc set_layout horizontal
+	hc set_layout grid
 	hc set default_frame_layout 1
 	key="${tag_keys[$i]}"
 	if [ -n "$key" ]; then
-		hc keybind "$Mod-$key" use_index "$i"
+		# first check if the tag is locked to some monitor.
+		# if so, first focus the monitor
+		hc keybind "$Mod-$key" \
+			chain , silent substitute M tags."$i".my_monitor \
+			focus_monitor M \
+			, use_index "$i"
 		hc keybind "$Mod-Shift-$key" move_index "$i"
 	fi
 done
@@ -92,7 +97,7 @@ done
 hc keybind $Mod-Alt-s spawn new-layout.sh
 hc keybind $Mod-Alt-l spawn ./.local/scripts/load-layout.sh
 hc keybind $Mod-r remove
-hc keybind $Mod-f fullscreen toggle
+hc keybind $Mod-f spawn ~/.config/herbstluftwm/sc/maximize
 hc keybind $Mod-Shift-f set_attr clients.focus.floating toggle
 # hc keybind $Mod-p pseudotile toggle
 
@@ -126,14 +131,39 @@ hc unrule -F
 # MONITORS #
 #----------#
 hc detect_monitors
+hc set focus_crosses_monitor_boundaries true
+hc set swap_monitors_to_get_tag false
+
+# Lock current tag in the monitor
+herbstclient keybind $Mod-t chain \
+	, new_attr string tags.focus.my_monitor \
+	, substitute M monitors.focus.index set_attr tags.focus.my_monitor M \
+	, try and \
+	. compare monitors.focus.name != "" \
+	. substitute M monitors.focus.name \
+	set_attr tags.focus.my_monitor M
+
+# Add a keybinding for removing the lock
+herbstclient keybind $Mod-Shift-t \
+	remove_attr tags.focus.my_monitor
+
+# Statically define which tag should be send to which monitor
+lock_tag_to_monitor() {
+	herbstclient chain \
+		, new_attr string tags.by-name."$1".my_monitor \
+		, set_attr tags.by-name."$1".my_monitor "$2"
+}
+# Already lock some of the tags to a monitor, for example:
+# lock the second tag to the monitor with index 0
+lock_tag_to_monitor 5 1
 
 # THEME #
 #-------#
 
-THEME="$HOME/.config/herbstluftwm/hlwmt/theme"
-if [ -f "$THEME" ]; then
-	. $THEME
-fi
+THEME="$HOME/.config/herbstluftwm/themes/theme"
+COLOR="$HOME/.config/herbstluftwm/themes/colors"
+[ -f "$THEME" ] && . $THEME
+[ -f "$COLOR" ] && . $COLOR
 
 # MENUS #
 #-------#
@@ -143,6 +173,11 @@ hc rule title~'configs' floating=on floatplacement=center floating_geometry=375x
 hc rule title~'windows' floating=on floatplacement=center floating_geometry=600x300
 hc rule title~'logout' floating=on floatplacement=center floating_geometry=320x200
 hc rule title~'vmach.sh' floating=on floatplacement=center floating_geometry=375x500
+
+# CLASSES #
+#---------#
+hc rule class~'firefox' tag="${tag_names[0]}"
+hc rule class~'Chromium' tag="${tag_names[1]}"
 
 # SCRATCHPADS #
 #-------------#

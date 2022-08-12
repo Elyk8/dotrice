@@ -1,5 +1,9 @@
 # -*- conf -*-
 
+# Toggle polybar
+super + b
+				polybar-msg cmd toggle
+
 # Show sxhkd keybindings in dmenu
 super + slash
         sxhkd-help
@@ -14,7 +18,7 @@ super + space ; d
 
 # Open terminal emulator
 super + Return
-			run-or-raise 'class = "kitty"' kitty
+			kitty
 
 # Open lf file manager
 super + space ; r

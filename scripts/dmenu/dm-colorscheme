@@ -97,6 +97,25 @@ zathura_change() {
 	CONF
 }
 
+herbstluft_change() {
+	cat <<-CONF >"$HOME/.config/herbstluftwm/hlwmt/colors"
+		#!/bin/sh
+		hc set frame_border_active_color '#222222'
+		hc set frame_border_normal_color '#101010'
+		hc set frame_bg_normal_color '#565656'
+		hc set frame_bg_active_color '$(xrdb -get foreground)'
+
+		hc attr theme.active.color '$(xrdb -get color14)'
+
+		hc attr theme.normal.color '$(xrdb -get background)'
+
+		hc attr theme.urgent.color orange
+		hc attr theme.inner_color '#ff00'
+
+		hc attr theme.floating.outer_color '$(xrdb -get color5)'
+	CONF
+}
+
 neovim_colorconf="$HOME/.config/nvim/lua/configs/colorscheme.lua"
 neovim_change() {
 	case "$colorscheme" in
@@ -126,6 +145,7 @@ command -v kitty && kitty_change
 xresources_change
 # emacs_change
 zathura_change
+herbstluft_change
 polybar_change
 neovim_change
 appendix

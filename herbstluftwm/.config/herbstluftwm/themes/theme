@@ -1,0 +1,25 @@
+#!/bin/sh
+hc attr theme.tiling.reset 1
+hc attr theme.floating.reset 1
+hc set frame_border_width 1
+hc set always_show_frame 0
+hc set frame_transparent_width 0
+hc set frame_gap 0
+
+hc set frame_active_opacity 0
+hc set frame_normal_opacity 0
+
+hc attr theme.active.border_width 3
+hc attr theme.active.inner_width 0
+
+hc attr theme.normal.border_width 3
+hc attr theme.normal.inner_width 0
+
+hc attr theme.floating.border_width 5
+hc attr theme.floating.outer_width 3
+
+hc set window_gap 10
+hc set frame_padding 0
+hc set smart_window_surroundings true
+hc set smart_frame_surroundings true
+hc set mouse_recenter_gap 0
