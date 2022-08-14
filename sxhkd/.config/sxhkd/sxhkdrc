@@ -10,7 +10,7 @@ super + slash
 
 # Open desktop applications
 super + space ; space
-				j4-dmenu-desktop --dmenu "dmenu -p Open: -l 8" --no-generic --display-binary
+				j4-dmenu-desktop --dmenu "dmenu -p Open: -l 8" --display-binary
 
 # Dropdown terminal
 super + space ; d

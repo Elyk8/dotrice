@@ -23,7 +23,7 @@ main() {
 	case $choice in
 		1)
 			notification "Lofi Girl ☕️🎶"
-			URL="https://www.youtube.com/watch?v=5qap5aO4i9A"
+			URL="https://www.youtube.com/watch?v=jfKfPfyJRdk"
 			break
 			;;
 		2)
