@@ -189,7 +189,7 @@ hc rule title~'Calc' floating=on floatplacement=center
 
 hc rule focus=on # normally focus new clients
 hc rule floatplacement=center
-#hc rule float_geometry=250x100
+hc rule switchtag=on
 
 # give focus to most common terminals
 hc rule class~'(.*[Rr]xvt.*|.*[Tt]erm|Konsole)' focus=on
