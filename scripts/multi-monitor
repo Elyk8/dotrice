@@ -1,7 +1,9 @@
 #!/bin/sh
 
-xrandr --output eDP1 --primary --auto \
-  --output HDMI-1-0 --auto --right-of eDP1 --set "PRIME Synchronization" 1
+xrandr --setprovideroutputsource modesetting NVIDIA-0
+
+xrandr --output eDP-1-1 --primary --auto \
+  --output HDMI-0 --auto --right-of eDP-1-1
 
 # xrandr --dpi 141 --fb 3969x2232 \
 # 	--output eDP1 --primary --mode 1920x1080 \

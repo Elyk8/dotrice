@@ -142,7 +142,6 @@ assign [class="Thunderbird"] $w9
 # Gaming
 assign [class="ATLauncher"] $w7
 assign [class="Minecraft*"] $w7
-assign [class="RuneScape"] $w7
 assign [class="Runescape"] $w7
 
 # Rules

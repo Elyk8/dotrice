@@ -152,7 +152,6 @@ lock_tag_to_monitor() {
 }
 # Already lock some of the tags to a monitor
 lock_tag_to_monitor "${tag_names[2]}" 0
-lock_tag_to_monitor "${tag_names[4]}" 1
 
 # THEME #
 #-------#
@@ -177,6 +176,7 @@ hc rule class~'firefox' tag="${tag_names[0]}"
 hc rule class~'Chromium' tag="${tag_names[1]}"
 hc rule class~'obsidian' tag="${tag_names[3]}"
 hc rule class~'discord' tag="${tag_names[4]}"
+hc rule class~'RuneScape' tag="${tag_names[5]}"
 
 # SCRATCHPADS #
 #-------------#

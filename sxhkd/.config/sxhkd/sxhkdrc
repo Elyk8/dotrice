@@ -58,7 +58,7 @@ super + o ; d
 
 # :Openers - AT Launcher
 super + o ; a
-      command -v prime-run && prime-run atlauncher || atlauncher
+      atlauncher
 
 # :Openers - Android file transfer
 super + o ; f
