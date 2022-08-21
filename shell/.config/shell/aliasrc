@@ -3,9 +3,6 @@
 # for doas to respect aliases
 alias doas="doas "
 
-# matlab
-alias matlab="~/.local/share/matlab/bin/matlab -nodesktop -nosplash"
-
 # pip aliases
 alias pip-upgrade="pip freeze --user | cut -d'=' -f1 | xargs -n1 pip install -U"
 alias pip-upgrade-venv="pip freeze | cut -d'=' -f1 | xargs -n1 pip install -U"
@@ -219,6 +216,7 @@ alias ffmpeg="ffmpeg -hide_banner"
 alias e="\$EDITOR"
 alias br='bulk-rename'
 alias lf='lfcd'
+alias pomodoro='pomodoro --directory "~/.config/pomodoro"'
 
 se() { fd -atf --base-directory "$XDG_CONFIG_HOME" | fzf | xargs -r "$EDITOR"; }
 sr() { fd -atf --base-directory "$SCRIPTS" | fzf | xargs -r "$EDITOR"; }

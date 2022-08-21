@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if ! which envycontrol >/dev/null; then
+	return
+fi
+
+MODE=$(printf "%s\n" "nvidia" "integrated" "hybrid" | dmenu -p "Change graphics mode: ")
+
+if yes | doas envycontrol --switch "$MODE" && [ -n "$MODE" ]; then
+  notify-send "Mode changed to $MODE. Please reboot."
+fi
