@@ -1,7 +1,12 @@
 #!/bin/bash
 
-SKYNET_PRIMARY="eDP-1-1"
-SKYNET_SECONDARY="HDMI-0"
+if envycontrol --query | grep nvidia; then
+	SKYNET_PRIMARY="eDP-1-1"
+	SKYNET_SECONDARY="HDMI-0"
+else
+	SKYNET_PRIMARY="eDP1"
+	SKYNET_SECONDARY="HDMI-1-0"
+fi
 
 choice=$(printf "%s\n" "SINGLE" "DUAL" "TV" | dmenu -p "Which mode?")
 
@@ -15,11 +20,11 @@ fi
 
 if [ "$(uname -n)" = skynet ]; then
 	xrandr_single() { xrandr --output $SKYNET_PRIMARY --auto --output $SKYNET_SECONDARY --off; }
-  xrandr_dual() { xrandr --output $SKYNET_PRIMARY --primary --auto --output $SKYNET_SECONDARY --auto $args $SKYNET_PRIMARY; }
-  xrandr_tv() { xrandr --output $SKYNET_PRIMARY --off --output $SKYNET_SECONDARY --auto; }
+	xrandr_dual() { xrandr --output $SKYNET_PRIMARY --primary --auto --output $SKYNET_SECONDARY --auto $args $SKYNET_PRIMARY; }
+	xrandr_tv() { xrandr --output $SKYNET_PRIMARY --off --output $SKYNET_SECONDARY --auto; }
 else
 	xrandr_single() { xrandr --output DSI1 --auto --output HDMI1 --off; }
-  xrandr_dual() { xrandr --output DSI1 --primary --auto --output HDMI1 --auto $args DSI1; }
+	xrandr_dual() { xrandr --output DSI1 --primary --auto --output HDMI1 --auto $args DSI1; }
 fi
 
 case $choice in

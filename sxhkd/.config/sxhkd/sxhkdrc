@@ -240,6 +240,10 @@ super + F3
 super + F4
       notify-send "Refreshing KMonad in 2 secs"; kmonad-refresh; notify-send "Success!"
 
+# :function - Change optimus mode
+super + F9
+      dm-envycontrol
+
 # :function - Monitor things
 super + F10
       dm-monitor
