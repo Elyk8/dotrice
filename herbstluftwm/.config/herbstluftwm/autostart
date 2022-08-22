@@ -169,6 +169,7 @@ hc rule title~'configs' floating=on floatplacement=center floating_geometry=375x
 hc rule title~'windows' floating=on floatplacement=center floating_geometry=600x300
 hc rule title~'logout' floating=on floatplacement=center floating_geometry=320x200
 hc rule title~'vmach.sh' floating=on floatplacement=center floating_geometry=375x500
+hc rule class~'Dragon-drop' floating=on floatplacement=center floating_geometry=375x500
 
 # CLASSES #
 #---------#
@@ -180,7 +181,7 @@ hc rule class~'RuneScape' tag="${tag_names[5]}"
 
 # SCRATCHPADS #
 #-------------#
-hc rule class~'Dropdown' floating=on floatplacement=center
+hc rule instance~'Dropdown' floating=on floatplacement=center
 hc rule title~'FM' floating=on floatplacement=center
 hc rule class~'qutebrowser' floating=on floatplacement=center
 hc rule title~'Mail' floating=on floatplacement=center

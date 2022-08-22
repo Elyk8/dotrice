@@ -1,2 +1,2 @@
 #!/bin/sh
-tdrop --monitor-aware --auto-detect-wm -N "$@"
+tdrop --monitor-aware --wm "herbstluftwm" -N "$@"

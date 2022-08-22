@@ -14,7 +14,7 @@ super + space ; space
 
 # Dropdown terminal
 super + space ; d
-			tdropper -n term $TERMINAL --class Dropdown
+			tdropper -n term $TERMINAL --name Dropdown
 
 # Open terminal emulator
 super + Return
@@ -26,7 +26,7 @@ super + space ; r
 
 # Open ncmpcpp music player
 super + space ; n
-			tdropper -n ncmpcpp $TERMINAL --class Dropdown -e ncmpcpp
+			tdropper -n ncmpcpp $TERMINAL --name Dropdown -e ncmpcpp
 
 # Dmenu list opened windows
 super + space ; b
@@ -146,7 +146,7 @@ super + semicolon ; e
 
 # :Sys - Open pulsemixer volume manager
 super + semicolon ; v
-			tdropper -n pulsemixer $TERMINAL --class Dropdown -e pulsemixer
+			tdropper -n pulsemixer $TERMINAL --name Dropdown -e pulsemixer
 
 # :Sys - Interactively setwallpaper using nsxiv
 super + semicolon ; w
