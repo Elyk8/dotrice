@@ -1,10 +1,14 @@
 configuration {
-	modi: "run,drun";
-	run-shell-command: "{terminal} -e '{cmd}'";
-	run-command: "/bin/sh -i -c '{cmd}'";
-	terminal: "rofi-sensible-terminal";
-	show-icons: true;
-	icon-theme: "Beautyline";
+  modes: "dmenu";
+  matching: "regex";
+  run-shell-command: "{terminal} -e '{cmd}'";
+  run-command: "/bin/sh -i -c '{cmd}'";
+  terminal: "rofi-sensible-terminal";
+  show-icons: true;
+  icon-theme: "Beautyline";
+  kb-element-next: "Alt+j";
+  kb-element-prev: "Alt+k";
+  kb-row-select: "Tab";
 }
 
 @theme "colors/tokyonight"
@@ -12,7 +16,7 @@ configuration {
 window {
     location:       center;
     width:          480;
-    y-offset:       -200;
+    y-offset:       -100;
     border-radius:  24px;
 
     background-color:   @bg0;
@@ -40,6 +44,7 @@ prompt {
 
 entry {
     placeholder:        "Search";
+    font              : "Sans 14";
     placeholder-color:  @fg2;
 }
 
@@ -58,7 +63,7 @@ listview {
     background-color:   transparent;
 
     margin:     12px 0 0;
-    lines:      8;
+    lines:      12;
     columns:    1;
 
     fixed-height: false;

@@ -4,9 +4,7 @@
 
 # Set a character width for this script if needed:
 #export MANWIDTH=80
-alias rofi="rofi -config ~/.config/rofi/menu.rasi"
-
-SELECTED=$(man -k . | awk '{ print $1 " " $2 }' | rofi -dmenu -p " " -l 8 | awk '{ print $1 }' | tr -d '()')
+SELECTED=$(man -k . | awk '{ print $1 " " $2 }' | rofi-dmenu -p " " | awk '{ print $1 }' | tr -d '()')
 
 if [ -n "$SELECTED" ]; then
     man -Tpdf "$SELECTED" | zathura -

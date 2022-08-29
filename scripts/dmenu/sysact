@@ -11,7 +11,7 @@ logout_menu() {
 		"4.  Leave $wm" \
 		"5.  Reboot" \
 		"6.  Shutdown" |
-		dmenu -l 6 -p 'Action: '
+		rofi-dmenu -l 6 -p 'Action: '
 }
 
 case "$(readlink -f /sbin/init)" in

@@ -19,7 +19,7 @@ menu() {
 }
 
 main() {
-	choice=$(menu | dmenu -l 8 -p "Play  :" | cut -d. -f1)
+	choice=$(menu | rofi-dmenu -dmenu -p "Play  :" | cut -d. -f1)
 	case $choice in
 		1)
 			notification "Lofi Girl ☕️🎶"

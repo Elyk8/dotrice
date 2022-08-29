@@ -8,10 +8,10 @@ else
 	SKYNET_SECONDARY="HDMI-1-0"
 fi
 
-choice=$(printf "%s\n" "SINGLE" "DUAL" "TV" | dmenu -p "Which mode?")
+choice=$(printf "%s\n" "SINGLE" "DUAL" "TV" | rofi-dmenu -p "Which mode?")
 
 if [ $choice = "DUAL" ]; then
-	direction=$(printf "%s\n" "Right" "Left" | dmenu -p "Where to attach?")
+	direction=$(printf "%s\n" "Right" "Left" | rofi-dmenu -p "Where to attach?")
 	case $direction in
 	"Right") args="--right-of" ;;
 	"Left") args="--left-of" ;;

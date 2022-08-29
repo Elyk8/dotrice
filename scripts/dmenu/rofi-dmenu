@@ -1,0 +1,3 @@
+#!/bin/sh
+
+rofi -config "$HOME"/.config/rofi/menu.rasi -dmenu -i "$@"

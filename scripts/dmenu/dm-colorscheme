@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 dmenu_bin() {
-	dmenu -l 8 -p "Choose your new colorscheme:"
+	rofi-dmenu -p "Choose your new colorscheme:"
 }
 
 colorscheme_menu() {

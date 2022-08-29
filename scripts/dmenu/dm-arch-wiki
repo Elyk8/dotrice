@@ -6,7 +6,7 @@ wikidocs="$(fd --type file --strip-cwd-prefix --base-directory $wikidir)"
 choice=$(printf "%s\n" "$wikidocs" | \
              sed "s/.html//g" | \
              sort -g | \
-             dmenu -l 20 -p "Arch Wiki Docs: ") || exit 1
+             rofi-dmenu -p "Arch Wiki Docs: ") || exit 1
 
 if [ "$choice" ]; then
     article=$(printf "%s%s.html" "$wikidir" "$choice")

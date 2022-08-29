@@ -90,7 +90,7 @@ super + p ; a
 
 # :Dmenu - Clipmenu clipboard manager
 super + p ; c
-      clipmenu
+      dm-clip
 
 # :Dmenu - Open terminal in directory
 super + p ; d

@@ -1,10 +1,14 @@
 configuration {
-	modi: "run,drun";
-	run-shell-command: "{terminal} -e '{cmd}'";
-	run-command: "/bin/sh -i -c '{cmd}'";
-	terminal: "rofi-sensible-terminal";
-	show-icons: true;
-	icon-theme: "Beautyline";
+  modes: "run,drun";
+  matching: "regex";
+  run-shell-command: "{terminal} -e '{cmd}'";
+  run-command: "/bin/sh -i -c '{cmd}'";
+  terminal: "rofi-sensible-terminal";
+  show-icons: true;
+  icon-theme: "Beautyline";
+  kb-element-next: "Alt+j";
+  kb-element-prev: "Alt+k";
+  kb-row-select: "Tab";
 }
 
 @theme "colors/tokyonight"
