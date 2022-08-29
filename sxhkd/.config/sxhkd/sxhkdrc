@@ -10,7 +10,7 @@ super + slash
 
 # Open desktop applications
 super + space ; space
-				j4-dmenu-desktop --dmenu "dmenu -p Open: -l 8" --display-binary
+				rofi-menu
 
 # Dropdown terminal
 super + space ; d
