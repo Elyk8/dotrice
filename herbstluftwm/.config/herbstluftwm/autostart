@@ -46,8 +46,8 @@ hc keybind $Mod-Shift-l shift right
 
 # splitting frames #
 #------------------#
-hc keybind $Mod-u split bottom 0.6
-hc keybind $Mod-o split right 0.6
+hc keybind $Mod-s split bottom 0.6
+hc keybind $Mod-u split right 0.6
 
 # let the current frame explode into subframes #
 #----------------------------------------------#
