@@ -173,7 +173,7 @@ schemes:
       # }}}
 
 # doom-one, dracula, tokyonight, darkplus, onedark
-colors: *doom-vibrant
+colors: *darkplus
 
 env:
   TERM: xterm-256color
