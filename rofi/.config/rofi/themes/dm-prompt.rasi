@@ -1,5 +1,0 @@
-@import "dm-dmenu"
-
-element-icon {
-    enabled: false;
-}

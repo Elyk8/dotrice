@@ -4,7 +4,94 @@ configuration {
 	run-command: "/bin/sh -i -c '{cmd}'";
 	terminal: "rofi-sensible-terminal";
 	show-icons: true;
-	icon-theme: "Arcolinux-candy-beauty";
+	icon-theme: "Beautyline";
 }
 
-@theme "themes/dm-dmenu"
+@theme "colors/tokyonight"
+
+element-icon, element-text, scrollbar {
+  cursor: pointer;
+}
+
+window {
+  location : south;
+  width    : 600px;
+  height   : 600px;
+  y-offset : -4px;
+
+  background-color : @bg1;
+  border-radius    : 8px;
+}
+
+mainbox {
+  padding : 24px;
+  spacing : 24px;
+}
+
+inputbar {
+  padding          : 8px;
+  spacing          : 4px;
+  children         : [ icon-search, entry ];
+  border           : 0 0 2px 0 solid;
+  border-color     : @accent;
+  border-radius    : 2px;
+  background-color : @bg0;
+}
+
+icon-search, entry, element-icon, element-text {
+  vertical-align: 0.5;
+}
+
+icon-search {
+  expand   : false;
+  filename : "search-symbolic";
+  size     : 24px;
+}
+
+entry {
+  font              : "Sans 14";
+  placeholder       : "";
+  placeholder-color : @fg1;
+}
+
+textbox {
+  padding          : 4px 8px;
+  background-color : @bg2;
+}
+
+listview {
+  columns       : 1;
+  spacing       : 8px;
+  fixed-height  : true;
+  fixed-columns : true;
+}
+
+element {
+  spacing       : 1em;
+  padding       : 8px;
+  border-radius : 2px;
+}
+
+element normal urgent {
+  text-color: @urgent;
+}
+
+element normal active {
+  text-color: @accent;
+}
+
+element selected {
+  background-color: @bg3;
+}
+
+element selected urgent {
+  background-color: @urgent;
+}
+
+element-icon {
+  size: 1.5em;
+}
+
+element-text {
+  text-color: inherit;
+}
