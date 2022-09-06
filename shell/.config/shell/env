@@ -100,7 +100,7 @@ export CONDARC="$XDG_CONFIG_HOME/conda/condarc"
 
 # Default programs:
 # export EDITOR="lvim"
-export VISUAL="nvim"
+export VISUAL="lvim"
 export EDITOR=$VISUAL
 export READER="zathura"
 export TERMINAL="kitty"
