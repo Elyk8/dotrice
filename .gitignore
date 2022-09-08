@@ -28,3 +28,6 @@ applications/.local/share/applications/discord*
 
 # Tmux
 tmux/.config/tmux/plugins
+
+# Lunarvim
+lvim/.config/lvim/plugin/packer_compiled.lua
