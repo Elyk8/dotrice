@@ -1,7 +1,7 @@
 -- Lvim options
 lvim.log.level = "warn"
 lvim.format_on_save = false
-lvim.colorscheme = "tokyonight"
+lvim.colorscheme = "vscode"
 
 -- Vim options
 vim.opt.relativenumber = true
@@ -169,6 +169,9 @@ lvim.plugins = {
     config = function()
       require "user.tokyonight"
     end
+  },
+  {
+    "Mofiqul/vscode.nvim"
   },
   {
     "folke/todo-comments.nvim",

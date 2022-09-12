@@ -8,7 +8,7 @@ set scrolloff 10
 set icons
 set period 1
 set preview true
-set hidden true
+# set hidden true
 # set drawbox true
 set ignorecase true
 set hiddenfiles ".*:*.aux:*.log:*.bbl:*.bcf:*.blg:*.run.xml"
@@ -263,5 +263,13 @@ map gd cd ~/Documents
 map gD cd ~/Downloads
 map gv cd ~/Videos
 map gp cd ~/Pictures
+
+cmd z-jump ${{
+  ZLUA_SCRIPT="$HOME/.config/zsh/plugins/z.lua/z.lua"  # Usually unnecessary
+  lf -remote "send ${id} cd '$($ZLUA_SCRIPT -e $@)'"
+}}
+map Z push :z-jump<space>-I<space>
+map zb push :z-jump<space>-b<space>
+map zz push :z-jump<space>
 
 map \;j cd ~

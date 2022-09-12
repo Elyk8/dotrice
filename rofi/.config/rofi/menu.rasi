@@ -11,7 +11,7 @@ configuration {
   kb-row-select: "Tab";
 }
 
-@theme "colors/tokyonight"
+@theme "colors/darkplus"
 
 window {
     location:       center;

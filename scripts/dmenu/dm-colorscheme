@@ -117,6 +117,7 @@ herbstluft_change() {
 }
 
 neovim_colorconf="$HOME/.config/nvim/lua/configs/colorscheme.lua"
+lunarvim_colorconf="$HOME/.config/lvim/config.lua"
 neovim_change() {
 	case "$colorscheme" in
 	"darkplus") theme="vscode" ;;
@@ -127,6 +128,7 @@ neovim_change() {
 	"tokyonight") theme="tokyonight" ;;
 	esac
 	sed -i "s/colorscheme = .*/colorscheme = \"$theme\"/g" "$neovim_colorconf"
+	sed -i "s/lvim\.colorscheme = .*/lvim\.colorscheme = \"$theme\"/g" "$lunarvim_colorconf"
 }
 
 appendix() {
