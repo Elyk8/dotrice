@@ -2,7 +2,7 @@
 Type=Application
 Terminal=false
 MimeType=text/x-matlab
-Exec=/media/MATLAB/bin/matlab -desktop
+Exec=LD_PRELOAD=/lib64/libfreetype.so LD_LIBRARY_PATH=/usr/lib/dri/ /media/MATLAB/R2022a/bin/matlab -desktop
 Name=MATLAB
 Icon=matlab
 Categories=Development;Math;Science
