@@ -109,7 +109,7 @@ export VIDEO="mpv"
 export IMAGE="nsxiv"
 export OPENER="xdg-open"
 export PAGER="less -S"
-export MANPAGER="nvim -c 'set ft=man nonumber nolist ts=8 laststatus=1 showtabline=1' '+Man!' -"
+export MANPAGER="$EDITOR -c 'set ft=man nonumber nolist ts=8 laststatus=1 showtabline=1' '+Man!' -"
 
 # Common directories
 export DOCUMENTS_DIR="$HOME/Documents"

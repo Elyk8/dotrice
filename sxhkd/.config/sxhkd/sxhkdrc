@@ -20,9 +20,9 @@ super + space ; d
 super + Return
 			kitty
 
-# Open lf file manager
+# Open pcmanfm file manager
 super + space ; r
-      samedirall $TERMINAL -e lf
+      pcmanfm
 
 # Open ncmpcpp music player
 super + space ; n

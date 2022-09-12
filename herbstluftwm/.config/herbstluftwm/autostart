@@ -123,6 +123,7 @@ hc mousebind $Mod-Button3 resize
 # RULES #
 #-------#
 hc unrule --all
+hc set focus_follows_mouse true
 
 # MONITORS #
 #----------#
@@ -193,10 +194,16 @@ hc rule floatplacement=center
 hc rule switchtag=on
 
 # give focus to most common terminals
-hc rule class~'(.*[Rr]xvt.*|.*[Tt]erm|Konsole)' focus=on
-hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH)' floating=on floatplacement=center
+hc rule instance=sun-awt-X11-XWindowPeer focus=off
+hc rule windowtype~'_NET_WM_WINDOW_TYPE_(DIALOG|UTILITY|SPLASH|TOOLBAR)' floating=on floatplacement=center
 hc rule windowtype='_NET_WM_WINDOW_TYPE_DIALOG' focus=on floatplacement=smart
 hc rule windowtype~'_NET_WM_WINDOW_TYPE_(NOTIFICATION|DOCK|DESKTOP)' manage=off
+
+# zoom and steam
+hc rule class='Steam' focus=off floating=on
+hc rule title~'.*Steam.*' focus=off floating=on
+hc rule class='Steam' title~'.*Freundesliste.*' floating=off focus=on
+hc rule class='zoom' not title~'.*Meeting.*' floating=on focus=off
 
 hc set tree_style '╾│ ├└╼─┐'
 
