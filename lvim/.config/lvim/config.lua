@@ -171,7 +171,16 @@ lvim.plugins = {
     end
   },
   {
-    "Mofiqul/vscode.nvim"
+    "Mofiqul/vscode.nvim",
+    config = function()
+      require('vscode').setup {
+        -- Enable transparent background
+        -- transparent = true,
+
+        -- Enable italic comment
+        italic_comments = true
+      }
+    end
   },
   {
     "folke/todo-comments.nvim",
