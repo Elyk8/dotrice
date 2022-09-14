@@ -73,7 +73,7 @@ tag_keys=({1..9} 0)
 hc rename default "${tag_names[0]}" || true
 for i in "${!tag_names[@]}"; do
 	hc add "${tag_names[$i]}"
-	hc set_layout horizontal
+	hc set_layout vertical
 	hc set default_frame_layout 1
 	key="${tag_keys[$i]}"
 	if [ -n "$key" ]; then
@@ -97,10 +97,10 @@ hc keybind $Mod-g set_attr clients.focus.floating toggle
 # The following cycles through the available layouts within a frame, but skips
 # layouts, if the layout change wouldn't affect the actual window positions.
 # I.e. if there are two windows within a frame, the grid layout is skipped.
-hc keybind $Mod-Shift-space \
+hc keybind $Mod-d \
 	or , and . compare tags.focus.curframe_wcount = 2 \
-	. cycle_layout +1 vertical horizontal max vertical grid \
-	, cycle_layout +1
+	. cycle_layout +1 vertical horizontal \
+	, cycle_layout +1 vertical horizontal grid 
 
 # focus #
 #-------#

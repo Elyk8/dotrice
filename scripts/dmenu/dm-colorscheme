@@ -24,12 +24,12 @@ kitty_change() {
 	sed -i "s/^include .*/include $colorscheme/" "$kittyconf"
 }
 
-polyconf="$HOME/.config/polybar/config.ini"
-polybar_change() {
-	sed -e "s/^bg =.\+/bg = #f0$(xrdb -get background | cut -c 2-)/" \
-		-e "s/^fg =.\+/fg = #$(xrdb -get foreground | cut -c 2-)/" \
-		-i "$polyconf"
-}
+# polyconf="$HOME/.config/polybar/config.ini"
+# polybar_change() {
+# 	sed -e "s/^bg =.\+/bg = #f0$(xrdb -get background | cut -c 2-)/" \
+# 		-e "s/^fg =.\+/fg = #$(xrdb -get foreground | cut -c 2-)/" \
+# 		-i "$polyconf"
+# }
 
 doomorg="$HOME/.config/doom/config.org"
 doomconf="$HOME/.config/doom/config.el"
@@ -148,6 +148,6 @@ xresources_change
 # emacs_change
 zathura_change
 herbstluft_change
-polybar_change
+# polybar_change
 neovim_change
 appendix
