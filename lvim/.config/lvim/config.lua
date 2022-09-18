@@ -13,8 +13,8 @@ lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 -- lvim.keys.normal_mode["<S-l>"] = ":BufferLineCycleNext<CR>"
 -- lvim.keys.normal_mode["<S-h>"] = ":BufferLineCyclePrev<CR>"
 -- unmap a default keymapping
-vim.keymap.del("n", "<A-j>")
-vim.keymap.del("n", "<A-k>")
+vim.keymap.del("n", "<A-j>", {})
+vim.keymap.del("n", "<A-k>", {})
 -- override a default keymapping
 -- lvim.keys.normal_mode["<C-q>"] = ":q<cr>" -- or vim.keymap.set("n", "<C-q>", ":q<cr>" )
 
@@ -57,7 +57,7 @@ lvim.builtin.which_key.mappings["f"] = {
 -- }
 
 -- After changing plugin config exit and reopen LunarVim, Run :PackerInstall :PackerCompile
-lvim.builtin.alpha.active = false
+lvim.builtin.alpha.active = true
 -- lvim.builtin.alpha.mode = "startify"
 lvim.builtin.notify.active = true
 lvim.builtin.terminal.active = true
