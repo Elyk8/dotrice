@@ -30,15 +30,11 @@ super + space ; n
 
 # Dmenu list opened windows
 super + space ; b
-      dm-win
+      rofi -show window
 
 # Open Firefox
 super + space ; w
       run-or-raise 'name ~ ".*Firefox$"' firefox
-
-# Open Chromium
-super + space ; c
-      run-or-raise 'name ~ ".*Chromium$"' chromium
 
 # Toggle mute microphone
 super + space ; m

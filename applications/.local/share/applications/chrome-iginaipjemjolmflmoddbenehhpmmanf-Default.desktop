@@ -1,9 +1,0 @@
-#!/usr/bin/env xdg-open
-[Desktop Entry]
-Version=1.0
-Terminal=false
-Type=Application
-Name=MATLAB
-Exec=chromium --profile-directory=Default --app-id=iginaipjemjolmflmoddbenehhpmmanf
-Icon=chrome-iginaipjemjolmflmoddbenehhpmmanf-Default
-StartupWMClass=crx_iginaipjemjolmflmoddbenehhpmmanf

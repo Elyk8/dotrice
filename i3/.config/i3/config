@@ -87,8 +87,8 @@ set $w9 "9:九."
 #set $w9 "9 🎵"
 #set $w10 "10 📦"
 
-set $primary eDP1
-set $secondary HDMI-1-0
+set $primary HDMI-1-0
+set $secondary eDP1
 
 workspace $w1 output $primary
 workspace $w2 output $primary
