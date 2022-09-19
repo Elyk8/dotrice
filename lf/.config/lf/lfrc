@@ -35,7 +35,7 @@ cmd open ${{
       setsid -f libreoffice "$f" >/dev/null 2>&1
       ;;
     *.pdf | *.epub)
-      zathura "$f" >/dev/null 2>&1
+      setsid -f zathura "$f" >/dev/null 2>&1
       ;;
     *.tgz | *.tar.gz | *.tar.bz2 | *.tbz2 | *.tar.txz | *.txz | *.tar | *.zip | *.jar | *.war | *.ear | *.oxt | *.rar | *.7z)
       atool -l "$f" | less

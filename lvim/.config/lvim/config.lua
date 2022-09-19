@@ -5,6 +5,7 @@ lvim.colorscheme = "vscode"
 
 -- Vim options
 vim.opt.relativenumber = true
+vim.opt.breakindent = true
 
 -- Keymappings [view all the defaults by pressing <leader>Lk]
 lvim.leader = "space"
@@ -36,7 +37,7 @@ lvim.builtin.telescope.defaults.mappings = {
 }
 
 -- Use which-key to add extra bindings with the leader-key prefix
-lvim.builtin.which_key.mappings["w"] = {}
+lvim.builtin.which_key.mappings["w"] = nil
 lvim.builtin.which_key.mappings["P"] = { "<cmd>Telescope projects<CR>", "Projects" }
 lvim.builtin.which_key.mappings["f"] = {
   name = "Files",
@@ -45,6 +46,11 @@ lvim.builtin.which_key.mappings["f"] = {
   r = { "<cmd>Telescope oldfiles<cr>", "Recent File" },
   s = { "<cmd>w<CR>", "Save File" },
   S = { "<cmd>wa<CR>", "Save All" },
+}
+
+lvim.builtin.which_key.mappings["t"] = {
+  name = "Toggle",
+  z = { "<cmd>TZNarrow<CR>", "Zen Mode" },
 }
 -- lvim.builtin.which_key.mappings["t"] = {
 --   name = "+Trouble",
@@ -216,7 +222,13 @@ lvim.plugins = {
     config = function()
       require "user.nvim-lastplace"
     end,
-  }
+  },
+  {
+    "Pocco81/true-zen.nvim",
+    config = function()
+      require "user.true-zen"
+    end
+  },
 }
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)

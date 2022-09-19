@@ -67,6 +67,9 @@ bindsym $mod+w focus output right
 bindsym $mod+e move container to output right
 bindsym $mod+Shift+w move workspace to output right
 
+bindsym --whole-window $mod+button4 workspace next_on_output
+bindsym --whole-window $mod+button5 workspace prev_on_output
+
 bindsym $mod+i floating toggle; sticky toggle
 
 bindsym $mod+x floating enable; sticky enable; move position 1220 30; resize set width 700 px
@@ -87,8 +90,8 @@ set $w9 "9:九."
 #set $w9 "9 🎵"
 #set $w10 "10 📦"
 
-set $primary HDMI-1-0
-set $secondary eDP1
+set $primary HDMI-0
+set $secondary eDP-1-1
 
 workspace $w1 output $primary
 workspace $w2 output $primary
