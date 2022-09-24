@@ -11,7 +11,7 @@ set preview true
 # set hidden true
 # set drawbox true
 set ignorecase true
-set hiddenfiles ".*:*.aux:*.log:*.bbl:*.bcf:*.blg:*.run.xml"
+set hiddenfiles ".*:*.aux:*.bbl:*.bcf:*.blg:*.run.xml"
 
 # setup file previewer
 set previewer ctpv
