@@ -28,10 +28,11 @@ run sxhkd &
 run nm-applet &
 # run dm-wacom &
 run otd &
-run picom -b &
+run picom -b --experimental-backends &
 run greenclip daemon &
 run redshift &
-run lxsession &
+run /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+
 # run mpd &
 run dunst-reload &
 run "$HOME"/.fehbg &

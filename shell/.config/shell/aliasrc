@@ -223,45 +223,11 @@ sr() { fd -atf --base-directory "$SCRIPTS" | fzf | xargs -r "$EDITOR"; }
 sc() { fd -Hatf --base-directory "$DOTS" | fzf | xargs -r "$EDITOR"; }
 xevv() { xev | awk -F'[ )]+' '/^KeyPress/ { a[NR+2] } NR in a { printf "%-3s %s\n", $5, $8 }'; }
 
-rosstart() {
-	sudo docker run --net=host --env="DISPLAY" --volume="$HOME/.Xauthority:/root/.Xauthority:rw" --name roslocal -it osrf/ros:noetic-desktop-full bash
-}
-
-rosconnect() {
-	sudo docker exec -ti "$(sudo docker ps -aq --filter ancestor=osrf/ros:noetic-desktop-full --filter status=running)" bash
-}
-
-rosclear() {
-	sudo docker rm "$(sudo docker ps -aq --filter ancestor=osrf/ros:neotic-desktop-full --filter status=exited)"
-}
-
-ricemamba() {
-	# >>> conda initialize >>>
-	# !! Contents within this block are managed by 'conda init' !!
-	__conda_setup="$('/home/elyk/.local/share/miniconda/bin/conda' 'shell.zsh' 'hook' 2>/dev/null)"
-	if [ $? -eq 0 ]; then
-		eval "$__conda_setup"
-	else
-		if [ -f "/home/elyk/.local/share/miniconda/etc/profile.d/conda.sh" ]; then
-			. "/home/elyk/.local/share/miniconda/etc/profile.d/conda.sh"
-		else
-			export PATH="/home/elyk/.local/share/miniconda/bin:$PATH"
-		fi
-	fi
-	unset __conda_setup
-
-	if [ -f "/home/elyk/.local/share/miniconda/etc/profile.d/mamba.sh" ]; then
-		. "/home/elyk/.local/share/miniconda/etc/profile.d/mamba.sh"
-	fi
-	# <<< conda initialize <<<
-}
-
 riceros() {
-	ricemamba
-	mamba activate ros_env
-	export ROS_MASTER_URI=http://192.168.43.102:11311
-	export ROS_HOSTNAME=192.168.43.102
+  conda activate ros
+	export ROS_MASTER_URI=http://10.1.1.100:11311
+	export ROS_HOSTNAME=10.1.1.100
 	export TURTLEBOT3_MODEL=burger # waffle, waffle_pi
-	alias teleop="roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch"
-	alias slam="roslaunch turtlebot3_slam turtlebot3_slam.launch"
+	# alias teleop="roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch"
+	# alias slam="roslaunch turtlebot3_slam turtlebot3_slam.launch"
 }

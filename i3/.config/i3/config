@@ -74,7 +74,7 @@ bindsym $mod+i floating toggle; sticky toggle
 
 bindsym $mod+x floating enable; sticky enable; move position 1220 30; resize set width 700 px
 
-workspace_auto_back_and_forth yes
+# workspace_auto_back_and_forth yes
 
 set $w1 "1:一."
 set $w2 "2:二."
@@ -159,6 +159,7 @@ for_window [instance="Capture"] move position center
 for_window [instance="Dropdown"] floating enable
 for_window [instance="Dropdown"] resize set width 65 ppt height 80 ppt
 for_window [instance="Dropdown"] move position center
+for_window [instance="Dropdown"] sticky enable
 for_window [class="Dragon-drop"] sticky enable
 for_window [window_type="dialog"] resize set width 70 ppt height 80 ppt
 for_window [window_type="dialog"] move position center
