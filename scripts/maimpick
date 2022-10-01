@@ -4,7 +4,12 @@
 # choose the kind of screenshot to take, including copying the image or even
 # highlighting an area to copy. scrotcucks on suicidewatch right now.
 
-output=${XDG_PICTURES_DIR:="$HOME/Pictures"}/Screenshots/"$(date +%s_%h%d_%H:%M:%S).png"
+outdir=${XDG_PICTURES_DIR:="$HOME/Pictures"}/Screenshots
+if [ ! -d "$outdir" ]; then
+  mkdir --parents "$outdir"
+fi
+
+output=$outdir/"$(date +%s_%h%d_%H:%M:%S).png"
 
 take_screenshot() {
 	case "$1" in
