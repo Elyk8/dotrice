@@ -1,11 +1,12 @@
 -- Lvim options
 lvim.log.level = "warn"
 lvim.format_on_save = false
-lvim.colorscheme = "vscode"
+lvim.colorscheme = "tokyonight"
 
 -- Vim options
 vim.opt.relativenumber = true
 vim.opt.breakindent = true
+vim.opt.showtabline = 0
 
 -- Keymappings [view all the defaults by pressing <leader>Lk]
 lvim.leader = "space"
@@ -25,7 +26,8 @@ local _, actions = pcall(require, "telescope.actions")
 lvim.builtin.telescope.defaults.mappings = {
   -- for input mode
   i = {
-    ["<C-j>"] = actions.move_selection_next, ["<C-k>"] = actions.move_selection_previous,
+    ["<C-j>"] = actions.move_selection_next,
+    ["<C-k>"] = actions.move_selection_previous,
     ["<C-n>"] = actions.cycle_history_next,
     ["<C-p>"] = actions.cycle_history_prev,
   },
@@ -65,7 +67,9 @@ lvim.builtin.which_key.mappings["t"] = {
 -- After changing plugin config exit and reopen LunarVim, Run :PackerInstall :PackerCompile
 lvim.builtin.alpha.active = true
 -- lvim.builtin.alpha.mode = "startify"
-lvim.builtin.notify.active = true
+lvim.builtin.breadcrumbs.active = true
+lvim.builtin.bufferline.active = false
+lvim.builtin.notify.active = false
 lvim.builtin.terminal.active = true
 lvim.builtin.nvimtree.setup.view.side = "left"
 lvim.builtin.nvimtree.setup.renderer.icons.show.git = false
@@ -98,6 +102,7 @@ lvim.lsp.installer.setup.ensure_installed = {
   "sumeko_lua",
   "jsonls",
   "ccls",
+  "bashls",
 }
 -- -- change UI setting of `LspInstallInfo`
 -- -- see <https://github.com/williamboman/nvim-lsp-installer#default-configuration>
@@ -136,8 +141,10 @@ end, lvim.lsp.automatic_configuration.skipped_servers)
 -- -- set a formatter, this will override the language server formatting capabilities (if it exists)
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
+  { command = "stylua", filetypes = { "lua" } },
   { command = "black", filetypes = { "python" } },
   { command = "isort", filetypes = { "python" } },
+  { command = "shfmt", filetypes = { "bash", "sh", "zsh" } },
   { command = "uncrustify", filetypes = { "c", "cpp" } },
   {
     -- each formatter accepts a list of options identical to https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md#Configuration
@@ -171,36 +178,17 @@ linters.setup {
 -- Additional Plugins
 lvim.plugins = {
   {
-    "folke/tokyonight.nvim",
-    config = function()
-      require "user.tokyonight"
-    end
-  },
-  {
-    "Mofiqul/vscode.nvim",
-    config = function()
-      require('vscode').setup {
-        -- Enable transparent background
-        -- transparent = true,
-
-        -- Enable italic comment
-        italic_comments = true
-      }
-    end
-  },
-  {
     "folke/todo-comments.nvim",
     event = "BufRead",
     config = function()
       require("todo-comments").setup()
     end,
   },
-  { "tpope/vim-surround" },
   {
     "aserowy/tmux.nvim",
     config = function()
       require "user.tmux"
-    end
+    end,
   },
   {
     "lervag/vimtex",
@@ -214,7 +202,7 @@ lvim.plugins = {
     "lukas-reineke/indent-blankline.nvim",
     config = function()
       require "user.indentline"
-    end
+    end,
   },
   {
     "ethanholz/nvim-lastplace",
@@ -227,7 +215,13 @@ lvim.plugins = {
     "Pocco81/true-zen.nvim",
     config = function()
       require "user.true-zen"
-    end
+    end,
+  },
+  {
+    "kylechui/nvim-surround",
+    config = function()
+      require "user.surround"
+    end,
   },
 }
 

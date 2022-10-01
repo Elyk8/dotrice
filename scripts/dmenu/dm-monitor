@@ -10,7 +10,7 @@ fi
 
 choice=$(printf "%s\n" "SINGLE" "DUAL" "TV" | rofi-dmenu -p "Which mode?")
 
-if [ $choice = "DUAL" ]; then
+if [ "$choice" = "DUAL" ]; then
 	direction=$(printf "%s\n" "Right" "Left" | rofi-dmenu -p "Where to attach?")
 	case $direction in
 	"Right") args="--right-of" ;;
