@@ -31,7 +31,7 @@ run otd &
 run picom -b --experimental-backends &
 run clipcatd &
 run redshift &
-run /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+run lxsession &
 
 # run mpd &
 run dunst-reload &

@@ -52,6 +52,10 @@ super + space ; e
 super + o ; d
       discord
 
+# :Openers - Thunderbird
+super + o ; e
+      run-or-raise 'class = "thunderbird"' thunderbird
+
 # :Openers - AT Launcher
 super + o ; a
       atlauncher
