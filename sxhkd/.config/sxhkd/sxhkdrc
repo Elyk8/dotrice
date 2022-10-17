@@ -157,8 +157,8 @@ super + Escape
       sysact
 
 # :xf86 - {Increase,Decrease} brightness
-XF86MonBrightness{Up,Down}
-      brightness {up,down}
+# XF86MonBrightness{Up,Down}
+#       brightness {up,down}
 
 # :xf86 - {Increase,Decrease} volume
 XF86Audio{Raise,Lower}Volume
