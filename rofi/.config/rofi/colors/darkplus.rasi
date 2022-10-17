@@ -8,12 +8,12 @@
   fg0     : #D8DEE9;
   fg1     : #abb2bf;
   fg2     : #737aa2;
-  red:    #D54646;
-  green:    #23D18B;
-  yellow:    #D7BA7D;
-  blue:    #569CD6;
-  magenta:    #C586C0;
-  cyan:    #29B8DB;
+  red     : #D54646;
+  green   : #23D18B;
+  yellow  : #D7BA7D;
+  blue    : #569CD6;
+  magenta : #C586C0;
+  cyan    : #29B8DB;
 
   accent: @red;
   urgent: @yellow;

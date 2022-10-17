@@ -7,6 +7,7 @@ ElykGroup = augroup("ElykGroup", {})
 --   -- enable wrap mode for json files only
 --   command = "setlocal wrap",
 -- })
+
 autocmd("FileType", {
   group = ElykGroup,
   pattern = "zsh",
@@ -16,3 +17,10 @@ autocmd("FileType", {
   end,
 })
 
+autocmd("BufRead", {
+  group = ElykGroup,
+  pattern = { "*.xresources", "*.Xresources", "Xresources" },
+  callback = function()
+    vim.cmd "set ft=xdefaults"
+  end,
+})
