@@ -252,8 +252,9 @@ map U unselect
 
 # Movements
 map gc cd ~/.config
-map gC cd ~/.local/share/cell
+map gC cd ~/.local/share
 map gl cd ~/.local
+map gr cd ~/.local/src
 
 map gE cd /etc
 map gU. cd /usr
