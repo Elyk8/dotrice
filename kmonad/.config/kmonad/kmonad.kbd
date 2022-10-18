@@ -38,6 +38,8 @@
 
 ;; VI-like-mode-aliases
 (defalias
+  back (around rctl S-tab)
+  forw (around rctl tab)
   b (around rctl lft)
   w (around rctl rght)
   v (layer-add sel)
@@ -86,7 +88,7 @@ This will be the default layout when I will be comfortable using the default lay
   @tab    q       w       e       r       t       y       u       i       o      p       [       ]       @\
   @caps   a       s       d       f       g       h       j       k       l      ;       '       ret
   lsft    z       x       c       v       b       n       m       ,       .      /       rsft
-  lctrl           lmet    lalt    spc                             ralt    prnt   rctrl   pgup    up      pgdn
+  lctrl           lmet    lalt    @spc                            ralt    prnt   rctrl   pgup    up      pgdn
                                                                                          lft     down    rght
 )
 
@@ -113,8 +115,8 @@ This will be the default layout when I will be comfortable using the default lay
 (deflayer vim
   -       mute    vold    volu    -       brdn    bru     -       -       -       previoussong       playpause   nextsong    -      -      -      -
   -       1       2       3       4       5       6       7       8       9       0       -       -       -
-  tab     -       @w      end     ret     -       @redo   @undo   -       -       bspc    -       -       -
-  -       home    -       del     @find   -       lft     down    up      rght    -       -       -
+  tab     -       @w      end     ret     -       @redo   @undo   @forw   @back   bspc    C-bspc  -       -
+  @caps   home    -       del     @find   -       lft     down    up      rght    -       -       -
   -       -       -       -       @v      @b      -       -       -       -       -       -
   -               -       -       spc                             -       -       -       -       -       -
                                                                                           -       -       -

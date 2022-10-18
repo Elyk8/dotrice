@@ -199,12 +199,6 @@ lvim.plugins = {
   },
   { "p00f/nvim-ts-rainbow" },
   {
-    "lukas-reineke/indent-blankline.nvim",
-    config = function()
-      require "user.indentline"
-    end,
-  },
-  {
     "ethanholz/nvim-lastplace",
     event = "BufRead",
     config = function()
@@ -223,6 +217,7 @@ lvim.plugins = {
       require "user.surround"
     end,
   },
+  { "kmonad/kmonad-vim" },
 }
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
