@@ -11,7 +11,7 @@ configuration {
   kb-row-select: "Tab";
 }
 
-@theme "colors/tokyonight"
+@theme "colors/darkplus"
 
 element-icon, element-text, scrollbar {
   cursor: pointer;

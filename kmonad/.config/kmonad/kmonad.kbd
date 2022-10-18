@@ -115,7 +115,7 @@ This will be the default layout when I will be comfortable using the default lay
 (deflayer vim
   -       mute    vold    volu    -       brdn    bru     -       -       -       previoussong       playpause   nextsong    -      -      -      -
   -       1       2       3       4       5       6       7       8       9       0       -       -       -
-  tab     -       @w      end     ret     -       @redo   @undo   @forw   @back   bspc    C-bspc  -       -
+  -       -       @w      end     ret     tab     @redo   @undo   @forw   @back   bspc    C-bspc  -       -
   @caps   home    -       del     @find   -       lft     down    up      rght    -       -       -
   -       -       -       -       @v      @b      -       -       -       -       -       -
   -               -       -       spc                             -       -       -       -       -       -
