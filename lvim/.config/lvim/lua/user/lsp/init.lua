@@ -1,6 +1,10 @@
 require("user.lsp.languages.python")
 require("user.lsp.languages.c")
 
+lvim.format_on_save = false
+lvim.lsp.diagnostics.virtual_text = false
+
+
 lvim.lsp.installer.setup.ensure_installed = {
   "sumeko_lua",
   "jsonls",
