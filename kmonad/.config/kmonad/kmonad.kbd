@@ -117,8 +117,8 @@ This will be the default layout when I will be comfortable using the default lay
   -       1       2       3       4       5       6       7       8       9       0       -       -       -
   -       -       @w      end     ret     tab     @redo   @undo   @forw   @back   bspc    C-bspc  -       -
   @caps   home    -       del     @find   -       lft     down    up      rght    -       -       -
-  -       -       -       -       @v      @b      -       -       -       -       -       -
-  -               -       -       spc                             -       -       -       -       -       -
+  -       -       -       -       @v      @b      spc     spc     -       -       -       -
+  -               -       -       -                               -       -       -       -       -       -
                                                                                           -       -       -
 )
 
