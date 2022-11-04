@@ -32,10 +32,6 @@ super + space ; n
 super + space ; b
       rofi -show window
 
-# Open Firefox
-super + space ; w
-      run-or-raise 'name ~ ".*Firefox$"' firefox
-
 # Toggle mute microphone
 super + space ; m
       microphone toggle
@@ -75,6 +71,10 @@ super + o ; o
 # :Openers - VSCodium
 super + o ; v
       vscodium
+
+# :Openers - Firefox
+super + o ; w
+      run-or-raise 'name ~ ".*Firefox$"' firefox
 
 # :Openers - zotero
 super + o ; t

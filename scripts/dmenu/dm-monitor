@@ -33,6 +33,6 @@ case $choice in
 "TV") xrandr_tv & ;;
 esac
 
-herbstclient detect_monitors
+# herbstclient detect_monitors
 
 sh -c $HOME/.fehbg &

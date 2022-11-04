@@ -3,10 +3,10 @@
 if envycontrol --query | grep nvidia; then
 	xrandr --setprovideroutputsource modesetting NVIDIA-0
 	xrandr --output HDMI-0 --primary --mode 1920x1080 --rate 144.00 \
-		--output eDP-1-1 --right-of HDMI-0 --auto
+		--output eDP-1-1 --left-of HDMI-0 --auto
 else
 	xrandr --output HDMI-1-0 --primary --auto \
-		--output eDP1 --auto --right-of HDMI-1-0
+		--output eDP1 --auto --left-of HDMI-1-0
 fi
 
 # xrandr --dpi 141 --fb 3969x2232 \
