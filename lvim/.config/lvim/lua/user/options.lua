@@ -13,7 +13,6 @@ lvim.builtin.alpha.active = true
 -- lvim.builtin.alpha.mode = "startify"
 lvim.builtin.breadcrumbs.active = true
 lvim.builtin.bufferline.active = false
-lvim.builtin.notify.active = false
 lvim.builtin.terminal.active = true
 lvim.builtin.nvimtree.setup.view.side = "left"
 lvim.builtin.nvimtree.setup.renderer.icons.show.git = false

@@ -2,7 +2,6 @@
 
 # for sudo to respect aliases
 alias sudo="sudo "
-
 # pip aliases
 alias pip-upgrade="pip freeze --user | cut -d'=' -f1 | xargs -n1 pip install -U"
 alias pip-upgrade-venv="pip freeze | cut -d'=' -f1 | xargs -n1 pip install -U"
@@ -215,8 +214,6 @@ alias xp='chmod +x'
 alias ffmpeg="ffmpeg -hide_banner"
 alias e="\$EDITOR"
 alias br='bulk-rename'
-alias lf='lfcd'
-alias pomodoro='pomodoro --directory "~/.config/pomodoro"'
 
 se() { fd -atf --base-directory "$XDG_CONFIG_HOME" | fzf | xargs -r "$EDITOR"; }
 sr() { fd -atf --base-directory "$SCRIPTS" | fzf | xargs -r "$EDITOR"; }
@@ -224,10 +221,26 @@ sc() { fd -Hatf --base-directory "$DOTS" | fzf | xargs -r "$EDITOR"; }
 xevv() { xev | awk -F'[ )]+' '/^KeyPress/ { a[NR+2] } NR in a { printf "%-3s %s\n", $5, $8 }'; }
 
 riceros() {
-  conda activate ros
+	conda activate ros
 	export ROS_MASTER_URI=http://10.1.1.100:11311
 	export ROS_HOSTNAME=10.1.1.100
 	export TURTLEBOT3_MODEL=burger # waffle, waffle_pi
 	# alias teleop="roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch"
 	# alias slam="roslaunch turtlebot3_slam turtlebot3_slam.launch"
 }
+
+lfcd() {
+	tmp="$(mktemp)"
+	lf -last-dir-path="$tmp" "$@"
+	if [ -f "$tmp" ]; then
+		dir="$(cat "$tmp")"
+		\rm -f "$tmp"
+		if [ -d "$dir" ]; then
+			if [ "$dir" != "$(pwd)" ]; then
+				cd "$dir"
+			fi
+		fi
+	fi
+}
+
+alias lf="lfcd"

@@ -7,7 +7,7 @@ tmux.setup {
   copy_sync = {
     -- enables copy sync and overwrites all register actions to
     -- sync registers *, +, unnamed, and 0 till 9 from tmux in advance
-    enable = true,
+    enable = false,
 
     -- ignore specific tmux buffers e.g. buffer0 = true to ignore the
     -- first buffer or named_buffer_name = true to ignore a named tmux
@@ -25,7 +25,7 @@ tmux.setup {
     -- sync clipboard overwrites vim.g.clipboard to handle * and +
     -- registers. If you sync your system clipboard without tmux, disable
     -- this option!
-    sync_clipboard = true,
+    sync_clipboard = false,
 
     -- syncs deletes with tmux clipboard as well, it is adviced to
     -- do so. Nvim does not allow syncing registers 0 and 1 without

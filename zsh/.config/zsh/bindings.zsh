@@ -10,6 +10,7 @@ bindkey '^k' autosuggest-accept
 bindkey '^h' backward-delete-word
 bindkey -r "^u"
 bindkey -r "^d"
+bindkey -s '^x' '^usource $ZDOTDIR/.zshrc\n'
 
 # Expand on Ctrl-Space
 my-expand() { zle _expand_alias || zle .expand-word || true; }
