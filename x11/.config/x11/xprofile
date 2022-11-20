@@ -37,7 +37,6 @@ run redshift &
 run lxsession &
 
 run dunst-reload &
-run "$HOME"/.fehbg &
 xsetroot -cursor_name left_ptr
 
 run syncthing-gtk --minimized &
