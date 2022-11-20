@@ -28,7 +28,7 @@ run sxhkd &
 run nm-applet &
 # run dm-wacom &
 run otd &
-run picom -b --experimental-backends &
+run picom -b &
 run clipcatd &
 run redshift &
 run lxsession &

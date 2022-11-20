@@ -19,17 +19,11 @@ alias upal="paru -Syu --noconfirm"
 #better cd
 alias ...='cd ../..'
 alias ....='cd ../../..'
-
-# vim and emacs
-alias em="emacs-edit -ui"
-alias doom="~/.local/share/emacs/doom/bin/doom"
-alias doomsync="~/.local/share/emacs/doom/bin/doom sync"
-alias doomdoctor="~/.local/share/emacs/doom/bin/doom doctor"
-alias doomupgrade="~/.local/share/emacs/doom/bin/doom upgrade"
-alias doompurge="~/.local/share/emacs/doom/bin/doom purge"
+alias .....='cd ../../../..'
 
 # z.lua useful aliases
 alias j='z -I'  # use fzf to select in multiple matches
+alias jj='z -c' # restrict matches to subdirs of $PWD
 alias zz='z -c' # restrict matches to subdirs of $PWD
 alias zi='z -i' # cd with interactive selection
 alias zb='z -b' # quickly cd to the parent directory
@@ -41,9 +35,6 @@ alias free="free -mth"
 # pacman unlock
 alias unlock="sudo rm /var/lib/pacman/db.lck"
 alias rmpacmanlock="sudo rm /var/lib/pacman/db.lck"
-
-# which graphical card is working
-alias whichvga="/usr/local/bin/arcolinux-which-vga"
 
 # continue download
 alias wget="wget -c --hsts-file='\$XDG_CACHE_HOME/wget-hsts'"
@@ -80,9 +71,6 @@ alias update-grub="sudo grub-mkconfig -o /boot/grub/grub.cfg"
 
 # add new fonts
 alias update-fc='sudo fc-cache -fv'
-
-# kill commands
-alias keyreload='killall shotkey && sleep 0.1 && setsid -f shotkey'
 
 # hardware info --short
 alias hw="hwinfo --short"
@@ -146,13 +134,6 @@ alias fix-keyserver="[ -d ~/.gnupg ] || mkdir ~/.gnupg ; cp /etc/pacman.d/gnupg/
 
 #fixes
 alias fix-permissions="sudo chown -R \$USER:\$USER ~/.config ~/.local"
-alias keyfix="/usr/local/bin/arcolinux-fix-pacman-databases-and-keys"
-alias key-fix="/usr/local/bin/arcolinux-fix-pacman-databases-and-keys"
-alias fixkey="/usr/local/bin/arcolinux-fix-pacman-databases-and-keys"
-alias fix-key="/usr/local/bin/arcolinux-fix-pacman-databases-and-keys"
-alias fix-sddm-config="/usr/local/bin/arcolinux-fix-sddm-config"
-alias fix-pacman-conf="/usr/local/bin/arcolinux-fix-pacman-conf"
-alias fix-pacman-keyserver="/usr/local/bin/arcolinux-fix-pacman-gpg-conf"
 
 #maintenance
 alias big="expac -H M '%m\t%n' | sort -h | nl"

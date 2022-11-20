@@ -20,3 +20,8 @@ local linters = require "lvim.lsp.null-ls.linters"
 linters.setup {
   { command = "cppcheck", filetypes = { "c", "cpp" } },
 }
+
+local lsp_manager = require "lvim.lsp.manager"
+lsp_manager.setup("ccls", {
+  filetypes = { "c", "cpp" },
+})

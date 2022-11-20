@@ -27,4 +27,5 @@ lvim.plugins = {
   "kmonad/kmonad-vim",
   "aserowy/tmux.nvim",
   "p00f/nvim-ts-rainbow",
+  "karb94/neoscroll.nvim",
 }
