@@ -1,5 +1,0 @@
-#!/bin/sh
-emacsclient --eval "(save-buffers-kill-emacs)" || killall emacs
-sleep 0.1
-emacs --daemon
-emacsclient -c --eval "(delete-frame)"

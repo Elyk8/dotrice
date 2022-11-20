@@ -1,6 +1,0 @@
-#!/bin/sh
-
-pkill Xephyr
-Xephyr -br -ac -noreset -screen 800x600 :1 &
-sleep 0.1
-DISPLAY=:1 lxappearance &

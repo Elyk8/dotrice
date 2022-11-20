@@ -3,4 +3,4 @@
 awk '/^[a-zA-Z]/ && last {print $0,"\t",last} {last=""} /^#/{last=$0}' ~/.config/sxhkd/sxhkdrc |
     column -t -s $'\t' |
     sed "s/# //" |
-    rofi-dmenu -l 15 -p "Helper for sxhkd"
+    rofi-dmenu -l 15 -p "Helper for sxhkd" -theme-str 'window {width: 50%;}'

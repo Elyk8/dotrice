@@ -5,44 +5,44 @@ run() {
 	fi
 }
 
+
 if [ "$(uname -n)" = "gpdskynet" ]; then
 	# xrandr -o right
 	# xinput set-prop "pointer:Goodix Capacitive TouchScreen" --type=float "Coordinate Transformation Matrix" 0 1 0 -1 0 1 0 0 1
 	run unclutter --hide-on-touch
 	# python3 /usr/share/slimbookintelcontroller/src/slimbookintelcontrollerindicator.py &
 	xrdb -merge ~/.config/x11/Xresources.d/gpdskynet.xresources
+
 elif [ "$(uname -n)" = "skynet" ]; then
 	xrdb -merge ~/.config/x11/Xresources.d/skynet.xresources
-	multi-monitor
+ 
+elif [ "$(uname -n)" = "ArchKeith" ]; then
+	xrdb -merge ~/.config/x11/Xresources.d/archkeith.xresources
 fi
 
 xrdb -merge ~/.config/x11/Xresources
+
+multi-monitor
 
 eval "$(gnome-keyring-daemon --start)"
 export SSH_AUTH_SOCK
 
 run kmonad-refresh &
-# run /usr/bin/emacs --daemon &
-# run /usr/bin/pipewire &
 run sxhkd &
 run nm-applet &
-# run dm-wacom &
 run otd &
 run picom -b &
 run clipcatd &
 run redshift &
 run lxsession &
 
-# run mpd &
 run dunst-reload &
 run "$HOME"/.fehbg &
 xsetroot -cursor_name left_ptr
 
-run syncthing-gtk --minimized
+run syncthing-gtk --minimized &
 
 # Don't Randomly Turn off
 xset s off
 xset -dpms
 xset s noblank
-
-[ -n "$xrdbpid" ] && wait "$xrdbpid"
