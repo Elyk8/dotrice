@@ -4,7 +4,7 @@ Xft.rgba: rgb
 Xft.HintStyle: hintslight
 Xft.antialias: true
 Xft.lcdfilter: lcddefault
-Xcursor.theme: Breeze-Blue
+Xcursor.theme: Bibata-Modern-Ice
 
 XTerm*termName: xterm-256color
 

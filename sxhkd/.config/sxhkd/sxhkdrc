@@ -228,20 +228,16 @@ super + BackSpace
 super + {comma,period}
       mpc seek {-,+}5
 
-# :function - Toggle Buckle spring keyboard sound effect
-super + F2
-      buckle-spring
-
 # :function - Reset monitor configuration
-super + F3
+super + F2
       autorandr --change --force
 
 # :function - Refresh kmonad configuration
-super + F4
+super + F3
       notify-send "Refreshing KMonad in 2 secs"; kmonad-refresh; notify-send "Success!"
 
 # :function - Turn off display
-super + F9
+super + F4
       xset dpms force off
 
 # :function - Change optimus mode

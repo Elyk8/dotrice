@@ -1,7 +1,7 @@
 -- Lvim options
 lvim.log.level = "warn"
 lvim.format_on_save = false
-lvim.colorscheme = "darkplus"
+lvim.colorscheme = "vscode"
 
 -- Vim options
 vim.opt.relativenumber = true

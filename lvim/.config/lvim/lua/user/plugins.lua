@@ -1,6 +1,13 @@
 -- Additional Plugins
 lvim.plugins = {
-  "lunarvim/darkplus.nvim",
+  {
+    "Mofiqul/vscode.nvim",
+    config = function()
+      require("vscode").setup {
+        italic_comments = true,
+      }
+    end,
+  },
   {
     "folke/todo-comments.nvim",
     event = "BufRead",
@@ -21,6 +28,14 @@ lvim.plugins = {
     config = function()
       require "user.nvim-lastplace"
     end,
+  },
+  {
+    "baskerville/vim-sxhkdrc",
+    ft = "sxhkdrc",
+  },
+  {
+    "Fymyte/rasi.vim",
+    ft = "rasi",
   },
   "Pocco81/true-zen.nvim",
   "kylechui/nvim-surround",
