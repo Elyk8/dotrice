@@ -15,7 +15,6 @@ lvim.lsp.installer.setup.ensure_installed = {
 ---@usage disable automatic installation of servers
 lvim.lsp.installer.setup.automatic_installation = false
 
-
 -- -- you can set a custom on_attach function that will be used for all the language servers
 -- -- See <https://github.com/neovim/nvim-lspconfig#keybindings-and-completion>
 -- lvim.lsp.on_attach_callback = function(client, bufnr)
@@ -40,5 +39,3 @@ formatters.setup {
     filetypes = { "typescript", "typescriptreact" },
   },
 }
-
--- set additional linters
