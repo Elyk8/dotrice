@@ -13,7 +13,7 @@ if [ "$(uname -n)" = "skynet" ]; then
 
 elif [ "$(uname -n)" = "ArchKeith" ]; then
   xrandr --output eDP1 --primary --auto \
-    --output DP2-1 --auto --left-of eDP-1
+    --output DP2-1 --auto --left-of eDP1
 
 fi
 
