@@ -237,7 +237,7 @@ super + F3
       notify-send "Refreshing KMonad in 2 secs"; kmonad-refresh; notify-send "Success!"
 
 # :function - Turn off display
-super + F4
+super + F8
       xset dpms force off
 
 # :function - Change optimus mode
