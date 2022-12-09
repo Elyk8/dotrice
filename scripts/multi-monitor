@@ -12,8 +12,8 @@ if [ "$(uname -n)" = "skynet" ]; then
 	fi
 
 elif [ "$(uname -n)" = "ArchKeith" ]; then
-	xrandr --output eDP-1 --primary --auto \
-		--output DP-2-1 --auto --left-of eDP-1
+  xrandr --output eDP1 --primary --auto \
+    --output DP2-1 --auto --left-of eDP1
 
 elif [ "$(uname -n)" = "gpdskynet" ]; then
 	xrandr --output DisplayPort-2 --primary --mode 1920x1080 --rate 165.00 --set TearFree on \
