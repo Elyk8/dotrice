@@ -121,4 +121,4 @@ export MOZ_USE_XINPUT2="1"                    # Mozilla smooth scrolling/touchpa
 export AWT_TOOLKIT="MToolkit wmname LG3D"     # May have to install wmname
 export _JAVA_AWT_WM_NONREPARENTING=1          # Fix for Java applications in dwm
 # export GAMEMODERUNEXEC="env __NV_PRIME_RENDER_OFFLOAD=1 env __GLX_VENDOR_LIBRARY_NAME=nvidia env __VK_LAYER_NV_optimus=NVIDIA_only"
-export GAMEMODERUNEXEC="prime-run"
+# export GAMEMODERUNEXEC="prime-run"

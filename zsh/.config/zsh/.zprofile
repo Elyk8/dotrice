@@ -1,5 +1,5 @@
 # Scaling
-export QT_QPA_PLATFORMTHEME="gtk2" # Have QT use gtk2 theme
+export QT_QPA_PLATFORMTHEME="Adwaita-dark" # Have QT use gtk2 theme
 # export QT_STYLE_OVERRIDE=kvantum
 # export PLASMA_USE_QT_SCALING=1
 # export QT_AUTO_SCREEN_SCALE_FACTOR=0
@@ -13,7 +13,8 @@ export QT_QPA_PLATFORMTHEME="gtk2" # Have QT use gtk2 theme
 
 # if pacman -Qs libxft-bgra >/dev/null 2>&1; then
 if [ -z "${DISPLAY}" ] && [ "$(tty)" = "/dev/tty1" ] && ! pidof -s Xorg &>/dev/null; then
-	exec startx "${XDG_CONFIG_HOME:-$HOME/.config}/x11/xinitrc" >/dev/null 2>&1
+	# exec startx "${XDG_CONFIG_HOME:-$HOME/.config}/x11/xinitrc" >/dev/null 2>&1
+	exec startx "${XDG_CONFIG_HOME:-$HOME/.config}/x11/xinitrc"
 fi
 
 # Switch escape and caps if tty and no passwd required:

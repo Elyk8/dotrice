@@ -218,7 +218,7 @@ super + {equal,minus}
 
 # :mpc -  {Increase,Decrease} volume by 2
 super + shift + {equal,minus}
-      mpc volume {50,20} && mpc-volume
+      mpc volume {50,30} && mpc-volume
 
 # :mpc -  Play/pause song
 super + BackSpace
