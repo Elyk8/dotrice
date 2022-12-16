@@ -17,7 +17,8 @@ elif [ "$(uname -n)" = "ArchKeith" ]; then
 
 elif [ "$(uname -n)" = "gpdskynet" ]; then
 	xrandr --output DisplayPort-2 --primary --mode 1920x1080 --rate 165.00 --set TearFree on \
-			--output DSI-1-1 --auto --right-of DisplayPort-2 --rotate right
+			--output DSI-1-1 --off
+			# --output DSI-1-1 --auto --right-of DisplayPort-2 --rotate right
 fi
 
 # xrandr --dpi 141 --fb 3969x2232 \

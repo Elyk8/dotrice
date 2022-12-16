@@ -29,18 +29,14 @@ lvim.plugins = {
       require "user.nvim-lastplace"
     end,
   },
-  {
-    "baskerville/vim-sxhkdrc",
-    ft = "sxhkdrc",
-  },
-  {
-    "Fymyte/rasi.vim",
-    ft = "rasi",
-  },
   "Pocco81/true-zen.nvim",
   "kylechui/nvim-surround",
   "kmonad/kmonad-vim",
   "aserowy/tmux.nvim",
   "p00f/nvim-ts-rainbow",
-  "karb94/neoscroll.nvim",
+  -- "karb94/neoscroll.nvim",
+  "opalmay/vim-smoothie",
+  "lvimuser/lsp-inlayhints.nvim",
+  "NvChad/nvim-colorizer.lua",
+  "nathom/filetype.nvim",
 }

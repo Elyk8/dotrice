@@ -129,9 +129,12 @@ cmd unarchive ${{
   archives="$(printf "%s\n" "$fx")"
   for i in $archives; do
       case "$i" in
-          *.zip | *.tar.gz | *.tar.bz2 | *.tar | *.rar)
-              aunpack "$i"
-              ;;
+          *.zip) unzip "$f" ;;
+          *.rar) unrar x "$f" ;;
+          *.tar.gz) tar -xzvf "$f" ;;
+          *.tar.bz2) tar -xjvf "$f" ;;
+          *.tar) tar -xvf "$f" ;;
+          *.7z) 7z x "$f" ;;
           *) echo "Unsupported format" ;;
       esac
   done

@@ -18,4 +18,4 @@ if [ -z "${DISPLAY}" ] && [ "$(tty)" = "/dev/tty1" ] && ! pidof -s Xorg &>/dev/n
 fi
 
 # Switch escape and caps if tty and no passwd required:
-sudo -n loadkeys ${XDG_CONFIG_HOME:-$HOME/.config}/ttymaps.kmap 2>/dev/null
+sudo -n loadkeys "${XDG_CONFIG_HOME:-$HOME/.config}"/ttymaps.kmap 2>/dev/null

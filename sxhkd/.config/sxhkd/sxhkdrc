@@ -1,5 +1,3 @@
-# -*- conf -*-
-
 # Toggle polybar
 super + b
 				polybar-msg cmd toggle
