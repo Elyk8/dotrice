@@ -7,7 +7,7 @@ killall kmonad
 
 sleep 0.1
 
-setsid -f kmonad $config
+setsid -f kmonad "$config"
 
 sleep 0.1
 
@@ -15,7 +15,7 @@ for keyboard in $keyb1 $keyb2; do
 	if test -e $keyboard; then
 		dest="/tmp/kmonad-lenovo.kbd"
 		cp $config $dest
-		sed -i 's:/dev/input/by-path/platform-i8042-serio-0-event-kbd:'$keyboard':' $dest
+		sed -i "s:/dev/input/by-path/platform-i8042-serio-0-event-kbd:'$keyboard':" $dest
 		setsid -f kmonad $dest
 	fi
     sleep 0.1

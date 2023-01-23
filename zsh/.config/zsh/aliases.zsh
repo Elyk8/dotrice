@@ -196,6 +196,7 @@ alias xp='chmod +x'
 alias ffmpeg="ffmpeg -hide_banner"
 alias e="\$EDITOR"
 alias br='bulk-rename'
+alias removemeta="exiftool -recurse -overwrite_original -all= --icc_profile:all"
 
 se() { fd -atf --base-directory "$XDG_CONFIG_HOME" | fzf | xargs -r "$EDITOR"; }
 sr() { fd -atf --base-directory "$SCRIPTS" | fzf | xargs -r "$EDITOR"; }

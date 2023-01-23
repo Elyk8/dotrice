@@ -24,3 +24,9 @@ autocmd("BufRead", {
     vim.cmd "set ft=xdefaults"
   end,
 })
+
+autocmd({ "BufWinEnter" }, {
+  callback = function()
+    vim.cmd "set formatoptions-=cro"
+  end,
+})

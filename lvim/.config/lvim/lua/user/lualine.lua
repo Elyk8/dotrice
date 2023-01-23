@@ -17,5 +17,3 @@ if lvim.colorscheme == "vscode" then
 
 	lvim.builtin.lualine.sections.lualine_b = { branch }
 end
-
-

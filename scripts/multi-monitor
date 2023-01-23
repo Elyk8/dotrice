@@ -1,7 +1,6 @@
 #!/bin/sh
 
 if [ "$(uname -n)" = "skynet" ]; then
-
 	if envycontrol --query | grep nvidia; then
 		xrandr --setprovideroutputsource modesetting NVIDIA-0
 		xrandr --output HDMI-0 --primary --mode 1920x1080 --rate 144.00 \

@@ -22,7 +22,7 @@ cmd on-quit $ctpv -e $id
 # opener
 cmd open ${{
   case "$f" in
-    *.bmp | *.jpg | *.jpeg | *.png | *.xpm | *.webp | *.gif | *.tif | *.ico)
+    *.bmp | *.jpg | *.JPG | *.jpeg | *.png | *.xpm | *.webp | *.gif | *.tif | *.ico)
       rotdir "$f" | grep -i "\.\(png\|jpg\|jpeg\|gif\|webp\|tif\|ico\)\(_large\)*$" | setsid -f nsxiv -aio 2>/dev/null | lf-select &
       ;;
     *.wav | *.mp3 | *.flac | *.m4a | *.wma | *.ape | *.ac3 | *.og[agx] | *.spx | *.opus | *.as[fx] | *.mka)

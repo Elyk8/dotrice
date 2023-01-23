@@ -18,7 +18,8 @@ lvim.builtin.treesitter.ensure_installed = {
 }
 
 lvim.builtin.treesitter.ignore_install = { "haskell" }
-lvim.builtin.treesitter.highlight.enabled = true
+lvim.builtin.treesitter.highlight.enable = true
+lvim.builtin.treesitter.autotag.enable = true
 
 if lvim.colorscheme == "vscode" then
   lvim.builtin.treesitter.rainbow = {

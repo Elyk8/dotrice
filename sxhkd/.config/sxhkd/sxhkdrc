@@ -8,7 +8,7 @@ super + slash
 
 # Open desktop applications
 super + space ; space
-				rofi-menu
+			krunner --replace
 
 # Dropdown terminal
 super + space ; d
@@ -154,49 +154,49 @@ super + semicolon ; w
 super + Escape
       sysact
 
-# :xf86 - {Increase,Decrease} brightness
-XF86MonBrightness{Up,Down}
-      brightness {up,down}
+# # :xf86 - {Increase,Decrease} brightness
+# XF86MonBrightness{Up,Down}
+#       brightness {up,down}
 
-# :xf86 - {Increase,Decrease} volume
-XF86Audio{Raise,Lower}Volume
-      volume {up,down}
+# # :xf86 - {Increase,Decrease} volume
+# XF86Audio{Raise,Lower}Volume
+#       volume {up,down}
 
-# :xf86 - Mute/Unmute volume
-XF86AudioMute
-      volume mute
+# # :xf86 - Mute/Unmute volume
+# XF86AudioMute
+#       volume mute
 
-# :xf86 - Mute/Unmute microphone
-XF86AudioMicMute
-      mic-toggle
+# # :xf86 - Mute/Unmute microphone
+# XF86AudioMicMute
+#       mic-toggle
 
-# :xf86 - Previous/Next/Play-pause player
-XF86Audio{Prev,Next,Play}
-    playerctl {previous,next,play-pause}
+# # :xf86 - Previous/Next/Play-pause player
+# XF86Audio{Prev,Next,Play}
+#     playerctl {previous,next,play-pause}
 
-# :Print - Take screenshot of selection
-Print ; s
-      maimpick 'Selected'
+# # :Print - Take screenshot of selection
+# Print ; s
+#       maimpick 'Selected'
 
-# :Print - Take screenshot of current screen
-Print ; c
-      maimpick 'Current'
+# # :Print - Take screenshot of current screen
+# Print ; c
+#       maimpick 'Current'
 
-# :Print - Take screenshot of whole desktop
-Print ; f
-      maimpick 'Fullscreen'
+# # :Print - Take screenshot of whole desktop
+# Print ; f
+#       maimpick 'Fullscreen'
 
-# :Print - Take screenshot of selection into clipboard
-Print ; shift + s
-      maimpick 'Selected (copy)'
+# # :Print - Take screenshot of selection into clipboard
+# Print ; shift + s
+#       maimpick 'Selected (copy)'
 
-# :Print - Take screenshot of current screen into clipboard
-Print ; shift + c
-      maimpick 'Current (copy)'
+# # :Print - Take screenshot of current screen into clipboard
+# Print ; shift + c
+#       maimpick 'Current (copy)'
 
-# :Print - Take screenshot of whole desktop into clipboard
-Print ; shift + f
-      maimpick 'Fullscreen (copy)'
+# # :Print - Take screenshot of whole desktop into clipboard
+# Print ; shift + f
+#       maimpick 'Fullscreen (copy)'
 
 # :mpc -  Previous song
 super + bracketleft
@@ -212,11 +212,11 @@ super + shift + bracketleft
 
 # :mpc -  {Increase,Decrease} volume by 2
 super + {equal,minus}
-      mpc volume {+,-}2 && mpc-volume
+      mpc volume {+,-}2
 
 # :mpc -  {Increase,Decrease} volume by 2
 super + shift + {equal,minus}
-      mpc volume {50,30} && mpc-volume
+      mpc volume {50,30}
 
 # :mpc -  Play/pause song
 super + BackSpace
@@ -226,26 +226,26 @@ super + BackSpace
 super + {comma,period}
       mpc seek {-,+}5
 
-# :function - Reset monitor configuration
-super + F2
-      autorandr --change --force
+# # :function - Reset monitor configuration
+# super + F2
+#       autorandr --change --force
 
 # :function - Refresh kmonad configuration
 super + F3
       notify-send "Refreshing KMonad in 2 secs"; kmonad-refresh; notify-send "Success!"
 
-# :function - Turn off display
-super + F8
-      xset dpms force off
+# # :function - Turn off display
+# super + F8
+#       xset dpms force off
 
-# :function - Change optimus mode
-super + F9
-      dm-envycontrol
+# # :function - Change optimus mode
+# super + F9
+#       dm-envycontrol
 
-# :function - Monitor things
-super + F10
-      dm-monitor
+# # :function - Monitor things
+# super + F10
+#       dm-monitor
 
-# :function - Adjust brightness
-super + {F11, F12}
-      brightness {down,up}
+# # :function - Adjust brightness
+# super + {F11, F12}
+#       brightness {down,up}

@@ -21,17 +21,16 @@ filetype.setup {
     function_literal = {
       Brewfile = function()
         vim.cmd "syntax off"
+      end,
+      sxhkdrc = function()
         vim.bo.filetype = "sxhkdrc"
       end,
-      sxhkdrc = function ()
-        vim.bo.filetype = "sxhkdrc"
-      end
     },
-    -- function_complex = {
-    --     ["*.math_notes/%w+"] = function()
-    --         vim.cmd("iabbrev $ $$")
-    --     end,
-    -- },
+    function_complex = {
+      [".*/i3/config"] = function()
+        vim.bo.filetype = "i3config"
+      end,
+    },
 
     -- shebang = {
     --     -- Set the filetype of files with a dash shebang to sh

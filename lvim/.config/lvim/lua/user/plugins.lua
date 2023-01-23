@@ -33,7 +33,7 @@ lvim.plugins = {
   "kylechui/nvim-surround",
   "kmonad/kmonad-vim",
   "aserowy/tmux.nvim",
-  "p00f/nvim-ts-rainbow",
+  "ChristianChiarulli/nvim-ts-rainbow",
   -- "karb94/neoscroll.nvim",
   "opalmay/vim-smoothie",
   "lvimuser/lsp-inlayhints.nvim",

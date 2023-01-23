@@ -1,15 +1,8 @@
 #!/bin/sh
-run() {
-	if ! pgrep "$1" >/dev/null; then
-		"$@" &
-	fi
-}
-
-
 if [ "$(uname -n)" = "gpdskynet" ]; then
-	run unclutter --hide-on-touch
+	# unclutter --hide-on-touch
 	xrdb -merge ~/.config/x11/Xresources.d/gpdskynet.xresources
-  xinput map-to-output "pointer:Goodix Capacitive TouchScreen" DSI-1-1
+  # xinput map-to-output "pointer:Goodix Capacitive TouchScreen" DSI-1-1
 
 elif [ "$(uname -n)" = "skynet" ]; then
 	xrdb -merge ~/.config/x11/Xresources.d/skynet.xresources
@@ -20,26 +13,20 @@ fi
 
 xrdb -merge ~/.config/x11/Xresources
 
-multi-monitor
+# multi-monitor
 
-eval "$(gnome-keyring-daemon --start)"
+# eval "$(gnome-keyring-daemon --start)"
 export SSH_AUTH_SOCK
 
-run kmonad-refresh &
-run sxhkd &
-run nm-applet &
-run otd &
-run picom -b &
-run clipcatd &
-run redshift &
-run lxsession &
+kmonad-refresh &
+sxhkd &
+# nm-applet &
+# picom -b &
+# clipcatd &
+# redshift &
+# lxsession &
 
-run dunst-reload &
+# dunst-reload &
 xsetroot -cursor_name left_ptr
 
-run syncthing-gtk --minimized &
-
-# Don't Randomly Turn off
-xset s off
-xset -dpms
-xset s noblank
+syncthing-gtk --minimized &

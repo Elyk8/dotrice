@@ -58,11 +58,10 @@ tmux.setup {
 }
 
 -- Shorten function name
-local keymap = vim.keymap.set
 local opts = { silent = true }
 
 -- Tmux navigation
-keymap("", "<M-h>", [[<cmd>lua require("tmux").move_left()<cr>]], opts)
-keymap("", "<M-j>", [[<cmd>lua require("tmux").move_bottom()<cr>]], opts)
-keymap("", "<M-k>", [[<cmd>lua require("tmux").move_top()<cr>]], opts)
-keymap("", "<M-l>", [[<cmd>lua require("tmux").move_right()<cr>]], opts)
+vim.keymap.set("", "<M-h>", [[<cmd>lua require("tmux").move_left()<cr>]], opts)
+vim.keymap.set("", "<M-j>", [[<cmd>lua require("tmux").move_bottom()<cr>]], opts)
+vim.keymap.set("", "<M-k>", [[<cmd>lua require("tmux").move_top()<cr>]], opts)
+vim.keymap.set("", "<M-l>", [[<cmd>lua require("tmux").move_right()<cr>]], opts)
