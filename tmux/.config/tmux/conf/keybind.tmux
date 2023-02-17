@@ -10,11 +10,6 @@ bind r source-file "$tmux_dir/tmux.conf"    # Displays "Tmux reloaded!"
 # Bring back clear screen under tmux prefix
 #bind-key C-l send-keys 'C-l'
 
-# Panes
-bind s split-window -v               # Horizontal
-bind v split-window -h               # Vertical
-bind k kill-pane -a                  # Kill all panes except for the current one
-
 ###################################### VIM #####################################
 
 # Tmux doesn't pass <S-CR> codes to Neovim

@@ -32,7 +32,7 @@ lvim.plugins = {
   "Pocco81/true-zen.nvim",
   "kylechui/nvim-surround",
   "kmonad/kmonad-vim",
-  "aserowy/tmux.nvim",
+  -- "sunaku/tmux-navigate",
   "ChristianChiarulli/nvim-ts-rainbow",
   -- "karb94/neoscroll.nvim",
   "opalmay/vim-smoothie",

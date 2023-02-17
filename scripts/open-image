@@ -1,2 +1,8 @@
 #!/bin/sh
-rotdir "$1" | grep -i "\.\(png\|jpg\|jpeg\|gif\|webp\|tif\|ico\)\(_large\)*$" | nsxiv -aio 2>/dev/null
+
+rotdir "$@" | grep -i "\.\(png\|jpg\|jpeg\|gif\|webp\|tif\|ico\)\(_large\)*$" |
+	setsid -f nsxiv -aio 2>/dev/null | while read -r file; do
+	[ -z "$file" ] && continue
+	lf -remote "send select \"$file\""
+	lf -remote "send toggle"
+done &

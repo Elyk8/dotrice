@@ -1,4 +1,4 @@
-# -*- conf-unix -*-
+# vim: set ft=conf:
 # Basic vars
 set shell zsh
 set shellopts '-euy'
@@ -17,38 +17,48 @@ set hiddenfiles ".*:*.aux:*.bbl:*.bcf:*.blg:*.run.xml"
 set previewer ctpv
 set cleaner ctpvclear
 &ctpv -s $id
-cmd on-quit $ctpv -e $id
+&ctpvquit $id
 
 # opener
-cmd open ${{
-  case "$f" in
-    *.bmp | *.jpg | *.JPG | *.jpeg | *.png | *.xpm | *.webp | *.gif | *.tif | *.ico)
-      rotdir "$f" | grep -i "\.\(png\|jpg\|jpeg\|gif\|webp\|tif\|ico\)\(_large\)*$" | setsid -f nsxiv -aio 2>/dev/null | lf-select &
-      ;;
-    *.wav | *.mp3 | *.flac | *.m4a | *.wma | *.ape | *.ac3 | *.og[agx] | *.spx | *.opus | *.as[fx] | *.mka)
-      mpv --audio-display=no "$f"
-      ;;
-    *.avi | *.mp4 | *.wmv | *.dat | *.3gp | *.ogv | *.mkv | *.mpg | *.mpeg | *.vob | *.fl[icv] | *.m2v | *.mov | *.webm | *.ts | *.mts | *.m4v | *.r[am] | *.qt | *.divx)
-      setsid -f mpv "$f" -quiet >/dev/null 2>&1
-      ;;
-    *.odt | *.ods | *.odp | *.sxw | *.doc | *.docx | *.ppt | *.pptx | *.rtf | *.xls | *.xlsx | *.csv )
-      setsid -f libreoffice "$f" >/dev/null 2>&1
-      ;;
-    *.pdf | *.epub)
-      setsid -f zathura "$f" >/dev/null 2>&1
-      ;;
-    *.tgz | *.tar.gz | *.tar.bz2 | *.tbz2 | *.tar.txz | *.txz | *.tar | *.zip | *.jar | *.war | *.ear | *.oxt | *.rar | *.7z)
-      atool -l "$f" | less
-      ;;
-    *.iso)
-      iso-info --no-header -l "$f" | less
-      ;;
-    *.svg)
-      setsid -f inkscape "$f" >/dev/null 2>&1
-      ;;
-    *)
-      $EDITOR "$fx"
-      ;;
+cmd open &{{
+  # case "$f" in
+  #   *.bmp | *.jpg | *.JPG | *.jpeg | *.png | *.xpm | *.webp | *.gif | *.tif | *.ico)
+  #     rotdir "$f" | grep -i "\.\(png\|jpg\|jpeg\|gif\|webp\|tif\|ico\)\(_large\)*$" | setsid -f nsxiv -aio 2>/dev/null | lf-select &
+  #     ;;
+  #   *.wav | *.mp3 | *.flac | *.m4a | *.wma | *.ape | *.ac3 | *.og[agx] | *.spx | *.opus | *.as[fx] | *.mka)
+  #     mpv --audio-display=no "$f"
+  #     ;;
+  #   *.avi | *.mp4 | *.wmv | *.dat | *.3gp | *.ogv | *.mkv | *.mpg | *.mpeg | *.vob | *.fl[icv] | *.m2v | *.mov | *.webm | *.ts | *.mts | *.m4v | *.r[am] | *.qt | *.divx)
+  #     setsid -f mpv "$f" -quiet >/dev/null 2>&1
+  #     ;;
+  #   *.odt | *.ods | *.odp | *.sxw | *.doc | *.docx | *.ppt | *.pptx | *.rtf | *.xls | *.xlsx | *.csv )
+  #     setsid -f libreoffice "$f" >/dev/null 2>&1
+  #     ;;
+  #   *.pdf | *.epub)
+  #     setsid -f zathura "$f" >/dev/null 2>&1
+  #     ;;
+  #   *.tgz | *.tar.gz | *.tar.bz2 | *.tbz2 | *.tar.txz | *.txz | *.tar | *.zip | *.jar | *.war | *.ear | *.oxt | *.rar | *.7z)
+  #     atool -l "$f" | less
+  #     ;;
+  #   *.iso)
+  #     iso-info --no-header -l "$f" | less
+  #     ;;
+  #   *.svg)
+  #     setsid -f inkscape "$f" >/dev/null 2>&1
+  #     ;;
+  #   *)
+  #     lf -remote "send $id \$$EDITOR \$fx"
+  #     ;;
+  # esac
+  case $(file --mime-type -Lb $f) in
+    image/svg+xml) display -- $f ;;
+    image/*) nsxiv-rifle $f ;;
+    text/*) lf -remote "send $id \$$EDITOR \$fx";;
+    audio/*|video/x-ms-asf) mpv --audio-display=no $f ;;
+    video/*) setsid -f mpv $f -quiet >/dev/null 2>&1 ;;
+    application/pdf|application/vnd.djvu|application/epub*) setsid -f zathura $fx >/dev/null 2>&1 ;;
+    application/pgp-encrypted|application/json) lf -remote "send $id \$$EDITOR \$fx" ;;
+    *) for f in $fx; do $OPENER $f > /dev/null 2> /dev/null & done;;
   esac
 }}
 

@@ -1,0 +1,84 @@
+#!/bin/sh
+
+TMPDIR="${TMPDIR:-/tmp}"
+tmp="$TMPDIR/nsxiv_rifle_$$"
+
+is_img_extension() {
+    grep -iE '\.(jpe?g|png|gif|svg|webp|tiff|heif|avif|ico|bmp)$'
+}
+
+listfiles() {
+    find -L "$1" -maxdepth 1 -type f -print |
+        is_img_extension | sort -V | tee "$tmp"
+}
+
+open_img() {
+    file="$1"; shift;
+    # only go through listfiles() if the file has a valid img extension
+    if echo "$file" | is_img_extension >/dev/null 2>&1; then
+        trap 'rm -f $tmp' EXIT
+        count="$(listfiles "///${file%/*}" | grep -nF "$file")"
+    fi
+    if [ -n "$count" ]; then
+        nsxiv -i -n "${count%%:*}" "$@" -- < "$tmp"
+    else
+        # fallback incase file didn't have a valid extension, or we couldn't
+        # find it inside the list
+        nsxiv "$@" -- "$file"
+    fi
+}
+
+uri2path () {
+  printf '%s' "${1#*://}" | awk '
+  BEGIN {
+    hextab ["0"] = 0; hextab ["8"] = 8;
+    hextab ["1"] = 1; hextab ["9"] = 9;
+    hextab ["2"] = 2; hextab ["A"] = hextab ["a"] = 10
+    hextab ["3"] = 3; hextab ["B"] = hextab ["b"] = 11;
+    hextab ["4"] = 4; hextab ["C"] = hextab ["c"] = 12;
+    hextab ["5"] = 5; hextab ["D"] = hextab ["d"] = 13;
+    hextab ["6"] = 6; hextab ["E"] = hextab ["e"] = 14;
+    hextab ["7"] = 7; hextab ["F"] = hextab ["f"] = 15;
+  }
+  {
+    decoded = ""
+    i   = 1
+    len = length ($0)
+    while ( i <= len ) {
+      c = substr ($0, i, 1)
+      if ( c == "%" ) {
+        if ( i+2 <= len ) {
+          c1 = substr ($0, i+1, 1)
+          c2 = substr ($0, i+2, 1)
+          if ( hextab [c1] == "" || hextab [c2] == "" ) {
+            print "WARNING: invalid hex encoding: %" c1 c2 | "cat >&2"
+          } else {
+            code = 0 + hextab [c1] * 16 + hextab [c2] + 0
+            c = sprintf ("%c", code)
+            i = i + 2
+          }
+        } else {
+          print "WARNING: invalid % encoding: " substr ($0, i, len - i)
+        }
+      } else if ( c == "+" ) {
+        c = " "
+      }
+      decoded = decoded c
+      ++i
+    }
+  print decoded
+  }'
+}
+
+[ "$1" = '--' ] && shift
+case "$1" in
+    "") echo "Usage: ${0##*/} PICTURES" >&2; exit 1 ;;
+    /*) open_img "$1" ;;
+    "~"/*) open_img "$HOME/${1#"~"/}" ;;
+    file:///*) open_img "$(uri2path "$1")" ;;
+    trash:///*)
+        trash_dir="${XDG_DATA_HOME:-$HOME/.local/share}/Trash/files"
+        open_img "${trash_dir}$(uri2path "$1")" -N "nsxiv_trash"
+        ;;
+    *) open_img "$PWD/$1" ;;
+esac

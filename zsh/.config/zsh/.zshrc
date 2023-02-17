@@ -31,4 +31,4 @@ _try_source "$ZDOTDIR/chpwd.zsh"
 _try_source "$ZDOTDIR/aliases.zsh"
 
 # Tmux
-tmx main > /dev/null 2>&1
+# tmx main > /dev/null 2>&1

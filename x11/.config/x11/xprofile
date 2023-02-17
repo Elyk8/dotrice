@@ -15,10 +15,9 @@ xrdb -merge ~/.config/x11/Xresources
 
 # multi-monitor
 
-# eval "$(gnome-keyring-daemon --start)"
 export SSH_AUTH_SOCK
 
-kmonad-refresh &
+kmonadd &
 sxhkd &
 # nm-applet &
 # picom -b &

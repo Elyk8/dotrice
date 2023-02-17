@@ -1,6 +1,6 @@
 # Toggle polybar
 super + b
-				polybar-msg cmd toggle
+        polybar-msg cmd toggle
 
 # Show sxhkd keybindings in dmenu
 super + slash
@@ -8,15 +8,15 @@ super + slash
 
 # Open desktop applications
 super + space ; space
-			krunner --replace
+      krunner --replace
 
 # Dropdown terminal
 super + space ; d
-			tdropper -n term $TERMINAL --name Dropdown
+      tdropper -n term $TERMINAL --name Dropdown
 
 # Open terminal emulator
 super + Return
-			kitty
+      kitty
 
 # Open pcmanfm file manager
 super + space ; r
@@ -24,7 +24,7 @@ super + space ; r
 
 # Open ncmpcpp music player
 super + space ; n
-			tdropper -n ncmpcpp $TERMINAL --name Dropdown -e ncmpcpp
+      tdropper -n ncmpcpp $TERMINAL --name Dropdown -e ncmpcpp
 
 # Dmenu list opened windows
 super + space ; b
@@ -40,7 +40,7 @@ super + space ; v
 
 # Neovim everywhere
 super + space ; e
-			nvim-everywhere
+      nvim-everywhere
 
 # :Openers - Discord
 super + o ; d
@@ -144,7 +144,7 @@ super + semicolon ; e
 
 # :Sys - Open pulsemixer volume manager
 super + semicolon ; v
-			tdropper -n pulsemixer $TERMINAL --name Dropdown -e pulsemixer
+      tdropper -n pulsemixer $TERMINAL --name Dropdown -e pulsemixer
 
 # :Sys - Interactively setwallpaper using nsxiv
 super + semicolon ; w
