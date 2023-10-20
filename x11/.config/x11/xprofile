@@ -1,6 +1,5 @@
 #!/bin/sh
 if [ "$(uname -n)" = "gpdskynet" ]; then
-	# unclutter --hide-on-touch
 	xrdb -merge ~/.config/x11/Xresources.d/gpdskynet.xresources
   # xinput map-to-output "pointer:Goodix Capacitive TouchScreen" DSI-1-1
 
@@ -17,8 +16,9 @@ xrdb -merge ~/.config/x11/Xresources
 
 export SSH_AUTH_SOCK
 
-kmonadd &
-sxhkd &
+# kmonadd &
+
+# setsid -f swhks && setsid -f pkexec swhkd
 # nm-applet &
 # picom -b &
 # clipcatd &

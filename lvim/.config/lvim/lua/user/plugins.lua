@@ -1,13 +1,6 @@
 -- Additional Plugins
 lvim.plugins = {
-  {
-    "Mofiqul/vscode.nvim",
-    config = function()
-      require("vscode").setup {
-        italic_comments = true,
-      }
-    end,
-  },
+  "Mofiqul/vscode.nvim",
   {
     "folke/todo-comments.nvim",
     event = "BufRead",
@@ -15,13 +8,7 @@ lvim.plugins = {
       require("todo-comments").setup()
     end,
   },
-  {
-    "lervag/vimtex",
-    ft = { "tex", "latex", "bib" },
-    config = function()
-      require "user.vimtex"
-    end,
-  },
+  "lervag/vimtex",
   {
     "ethanholz/nvim-lastplace",
     event = "BufRead",
@@ -29,11 +16,10 @@ lvim.plugins = {
       require "user.nvim-lastplace"
     end,
   },
-  "Pocco81/true-zen.nvim",
+  "pocco81/true-zen.nvim",
   "kylechui/nvim-surround",
   "kmonad/kmonad-vim",
   -- "sunaku/tmux-navigate",
-  "ChristianChiarulli/nvim-ts-rainbow",
   -- "karb94/neoscroll.nvim",
   "opalmay/vim-smoothie",
   "lvimuser/lsp-inlayhints.nvim",

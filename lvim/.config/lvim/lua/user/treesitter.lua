@@ -20,19 +20,7 @@ lvim.builtin.treesitter.ensure_installed = {
 lvim.builtin.treesitter.ignore_install = { "haskell" }
 lvim.builtin.treesitter.highlight.enable = true
 lvim.builtin.treesitter.autotag.enable = true
-
-if lvim.colorscheme == "vscode" then
-  lvim.builtin.treesitter.rainbow = {
-    enable = true,
-    extended_mode = false,
-    colors = {
-      "DodgerBlue",
-      "Orchid",
-      "Gold",
-    },
-    disable = { "html" },
-  }
-end
+lvim.builtin.treesitter.rainbow.enable = true
 
 lvim.builtin.treesitter.textobjects = {
   select = {

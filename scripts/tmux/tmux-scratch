@@ -1,5 +1,0 @@
-#!/bin/sh
-
-class="Dropdown,Dropdown"
-command="tmux new-session -A -s $1 -d $2"
-$TERMINAL --class $class -e $command

@@ -1,0 +1,12 @@
+{
+  "texlab.rootDirectory": ".",
+  "texlab.build.executable": "tectonic",
+  "texlab.build.args": [
+    "%f",
+    "--synctex",
+    "--keep-logs",
+    "--keep-intermediates",
+    "--outdir build"
+  ],
+  "texlab.build.onSave": true
+}

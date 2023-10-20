@@ -9,6 +9,7 @@ kmoinit() {
 	keyb3="/dev/input/by-id/usb-Razer_Razer_BlackWidow_Tournament_Edition-event-kbd"
 	keyb4="/dev/input/by-id/usb-SEMICO_USB_Gaming_Keyboard-event-kbd"
 	killall kmonad
+	sleep 0.1
 
 	for keyboard in $keyb1 $keyb2 $keyb3 $keyb4; do
 		if test -e "$keyboard"; then
@@ -20,6 +21,7 @@ kmoinit() {
 		sleep 0.1
 	done
 }
+sleep 0.1
 
 while :; do
 	kmoinit

@@ -2,14 +2,14 @@
   ;; The keyboard_name is just a place holder for the kmonad-initialise script
   input   (device-file "keyboard_name")
   output (uinput-sink
-          "My KMonad output"
-          "sleep 0.1s; remaps; sleep 0.1s")
+          "My KMonad output")
   fallthrough true
   allow-cmd true
 )
 
 ;; Default aliases
 (defalias
+  cmp           (tap-hold-next 300 cmp rmet)
   \             (tap-hold-next 300 \ rmet)
   caps          (tap-hold-next 300 esc lctl)
   f4            (tap-hold-next 300 f4 caps)
@@ -65,7 +65,7 @@
   tab     q       w       e       r       t       y       u       i       o       p       [       ]       \
   caps    a       s       d       f       g       h       j       k       l       ;       '       ret
   lsft    z       x       c       v       b       n       m       ,       .       /       rsft
-  lctl            lmet    lalt    spc                             ralt    prnt    rctrl   pgup    up      pgdn
+  lctl            lmet    lalt    spc                     cmp     ralt    prnt    rctrl   pgup    up      pgdn
                                                                                           lft     down    rght
 )
 
@@ -86,10 +86,10 @@ This will be the default layout when I will be comfortable using the default lay
 (deflayer default
   esc     @game   f2      f3      @f4     f5      f6      f7      f8      f9     f10     f11     f12     home   end    ins    del
   `       1       2       3       4       5       6       7       8       9      0       -       =       bspc
-  @tab    q       w       e       r       t       y       u       i       o      p       [       ]       @\
+  @tab    q       w       e       r       t       y       u       i       o      p       [       ]       \
   @caps   a       s       d       f       g       h       j       k       l      ;       '       ret
   lsft    z       x       c       v       b       n       m       ,       .      /       rsft
-  lctrl           lmet    lalt    @spc                            ralt    prnt   rctrl   pgup    up      pgdn
+  lctrl           lmet    lalt    @spc                    @cmp    ralt    prnt   rctrl   pgup    up      pgdn
                                                                                          lft     down    rght
 )
 
@@ -99,7 +99,7 @@ This will be the default layout when I will be comfortable using the default lay
   tab     q       w       e       r       t       y       u       i       o       p       [       ]       \
   esc     a       s       d       f       g       h       j       k       l       ;       '       ret
   lsft    z       x       c       v       b       n       m       ,       .       /       rsft
-  lctl            lmet    lalt    spc                             ralt    prnt    rctrl   pgup    up      pgdn
+  lctl            lmet    lalt    spc                     cmp     ralt    prnt    rctrl   pgup    up      pgdn
                                                                                           lft     down    rght
 )
 
@@ -109,7 +109,7 @@ This will be the default layout when I will be comfortable using the default lay
   -       1       2       3       4       5       6       7       8       9       0       -       -       bspc
   -       $       +       \(      \)      @       |       -       =       \_      *       -       -
   -       !       #       {       }       ~       &       [       ]       %       ^       -
-  -               -       -       -                               -       -       -       -       -       -
+  -               -       -       -                       -       -       -       -       -       -       -
                                                                                           -       -       -
 )
 
@@ -119,7 +119,7 @@ This will be the default layout when I will be comfortable using the default lay
   -       -       @w      end     ret     tab     @redo   @undo   @forw   @back   bspc    C-bspc  -       -
   @caps   home    -       del     @find   -       lft     down    up      rght    -       -       -
   -       -       -       -       @v      @b      spc     spc     -       -       -       -
-  -               -       -       -                               -       -       -       -       -       -
+  -               -       -       -                       -       -       -       -       -       -       -
                                                                                           -       -       -
 )
 
@@ -129,7 +129,7 @@ This will be the default layout when I will be comfortable using the default lay
   -       -       @vw     @ven    -       -       -       -       -       -       -       -       -       -
   @ves    @vho    -       -       -       -       @vlf    @vdo    @vup    @vrg    -       -       -
   -       -       -       -       -       @vb     -       -       -       -       -       -
-  -               -       -       -                               @ves    -       -       -       -       -
+  -               -       -       -                       -       @ves    -       -       -       -       -
                                                                                           -       -       -
 )
 

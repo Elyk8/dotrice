@@ -25,6 +25,14 @@ autocmd("BufRead", {
   end,
 })
 
+autocmd("BufRead", {
+  group = ElykGroup,
+  pattern = { "swhkdrc" },
+  callback = function()
+    vim.cmd "set ft=sxhkdrc"
+  end,
+})
+
 autocmd({ "BufWinEnter" }, {
   callback = function()
     vim.cmd "set formatoptions-=cro"

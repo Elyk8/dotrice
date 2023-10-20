@@ -1,42 +1,21 @@
 #!/bin/sh
-#
-# Set brightness with xbacklight, but never go below 1 (as that's "off").
 
-# if pidof -x blocker >/dev/null 2>&1; then
-#   exit 1
-# fi
-#
-# blocker >/dev/null 2>&1 &
+MONITOR="ddcci8"
 
 # Increment to use.
 cur=$(xbacklight -get)
 case "$1" in
 "") echo "$cur" ;;
 "up")
-		xbacklight -inc 5;;
+		brightnessctl --device $MONITOR set +20%;;
 "down")
-		xbacklight -dec 5;;
+		brightnessctl --device $MONITOR set 20%-;;
 "sup")
-		xbacklight -inc 1;;
+		brightnessctl --device $MONITOR set +1%;;
 "sdown")
-		xbacklight -dec 1;;
+		brightnessctl --device $MONITOR set 1%-;;
 *)
 	echo "Unsupported: \"$1\""
 	exit 1
 	;;
 esac
-
-cur=$(xbacklight -get)
-if [ "$cur" -le 30 ]; then
-	icon_path="/usr/share/icons/Papirus-Dark/symbolic/status/display-brightness-low-symbolic.svg"
-elif [ "$cur" -ge 70 ]; then
-	icon_path="/usr/share/icons/Papirus-Dark/symbolic/status/display-brightness-high-symbolic.svg"
-else
-	icon_path="/usr/share/icons/Papirus-Dark/symbolic/status/display-brightness-medium-symbolic.svg"
-fi
-
-if ! pidof dunstify; then
-	dunstify "$cur %" -i "$icon_path" -t 2000 -h int:value:"$cur" --replace=555
-fi
-
-# killall blocker &

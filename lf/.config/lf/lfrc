@@ -8,7 +8,7 @@ set scrolloff 10
 set icons
 set period 1
 set preview true
-# set hidden true
+set hidden true
 # set drawbox true
 set ignorecase true
 set hiddenfiles ".*:*.aux:*.bbl:*.bcf:*.blg:*.run.xml"
@@ -18,6 +18,8 @@ set previewer ctpv
 set cleaner ctpvclear
 &ctpv -s $id
 &ctpvquit $id
+# set previewer ~/.config/lf/kitty-preview
+# set cleaner ~/.config/lf/kitty-clean
 
 # opener
 cmd open &{{
@@ -53,10 +55,10 @@ cmd open &{{
   case $(file --mime-type -Lb $f) in
     image/svg+xml) display -- $f ;;
     image/*) nsxiv-rifle $f ;;
-    text/*) lf -remote "send $id \$$EDITOR \$fx";;
-    audio/*|video/x-ms-asf) mpv --audio-display=no $f ;;
-    video/*) setsid -f mpv $f -quiet >/dev/null 2>&1 ;;
-    application/pdf|application/vnd.djvu|application/epub*) setsid -f zathura $fx >/dev/null 2>&1 ;;
+    text/*|application/postscript) lf -remote "send $id \$$EDITOR \$fx";;
+    audio/*|video/x-ms-asf) mpv $f ;;
+    video/*) setsid -f vlc $f >/dev/null 2>&1 ;;
+    application/pdf|application/vnd.djvu|application/epub*) setsid -f evince $fx >/dev/null 2>&1 ;;
     application/pgp-encrypted|application/json) lf -remote "send $id \$$EDITOR \$fx" ;;
     *) for f in $fx; do $OPENER $f > /dev/null 2> /dev/null & done;;
   esac
@@ -219,7 +221,7 @@ map o :fzf
 map f :fzf_jump
 
 # Open new term in current directory
-map w $setsid -f $TERMINAL
+map w &setsid -f $TERMINAL > /dev/null
 
 # Archive Mappings
 map az zip

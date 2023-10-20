@@ -1,16 +1,17 @@
 vim.opt_local.wrap = true
 vim.opt_local.linebreak = true
 vim.opt_local.spell = true
+vim.g.tex_flavor = "latex"
 
 -- Shorten function name
-local keymap = vim.keymap.set
+-- local keymap = vim.keymap.set
 -- Silent keymap option
-local opts = { silent = true }
-keymap("i", "<C-i>",
-  [[<Esc>: silent exec '.!inkscape-figures create "'.getline('.').'" "'.b:vimtex.root.'/figures/"'<CR><CR>:w<CR>]], opts)
-keymap("n", "<C-i>",
-  [[<cmd> silent exec '!inkscape-figures edit "'.b:vimtex.root.'/figures/" > /dev/null 2>&1 &'<CR><CR>:redraw!<CR>]],
-  opts)
+-- local opts = { silent = true }
+-- keymap("i", "<C-i>",
+--   [[<Esc>: silent exec '.!inkscape-figures create "'.getline('.').'" "'.b:vimtex.root.'/figures/"'<CR><CR>:w<CR>]], opts)
+-- keymap("n", "<C-i>",
+--   [[<cmd> silent exec '!inkscape-figures edit "'.b:vimtex.root.'/figures/" > /dev/null 2>&1 &'<CR><CR>:redraw!<CR>]],
+--   opts)
 
 lvim.builtin.which_key.mappings["m"] = {
   name = "LaTex",

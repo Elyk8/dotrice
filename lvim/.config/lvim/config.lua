@@ -3,7 +3,7 @@ reload "user.autocommands"
 reload "user.keymaps"
 
 reload "user.plugins"
-
+reload "user.colorscheme"
 reload "user.filetype"
 reload "user.treesitter"
 reload "user.lsp"
@@ -14,3 +14,4 @@ reload "user.true-zen"
 reload "user.surround"
 reload "user.smoothie"
 reload "user.lualine"
+reload "user.vimtex"

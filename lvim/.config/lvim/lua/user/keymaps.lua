@@ -2,12 +2,10 @@
 lvim.leader = "space"
 -- add your own keymapping
 lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
+vim.keymap.set("", ";", ":")
+
 -- lvim.keys.normal_mode["<S-l>"] = ":BufferLineCycleNext<CR>"
 -- lvim.keys.normal_mode["<S-h>"] = ":BufferLineCyclePrev<CR>"
--- unmap a default keymapping
-vim.keymap.del("n", "<A-j>", {})
-vim.keymap.del("n", "<A-k>", {})
--- override a default keymapping
 -- lvim.keys.normal_mode["<C-q>"] = ":q<cr>" -- or vim.keymap.set("n", "<C-q>", ":q<cr>" )
 
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
@@ -24,6 +22,10 @@ lvim.builtin.which_key.mappings["w"] = {
   name = "Windows",
   v = { "<cmd>vsp<cr>", "Vertical Split" },
   s = { "<cmd>sp<cr>", "Split" },
+  h = { "<cmd>wincmd h<cr>", "Left" },
+  j = { "<cmd>wincmd j<cr>", "Down" },
+  k = { "<cmd>wincmd k<cr>", "Up" },
+  l = { "<cmd>wincmd l<cr>", "Right" },
 }
 lvim.builtin.which_key.mappings["P"] = { "<cmd>Telescope projects<CR>", "Projects" }
 lvim.builtin.which_key.mappings["f"] = {
@@ -33,10 +35,17 @@ lvim.builtin.which_key.mappings["f"] = {
   r = { "<cmd>Telescope oldfiles<cr>", "Recent File" },
   s = { "<cmd>w<CR>", "Save File" },
   S = { "<cmd>wa<CR>", "Save All" },
-  x = { "<cmd>!chmod +x %<CR>", "Chmod +x"}
+  x = { "<cmd>!chmod +x %<CR>", "Chmod +x" },
 }
 
 lvim.builtin.which_key.mappings["t"] = {
   name = "Toggle",
   z = { "<cmd>TZNarrow<CR>", "Zen Mode" },
+  c = { "<cmd>Telescope colorscheme<CR>", "Change colorscheme" },
+}
+
+lvim.builtin.which_key.mappings["m"] = {
+  name = "Commands",
+  c = { [[<cmd>w! | !compiler "%:p"<CR>]], "Compile" },
+  p = { [[<cmd>silent! !opout "%:p"<CR>]], "View" },
 }

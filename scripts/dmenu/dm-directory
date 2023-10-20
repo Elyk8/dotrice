@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-source "$HOME/.config/shell/apparix"
-apparish | awk '{ print $3}' | sort | rofi-dmenu -p "Open Terminal in:" | xargs -r st -d

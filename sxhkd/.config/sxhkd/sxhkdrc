@@ -247,5 +247,5 @@ super + F3
 #       dm-monitor
 
 # # :function - Adjust brightness
-# super + {F11, F12}
-#       brightness {down,up}
+super + shift + {9, 0}
+      brightness {down,up}

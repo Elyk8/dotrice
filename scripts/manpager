@@ -1,2 +1,4 @@
 #!/bin/sh
 exec nvim --noplugin -c "set ft=man" "$@"
+# exec /usr/local/bin/nvr --noplugin -c 'Man!' -o "$@"
+# nvimpager

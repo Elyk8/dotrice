@@ -1,13 +1,17 @@
+-- Configure a server manually. !!Requires `:LvimCacheReset` to take effect!!
+-- See the full default list `:lua print(vim.inspect(lvim.lsp.automatic_configuration.skipped_servers))`
+vim.list_extend(lvim.lsp.automatic_configuration.skipped_servers, { "clangd" })
+
 require("user.lsp.languages.python")
 require("user.lsp.languages.c")
 require("user.lsp.languages.sh")
+require("user.lsp.languages.typst")
 
 lvim.format_on_save = false
-lvim.lsp.diagnostics.virtual_text = false
-
+vim.diagnostic.config({ virtual_text = false })
 
 lvim.lsp.installer.setup.ensure_installed = {
-  "sumneko_lua",
+  "lua_ls",
   "jsonls",
   "bashls",
 }

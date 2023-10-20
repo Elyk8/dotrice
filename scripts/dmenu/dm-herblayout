@@ -1,4 +1,0 @@
-#!/bin/sh
-
-SEL="$(find ~/.config/herbstluftwm/layouts/ | rofi-dmenu -p "Which Layout?: ")"
-herbstclient load "$(cat ~/.config/herbstluftwm/layouts/"$SEL")"

@@ -1,8 +1,9 @@
 $recorder = 1;
-$bibtex_use = 2;
+# $bibtex_use = 2;
+$bibtex = "citeproc-lua %S";
 
 $clean_ext .= '%R.ist %R.xdy';
-$emulate_aux = 1;
+# $emulate_aux = 1;
 
 $pdf_mode = 4;
 

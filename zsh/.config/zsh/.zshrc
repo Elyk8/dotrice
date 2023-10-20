@@ -1,13 +1,9 @@
 # Zap
 [ -f "$HOME/.local/share/zap/zap.zsh" ] && source "$HOME/.local/share/zap/zap.zsh"
 
-function zsh_add_file() {
-    zapsource "$ZDOTDIR/$1"
-}
-
 # Main
-_try_source "$ZDOTDIR/options.zsh"
-_try_source "$ZDOTDIR/bindings.zsh"
+plug "$ZDOTDIR/options.zsh"
+plug "$ZDOTDIR/bindings.zsh"
 
 
 # Plugins
@@ -24,11 +20,11 @@ plug "skywind3000/z.lua"
 plug "zap-zsh/zap-prompt"
 
 # Completion
-plug "esc/conda-zsh-completion" false
+plug "esc/conda-zsh-completion"
 
 # Other options
-_try_source "$ZDOTDIR/chpwd.zsh"
-_try_source "$ZDOTDIR/aliases.zsh"
+plug "$ZDOTDIR/chpwd.zsh"
+plug "$ZDOTDIR/aliases.zsh"
 
 # Tmux
 # tmx main > /dev/null 2>&1

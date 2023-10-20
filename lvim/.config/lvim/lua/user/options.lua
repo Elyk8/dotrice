@@ -1,5 +1,5 @@
 -- Lvim options
-lvim.log.level = "warn"
+lvim.log.level = "info"
 lvim.format_on_save = false
 lvim.colorscheme = "vscode"
 
@@ -10,7 +10,6 @@ vim.opt.showtabline = 0
 
 -- Builtin plugins
 lvim.builtin.alpha.active = true
-lvim.lsp.diagnostics.float.focusable = true
 -- lvim.builtin.alpha.mode = "startify"
 lvim.builtin.breadcrumbs.active = true
 lvim.builtin.bufferline.active = false
@@ -84,6 +83,7 @@ local options = {
 -- vim.opt.fillchars.eob = " "
 -- vim.opt.fillchars = vim.opt.fillchars + "vertleft: "
 -- vim.opt.fillchars = vim.opt.fillchars + "vertright: "
+vim.g.tex_flavor = "latex"
 vim.opt.fillchars = vim.opt.fillchars + "eob: "
 vim.opt.fillchars:append {
   stl = " ",

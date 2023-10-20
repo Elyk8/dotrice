@@ -1,12 +1,13 @@
 #!/usr/bin/env zsh
 
 # XDG Directories
-export SCRIPTS=${SCRIPTS:="$HOME/.dotrice/scripts"}
+SCRIPTS=$(find -L "$HOME/.dotrice/scripts")
 export DOTS=${DOTS:="$HOME/.dotrice"}
 
-# Adds `~/.local/bin` to $PATH
-PATH="$PATH:$HOME/.local/bin:$HOME/.ghcup/bin:$HOME/.cabal/bin:${$(find -L $SCRIPTS -type d -printf %p:)%%:}"
-export PATH
+# Adds `~/.local/bin` to $PATH recursively
+typeset -U path
+path+=(~/.local/bin{,/**/*(N/)})
+path+=(~/.dotrice/scripts{,/**/*(N/)})
 
 unsetopt PROMPT_SP
 
@@ -108,7 +109,7 @@ export VIDEO="mpv"
 export IMAGE="nsxiv"
 export OPENER="xdg-open"
 export PAGER="less -S"
-export MANPAGER="$EDITOR -c 'set ft=man nonumber nolist ts=8 laststatus=1 showtabline=1' '+Man!' -"
+command -v nvimpager &> /dev/null && export MANPAGER="nvimpager"
 
 # Common directories
 export DOCUMENTS_DIR="$HOME/Documents"
@@ -122,3 +123,9 @@ export AWT_TOOLKIT="MToolkit wmname LG3D"     # May have to install wmname
 export _JAVA_AWT_WM_NONREPARENTING=1          # Fix for Java applications in dwm
 # export GAMEMODERUNEXEC="env __NV_PRIME_RENDER_OFFLOAD=1 env __GLX_VENDOR_LIBRARY_NAME=nvidia env __VK_LAYER_NV_optimus=NVIDIA_only"
 # export GAMEMODERUNEXEC="prime-run"
+
+# AMD eGPU
+export RADV_PERFTEST=nosam
+
+# QT themes
+export QT_STYLE_OVERRIDE=adwaita
